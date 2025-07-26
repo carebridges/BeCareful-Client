@@ -26,4 +26,3 @@ export const TIME_EN_TO_KO = {
   EVENING: '저녁',
   NIGHT: '야간',
 } as const;
-

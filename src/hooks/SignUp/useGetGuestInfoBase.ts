@@ -16,7 +16,19 @@ export const useGetGuestInfoBase = <T>(
   mapper: GuestInfoMapper<T>,
 ) => {
   const [searchParams] = useSearchParams();
-  const guestKey = searchParams.get('guestKey');
+  const rawGuestKey = searchParams.get('guestKey');
+
+  useEffect(() => {
+    if (rawGuestKey !== null && rawGuestKey !== 'null' && rawGuestKey !== '') {
+      sessionStorage.setItem('guestKey', rawGuestKey);
+    }
+  }, [rawGuestKey]);
+
+  const guestKey =
+    rawGuestKey && rawGuestKey !== 'null'
+      ? rawGuestKey
+      : sessionStorage.getItem('guestKey');
+
   const { data: guestInfo, isLoading, error } = useGuestInfoQuery(guestKey);
   const { setFormData } = useContext();
 

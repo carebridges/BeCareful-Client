@@ -38,8 +38,8 @@ export const SignUpFunnel = () => {
 
   return (
     <>
-      <IconContainer onClick={handleClickBack}>
-        <IconArrowLeft />
+      <IconContainer>
+        <IconArrowLeft onClick={handleClickBack} />
       </IconContainer>
       {!isInstitutionFunnel && !isLastStep && <ProgressBar percent={percent} />}
       <AnimatePresence mode="wait">

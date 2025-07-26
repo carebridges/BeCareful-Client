@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
 import { styled } from 'styled-components';
 import { useSearchInstitution } from '@/api/signupFunnel';
@@ -11,6 +11,8 @@ export const InstitutionSearchInput = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const { data: institutions = [] } = useSearchInstitution(searchTerm.trim(), {
     enabled: searchTerm.trim().length > 0,
@@ -22,8 +24,24 @@ export const InstitutionSearchInput = ({
     onInstitutionSelect(inst.institutionName, inst.institutionId);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <Wrapper>
+    <Wrapper ref={wrapperRef}>
       <SearchContainer>
         <StyledInput
           placeholder="기관명 검색"
@@ -31,9 +49,10 @@ export const InstitutionSearchInput = ({
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setShowDropdown(true);
+            setSearched(false);
           }}
         />
-        <IconWrapper>
+        <IconWrapper onClick={() => setSearched(true)}>
           <SearchIcon />
         </IconWrapper>
       </SearchContainer>
@@ -50,6 +69,11 @@ export const InstitutionSearchInput = ({
           ))}
         </Dropdown>
       )}
+      {searched &&
+        searchTerm.trim().length > 0 &&
+        institutions.length === 0 && (
+          <NoResultWrapper>검색 결과가 없습니다.</NoResultWrapper>
+        )}
     </Wrapper>
   );
 };
@@ -125,4 +149,11 @@ const DropdownItem = styled.li`
   &:hover {
     background: ${({ theme }) => theme.colors.subBlue};
   }
+`;
+
+const NoResultWrapper = styled.div`
+  margin-top: 8px;
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.gray500};
 `;

@@ -24,7 +24,7 @@
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.54.2",
     "react-mobile-picker": "^1.0.1",
-    "react-router-dom": "^7.7.0",
+    "react-router-dom": "^7.1.5",
     "recoil": "^0.7.7",
     "styled-components": "^6.1.15",
     "swiper": "^11.2.10",

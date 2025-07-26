@@ -70,8 +70,8 @@ export const CommunityFunnel = ({ onDone, onCancel }: CommunityFunnelProps) => {
 
   return (
     <div>
-      <IconContainer onClick={handleClickBack}>
-        <IconArrowLeft />
+      <IconContainer>
+        <IconArrowLeft onClick={handleClickBack} />
       </IconContainer>
       {!isLastStep && <ProgressBar percent={percent} />}
       <AnimatePresence mode="wait">
