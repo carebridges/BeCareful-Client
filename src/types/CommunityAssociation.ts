@@ -1,4 +1,5 @@
 import { ASSOCIATION_RANKS } from '@/constants/associationRank';
+import { CommunityAccessStatusValue } from '@/constants/communityAssociation';
 
 export interface AssociationWholeList {
   associationId: number;
@@ -19,3 +20,13 @@ export interface JoinAssociationRequest {
 }
 
 export type AssociationRank = (typeof ASSOCIATION_RANKS)[number]['value'];
+
+export interface CommunityAccessResponse {
+  accessStatus: CommunityAccessStatusValue;
+  associationName: string;
+  associationInfo: {
+    associationId: number;
+    associationName: string;
+    associationMemberCount: number;
+  };
+}

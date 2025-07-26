@@ -11,6 +11,7 @@ import CommunityAssociationInfoPage from '@/page/Community/Association/Community
 import CommunityAssociationEditPage from '@/page/Community/Association/CommunityAssociationEditPage';
 import CommunityMembersPage from '@/page/Community/Association/CommunityMembersPage';
 import CommnunityMemberDetailPage from '@/page/Community/Association/CommunityMemberDetailPage';
+import { CommunityRouteGuard } from '@/page/Community/CommunityRouteGuard';
 
 const CommunityRoute = () => {
   return (
@@ -20,8 +21,8 @@ const CommunityRoute = () => {
       <main>
         <Routes>
           <Route path="/splash" element={<CommunitySplashPage />} />
-
           <Route path="/create" element={<CommunityCreatePage />} />
+          {/*서버 수정되면 삭제 예정*/}
           <Route path="/signup" element={<CommunitySignUpPage />} />
           <Route path="/members/new" element={<CommunityJoinPage />} />
           <Route path="/:id/preview" element={<CommunityPage previewMode />} />
@@ -29,11 +30,9 @@ const CommunityRoute = () => {
             path="/join/:id/role"
             element={<CommunityJoinSelectRolePage />}
           />
-
-          <Route index element={<CommunityPage />} />
+          <Route index element={<CommunityRouteGuard />} />
           <Route path="/:postId" element={<CommunityPostPage />} />
           <Route path="/search" element={<CommunitySearchPage />} />
-
           <Route path="/:associationId">
             <Route path="info" element={<CommunityAssociationInfoPage />} />
             <Route path="edit" element={<CommunityAssociationEditPage />} />

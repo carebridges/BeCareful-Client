@@ -6,10 +6,16 @@ import {
   MembersResponse,
 } from '@/types/Community/association';
 import {
+  CommunityAccessResponse,
   GetAssociationListResponse,
   JoinAssociationRequest,
 } from '@/types/CommunityAssociation';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 export const useGetAssociationList = () =>
   useQuery<GetAssociationListResponse>({
@@ -25,6 +31,17 @@ export const useJoinAssociation = () =>
     mutationFn: async (payload: JoinAssociationRequest) => {
       await axiosInstance.post('/association/join-requests', payload);
     },
+  });
+
+export const useCommunityAccess = (): UseQueryResult<CommunityAccessResponse> =>
+  useQuery({
+    queryKey: ['communityAccess'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get('/community/access');
+      return data;
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60, //TODO
   });
 
 // 회원관리 탭 목록(협회 회원 + 가입 신청자 요약)

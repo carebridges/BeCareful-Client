@@ -1,38 +1,24 @@
 import { styled } from 'styled-components';
-
 import { Button } from '@/components/common/Button/Button';
 import { ReactComponent as SignUpComplete } from '@/assets/icons/signup/SignUpComplete.svg';
-
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
-import { useRegisterAssociation } from '@/api/communityFunnel';
+import { useNavigate } from 'react-router-dom';
 
 interface StepProps {
-  onComplete: () => void;
   communityFormData: CommunityFormData;
+  onComplete?: () => void;
 }
-export const Step3CommunityRegister = ({
-  onComplete,
-  communityFormData,
-}: StepProps) => {
-  const { mutate: registerAssociation } = useRegisterAssociation();
+export const Step3CommunityRegister = ({ communityFormData }: StepProps) => {
+  const navigate = useNavigate();
 
-  const handleRegister = () => {
-    registerAssociation(communityFormData, {
-      onSuccess: () => {
-        onComplete();
-      },
-      onError: (error) => {
-        console.error('커뮤니티 등록 실패:', error);
-        console.log(communityFormData);
-      },
-    });
+  const handleComplete = () => {
+    navigate('/community');
   };
-
   return (
     <StepWrapper>
       <HeaderSection>
         <Title>
-          /{communityFormData.name}/
+          {communityFormData.name}
           <br />
           커뮤니티가 만들어졌어요!
           <br />
@@ -44,10 +30,10 @@ export const Step3CommunityRegister = ({
       </SignUpCompleteContainer>
 
       <ButtonContainer>
-        <Button onClick={handleRegister} height={'52px'} variant="blue2">
+        <Button onClick={handleComplete} height="52px" variant="blue2">
           커뮤니티 둘러보기
         </Button>
-        <Button onClick={handleRegister} height={'52px'} variant="blue">
+        <Button onClick={handleComplete} height="52px" variant="blue">
           회원 초대하기
         </Button>
       </ButtonContainer>

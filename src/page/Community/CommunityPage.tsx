@@ -13,6 +13,9 @@ import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorke
 import { CommunityJoinRequestModal } from '@/components/Community/JoinCommunity/CommunityJoinRequestModal';
 import { COMMUNITY_BOARDS } from '@/constants/communityBoard';
 import { useAssociationInfo } from '@/api/community';
+import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
+import { CommunityJoinPendingModal } from '@/components/Home/CommunityJoinPendingModal';
+import { CommunityJoinApprovedModal } from '@/components/Home/CommunityJoinApprovedModal';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const navigate = useNavigate();
@@ -36,6 +39,13 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const [isWriting, setIsWriting] = useState(false);
 
   const { data } = useAssociationInfo(!previewMode);
+  const {
+    isPendingModalOpen,
+    isApprovedModalOpen,
+    associationName,
+    closePendingModal,
+    closeApprovedModal,
+  } = useJoinStatusModal();
 
   return (
     <>
@@ -113,6 +123,29 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
               associationId={selectedAssociation?.associationId}
               associationName={selectedAssociation?.associationName ?? ''}
               onClose={() => navigate(-1)}
+            />
+          )}
+          {isPendingModalOpen && (
+            <CommunityJoinPendingModal
+              width="343px"
+              associationName={associationName}
+              onCancelJoin={() => {
+                //TODO
+                closePendingModal();
+              }}
+              onClose={() => {
+                closePendingModal();
+              }}
+            />
+          )}
+
+          {isApprovedModalOpen && (
+            <CommunityJoinApprovedModal
+              width="343px"
+              associationName={associationName}
+              onClose={() => {
+                closeApprovedModal();
+              }}
             />
           )}
         </Container>

@@ -1,34 +1,49 @@
 import { useEffect, useState } from 'react';
-import { mockCommunityJoinStatus } from '@/utils/mockCommunityJoinStatus';
+import { useCommunityAccess } from '@/api/communityAssociation';
+import { COMMUNITY_ACCESS_SESSION_KEYS } from '@/constants/communityAssociation';
 
 export const useJoinStatusModal = () => {
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
-  const [isRejectedModalOpen, setIsRejectedModalOpen] = useState(false);
+  const [associationName, setAssociationName] = useState('');
+
+  const [modals, setModals] = useState({
+    REJECTED: false,
+    PENDING: false,
+    APPROVED: false,
+  });
+
+  const { data, isSuccess } = useCommunityAccess();
 
   useEffect(() => {
-    const fetchJoinStatus = async () => {
-      try {
-        const status = await mockCommunityJoinStatus();
-        if (
-          status === 'REJECTED' &&
-          sessionStorage.getItem('rejectedModalShown') !== 'true'
-        ) {
-          setIsRejectedModalOpen(true);
-          sessionStorage.setItem('rejectedModalShown', 'true');
-        }
-      } catch (error) {
-        console.error('가입 상태 확인 실패:', error);
-      }
-    };
+    if (!isSuccess || !data) return;
 
-    fetchJoinStatus();
-  }, []);
+    const { accessStatus, associationName } = data;
+    setAssociationName(associationName);
+
+    const sessionKey = COMMUNITY_ACCESS_SESSION_KEYS[accessStatus];
+
+    if (!sessionKey) return;
+
+    if (sessionStorage.getItem(sessionKey) !== 'true') {
+      if (accessStatus in modals) {
+        setModals((prev) => ({ ...prev, [accessStatus]: true }));
+        sessionStorage.setItem(sessionKey, 'true');
+      }
+    }
+  }, [isSuccess, data]);
 
   return {
     isLimitModalOpen,
-    isRejectedModalOpen,
+    isRejectedModalOpen: modals.REJECTED,
+    isPendingModalOpen: modals.PENDING,
+    isApprovedModalOpen: modals.APPROVED,
+    associationName,
     openLimitModal: () => setIsLimitModalOpen(true),
     closeLimitModal: () => setIsLimitModalOpen(false),
-    closeRejectedModal: () => setIsRejectedModalOpen(false),
+    closeRejectedModal: () =>
+      setModals((prev) => ({ ...prev, REJECTED: false })),
+    closePendingModal: () => setModals((prev) => ({ ...prev, PENDING: false })),
+    closeApprovedModal: () =>
+      setModals((prev) => ({ ...prev, APPROVED: false })),
   };
 };

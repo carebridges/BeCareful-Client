@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
 import { CommunitySearchInput } from '@/components/SignUp/CommunityFunnel/CommunitySearchInput';
+import { useRegisterAssociation } from '@/api/communityFunnel';
 
 interface StepProps {
   goToNext: () => void;
@@ -16,6 +17,8 @@ export const Step2CommunityName = ({
   communityFormData,
   setCommunityFormData,
 }: StepProps) => {
+  const { mutate: registerAssociation } = useRegisterAssociation();
+
   const handleCommunityNameChange = (name: string) => {
     setCommunityFormData((prev) => ({ ...prev, name }));
   };
@@ -28,6 +31,17 @@ export const Step2CommunityName = ({
   };
 
   const isCommunityNameValid = communityFormData.name.length > 0;
+  const handleRegisterClick = () => {
+    if (!isCommunityNameValid) return;
+    registerAssociation(communityFormData, {
+      onSuccess: () => {
+        goToNext();
+      },
+      onError: () => {
+        alert('커뮤니티 생성에 실패했어요. 다시 시도해 주세요.');
+      },
+    });
+  };
 
   return (
     <StepWrapper>
@@ -56,7 +70,7 @@ export const Step2CommunityName = ({
           이전
         </Button>
         <Button
-          onClick={goToNext}
+          onClick={handleRegisterClick}
           height="52px"
           variant={isCommunityNameValid ? 'blue' : 'gray'}
           disabled={!isCommunityNameValid}

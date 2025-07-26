@@ -15,6 +15,7 @@ export const HomeMainContent = () => {
   const {
     isLimitModalOpen,
     isRejectedModalOpen,
+    associationName,
     openLimitModal,
     closeLimitModal,
     closeRejectedModal,
@@ -88,7 +89,7 @@ export const HomeMainContent = () => {
       <Modal isOpen={isRejectedModalOpen} onClose={closeRejectedModal}>
         <ModalLimit
           onClose={closeRejectedModal}
-          title="전주완주 장기요양기관 협회 커뮤니티 가입이 반려되었습니다." //TODO
+          title={`${associationName} 커뮤니티 가입이 반려되었습니다.`}
           detail="가입 조건에 부합하지 않아 반려되었습니다."
           button="확인"
           handleBtnClick={closeRejectedModal}
