@@ -40,7 +40,6 @@ const CommunityDetail = ({ boardType }: CommunityDetailProps) => {
               createdAt={post.createdAt}
               author={post.author}
               boardType={boardType}
-              // isReaded={false}
             />
             <Border />
           </>

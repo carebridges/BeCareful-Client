@@ -11,6 +11,13 @@ export const COMMUNITY_BOARDS = [
   // '참여 신청',
 ];
 
+export const COMMUNITY_BOARDS_LIST = [
+  '협회 공지',
+  '공단 공지',
+  '정보 공유',
+  // '참여 신청',
+];
+
 // parameter로 사용할 boardType
 export const Board_Type_Mapping: { [key: string]: string } = {
   '협회 공지': 'association-notice',

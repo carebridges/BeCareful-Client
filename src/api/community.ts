@@ -17,7 +17,6 @@ export const useAssociationInfo = (enabled: boolean) => {
   return useQuery<AssociationInfoResponse, Error>({
     queryKey: ['associationInfo'],
     queryFn: async () => {
-      // getAssociationInfo 로직을 queryFn 내부로 이동
       const response = await axiosInstance.get('/community/my/association');
       return response.data;
     },
@@ -49,7 +48,7 @@ export const postMedia = async (
     {
       params: {
         fileType: fileTypeParam,
-        ...(fileTypeParam === 'VIDEO' && { videoDuration: duration }), // videoDuration 파라미터 조건부 추가
+        ...(fileTypeParam === 'VIDEO' && { videoDuration: duration }),
       },
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -61,31 +60,51 @@ export const postMedia = async (
 };
 
 // 게시글 작성
-export const usePostPostingMutation = () => {
+export const usePostPostingMutation = (boardType: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      boardType,
-      postData,
-    }: {
-      boardType: string;
-      postData: PostRequest;
-    }) => {
+    mutationFn: async (postData: PostRequest) => {
       const response = await axiosInstance.post(
         `/community/board/${boardType}/post`,
         postData,
       );
       return response;
     },
-    onSuccess: (response, variables) => {
+    onSuccess: (response) => {
       console.log('usePostPostingMutation - 게시글 작성 성공:', response.data);
       queryClient.invalidateQueries({
-        queryKey: ['posts', variables.boardType],
+        queryKey: ['posts', boardType],
       });
     },
     onError: (error) => {
       console.error('usePostPostingMutation - 게시글 작성 실패:', error);
+    },
+  });
+};
+
+// 게시글 수정
+export const usePutPostingMutation = (boardType: string, postId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (postData: PostRequest) => {
+      const response = await axiosInstance.put(
+        `/community/board/${boardType}/post/${postId}`,
+        postData,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('usePutPostingMutation - 게시글 수정 성공:', response.data);
+      queryClient.invalidateQueries({
+        queryKey: ['postDetail', boardType, postId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['posts', boardType] });
+      queryClient.invalidateQueries({ queryKey: ['importantPostingList'] });
+    },
+    onError: (error) => {
+      console.error('usePutPostingMutation - 게시글 수정 실패:', error);
     },
   });
 };

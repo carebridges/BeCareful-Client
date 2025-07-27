@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { PostListItem } from '@/types/Community/post';
 import { textTruncateFormat } from '@/hooks/Community/PostOverview/textFormat';
-import { isRecentDate } from '@/hooks/Community/PostOverview/isRecentDate';
+import { isRecentDate } from '@/hooks/Community/isRecentDate';
 
-// PostOverview 컴포넌트가 받을 props 타입 정의
-export interface PostOverviewProps extends PostListItem {
-  // isReaded: boolean;
+interface PostOverviewProps extends PostListItem {
   boardType: string;
 }
 
@@ -21,13 +20,15 @@ const PostOverview = ({
   boardType,
 }: PostOverviewProps) => {
   const navigate = useNavigate();
-
   const handleClick = () => {
     navigate(`/community/${postId}`, {
       state: { boardType: boardType },
     }); // 클릭 시 해당 ID의 게시글 상세 페이지로 이동
     window.scrollTo(0, 0);
   };
+
+  const { readStatuses } = usePostReadStatus();
+  const isRead = readStatuses[postId] || false;
 
   return (
     <Container onClick={handleClick}>
@@ -40,8 +41,7 @@ const PostOverview = ({
             {Institution_Rank_Mapping[author.authorInstitutionRank]}
           </label>
         </Writer>
-        {/* <Title isReaded={isReaded}> */}
-        <Title isReaded={false}>
+        <Title isRead={isRead}>
           <label>
             {isImportant && <IsMustTag>필독</IsMustTag>}{' '}
             {textTruncateFormat(title, 33)}
@@ -100,14 +100,14 @@ const Writer = styled.div`
   }
 `;
 
-const Title = styled.div<{ isReaded: boolean }>`
+const Title = styled.div<{ isRead: boolean }>`
   display: flex;
   gap: 5px;
   align-items: center;
 
   label {
-    color: ${({ theme, isReaded }) =>
-      isReaded ? theme.colors.gray300 : theme.colors.black};
+    color: ${({ theme, isRead }) =>
+      isRead ? theme.colors.gray300 : theme.colors.black};
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     line-height: 140%;

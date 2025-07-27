@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Dots } from '@/assets/icons/community/Dots.svg';
 import { ReactComponent as Share } from '@/assets/icons/community/Share.svg';
@@ -18,7 +19,12 @@ import { Board_Type_Mapping } from '@/constants/communityBoard';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { useLinkCopy } from '@/hooks/Community/PostPage/useLinkCopy';
 import { useCommentSend } from '@/hooks/Community/PostPage/useCommentSend';
-import { useComments, usePostDetail } from '@/api/community';
+import { useComments, useDeletePost, usePostDetail } from '@/api/community';
+import { isRecentDate } from '@/hooks/Community/isRecentDate';
+import CommunityWritePage from './CommunityWritePage';
+import { useFileHandling } from '@/hooks/Community/PostPage/useFileHandling';
+import { useKakaoShare } from '@/hooks/Community/PostPage/useKakaoShare';
+import { usePostActions } from '@/hooks/Community/PostPage/usePostActions';
 
 const CommunityPostPage = () => {
   const navigate = useNavigate();
@@ -32,14 +38,6 @@ const CommunityPostPage = () => {
     '협회 공지';
   const apiBoardType = Board_Type_Mapping[boardType];
 
-  // TODO : id와 함께 local에 저장
-  const [isRead, setIsRead] = useState(false);
-  // bottomsheet - 공유 버튼
-  const [isShareSheetOpen, setIsShareSheetOpen] = useState(false);
-  // bottomsheet - 수정 버튼
-  const [isDeleteSheetOpen, setIsDeleteSheetOpen] = useState(false);
-  const [writingTask, setWritingTask] = useState('');
-
   // 게시글 상세 조회
   const { data: post, error: postDetailError } = usePostDetail(
     apiBoardType,
@@ -50,36 +48,55 @@ const CommunityPostPage = () => {
     apiBoardType,
     postId,
   );
-
   // 댓글 등록
   const { reply, handleReplyChange, handleReplySend } = useCommentSend(
     apiBoardType,
     postId,
   );
 
-  // 게시글 링크 복사
+  // 읽음 상태 context 관리
+  const { readStatuses, markAsRead } = usePostReadStatus();
+  // 현재 게시글의 읽음 상태
+  const currentPostIsRead = readStatuses[postId] || false;
+  useEffect(() => {
+    if (!currentPostIsRead && postId >= 0) {
+      markAsRead(postId);
+    }
+  }, [postId, markAsRead, currentPostIsRead]);
+  const handleCheckReadBtnClick = () => {
+    if (!currentPostIsRead && postId >= 0) {
+      markAsRead(postId);
+    }
+  };
+
+  const { mutate: handleDeletetPost } = useDeletePost(apiBoardType, postId);
+
+  // 게시글 수정, 삭제하기
+  const {
+    isActionSheetOpen,
+    setIsActionSheetOpen,
+    openActionSheet,
+    closeActionSheet,
+    selectedAction,
+    setSelectedAction,
+    isEditPageOpen,
+    setIsEditPageOpen,
+    handleActionSheetConfirm,
+  } = usePostActions({
+    onEditSuccess: () => setIsEditPageOpen(true),
+    onDelete: handleDeletetPost,
+    post: post,
+  });
+
+  // 파일 다운로드, 원본 url 링크 이동
+  const { handleFileDownload, handleOriginalLinkClick } = useFileHandling();
+
+  // 카카오톡 공유하기
+  const { isShareSheetOpen, setIsShareSheetOpen, handleKakaoShare } =
+    useKakaoShare();
+
+  // 현재 게시글 링크 복사
   const { isLinkModalOpen, setIsLinkModalOpen, handleCopy } = useLinkCopy();
-
-  const handleDeleteSheetConfirm = () => {
-    if (writingTask == '수정하기') {
-      // TODO: 글쓰기 수정 api 아니면 wirtingpage로 이동
-    } else if (writingTask == '삭제하기') {
-      // TODO: delete api 연결
-    }
-    setIsDeleteSheetOpen(false);
-  };
-
-  // 파일 다운로드
-  const handleFileDownload = (fileUrl: string) => {
-    window.open(fileUrl, '_blank');
-  };
-
-  // 원본 URL로 이동
-  const handleOriginalLinkClick = () => {
-    if (post?.originalUrl) {
-      window.open(post.originalUrl, '_blank');
-    }
-  };
 
   if (postDetailError) {
     console.log('getPostDetail 에러 발생: ', postDetailError);
@@ -89,239 +106,262 @@ const CommunityPostPage = () => {
   }
 
   return (
-    <Container>
-      <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
-        center={<NavCenter>{boardType}</NavCenter>}
-        color="white"
-      />
-
-      <TitleWrapper>
-        <Title>
-          {post?.isImportant && <Tag>필독</Tag>}
-          <label>{post?.title}</label>
-        </Title>
-
-        <Writer>
-          <div className="writer-info">
-            <img src={post?.author.institutionImageUrl} />
-            <div className="writer-wrapper">
-              <div className="wrapper">
-                <label className="writer">{post?.author.authorName}</label>
-                <label className="writer">·</label>
-                <label className="writer">
-                  {post?.author &&
-                    Institution_Rank_Mapping[
-                      post?.author.authorInstitutionRank
-                    ]}
-                </label>
-              </div>
-              <div className="wrapper">
-                <label className="date">{post?.postedDate}</label>
-                {/* <label className="date">09:07</label> */}
-                {!isRead && <label className="new">N</label>}
-                <label className="date">수정됨</label>
-                <label className="date">조회 101</label>
-              </div>
-            </div>
-          </div>
-          <Dots onClick={() => setIsDeleteSheetOpen(true)} />
-        </Writer>
-      </TitleWrapper>
-
-      {post?.fileUrls && post.fileUrls.length > 0 && (
-        <Files>
-          {post.fileUrls.map((fileUrl, index) => {
-            const fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
-            return (
-              <label
-                key={`file-${index}`}
-                onClick={() => handleFileDownload(fileUrl)}
-              >
-                {fileName}
-              </label>
-            );
-          })}
-        </Files>
-      )}
-
-      <Border style={{ marginBottom: '14px' }} />
-
-      <ContentWrapper>
-        <label>{post?.content}</label>
-        <MediaWrapper>
-          {post?.imageUrls &&
-            post?.imageUrls.map((imageUrl, index) => (
-              <img
-                key={`image-${index}`}
-                src={imageUrl}
-                alt={`게시글 이미지 ${index + 1}`}
+    <>
+      {isEditPageOpen ? (
+        <CommunityWritePage
+          boardType={boardType}
+          onClose={() => setIsEditPageOpen(false)}
+          initialData={post}
+        />
+      ) : (
+        <Container>
+          <NavBar
+            left={
+              <NavLeft
+                onClick={() => {
+                  navigate(-1);
+                  window.scrollTo(0, 0);
+                }}
               />
-            ))}
-          {post?.videoUrls &&
-            post?.videoUrls.map((videoUrl, index) => (
-              <video key={`video-${index}`} src={videoUrl} controls />
-            ))}
-        </MediaWrapper>
-      </ContentWrapper>
+            }
+            center={<NavCenter>{boardType}</NavCenter>}
+            color="white"
+          />
 
-      <Border />
+          <TitleWrapper>
+            <Title>
+              {post?.isImportant && <Tag>필독</Tag>}
+              <label>{post?.title}</label>
+            </Title>
 
-      {!post?.isMyPost && (
-        <IsRead>
-          <CheckButton active={isRead} onClick={() => setIsRead(true)}>
-            <Check />
-            게시물을 확인하셨나요?
-          </CheckButton>
-          <label>
-            {isRead
-              ? '* 게시물 확인이 완료되었습니다.'
-              : '* 게시물을 꼼꼼히 확인하셨다면 위 버튼을 눌러주세요.'}
-          </label>
-        </IsRead>
-      )}
-
-      <SectionBorder />
-
-      <ReplyWrapper>
-        <div className="replys">
-          <label
-            className="content"
-            style={{ display: 'block', padding: '14px 0px' }}
-          >
-            댓글 <span>{comments?.length}</span>
-          </label>
-          {comments?.map((comment) => (
-            // <React.Fragment key={comment.commentId}>
-            <React.Fragment key={comment.author.authorId}>
-              <div className="reply">
-                <img src={comment.author.institutionImageUrl} />
-                <div className="labels">
-                  <div className="writer-wrapper">
-                    <label className="writer">
-                      {comment.author.authorName}
-                    </label>
+            <Writer>
+              <div className="writer-info">
+                <img src={post?.author.institutionImageUrl} />
+                <div className="writer-wrapper">
+                  <div className="wrapper">
+                    <label className="writer">{post?.author.authorName}</label>
                     <label className="writer">·</label>
                     <label className="writer">
-                      {
+                      {post?.author &&
                         Institution_Rank_Mapping[
-                          comment.author.authorInstitutionRank
-                        ]
-                      }
+                          post?.author.authorInstitutionRank
+                        ]}
                     </label>
                   </div>
-                  <label className="content">{comment.content}</label>
-                  <label className="date">{comment.createdAt}</label>
+                  <div className="wrapper">
+                    <label className="date">{post?.postedDate}</label>
+                    {isRecentDate(post?.postedDate ?? '', 3) && (
+                      <label className="new">N</label>
+                    )}
+
+                    <label className="date">수정됨</label>
+                    <label className="date">조회 101</label>
+                  </div>
                 </div>
               </div>
-              <Border />
-            </React.Fragment>
-          ))}
-        </div>
+              {post?.isMyPost && <Dots onClick={openActionSheet} />}
+            </Writer>
+          </TitleWrapper>
 
-        <SectionBorder />
+          {post?.fileUrls && post.fileUrls.length > 0 && (
+            <Files>
+              {post.fileUrls.map((fileUrl, index) => {
+                const fileName = fileUrl.fileName;
+                return (
+                  <label
+                    key={`file-${index}`}
+                    onClick={() => handleFileDownload(fileUrl.mediaUrl)}
+                  >
+                    {fileName}
+                  </label>
+                );
+              })}
+            </Files>
+          )}
 
-        {boardType === '공단 공지' ? (
-          <IsMyPost>
-            <Link onClick={handleOriginalLinkClick} />
-            <Share onClick={() => setIsShareSheetOpen(true)} />
-          </IsMyPost>
-        ) : (
-          <Share
-            style={{ padding: '10px 0px' }}
-            onClick={() => setIsShareSheetOpen(true)}
-          />
-        )}
+          <Border style={{ marginBottom: '14px' }} />
 
-        <SectionBorder />
+          <ContentWrapper>
+            <label>{post?.content}</label>
+            <MediaWrapper>
+              {post?.imageUrls &&
+                post?.imageUrls.map((imageUrl, index) => (
+                  <img
+                    key={`image-${index}`}
+                    src={imageUrl.mediaUrl}
+                    alt={`게시글 이미지 ${index + 1}`}
+                  />
+                ))}
+              {post?.videoUrls &&
+                post?.videoUrls.map((videoUrl, index) => (
+                  <video
+                    key={`video-${index}`}
+                    src={videoUrl.mediaUrl}
+                    controls
+                  />
+                ))}
+            </MediaWrapper>
+          </ContentWrapper>
 
-        <div className="my-reply">
-          <Reply
-            placeholder="댓글을 입력하세요"
-            value={reply}
-            onChange={handleReplyChange}
-          />
-          <Send style={{ padding: '4px' }} onClick={handleReplySend} />
-        </div>
-      </ReplyWrapper>
+          <Border />
 
-      <BottomSheet
-        isOpen={isShareSheetOpen}
-        setIsOpen={setIsShareSheetOpen}
-        title="게시물 공유하기"
-        titleStar={false}
-      >
-        <Buttons>
-          <button className="kakao">
-            <Kakao />
-            카카오톡
-          </button>
-          <button className="copy">
-            <Copy onClick={handleCopy} />
-            링크 복사
-          </button>
-        </Buttons>
-      </BottomSheet>
+          {!post?.isMyPost && (
+            <IsRead>
+              <CheckButton
+                active={currentPostIsRead}
+                onClick={handleCheckReadBtnClick}
+              >
+                <Check />
+                게시물을 확인하셨나요?
+              </CheckButton>
+              <label>
+                {currentPostIsRead
+                  ? '* 게시물 확인이 완료되었습니다.'
+                  : '* 게시물을 꼼꼼히 확인하셨다면 위 버튼을 눌러주세요.'}
+              </label>
+            </IsRead>
+          )}
 
-      <BottomSheet
-        isOpen={isDeleteSheetOpen}
-        setIsOpen={setIsDeleteSheetOpen}
-        title="게시물을 수정 또는 삭제하시겠습니까?"
-        titleStar={false}
-      >
-        <CheckButton
-          active={writingTask === '수정하기'}
-          onClick={() => setWritingTask('수정하기')}
-        >
-          <Check />
-          수정하기
-        </CheckButton>
-        <CheckButton
-          active={writingTask === '삭제하기'}
-          onClick={() => setWritingTask('삭제하기')}
-        >
-          <Check />
-          삭제하기
-        </CheckButton>
-        <DeleteButtons>
-          <Button
-            width="100%"
-            height="52px"
-            variant="subBlue"
-            onClick={() => setIsDeleteSheetOpen(false)}
+          <SectionBorder />
+
+          <ReplyWrapper>
+            <div className="replys">
+              <label
+                className="content"
+                style={{ display: 'block', padding: '14px 0px' }}
+              >
+                댓글 <span>{comments?.length}</span>
+              </label>
+              {comments?.map((comment) => (
+                // <React.Fragment key={comment.commentId}>
+                <React.Fragment key={comment.author.authorId}>
+                  <div className="reply">
+                    <img src={comment.author.institutionImageUrl} />
+                    <div className="labels">
+                      <div className="writer-wrapper">
+                        <label className="writer">
+                          {comment.author.authorName}
+                        </label>
+                        <label className="writer">·</label>
+                        <label className="writer">
+                          {
+                            Institution_Rank_Mapping[
+                              comment.author.authorInstitutionRank
+                            ]
+                          }
+                        </label>
+                      </div>
+                      <label className="content">{comment.content}</label>
+                      <label className="date">{comment.createdAt}</label>
+                    </div>
+                  </div>
+                  <Border />
+                </React.Fragment>
+              ))}
+            </div>
+
+            <SectionBorder />
+
+            {boardType === '공단 공지' ? (
+              <IsMyPost>
+                <Link
+                  onClick={() => handleOriginalLinkClick(post?.originalUrl)}
+                />
+                <Share onClick={() => setIsShareSheetOpen(true)} />
+              </IsMyPost>
+            ) : (
+              <Share
+                style={{ padding: '10px 0px' }}
+                onClick={() => setIsShareSheetOpen(true)}
+              />
+            )}
+
+            <SectionBorder />
+
+            <div className="my-reply">
+              <Reply
+                placeholder="댓글을 입력하세요"
+                value={reply}
+                onChange={handleReplyChange}
+              />
+              <Send style={{ padding: '4px' }} onClick={handleReplySend} />
+            </div>
+          </ReplyWrapper>
+
+          <BottomSheet
+            isOpen={isShareSheetOpen}
+            setIsOpen={setIsShareSheetOpen}
+            title="게시물 공유하기"
+            titleStar={false}
           >
-            취소
-          </Button>
-          <Button
-            width="100%"
-            height="52px"
-            variant="mainBlue"
-            onClick={handleDeleteSheetConfirm}
-          >
-            확인
-          </Button>
-        </DeleteButtons>
-      </BottomSheet>
+            <Buttons>
+              <button className="kakao">
+                <Kakao onClick={() => handleKakaoShare(post)} />
+                카카오톡
+              </button>
+              <button className="copy">
+                <Copy onClick={handleCopy} />
+                링크 복사
+              </button>
+            </Buttons>
+          </BottomSheet>
 
-      <Modal
-        isOpen={isLinkModalOpen}
-        onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
-      >
-        <ModalLimit
-          title="링크가 복사되었어요."
-          detail={'게시글 링크가 복사되었어요.\n링크를 붙여넣기할 수 있어요.'}
-          onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
-          handleBtnClick={() => setIsLinkModalOpen(!isLinkModalOpen)}
-        />
-      </Modal>
-    </Container>
+          <BottomSheet
+            isOpen={isActionSheetOpen}
+            setIsOpen={setIsActionSheetOpen}
+            title="게시물을 수정 또는 삭제하시겠습니까?"
+            titleStar={false}
+          >
+            <CheckButton
+              active={selectedAction === '수정하기'}
+              onClick={() => setSelectedAction('수정하기')}
+            >
+              <Check />
+              수정하기
+            </CheckButton>
+            <CheckButton
+              active={selectedAction === '삭제하기'}
+              onClick={() => setSelectedAction('삭제하기')}
+            >
+              <Check />
+              삭제하기
+            </CheckButton>
+            <DeleteButtons>
+              <Button
+                width="100%"
+                height="52px"
+                variant="subBlue"
+                onClick={closeActionSheet}
+              >
+                취소
+              </Button>
+              <Button
+                width="100%"
+                height="52px"
+                variant="mainBlue"
+                onClick={handleActionSheetConfirm}
+              >
+                확인
+              </Button>
+            </DeleteButtons>
+          </BottomSheet>
+
+          <Modal
+            isOpen={isLinkModalOpen}
+            onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
+          >
+            <ModalLimit
+              title="링크가 복사되었어요."
+              detail={
+                '게시글 링크가 복사되었어요.\n링크를 붙여넣기할 수 있어요.'
+              }
+              onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
+              handleBtnClick={() => setIsLinkModalOpen(!isLinkModalOpen)}
+            />
+          </Modal>
+        </Container>
+      )}
+    </>
   );
 };
 
@@ -635,6 +675,7 @@ const SectionBorder = styled.div`
 `;
 
 const Buttons = styled.div`
+  margin-bottom: 20px;
   display: flex;
   gap: 30px;
 

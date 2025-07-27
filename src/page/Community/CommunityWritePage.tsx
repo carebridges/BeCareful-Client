@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useState } from 'react';
 import { ReactComponent as Close } from '@/assets/icons/Close.svg';
 import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
 import { ReactComponent as Post } from '@/assets/icons/community/Post.svg';
@@ -8,46 +7,44 @@ import { ReactComponent as Photo } from '@/assets/icons/community/Photo.svg';
 import { ReactComponent as File } from '@/assets/icons/community/File.svg';
 import { ReactComponent as LinkIcon } from '@/assets/icons/community/LinkIcon.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
-import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
+import { COMMUNITY_BOARDS_LIST } from '@/constants/communityBoard';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
 import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
 import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
-import { PostRequest } from '@/types/Community/post';
+import { PostDetailResponse, PostRequest } from '@/types/Community/post';
+import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
 
 interface WritingProp {
   boardType: string;
   onClose: () => void;
+  initialData?: PostDetailResponse;
 }
 
-const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
-  // 게시판 bottom sheet 열림 상태
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleSheet = () => {
-    if (!isOpen) {
-      setTempBoard(board);
-    }
-    setIsOpen(!isOpen);
-  };
-  // 메인으로 표시될 게시판 유형 상태
-  const [board, setBoard] = useState(
-    boardType === '전체' ? '게시판 선택' : boardType,
-  );
-  // 시트 내에서 임시로 선택된 게시판 유형 상태
-  const [tempBoard, setTempBoard] = useState(board);
-  const handleSheetConfirm = () => {
-    setBoard(tempBoard);
-    setIsOpen(false);
-  };
+const CommunityWritePage = ({
+  boardType,
+  onClose,
+  initialData,
+}: WritingProp) => {
+  // 게시판 관련
+  const {
+    isBoardSheetOpen,
+    board,
+    tempBoard,
+    setIsBoardSheetOpen,
+    setTempBoard,
+    toggleBoardSheet,
+    handleBoardSheetConfirm,
+  } = useBoardSelection(boardType);
 
-  // 모달 관련
+  // 모달 및 BottomSheet 관련
   // 모달 상태 및 로직
   const {
     modalContent,
@@ -55,12 +52,12 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
     isSaveModalOpen,
     isCloseModalOpen,
     isPostModalOpen,
-    isLinkModalOpen,
     setIsSaveModalOpen,
     setIsCloseModalOpen,
     setIsPostModalOpen,
-    setIsLinkModalOpen,
     handleCloseLimitModal,
+    isUrlSheetOpen,
+    setIsUrlSheetOpen,
   } = useModals();
 
   // 게시글 내용
@@ -68,6 +65,7 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
     isImportant,
     title,
     content,
+    contentRef,
     originalUrl,
     setIsImportant,
     setTitle,
@@ -76,8 +74,8 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
     handleToggleChange,
     handleTitleChange,
     handleContentChange,
-    handleLinkChange,
-  } = usePostings();
+    handleUrlChange,
+  } = usePostings(initialData);
 
   // 미디어 파일 업로드
   const {
@@ -93,7 +91,7 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
     handleFileClick,
     handleMediaChange,
     handleFileChange,
-  } = useMedia();
+  } = useMedia(initialData);
 
   // 임시 저장
   const { handleSaveDraft } = useSave({
@@ -117,8 +115,16 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
   const isActive =
     title.length > 0 && content.length > 0 && board !== '게시판 선택';
 
-  // 게시글 전송(post)
-  const { handleSubmit } = usePostingSubmit(board, onClose);
+  // 수정 모드인지 판단 - initialData 있고 id가 있으면 수정 모드
+  const isEditMode = !!initialData?.postId;
+
+  // 게시글 전송(post), 수정(put)
+  const { handleSubmit } = usePostingSubmit(
+    board,
+    onClose,
+    isEditMode,
+    isEditMode ? initialData.postId : undefined,
+  );
   const handlePostBtnClick = async () => {
     const postData: PostRequest = {
       title,
@@ -159,50 +165,41 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
               disabled={!isActive}
             >
               <Post className="post-svg" />
-              등록
+              {isEditMode ? '수정' : '등록'}
             </button>
           </NavRight>
         }
         color=""
       />
 
-      <BoardSelect onClick={toggleSheet}>
+      <BoardSelect onClick={toggleBoardSheet}>
         <label>{board}</label>
         <ChevronDown />
       </BoardSelect>
       <BottomSheet
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        isOpen={isBoardSheetOpen}
+        setIsOpen={setIsBoardSheetOpen}
         title="게시판 유형을 선택해주세요."
         titleStar={true}
       >
-        <SheetButton
-          active={tempBoard === '협회 공지'}
-          onClick={() => setTempBoard('협회 공지')}
-        >
-          <Check />
-          협회 공지
-        </SheetButton>
-        <SheetButton
-          active={tempBoard === '공단 공지'}
-          onClick={() => setTempBoard('공단 공지')}
-        >
-          <Check />
-          공단 공지
-        </SheetButton>
-        <SheetButton
-          active={tempBoard === '정보 공유'}
-          onClick={() => setTempBoard('정보 공유')}
-        >
-          <Check />
-          정보 공유
-        </SheetButton>
+        {COMMUNITY_BOARDS_LIST.map((board) => (
+          <SheetButton
+            key={board}
+            active={tempBoard === board}
+            onClick={() => {
+              setTempBoard(board);
+            }}
+          >
+            <Check />
+            {board}
+          </SheetButton>
+        ))}
         <Buttons>
           <Button
             width="100%"
             height="52px"
             variant="subBlue"
-            onClick={() => setIsOpen(false)}
+            onClick={() => setIsBoardSheetOpen(false)}
           >
             취소
           </Button>
@@ -210,7 +207,7 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
             width="100%"
             height="52px"
             variant="mainBlue"
-            onClick={handleSheetConfirm}
+            onClick={handleBoardSheetConfirm}
           >
             확인
           </Button>
@@ -231,6 +228,7 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
       />
 
       <Content
+        ref={contentRef}
         placeholder="내용을 입력해주세요"
         value={content}
         onChange={handleContentChange}
@@ -257,7 +255,7 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
             multiple // 여러 파일 선택 가능하도록 설정
             accept=".pdf, .doc, .docx, .hwp" // 특정 파일 형식만 허용
           />
-          <LinkIcon onClick={() => setIsLinkModalOpen(!isLinkModalOpen)} />
+          <LinkIcon onClick={() => setIsUrlSheetOpen(!isUrlSheetOpen)} />
         </div>
       </Bottom>
 
@@ -305,57 +303,54 @@ const CommunityWritePage = ({ boardType, onClose }: WritingProp) => {
         onClose={() => setIsPostModalOpen(!isPostModalOpen)}
       >
         <ModalButtons
-          title="작성한 내용을 등록하시겠습니까?"
+          title={
+            isEditMode
+              ? '수정한 내용을 등록하시겠습니까?'
+              : '작성한 내용을 등록하시겠습니까?'
+          }
           detail={
-            '게시물이 등록되면 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.'
+            isEditMode
+              ? ''
+              : '게시물이 등록되면 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.'
           }
           onClose={() => setIsPostModalOpen(!isPostModalOpen)}
           left="취소"
-          right="등록하기"
+          right={isEditMode ? '수정하기' : '등록하기'}
           handleLeftBtnClick={() => setIsPostModalOpen(!isPostModalOpen)}
           handleRightBtnClick={handlePostBtnClick}
         />
       </Modal>
 
-      <Modal
-        isOpen={isLinkModalOpen}
-        onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
+      <BottomSheet
+        isOpen={isUrlSheetOpen}
+        setIsOpen={() => setIsUrlSheetOpen(!isUrlSheetOpen)}
+        title="URL을 입력해 주세요."
+        titleStar={true}
       >
-        <ModalWrapper>
-          <ModalXImg onClick={() => setIsLinkModalOpen(!isLinkModalOpen)} />
-          <ModalLabelWrapper>
-            <label className="title">URL을 등록해주세요</label>
-            <URLInput
-              value={originalUrl}
-              placeholder="URL"
-              onChange={handleLinkChange}
-            />
-          </ModalLabelWrapper>
-          <ModalButtonWrapper>
-            <Button
-              width="100%"
-              height="52px"
-              variant="subBlue"
-              onClick={() => {
-                setOriginalUrl('');
-                setIsLinkModalOpen(!isLinkModalOpen);
-              }}
-            >
-              취소
-            </Button>
-            <Button
-              width="100%"
-              height="52px"
-              variant="mainBlue"
-              onClick={() => {
-                setIsLinkModalOpen(!isLinkModalOpen);
-              }}
-            >
-              확인
-            </Button>
-          </ModalButtonWrapper>
-        </ModalWrapper>
-      </Modal>
+        <URLInput
+          value={originalUrl}
+          placeholder="첨부할 링크 주소를 입력해 주세요."
+          onChange={handleUrlChange}
+        />
+        <Buttons>
+          <Button
+            width="100%"
+            height="52px"
+            variant="subBlue"
+            onClick={() => setIsUrlSheetOpen(!isUrlSheetOpen)}
+          >
+            취소
+          </Button>
+          <Button
+            width="100%"
+            height="52px"
+            variant="mainBlue"
+            onClick={() => setIsUrlSheetOpen(!isUrlSheetOpen)}
+          >
+            확인
+          </Button>
+        </Buttons>
+      </BottomSheet>
     </Container>
   );
 };
@@ -529,6 +524,7 @@ const Title = styled.input`
 const Content = styled.textarea`
   padding: 14px 0px;
   width: 100%;
+  min-height: 200px;
   resize: none;
   outline: none;
   border: none;
@@ -552,6 +548,7 @@ const Bottom = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  background: ${({ theme }) => theme.colors.white};
 
   position: fixed;
   bottom: 0;
@@ -570,40 +567,8 @@ const Bottom = styled.div`
   }
 `;
 
-const ModalWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 24px;
-  background: ${({ theme }) => theme.colors.white};
-  width: 272px;
-  border-radius: 12px;
-  padding: 56px 20px 20px 20px;
-`;
-
-const ModalXImg = styled(ModalClose)`
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  cursor: pointer;
-`;
-
-const ModalLabelWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  .title {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.title3};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-    text-align: center;
-  }
-`;
-
 const URLInput = styled.input`
+  margin-bottom: 64px;
   height: 20px;
   padding: 16px;
   border-radius: 12px;
@@ -624,10 +589,4 @@ const URLInput = styled.input`
     outline: none;
     caret-color: ${({ theme }) => theme.colors.mainBlue};
   }
-`;
-
-const ModalButtonWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  gap: 8px;
 `;

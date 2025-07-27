@@ -7,9 +7,9 @@ export const OnboardingPage = () => {
     <>
       <IntroduceContainer>
         <TopText>
-          세상 모든 센터장을 위한
+          요양보호사 <strong>구인구직</strong>과
           <br />
-          <strong>필수 커뮤니티</strong>
+          <strong>정보 공유</strong>를 한번에
         </TopText>
         <LogoBlue />
         <BottomText>

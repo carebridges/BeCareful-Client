@@ -16,7 +16,6 @@ import { useRecentSearches } from '@/hooks/Community/SearchPage/useRecentSearche
 import { PageableRequest } from '@/types/Community/common';
 import { useBoardPostings } from '@/hooks/Community/api/useBoardPostings';
 import { useBoardPostList } from '@/hooks/Community/api/useBoardPostList';
-// import { SEARCH_DATA } from '@/data/SearchData';
 
 const CommunitySearchPage = () => {
   const navigate = useNavigate();
@@ -59,24 +58,6 @@ const CommunitySearchPage = () => {
       return boardData || [];
     }
   }, [selectedBoard, allBoardData, boardData]);
-
-  /*
-  const selectedBoardData = useMemo(() => {
-    if (selectedBoard === '전체') {
-      return SEARCH_DATA;
-    } else if (selectedBoard === '공단 공지') {
-      return SEARCH_DATA.filter(
-        (item) => item.author.authorName === '공단대표',
-      );
-    } else if (selectedBoard === '협회 공지') {
-      return SEARCH_DATA.filter(
-        (item) => item.author.authorName === '협회관리자',
-      );
-    } else {
-      return SEARCH_DATA.filter((item) => item.author.authorName === '정보통');
-    }
-  }, [selectedBoard]);
-*/
 
   // 검색 실행
   const handleSearch = useCallback(

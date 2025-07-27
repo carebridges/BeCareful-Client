@@ -9,9 +9,10 @@ import {
 } from '@/utils/fileValidation';
 import { usePostMediaMutation } from '@/hooks/Community/api/usePostMediaMutation';
 import { useModals } from './useModals';
+import { PostDetailResponse } from '@/types/Community/post';
 
 /* CommunityWritePage */
-export const useMedia = () => {
+export const useMedia = (initialData?: PostDetailResponse) => {
   const { handleOpenLimitModal } = useModals();
 
   // 미디어 등록 api mutation
@@ -20,9 +21,15 @@ export const useMedia = () => {
   const photoRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const [photos, setPhotos] = useState<MediaItem[]>([]);
-  const [videos, setVideos] = useState<MediaItem[]>([]);
-  const [attachedFiles, setAttachedFiles] = useState<MediaItem[]>([]);
+  const [photos, setPhotos] = useState<MediaItem[]>(
+    initialData?.imageUrls || [],
+  );
+  const [videos, setVideos] = useState<MediaItem[]>(
+    initialData?.videoUrls || [],
+  );
+  const [attachedFiles, setAttachedFiles] = useState<MediaItem[]>(
+    initialData?.fileUrls || [],
+  );
 
   const handlePhotoClick = () => {
     photoRef.current?.click();

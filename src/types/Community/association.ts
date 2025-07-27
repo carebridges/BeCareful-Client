@@ -9,11 +9,10 @@ export interface Member {
   institutionImageUrl: string;
 }
 
-// 탭
+// 협회 회원 수, 가입 신청서 개수 반환
 export interface MembersOverviewResponse {
   memberCount: number;
   pendingApplicationCount: number;
-  members: Member[];
 }
 
 // 협회 회원 목록 조회

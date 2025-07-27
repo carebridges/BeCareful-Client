@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import { PostReadStatusProvider } from '@/contexts/PostReadStatusContext';
 import CommunitySplashPage from '@/page/CommunitySplashPage';
 import { CommunityCreatePage } from '@/page/Community/CommunityCreatePage';
 import { CommunitySignUpPage } from '@/page/SignUp/CommunitySignUpPage';
@@ -15,36 +16,44 @@ import { CommunityRouteGuard } from '@/page/Community/CommunityRouteGuard';
 
 const CommunityRoute = () => {
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-    >
-      <main>
-        <Routes>
-          <Route path="/splash" element={<CommunitySplashPage />} />
-          <Route path="/create" element={<CommunityCreatePage />} />
-          {/*서버 수정되면 삭제 예정*/}
-          <Route path="/signup" element={<CommunitySignUpPage />} />
-          <Route path="/members/new" element={<CommunityJoinPage />} />
-          <Route path="/:id/preview" element={<CommunityPage previewMode />} />
-          <Route
-            path="/join/:id/role"
-            element={<CommunityJoinSelectRolePage />}
-          />
-          <Route index element={<CommunityRouteGuard />} />
-          <Route path="/:postId" element={<CommunityPostPage />} />
-          <Route path="/search" element={<CommunitySearchPage />} />
-          <Route path="/:associationId">
-            <Route path="info" element={<CommunityAssociationInfoPage />} />
-            <Route path="edit" element={<CommunityAssociationEditPage />} />
-            <Route path="members" element={<CommunityMembersPage />} />
+    <PostReadStatusProvider>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+      >
+        <main>
+          <Routes>
+            <Route path="/splash" element={<CommunitySplashPage />} />
+
+            <Route path="/create" element={<CommunityCreatePage />} />
+            {/*서버 수정되면 삭제 예정*/}
+            <Route path="/signup" element={<CommunitySignUpPage />} />
+            <Route path="/members/new" element={<CommunityJoinPage />} />
             <Route
-              path="members/:memberId"
-              element={<CommnunityMemberDetailPage />}
+              path="/:id/preview"
+              element={<CommunityPage previewMode />}
             />
-          </Route>
-        </Routes>
-      </main>
-    </div>
+            <Route
+              path="/join/:id/role"
+              element={<CommunityJoinSelectRolePage />}
+            />
+
+            <Route index element={<CommunityRouteGuard />} />
+            <Route path="/:postId" element={<CommunityPostPage />} />
+            <Route path="/search" element={<CommunitySearchPage />} />
+
+            <Route path="/:associationId">
+              <Route path="info" element={<CommunityAssociationInfoPage />} />
+              <Route path="edit" element={<CommunityAssociationEditPage />} />
+              <Route path="members" element={<CommunityMembersPage />} />
+              <Route
+                path="members/:memberId"
+                element={<CommnunityMemberDetailPage />}
+              />
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    </PostReadStatusProvider>
   );
 };
 

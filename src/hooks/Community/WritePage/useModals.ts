@@ -31,6 +31,9 @@ export const useModals = () => {
   // 링크 첨부 모달
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
 
+  // 링크 첨부 bottom sheet
+  const [isUrlSheetOpen, setIsUrlSheetOpen] = useState(false);
+
   return {
     modalContent,
     isLimitModalOpen,
@@ -44,5 +47,7 @@ export const useModals = () => {
     setIsLinkModalOpen,
     handleOpenLimitModal,
     handleCloseLimitModal,
+    isUrlSheetOpen,
+    setIsUrlSheetOpen,
   };
 };

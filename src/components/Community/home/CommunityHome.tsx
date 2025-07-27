@@ -95,7 +95,6 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
                   thumbnailUrl={post.thumbnailUrl}
                   createdAt={post.createdAt}
                   author={post.author}
-                  // isReaded={false}
                   boardType="필독"
                 />
               </NoticeList>

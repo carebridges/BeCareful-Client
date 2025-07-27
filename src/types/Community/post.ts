@@ -10,9 +10,9 @@ export interface PostDetailResponse {
   isEdited: boolean;
   postedDate: string;
   author: AuthorInfo;
-  imageUrls: string[];
-  videoUrls: string[];
-  fileUrls: string[];
+  imageUrls: MediaItem[];
+  videoUrls: MediaItem[];
+  fileUrls: MediaItem[];
   isMyPost: boolean;
   originalUrl: string;
 }
