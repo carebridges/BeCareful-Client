@@ -1,72 +1,82 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-
-import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
-import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
-import { AgreementValues } from '@/types/Socialworker/common';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
+import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
+import { AgreementValues } from '@/types/Socialworker/common';
+import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
+import { Button } from '@/components/common/Button/Button';
+import { useGetSocialWorkerMy, usePutSocialworkerMy } from '@/api/socialworker';
+import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
+import { API_Institution_Rank_Mapping } from '@/constants/institutionRank';
 
-interface SocialworkerEditProfilePageProps {
-  name: string;
-  nickname: string;
-  birth: string;
-  genderCode: number;
-  phoneNumber: string;
-  institution: string;
-  rank: string;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
-}
-
-const SocialworkerEditProfilePage = ({
-  name: initialName,
-  nickname: initialNickname,
-  birth: initialBirth,
-  genderCode: initialGenderCode,
-  phoneNumber: initialPhoneNumber,
-  institution: initialInstitution,
-  rank: initialRank,
-  isAgreedToTerms: initialIsAgreedToTerms,
-  isAgreedToCollectPersonalInfo: initialIsAgreedToCollectPersonalInfo,
-  isAgreedToReceiveMarketingInfo: initialIsAgreedToReceiveMarketingInfo,
-}: SocialworkerEditProfilePageProps) => {
+const SocialworkerEditProfilePage = () => {
   const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate(-1);
+    window.scrollTo(0, 0);
+  };
 
-  const [name, setName] = useState(initialName);
-  const [nickname, setNickname] = useState(initialNickname);
-  const [birth, setBirth] = useState(initialBirth);
-  const [genderCode, setGenderCode] = useState(initialGenderCode);
-  const [phoneNumber, setPhoneNumber] = useState(initialPhoneNumber);
-  const [institution, setInstitution] = useState(initialInstitution);
-  const [rank, setRank] = useState(initialRank);
-
+  const [name, setName] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [birth, setBirth] = useState('');
+  const [genderCode, setGenderCode] = useState(0);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [rank, setRank] = useState('');
   const [agreementStates, setAgreementStates] = useState({
-    isAgreedToTerms: initialIsAgreedToTerms,
-    isAgreedToCollectPersonalInfo: initialIsAgreedToCollectPersonalInfo,
-    isAgreedToReceiveMarketingInfo: initialIsAgreedToReceiveMarketingInfo,
+    isAgreedToTerms: true,
+    isAgreedToCollectPersonalInfo: true,
+    isAgreedToReceiveMarketingInfo: false,
   });
+  const [isChanged, setIsChanged] = useState(false);
+  const [nicknameChanged, setNicknameChanged] = useState(false);
+
+  const { data } = useGetSocialWorkerMy();
+
+  useEffect(() => {
+    if (data) {
+      setName(data.socialWorkerInfo.name);
+      setNickname(data.socialWorkerInfo.nickName);
+      // TODO: 생일
+      setBirth('2000-01-01');
+      setGenderCode(data.socialWorkerInfo.gender === 'FEMALE' ? 2 : 1);
+      setPhoneNumber(data.socialWorkerInfo.phoneNumber);
+      setInstitution(data.institutionInfo.institutionName);
+      setRank(data.socialWorkerInfo.institutionRank);
+      // TODO: 동의 상태
+      setAgreementStates((prev) => ({
+        ...prev,
+      }));
+    }
+  }, [data]);
 
   const handleChange = (fieldName: string, value: string) => {
     switch (fieldName) {
       case 'name':
         setName(value);
+        setIsChanged(true);
         break;
       case 'nickname':
         setNickname(value);
+        setNicknameChanged(true);
+        // TODO: 중복 확인 됐을때만 변경
+        setIsChanged(true);
         break;
       case 'phoneNumber':
         setPhoneNumber(value);
+        setIsChanged(true);
         break;
       case 'institution':
         setInstitution(value);
+        setIsChanged(true);
         break;
       case 'rank':
         setRank(value);
+        setIsChanged(true);
         break;
       default:
         break;
@@ -95,17 +105,36 @@ const SocialworkerEditProfilePage = ({
     [],
   );
 
+  const { mutate: updateSocialMy } = usePutSocialworkerMy();
+
+  const handleEditBtnClick = async () => {
+    const myData: SocialworkerMyRequest = {
+      realName: name,
+      nickName: nickname,
+      birthYymmdd: birth,
+      genderCode: genderCode,
+      phoneNumber: phoneNumber,
+      // TODO:협회검색해서 id 받아오기
+      nursingInstitutionId: 0,
+      institutionRank: API_Institution_Rank_Mapping[rank],
+      isAgreedToTerms: agreementStates.isAgreedToTerms,
+      isAgreedToCollectPersonalInfo:
+        agreementStates.isAgreedToCollectPersonalInfo,
+      isAgreedToReceiveMarketingInfo:
+        agreementStates.isAgreedToReceiveMarketingInfo,
+    };
+    console.log(myData);
+    updateSocialMy(myData, {
+      onSuccess: () => {
+        handleGoBack();
+      },
+    });
+  };
+
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>프로필 수정하기</NavCenter>}
         color="white"
       />
@@ -133,7 +162,13 @@ const SocialworkerEditProfilePage = ({
               value={nickname}
               onChange={(e) => handleChange('nickname', e.target.value)}
             />
-            <Button style={{ width: '20%' }} onClick={handleCheckDuplicate}>
+            <Button
+              height="52px"
+              variant={nicknameChanged ? 'mainBlue' : 'disabled'}
+              disabled={!nicknameChanged}
+              style={{ width: '20%' }}
+              onClick={handleCheckDuplicate}
+            >
               중복확인
             </Button>
           </NicknameInput>
@@ -211,7 +246,14 @@ const SocialworkerEditProfilePage = ({
       />
 
       <Bottom>
-        <Button>프로필 수정하기</Button>
+        <Button
+          height="56px"
+          variant={isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!isChanged}
+          onClick={handleEditBtnClick}
+        >
+          프로필 수정하기
+        </Button>
       </Bottom>
     </Container>
   );
@@ -294,16 +336,6 @@ const NicknameInput = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 56px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.mainBlue};
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
 const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`

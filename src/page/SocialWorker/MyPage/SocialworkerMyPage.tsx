@@ -1,14 +1,21 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { NavBar } from '@/components/common/NavBar/NavBar';
+import { useRecoilValue } from 'recoil';
+import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as LogoutIcon } from '@/assets/icons/caregiver/my/Logout.svg';
+import { Button } from '@/components/common/Button/Button';
+import { NavBar } from '@/components/common/NavBar/NavBar';
 import ProfileCard from '@/components/shared/ProfileCard';
 import BelongCard from '@/components/SocialWorker/MyPage/BelongCard';
 import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
+import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { Association_Rank_Mapping } from '@/constants/associationRank';
+import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const SocialworkerMyPage = () => {
   const navigate = useNavigate();
@@ -17,7 +24,10 @@ const SocialworkerMyPage = () => {
     scrollTo(0, 0);
   };
 
-  const isDirector = true;
+  const userInfo = useRecoilValue(currentUserInfo);
+  const isDirector = userInfo.institutionRank === 'CENTER_DIRECTOR';
+
+  const { data } = useGetSocialWorkerMy();
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -54,22 +64,40 @@ const SocialworkerMyPage = () => {
 
       <ProfileWrapper>
         <ProfileCard
-          profileImgURL=""
-          name="김사회"
-          nickname="dolbomi2"
-          point={1500}
-          phoneNumber="010-2547-2534"
-          age={52}
-          gender="여자"
+          profileImgURL={data?.institutionInfo.institutionImageUrl ?? ''}
+          name={data?.socialWorkerInfo.name ?? ''}
+          nickname={data?.socialWorkerInfo.nickName ?? ''}
+          // point={1500}
+          phoneNumber={data?.socialWorkerInfo.phoneNumber ?? ''}
+          age={data?.socialWorkerInfo.age ?? 0}
+          gender={Gender_Mapping[data?.socialWorkerInfo.gender ?? 'FEMALE']}
         />
 
-        <BelongCard title="은파요양원" rank="센터장" />
+        <BelongCard
+          title={data?.institutionInfo.institutionName ?? ''}
+          rank={
+            Institution_Rank_Mapping[
+              data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
+            ]
+          }
+        />
 
         {isDirector && (
-          <BelongCard title="전주완주장기요양기관협회" rank="회원" />
+          <BelongCard
+            title={data?.associationName ?? ''}
+            rank={
+              Association_Rank_Mapping[
+                data?.socialWorkerInfo.associationRank ?? 'MEMBER'
+              ]
+            }
+          />
         )}
 
-        <Button onClick={() => handleNavigate('my/profile')}>
+        <Button
+          height="52px"
+          variant="subBlue"
+          onClick={() => handleNavigate('my/profile')}
+        >
           프로필 수정하기
         </Button>
       </ProfileWrapper>
@@ -79,13 +107,17 @@ const SocialworkerMyPage = () => {
       <SectionWrapper>
         <label className="section-title">기관 정보</label>
         <InstitutionCard
-          date="2025.02.14"
-          institution="은파요양원"
-          year={2007}
-          types="방문 요양, 방문 간호"
-          phoneNumber="02-1234-5678"
+          date={data?.institutionInfo.institutionLastUpdate ?? ''}
+          institution={data?.institutionInfo.institutionName ?? ''}
+          year={data?.institutionInfo.institutionOpenYear ?? 0}
+          types={data?.institutionInfo.facilityTypes ?? []}
+          phoneNumber={data?.institutionInfo.institutionPhoneNumber ?? ''}
         />
-        <Button onClick={() => handleNavigate('my/institution')}>
+        <Button
+          height="52px"
+          variant="subBlue"
+          onClick={() => handleNavigate('my/institution')}
+        >
           기관 정보 수정하기
         </Button>
       </SectionWrapper>
@@ -101,7 +133,11 @@ const SocialworkerMyPage = () => {
               type="회원"
               rank="센터장"
             />
-            <Button onClick={() => handleNavigate('my/association')}>
+            <Button
+              height="52px"
+              variant="subBlue"
+              onClick={() => handleNavigate('my/association')}
+            >
               협회 정보 변경하기
             </Button>
           </SectionWrapper>
@@ -211,16 +247,6 @@ const Logout = styled.div<{ isRed: boolean }>`
     isRed ? theme.colors.mainOrange : theme.colors.gray500};
   font-size: ${({ theme }) => theme.typography.fontSize.body3};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 52px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.subBlue};
-  color: ${({ theme }) => theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
 const Border = styled.div`

@@ -13,13 +13,12 @@ import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ProfileCard from '@/components/shared/ProfileCard';
-import { caretypeFormat } from '@/utils/caregiver';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import {
   API_Association_Rank_Mapping,
   Association_Rank_Mapping,
 } from '@/constants/associationRank';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { MemberRankRequest } from '@/types/Community/association';
 import {
   useMemberExpel,
@@ -112,7 +111,7 @@ const CommunityMemberDetailPage = () => {
           date={data?.institutionLastUpdate}
           institution={data?.institutionName}
           year={data.institutionOpenYear}
-          types={caretypeFormat(data?.facilityTypes, 2)}
+          types={data.facilityTypes}
           phoneNumber={data?.institutionPhoneNumber}
         />
       </SectionWrapper>

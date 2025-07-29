@@ -1,5 +1,4 @@
 import { API_Association_Rank_Mapping } from '@/constants/associationRank';
-import { API_Institution_Rank_Mapping } from '@/constants/institutionRank';
 import SocialworkerEditAssociationPage from '@/page/SocialWorker/MyPage/SocialworkerEditAssociationPage';
 import SocialworkerEditInstitutionPage from '@/page/SocialWorker/MyPage/SocialworkerEditInstitutionPage';
 import SocialworkerEditProfilePage from '@/page/SocialWorker/MyPage/SocialworkerEditProfilePage';
@@ -11,23 +10,7 @@ const SocialworkerMyRoute = () => {
     <div>
       <Routes>
         <Route index element={<SocialworkerMyPage />} />
-        <Route
-          path="profile"
-          element={
-            <SocialworkerEditProfilePage
-              name="김사회"
-              nickname="dolbomi2"
-              birth="720101"
-              genderCode={2}
-              phoneNumber="010-2547-2534"
-              institution="은파요양원"
-              rank={API_Institution_Rank_Mapping['센터장']}
-              isAgreedToTerms={true}
-              isAgreedToCollectPersonalInfo={true}
-              isAgreedToReceiveMarketingInfo={false}
-            />
-          }
-        />
+        <Route path="profile" element={<SocialworkerEditProfilePage />} />
         <Route
           path="institution"
           element={
