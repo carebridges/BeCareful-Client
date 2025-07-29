@@ -1,12 +1,11 @@
 import styled from 'styled-components';
-import { Recruitment } from '@/types/Caregiver/common';
-import {
-  CareTypeFormat,
-  DayFormat,
-  SalaryTypeMapping,
-} from '@/constants/caregiver';
-import { useNavigate } from 'react-router-dom';
 import { colors } from '@/style/theme/color';
+import { useNavigate } from 'react-router-dom';
+import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { Button } from '@/components/common/Button/Button';
+import { Salary_Type_Mapping } from '@/constants/caregiverMapping';
+import { Recruitment } from '@/types/Caregiver/common';
+import { caretypeFormat, dayFormat } from '@/utils/caregiver';
 
 type ColorKey = keyof typeof colors;
 interface CaregiverWorkCardProps {
@@ -31,6 +30,24 @@ const CaregiverWorkCard = ({
     );
     window.scrollTo(0, 0);
   };
+
+  const applyInfo = [
+    {
+      title: '케어항목',
+      detail: caretypeFormat(
+        recruitment.recruitmentInfo.careTypes.map((itme) => itme.careType),
+        2,
+      ),
+    },
+    {
+      title: '근무요일',
+      detail: dayFormat(recruitment.recruitmentInfo.workDays),
+    },
+    {
+      title: '근무시간',
+      detail: `${recruitment.recruitmentInfo.workStartTime} ~ ${recruitment.recruitmentInfo.workEndTime}`,
+    },
+  ];
 
   return (
     <CardContainer>
@@ -62,30 +79,11 @@ const CaregiverWorkCard = ({
         </Tags>
       )}
 
-      <Info>
-        <div className="apply">
-          <label className="title">케어항목</label>
-          <label className="title">근무요일</label>
-          <label className="title">근무시간</label>
-        </div>
-
-        <div className="apply">
-          <label className="detail">
-            {CareTypeFormat(recruitment.recruitmentInfo.careTypes, 2)}
-          </label>
-          <label className="detail">
-            {DayFormat(recruitment.recruitmentInfo.workDays)}
-          </label>
-          <label className="detail">
-            {recruitment.recruitmentInfo.workStartTime} ~{' '}
-            {recruitment.recruitmentInfo.workEndTime}
-          </label>
-        </div>
-      </Info>
+      <InfoDisplay items={applyInfo} gapColumn="4px" gapRow="12px" />
 
       <Salary>
         <label className="type">
-          {SalaryTypeMapping[recruitment.recruitmentInfo.workSalaryType]}
+          {Salary_Type_Mapping[recruitment.recruitmentInfo.workSalaryUnitType]}
         </label>
         <label className="amount">
           {recruitment.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR')}
@@ -93,7 +91,9 @@ const CaregiverWorkCard = ({
         </label>
       </Salary>
 
-      <Button onClick={handleDetailBtnClick}>자세히 보기</Button>
+      <Button height="52px" variant="subBlue" onClick={handleDetailBtnClick}>
+        자세히 보기
+      </Button>
     </CardContainer>
   );
 };
@@ -171,25 +171,6 @@ const Tags = styled.div`
   }
 `;
 
-const Info = styled.div`
-  gap: 12px;
-
-  .apply {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .title {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  }
-
-  .detail {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  }
-`;
-
 const Salary = styled.div`
   align-items: center;
 
@@ -208,14 +189,4 @@ const Salary = styled.div`
   span {
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
   }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 52px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.subBlue};
-  color: ${({ theme }) => theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;

@@ -5,9 +5,7 @@ import { ReactComponent as Chat } from '@/assets/icons/ChatNewBlack.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
-import { useQuery } from '@tanstack/react-query';
-import { MatchingMyRecruitmentResponse } from '@/types/Caregiver/apply';
-import { getApplicationList } from '@/api/caregiver';
+import { useApplicationListQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverApplyPage = () => {
   const navigate = useNavigate();
@@ -20,10 +18,7 @@ const CaregiverApplyPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const { data, error } = useQuery<MatchingMyRecruitmentResponse, Error>({
-    queryKey: ['caregiveApplicationList', activeTab],
-    queryFn: () => getApplicationList(activeTab),
-  });
+  const { data, error } = useApplicationListQuery(activeTab);
   if (error) {
     console.log('getApplicationList 에러: ', error);
   }
@@ -31,7 +26,7 @@ const CaregiverApplyPage = () => {
   return (
     <Container>
       <NavBar
-        left={<NavLeft>지원하기</NavLeft>}
+        left={<NavLeft>지원현황</NavLeft>}
         right={
           <NavRight
             onClick={() => {
@@ -67,20 +62,20 @@ const CaregiverApplyPage = () => {
             key={application.recruitmentInfo.recruitmentInfo.recruitmentId}
             recruitment={application.recruitmentInfo}
             stateColor={
-              application.matchingStatus === '검토중'
+              application.matchingApplicationStatus === '검토중'
                 ? 'mainBlue'
-                : application.matchingStatus === '합격'
+                : application.matchingApplicationStatus === '합격'
                   ? 'mainGreen'
                   : 'gray500'
             }
             bgColor={
-              application.matchingStatus === '검토중'
+              application.matchingApplicationStatus === '검토중'
                 ? 'subBlue'
-                : application.matchingStatus === '합격'
+                : application.matchingApplicationStatus === '합격'
                   ? 'subGreen'
                   : 'gray50'
             }
-            stateLabel={application.matchingStatus}
+            stateLabel={application.matchingApplicationStatus}
             navigatePath="apply"
           />
         ))}

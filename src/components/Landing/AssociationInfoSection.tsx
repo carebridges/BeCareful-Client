@@ -237,6 +237,7 @@ const Association = styled.div`
   .imgs {
     box-sizing: border-box;
     width: 100%;
+    object-fit: cover;
 
     display: flex;
     gap: 20px;
@@ -282,6 +283,7 @@ const Feature = styled.div`
   img {
     width: 50px;
     height: 50px;
+    object-fit: cover;
   }
 `;
 

@@ -1,8 +1,8 @@
+import { axiosInstance } from '@/api/axiosInstance';
 import {
   MatchingMyRecruitmentDetailResponse,
   MatchingMyRecruitmentResponse,
 } from '@/types/Caregiver/apply';
-import { axiosInstance } from './axiosInstance';
 import {
   CaregiverCompletedMatchingResponse,
   CaregiverHomeResponse,
@@ -11,6 +11,7 @@ import {
 import {
   CareerRequest,
   CareerResponse,
+  CaregiverMyRequest,
   CaregiverMyResponse,
 } from '@/types/Caregiver/mypage';
 import {
@@ -58,6 +59,12 @@ export const getCaregiverMyPageInfo =
     const response = await axiosInstance.get('/caregiver/my');
     return response.data;
   };
+
+// 요양보호사 마이페이지 수정
+export const putCaregiverMy = async (myData: CaregiverMyRequest) => {
+  const response = await axiosInstance.put('/caregiver/my', myData);
+  return response;
+};
 
 // 경력서 조회
 export const getCareer = async (): Promise<CareerResponse> => {

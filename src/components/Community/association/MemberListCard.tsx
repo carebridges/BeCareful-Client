@@ -60,6 +60,7 @@ const CardContainer = styled.div`
     height: 56px;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 `;
 

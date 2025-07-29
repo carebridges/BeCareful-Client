@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { colors } from '@/style/theme/color';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
@@ -12,7 +13,7 @@ import { ReactComponent as ApplyRate } from '@/assets/icons/socialworker/home/Ap
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { colors } from '@/style/theme/color';
+
 type ColorKey = keyof typeof colors;
 const SocialworkerHomePage = () => {
   const navigate = useNavigate();
@@ -285,6 +286,7 @@ const Top = styled.div`
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   .rank {
@@ -362,6 +364,7 @@ const Institution = styled.div`
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   .people {
@@ -465,6 +468,7 @@ const Edler = styled.div`
   img {
     width: 56px;
     height: 56px;
+    object-fit: cover;
   }
 
   .elder-info {

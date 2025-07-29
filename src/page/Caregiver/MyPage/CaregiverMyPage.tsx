@@ -1,35 +1,26 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { NavBar } from '@/components/common/NavBar/NavBar';
-import { Toggle } from '@/components/common/Toggle/Toggle';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ApplicationIcon } from '@/assets/icons/caregiver/MyWork.svg';
 import { ReactComponent as CareerIcon } from '@/assets/icons/caregiver/my/Career.svg';
 import { ReactComponent as LogoutIcon } from '@/assets/icons/caregiver/my/Logout.svg';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  CareTypeFormat,
-  DayFormat,
-  GenderMapping,
-  LocationFormat,
-  TimeFormat,
-} from '@/constants/caregiver';
-import { CaregiverMyResponse } from '@/types/Caregiver/mypage';
-import {
-  getCaregiverMyPageInfo,
-  workApplicationActive,
-  workApplicationInactive,
-} from '@/api/caregiver';
+import { NavBar } from '@/components/common/NavBar/NavBar';
+import { Toggle } from '@/components/common/Toggle/Toggle';
+import { Button } from '@/components/common/Button/Button';
+import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import ProfileCard from '@/components/shared/ProfileCard';
+import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { useCaregiverMyPageInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/useWorkApplicationToggleMutation';
+import {
+  caretypeFormat,
+  dayFormat,
+  locationFormat,
+  timeFormat,
+} from '@/utils/caregiver';
 
 const CaregiverMyPage = () => {
-  const { data, isLoading, error } = useQuery<CaregiverMyResponse, Error>({
-    queryKey: ['caregiverMypageInfo'],
-    queryFn: getCaregiverMyPageInfo,
-  });
-  if (isLoading) {
-    console.log('getCaregiverMyPageInfo: 로딩 중');
-  }
+  const { data, error } = useCaregiverMyPageInfoQuery();
   if (error) {
     console.log('getCaregiverMyPageInfo 에러: ', error);
   }
@@ -40,37 +31,46 @@ const CaregiverMyPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const queryClient = useQueryClient();
-  const workApplicationToggle = useMutation({
-    mutationFn: (isActive: boolean) => {
-      if (isActive) {
-        return workApplicationInactive();
-      } else {
-        return workApplicationActive();
-      }
-    },
-    onSuccess: () => {
-      console.log('일자리 매칭 상태 변경 성공');
-      setIsToggleChecked((prev) => !prev);
-      queryClient.invalidateQueries({
-        queryKey: ['applicationToggle'],
-      });
-    },
-    onError: (error) => {
-      console.log('일자리 매칭 상태 변경 실패', error);
+  const { mutate: toggleWorkApplication } = useWorkApplicationToggleMutation({
+    onSuccessCallback: (newIsActive) => {
+      setIsToggleChecked(newIsActive);
     },
   });
 
   const [isToggleChecked, setIsToggleChecked] = useState(false);
   useEffect(() => {
-    if (data?.isWorkApplicationActive !== undefined) {
-      setIsToggleChecked(data.isWorkApplicationActive);
+    if (data?.workApplicationInfo.isActive !== undefined) {
+      setIsToggleChecked(data.workApplicationInfo.isActive);
     }
-  }, [data?.isWorkApplicationActive]);
+  }, [data?.workApplicationInfo.isActive]);
 
   const handleToggleChange = () => {
-    workApplicationToggle.mutate(isToggleChecked);
+    toggleWorkApplication(isToggleChecked);
   };
+
+  const applicationInfo = [
+    {
+      title: '케어항목',
+      detail: caretypeFormat(data?.workApplicationInfo.careTypes ?? [], 2),
+    },
+    {
+      title: '근무요일',
+      detail: dayFormat(data?.workApplicationInfo.workDays ?? []),
+    },
+    {
+      title: '근무시간',
+      detail: timeFormat(data?.workApplicationInfo.workTimes ?? []),
+    },
+    {
+      title: '희망급여',
+      detail:
+        data?.workApplicationInfo.workSalaryAmount.toLocaleString('ko-KR'),
+    },
+    {
+      title: '근무지역',
+      detail: locationFormat(data?.workApplicationInfo.workLocations ?? [], 2),
+    },
+  ];
 
   const handleLogout = () => {
     console.log('로그아웃');
@@ -83,23 +83,36 @@ const CaregiverMyPage = () => {
       <ProfileWrapper>
         {data && (
           <ProfileCard
-            profileImgURL={data?.profileImageUrl}
-            name={data?.name}
+            profileImgURL={data.caregiverInfo.profileImageUrl}
+            name={data.caregiverInfo.name}
             point={1500}
-            phoneNumber={data?.phoneNumber}
-            age={52}
-            gender={data?.gender && GenderMapping[data?.gender]}
+            phoneNumber={data.caregiverInfo.phoneNumber}
+            age={data.caregiverInfo.age}
+            gender={
+              data.caregiverInfo.gender &&
+              Gender_Mapping[data.caregiverInfo.gender]
+            }
           />
         )}
         <Bottom>
           <div className="certificateWrapper">
             <label className="title-label">기본 자격</label>
             <div className="certificates">
-              <CertificateCard isBlue={data?.isHavingCar}>
-                {data?.isHavingCar ? '자차 보유' : '자차 미보유'}
+              <CertificateCard
+                isBlue={data?.caregiverInfo.caregiverDetailInfo.havingCar}
+              >
+                {data?.caregiverInfo.caregiverDetailInfo.havingCar
+                  ? '자차 보유'
+                  : '자차 미보유'}
               </CertificateCard>
-              <CertificateCard isBlue={data?.isCompleteDementiaEducation}>
-                {data?.isCompleteDementiaEducation
+              <CertificateCard
+                isBlue={
+                  data?.caregiverInfo.caregiverDetailInfo
+                    .completeDementiaEducation
+                }
+              >
+                {data?.caregiverInfo.caregiverDetailInfo
+                  .completeDementiaEducation
                   ? '치매교육 이수 완료'
                   : '치매교육 이수전'}
               </CertificateCard>
@@ -108,15 +121,20 @@ const CaregiverMyPage = () => {
           <div className="certificateWrapper">
             <label className="title-label">보유 자격증</label>
             <div className="certificates">
-              {data?.certificateNames.map((certificate, index) => (
-                <label key={`certificate-${index}`} className="certificate">
+              {data?.caregiverInfo.certificates.map((certificate, index) => (
+                <label key={index} className="certificate">
                   {certificate}
                 </label>
               ))}
             </div>
           </div>
         </Bottom>
-        <Button onClick={() => handleNavigate('/caregiver/my/profile')}>
+
+        <Button
+          height="52px"
+          variant="subBlue"
+          onClick={() => handleNavigate('/caregiver/my/profile')}
+        >
           프로필 수정하기
         </Button>
       </ProfileWrapper>
@@ -125,13 +143,15 @@ const CaregiverMyPage = () => {
 
       <SectionWrapper>
         <label className="title-label">경력서</label>
-        {data?.careerTitle ? (
+        {data?.careerInfo.careerTitle ? (
           <Career>
             <div className="dateWrapper">
               <label className="date">최근 수정일 </label>
-              <span>{data?.careerLastModifyDate.replaceAll('-', '.')}</span>
+              <span>
+                {data.careerInfo.lastModifiedDate.replaceAll('-', '.')}
+              </span>
             </div>
-            <label className="title">{data?.careerTitle}</label>
+            <label className="title">{data.careerInfo.careerTitle}</label>
           </Career>
         ) : (
           <NoContent>
@@ -142,8 +162,12 @@ const CaregiverMyPage = () => {
             </label>
           </NoContent>
         )}
-        <Button onClick={() => handleNavigate('/caregiver/my/career')}>
-          {data?.careerTitle ? '경력서 수정하기' : '경력서 작성하기'}
+        <Button
+          height="52px"
+          variant="subBlue"
+          onClick={() => handleNavigate('/caregiver/my/career')}
+        >
+          {data?.careerInfo.careerTitle ? '경력서 수정하기' : '경력서 작성하기'}
         </Button>
       </SectionWrapper>
 
@@ -156,7 +180,10 @@ const CaregiverMyPage = () => {
                 <div className="dateWrapper">
                   <label className="date">최근 수정일 </label>
                   <span>
-                    {data?.workApplicationLastModifyDate.replaceAll('-', '.')}
+                    {data.workApplicationInfo.lastModifiedDate.replaceAll(
+                      '-',
+                      '.',
+                    )}
                   </span>
                 </div>
                 <label className="title">일자리 신청서</label>
@@ -171,35 +198,11 @@ const CaregiverMyPage = () => {
                 </ToggleLabel>
               </div>
             </div>
-            <div className="bottom">
-              <div className="applyWrapper">
-                <label className="apply-title">케어항목</label>
-                <label className="apply-title">근무요일</label>
-                <label className="apply-title">근무시간</label>
-                <label className="apply-title">희망급여</label>
-                <label className="apply-title">근무지역</label>
-              </div>
-              <div className="applyWrapper">
-                <label className="apply-detail">
-                  {CareTypeFormat(data.workApplicationInfo.careTypes, 2)}
-                </label>
-                <label className="apply-detail">
-                  {DayFormat(data.workApplicationInfo.workDays)}
-                </label>
-                <label className="apply-detail">
-                  {TimeFormat(data.workApplicationInfo.workTimes)}
-                </label>
-                <label className="apply-detail">
-                  {data.workApplicationInfo.workSalaryAmount.toLocaleString(
-                    'ko-KR',
-                  )}
-                  원
-                </label>
-                <label className="apply-detail">
-                  {LocationFormat(data.workApplicationInfo.workLocations, 2)}
-                </label>
-              </div>
-            </div>
+            <InfoDisplay
+              items={applicationInfo}
+              gapColumn="8px"
+              gapRow="32px"
+            />
           </Application>
         ) : (
           <NoContent>
@@ -212,7 +215,11 @@ const CaregiverMyPage = () => {
             </label>
           </NoContent>
         )}
-        <Button onClick={() => handleNavigate('/caregiver/my/application')}>
+        <Button
+          height="52px"
+          variant="subBlue"
+          onClick={() => handleNavigate('/caregiver/my/application')}
+        >
           {data?.workApplicationInfo ? '신청서 수정하기' : '신청서 작성하기'}
         </Button>
       </SectionWrapper>
@@ -403,27 +410,6 @@ const Application = styled.div`
     gap: 4px;
     align-items: center;
   }
-
-  .bottom {
-    flex-direction: row;
-    gap: 32px;
-  }
-
-  .applyWrapper {
-    gap: 8px;
-  }
-
-  .apply-title {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .apply-detail {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
 `;
 
 const Logout = styled.div<{ isRed: boolean }>`
@@ -440,21 +426,6 @@ const Logout = styled.div<{ isRed: boolean }>`
     isRed ? theme.colors.mainOrange : theme.colors.gray500};
   font-size: ${({ theme }) => theme.typography.fontSize.body3};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-`;
-
-const Button = styled.button`
-  display: flex;
-  width: 100%;
-  height: 52px;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.subBlue};
-
-  color: ${({ theme }) => theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
 const Border = styled.div`

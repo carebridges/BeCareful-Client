@@ -1,8 +1,8 @@
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as PointIcon } from '@/assets/icons/Point.svg';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 
 const PointPage = () => {
   const navigate = useNavigate();
@@ -121,6 +121,7 @@ const NameWrapper = styled.div`
     height: 24px;
     border-radius: 50%;
     border: 0.279px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 `;
 

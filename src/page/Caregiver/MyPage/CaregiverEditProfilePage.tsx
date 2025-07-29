@@ -1,81 +1,80 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
-import { CareGiverQualificationCard } from '@/components/common/QualificationCard/CaregiverQualificationCard';
-import { NursingQualificationCard } from '@/components/common/QualificationCard/NursingQualificationCard';
-import { SocialQualificationCard } from '@/components/common/QualificationCard/SocialQualificationCard';
+import InputBox from '@/components/common/InputBox/InputBox';
 import { CertificateSelectModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateSelectModal';
-import { CertificateFormInput } from '@/types/CareGiverSignUp';
+import { CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateComponentMap';
+import { CERTIFICATE_LABEL } from '@/constants/certificateLabel';
+import { CertificateFormInput, CertificateKey } from '@/types/CareGiverSignUp';
+import { CertificateInfo } from '@/types/Caregiver/common';
+import { CaregiverMyRequest } from '@/types/Caregiver/mypage';
+import { useCaregiverMyPageInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { usePutMyMutation } from '@/hooks/Caregiver/usePutMyMutation';
 
 const CaregiverEditProfilePage = () => {
   const navigate = useNavigate();
 
-  const [certificateList, setCertificateList] = useState<
-    {
-      type: string;
-      number: string;
-      component: React.FC<{
-        initialType: string;
-        onChange: (data: CertificateFormInput) => void;
-      }>;
-      onChange: (data: CertificateFormInput) => void;
-    }[]
-  >([
-    {
-      type: '요양보호사',
-      number: '',
-      component: CareGiverQualificationCard,
-      onChange: (data) =>
-        handleCertificateChange('caregiverCertificate', {
-          certificateType: data.certificateType ?? '',
-          certificateLevel: data.certificateLevel ?? '',
-          certificateNumber: data.certificateNumber ?? '',
-        }),
-    },
+  const { data, error } = useCaregiverMyPageInfoQuery();
+  if (error) {
+    console.log('getCaregiverMyPageInfo 에러: ', error);
+  }
+
+  const defaultCert: CertificateInfo = {
+    grade: 'FIRST',
+    certificateNumber: '',
+  };
+
+  const [caregiverCert, setCaregiverCert] =
+    useState<CertificateInfo>(defaultCert);
+  const [socialworkerCert, setSocialworkerCert] =
+    useState<CertificateInfo>(defaultCert);
+  const [nursingCert, setNursingCert] = useState<CertificateInfo>(defaultCert);
+
+  const [selectedKeys, setSelectedKeys] = useState<CertificateKey[]>([
+    'caregiverCertificate',
   ]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleCertificateChange = (key: string, data: CertificateFormInput) => {
-    console.log(`자격증 업데이트: ${key}`, data);
-  };
+  const handleCertificateChange = (
+    key: CertificateKey,
+    cert: CertificateFormInput,
+  ) => {
+    const grade: CertificateInfo['grade'] =
+      cert.certificateLevel === '2급' ? 'SECOND' : 'FIRST';
 
-  const handleAddCertificate = (type: string) => {
-    let key = 'caregiverCertificate';
-    let component;
+    const newCert: CertificateInfo = {
+      grade,
+      certificateNumber: cert.certificateNumber,
+    };
 
-    if (type === '간호지원사') {
-      key = 'nursingCareCertificate';
-      component = NursingQualificationCard;
-    } else {
-      key = 'socialWorkerCertificate';
-      component = SocialQualificationCard;
+    if (key === 'caregiverCertificate') {
+      setCaregiverCert(newCert);
+    } else if (key === 'socialWorkerCertificate') {
+      setSocialworkerCert(newCert);
+    } else if (key === 'nursingCareCertificate') {
+      setNursingCert(newCert);
     }
-
-    setCertificateList((prev) => [
-      ...prev,
-      {
-        type,
-        number: '',
-        component,
-        onChange: (data) =>
-          handleCertificateChange(key, {
-            certificateType: data.certificateType ?? '',
-            certificateLevel: data.certificateLevel ?? '',
-            certificateNumber: data.certificateNumber ?? '',
-          }),
-      },
-    ]);
-
-    handleCloseModal();
   };
 
+  const handleAddCertificate = (label: string) => {
+    const key = Object.entries(CERTIFICATE_LABEL).find(
+      ([, value]) => value === label,
+    )?.[0] as CertificateKey;
+
+    if (!key || selectedKeys.includes(key)) return;
+
+    setSelectedKeys((prev) => [...prev, key]);
+    setIsModalOpen(false);
+  };
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneNumber(e.target.value);
+  };
   const [isEduChecked, setIsEduChecked] = useState(false);
   const handleEduToggleChange = () => {
     setIsEduChecked((prevChecked) => !prevChecked);
@@ -83,6 +82,60 @@ const CaregiverEditProfilePage = () => {
   const [isCarChecked, setIsCarChecked] = useState(false);
   const handleCarToggleChange = () => {
     setIsCarChecked((prevChecked) => !prevChecked);
+  };
+
+  useEffect(() => {
+    if (data) {
+      setPhoneNumber(data.caregiverInfo.phoneNumber);
+      setIsEduChecked(
+        data.caregiverInfo.caregiverDetailInfo.completeDementiaEducation,
+      );
+      setIsCarChecked(data.caregiverInfo.caregiverDetailInfo.havingCar);
+
+      const initialSelectedKeys: CertificateKey[] = [];
+      if (data.caregiverInfo.caregiverDetailInfo.caregiverCertificate) {
+        setCaregiverCert(
+          data.caregiverInfo.caregiverDetailInfo.caregiverCertificate,
+        );
+        initialSelectedKeys.push('caregiverCertificate');
+      } else {
+        setCaregiverCert(defaultCert);
+      }
+      if (data.caregiverInfo.caregiverDetailInfo.socialWorkerCertificate) {
+        setSocialworkerCert(
+          data.caregiverInfo.caregiverDetailInfo.socialWorkerCertificate,
+        );
+        initialSelectedKeys.push('socialWorkerCertificate');
+      } else {
+        setSocialworkerCert(defaultCert);
+      }
+      if (data.caregiverInfo.caregiverDetailInfo.nursingCareCertificate) {
+        setNursingCert(
+          data.caregiverInfo.caregiverDetailInfo.nursingCareCertificate,
+        );
+        initialSelectedKeys.push('nursingCareCertificate');
+      } else {
+        setNursingCert(defaultCert);
+      }
+
+      setSelectedKeys(initialSelectedKeys);
+    }
+  }, [data]);
+
+  const { mutate: updateMy } = usePutMyMutation();
+
+  const handleEditBtnClick = () => {
+    const caregiverData: CaregiverMyRequest = {
+      phoneNumber: phoneNumber,
+      caregiverCertificate: caregiverCert,
+      socialWorkerCertificate: socialworkerCert,
+      nursingCareCertificate: nursingCert,
+      isHavingCar: isCarChecked,
+      isCompleteDementiaEducation: isEduChecked,
+    };
+
+    // console.log(caregiverData);
+    updateMy(caregiverData);
   };
 
   return (
@@ -104,35 +157,44 @@ const CaregiverEditProfilePage = () => {
         <img src="" />
       </ProfileImgWrapper>
 
-      <NumberWrapper>
-        <label>
-          휴대전화 번호 <span>*</span>
-        </label>
-        <PhoneNumber placeholder="휴대전화 번호" type="tel" />
-      </NumberWrapper>
+      <InputBox
+        title="휴대전화 번호"
+        placeholder="예) 010-1234-5678"
+        value={phoneNumber}
+        onChange={handlePhoneNumber}
+      />
 
-      {certificateList.map((cert, index) => (
-        <CardWrapper key={index}>
-          <cert.component initialType={cert.type} onChange={cert.onChange} />
-        </CardWrapper>
-      ))}
+      <>
+        {selectedKeys.map((key) => {
+          const Card = CERTIFICATE_CARD_MAP[key];
+          const label = CERTIFICATE_LABEL[key];
+          return (
+            <CertCardWrapper key={key}>
+              <Card
+                initialType={label}
+                onChange={(data) => handleCertificateChange(key, data)}
+              />
+            </CertCardWrapper>
+          );
+        })}
+      </>
 
-      {certificateList.length < 3 && (
+      {selectedKeys.length < 3 && (
         <CardWrapper>
-          <Button isBlue={false} onClick={handleOpenModal}>
+          <Button isBlue={false} onClick={() => setIsModalOpen(true)}>
             <Plus />
             자격증 추가하기
           </Button>
           <CertificateSelectModal
-            width=""
+            width="312px"
             isOpen={isModalOpen}
-            onClose={handleCloseModal}
+            onClose={() => setIsModalOpen(false)}
             onAddCertificate={handleAddCertificate}
           />
         </CardWrapper>
       )}
 
-      <Border />
+      <Border style={{ marginTop: '16px' }} />
 
       <ToggleWrapper>
         <label>치매교육 이수</label>
@@ -147,7 +209,9 @@ const CaregiverEditProfilePage = () => {
       </ToggleWrapper>
 
       <Bottom>
-        <Button isBlue={true}>프로필 수정하기</Button>
+        <Button isBlue={true} onClick={handleEditBtnClick}>
+          프로필 수정하기
+        </Button>
       </Bottom>
     </Container>
   );
@@ -198,54 +262,21 @@ const ProfileImgWrapper = styled.div`
     height: 100px;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 `;
 
-const NumberWrapper = styled.div`
+const CertCardWrapper = styled.div`
+  margin-top: 16px;
+  display: flex;
   flex-direction: column;
-  gap: 8px;
-
-  label {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  }
-
-  span {
-    color: ${({ theme }) => theme.colors.mainBlue};
-  }
-`;
-
-const PhoneNumber = styled.input`
-  width: 100%;
-  height: 20px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray100};
-  background: ${({ theme }) => theme.colors.white};
-
-  color: ${({ theme }) => theme.colors.gray900};
-  font-size: ${({ theme }) => theme.typography.fontSize.title5};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.gray300};
-  }
-
-  &:hover {
-    border: 1px solid ${({ theme }) => theme.colors.mainBlue};
-  }
-
-  &:focus {
-    border: 1px solid ${({ theme }) => theme.colors.mainBlue};
-    outline: none;
-    caret-color: ${({ theme }) => theme.colors.mainBlue};
-  }
+  align-items: center;
+  justify-content: center;
 `;
 
 const CardWrapper = styled.div`
+  margin-top: 16px;
   display: flex;
-  margin: 16px 0px;
   flex-direction: column;
   align-items: center;
 `;

@@ -1,13 +1,19 @@
 import styled from 'styled-components';
 
-interface InputBoxProps {
+interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title: string;
   detail?: string;
   placeholder: string;
   value?: string;
 }
 
-const InputBox = ({ title, detail, placeholder, value }: InputBoxProps) => {
+const InputBox = ({
+  title,
+  detail,
+  placeholder,
+  value,
+  ...props
+}: InputBoxProps) => {
   return (
     <Container>
       <div className="titleWrapper">
@@ -16,7 +22,7 @@ const InputBox = ({ title, detail, placeholder, value }: InputBoxProps) => {
         </label>
         {detail && <label className="detail">{detail}</label>}
       </div>
-      <Input placeholder={placeholder} value={value} />
+      <Input placeholder={placeholder} value={value} {...props} />
     </Container>
   );
 };
@@ -52,8 +58,8 @@ const Container = styled.div`
 `;
 
 const Input = styled.input`
+  box-sizing: border-box;
   width: 100%;
-  height: 20px;
   padding: 16px;
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.gray100};

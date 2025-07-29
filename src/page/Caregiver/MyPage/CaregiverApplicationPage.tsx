@@ -1,39 +1,33 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { NavBar } from '@/components/common/NavBar/NavBar';
-import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDropdown';
-import { CheckBoxSelect } from '@/components/common/CheckBox/CheckBoxSelect';
-import Modal from '@/components/common/Modal/Modal';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
 import { ReactComponent as CloseButton } from '@/assets/icons/caregiver/my/CloseButton.svg';
-import { Area } from '@/data/Area';
-import { WorkLocation } from '@/types/Caregiver/common';
-import {
-  WorkApplicationRequest,
-  WorkApplicationResponse,
-} from '@/types/Caregiver/work';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getApplication, putApplication } from '@/api/caregiver';
+import { NavBar } from '@/components/common/NavBar/NavBar';
+import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDropdown';
+import { Button } from '@/components/common/Button/Button';
+import { CheckBoxSelect } from '@/components/common/CheckBox/CheckBoxSelect';
+import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
+import { Area } from '@/data/Area';
 import {
-  APIDayFormat,
-  APISalaryTypeMapping,
-  APITimeFormat,
-  DayMapping,
-  SalaryTypeMapping,
-  TimeMapping,
-} from '@/constants/caregiver';
+  API_Salary_Type_Mapping,
+  Day_Mapping,
+  Salary_Type_Mapping,
+  Time_Mapping,
+} from '@/constants/caregiverMapping';
+import { WorkLocation } from '@/types/Caregiver/common';
+import { WorkApplicationRequest } from '@/types/Caregiver/work';
+import { apiDayFormat, apiTimeFormat } from '@/utils/caregiver';
+import { useApplicationQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { usePutApplicationMutation } from '@/hooks/Caregiver/usePutApplicationMutation';
 
 const CaregiverApplicationPage = () => {
   const navigate = useNavigate();
 
-  const { data, error } = useQuery<WorkApplicationResponse, Error>({
-    queryKey: ['caregiverApplication'],
-    queryFn: getApplication,
-  });
+  const { data, error } = useApplicationQuery();
   if (error) {
     console.log('getApplication 에러: ', error);
   }
@@ -155,49 +149,37 @@ const CaregiverApplicationPage = () => {
 
   useEffect(() => {
     if (data) {
-      setPayType(SalaryTypeMapping[data.workSalaryType]);
+      setPayType(Salary_Type_Mapping[data.workSalaryUnitType]);
       setPay(data.workSalaryAmount.toLocaleString('ko-KR'));
-      setSelectDay(data.workDays.map((day) => DayMapping[day]));
-      setSelectTime(data.workTimes.map((time) => TimeMapping[time]));
+      setSelectDay(data.workDays.map((day) => Day_Mapping[day]));
+      setSelectTime(data.workTimes.map((time) => Time_Mapping[time]));
       setSelectCaretype(data.careTypes);
       setSelectedArea(data.workLocations);
     }
   }, [data]);
 
-  const queryClient = useQueryClient();
-  const usePutApplicationMutation = useMutation({
-    mutationFn: (applicationData: WorkApplicationRequest) =>
-      putApplication(applicationData),
-    onSuccess: () => {
-      console.log('신청서 등록/수정하기 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverApplication'],
-      });
-
-      if (data) {
+  const { mutate: updateApplication } = usePutApplicationMutation({
+    onSuccessCallback: (dataExists) => {
+      if (dataExists) {
         setIsEditModalOpen(true);
       } else {
         setIsRegisterModalOpen(true);
       }
     },
-    onError: (error) => {
-      console.log('신청서 등록/수정하기 실패', error);
-    },
   });
 
   const handleBtnClick = () => {
     const applicationData: WorkApplicationRequest = {
-      workSalaryType: APISalaryTypeMapping[payType],
+      workSalaryUnitType: API_Salary_Type_Mapping[payType],
       workSalaryAmount: Number(pay.replaceAll(',', '')),
-      workTimes: APITimeFormat(selectTime),
-      workDays: APIDayFormat(selectDay),
+      workTimes: apiTimeFormat(selectTime),
+      workDays: apiDayFormat(selectDay),
       workLocations: selectedArea,
       careTypes: selectCaretype,
     };
 
     console.log(applicationData);
-
-    usePutApplicationMutation.mutate(applicationData);
+    updateApplication(applicationData);
   };
 
   return (
@@ -226,8 +208,9 @@ const CaregiverApplicationPage = () => {
             <label className="guide">최대 5개까지 선택 가능</label>
           </div>
           <Button
-            style={{ width: '88px' }}
-            isBlue={false}
+            height="52px"
+            width="88px"
+            variant="subBlue"
             onClick={openAreaModal}
           >
             지역선택
@@ -356,7 +339,7 @@ const CaregiverApplicationPage = () => {
       </SectionWrapper>
 
       <Bottom>
-        <Button isBlue={true} onClick={handleBtnClick}>
+        <Button height="52px" variant="mainBlue" onClick={handleBtnClick}>
           {data ? '신청서 수정하기' : '신청서 등록하기'}
         </Button>
       </Bottom>
@@ -431,7 +414,7 @@ const CaregiverApplicationPage = () => {
             )}
           </AreaWrapper>
 
-          <Button isBlue={true} onClick={handleSelectBtn}>
+          <Button height="52px" variant="mainBlue" onClick={handleSelectBtn}>
             선택하기
           </Button>
         </AreaModal>
@@ -596,22 +579,6 @@ const Bottom = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-`;
-
-const Button = styled.button<{ isBlue: boolean }>`
-  width: 100%;
-  height: 52px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  background: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.mainBlue : theme.colors.subBlue};
-  color: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.white : theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
 `;
 
 const SelectedAreasWrapper = styled.div`

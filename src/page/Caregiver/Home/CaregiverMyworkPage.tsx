@@ -1,27 +1,16 @@
-import { NavBar } from '@/components/common/NavBar/NavBar';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Mywork } from '@/assets/icons/caregiver/MyWork.svg';
 import { Button } from '@/components/common/Button/Button';
+import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverMyworkCard from '@/components/Caregiver/Home/CaregiverMyworkCard';
-import { useQuery } from '@tanstack/react-query';
-import { CaregiverCompletedMatchingResponse } from '@/types/Caregiver/home';
-import { getMyWorkList } from '@/api/caregiver';
+import { useMyWorkListQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverMyworkPage = () => {
   const navigate = useNavigate();
 
-  const { data, isLoading, error } = useQuery<
-    CaregiverCompletedMatchingResponse,
-    Error
-  >({
-    queryKey: ['caregiverCompletedMatching'],
-    queryFn: getMyWorkList,
-  });
-  if (isLoading) {
-    console.log('getMyWorkList: 로딩 중');
-  }
+  const { data, error } = useMyWorkListQuery();
   if (error) {
     console.log('getMyWorkList 에러: ', error);
   }
@@ -58,8 +47,7 @@ const CaregiverMyworkPage = () => {
             </label>
           </div>
           <Button
-            variant="blue2"
-            width=""
+            variant="subBlue"
             height="52px"
             onClick={() => {
               navigate('/caregiver/my');

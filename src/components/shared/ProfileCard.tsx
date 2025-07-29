@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Point } from '@/assets/icons/Point.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 
@@ -82,6 +82,7 @@ const CardContainter = styled.div`
     height: 86px;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 
   .right {

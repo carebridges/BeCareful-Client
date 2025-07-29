@@ -1,25 +1,19 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
+import { Button } from '@/components/common/Button/Button';
 import CaregiverCareerExperience from '@/components/Caregiver/Mypage/CaregiverCareerExperience';
 import CaregiverCareerNew from '@/components/Caregiver/Mypage/CaregiverCareerNew';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  CareerDetail,
-  CareerRequest,
-  CareerResponse,
-} from '@/types/Caregiver/mypage';
-import { getCareer, putCareer } from '@/api/caregiver';
-import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { useNavigate } from 'react-router-dom';
+import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
+import { useCareerQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { usePutCareerMutation } from '@/hooks/Caregiver/usePutCareerMutation';
 
 const CaregiverCareerPage = () => {
   const navigate = useNavigate();
 
-  const { data, error } = useQuery<CareerResponse, Error>({
-    queryKey: ['caregiverCareer'],
-    queryFn: getCareer,
-  });
+  const { data, error } = useCareerQuery();
   if (error) {
     console.log('getCareer 에러: ', error);
   }
@@ -43,19 +37,7 @@ const CaregiverCareerPage = () => {
     }
   }, [data]);
 
-  const queryClient = useQueryClient();
-  const usePutCareerMutation = useMutation({
-    mutationFn: (careerData: CareerRequest) => putCareer(careerData),
-    onSuccess: () => {
-      console.log('경력서 등록/수정하기 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['career'],
-      });
-    },
-    onError: (error) => {
-      console.log('경력서 등록/수정하기 실패', error);
-    },
-  });
+  const { mutate: updateCareer } = usePutCareerMutation();
 
   const handleBtnClick = () => {
     const careerData: CareerRequest = {
@@ -66,8 +48,7 @@ const CaregiverCareerPage = () => {
     };
 
     console.log(careerData);
-
-    usePutCareerMutation.mutate(careerData);
+    updateCareer(careerData);
   };
 
   return (
@@ -127,7 +108,7 @@ const CaregiverCareerPage = () => {
       )}
 
       <Bottom>
-        <Button isBlue={true} onClick={handleBtnClick}>
+        <Button height="52px" variant="mainBlue" onClick={handleBtnClick}>
           {data ? '경력서 수정하기' : '경력서 등록하기'}
         </Button>
       </Bottom>
@@ -211,22 +192,6 @@ const Bottom = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-`;
-
-const Button = styled.button<{ isBlue: boolean }>`
-  width: 100%;
-  height: 52px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  background: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.mainBlue : theme.colors.subBlue};
-  color: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.white : theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
 const TabWrapper = styled.div`

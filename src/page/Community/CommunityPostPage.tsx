@@ -15,13 +15,13 @@ import BottomSheet from '@/components/Community/common/BottomSheet';
 import { Button } from '@/components/common/Button/Button';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
+import CommunityWritePage from '@/page/Community/CommunityWritePage';
 import { Board_Type_Mapping } from '@/constants/communityBoard';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { useComments, useDeletePost, usePostDetail } from '@/api/community';
 import { useLinkCopy } from '@/hooks/Community/PostPage/useLinkCopy';
 import { useCommentSend } from '@/hooks/Community/PostPage/useCommentSend';
-import { useComments, useDeletePost, usePostDetail } from '@/api/community';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
-import CommunityWritePage from './CommunityWritePage';
 import { useFileHandling } from '@/hooks/Community/PostPage/useFileHandling';
 import { useKakaoShare } from '@/hooks/Community/PostPage/useKakaoShare';
 import { usePostActions } from '@/hooks/Community/PostPage/usePostActions';
@@ -428,8 +428,8 @@ const Writer = styled.div`
     width: 47px;
     height: 47px;
     border-radius: 50%;
-
     border: 1px solid gray;
+    object-fit: cover;
   }
 
   svg {
@@ -519,6 +519,7 @@ const MediaWrapper = styled.div`
     border: 1px solid gray;
     width: 320px;
     height: 320px;
+    object-fit: cover;
   }
 `;
 
@@ -603,6 +604,7 @@ const ReplyWrapper = styled.div`
     border: 1px solid gray;
     width: 32px;
     height: 32px;
+    object-fit: cover;
   }
 
   .labels {

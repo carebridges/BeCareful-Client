@@ -67,6 +67,9 @@ const CertificateSelectModalContent = styled.div<{ width: string }>`
 
   margin-bottom: 28px;
   position: relative;
+
+  display: flex;
+  flex-direction: column;
 `;
 
 const CertificateSelectModalHeader = styled.div`

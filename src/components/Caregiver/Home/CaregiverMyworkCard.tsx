@@ -1,43 +1,39 @@
-import { putMemo } from '@/api/caregiver';
-import {
-  CareTypeFormat,
-  DayFormat,
-  GenderMapping,
-} from '@/constants/caregiver';
-import {
-  CaregiverCompletedMatching,
-  MemoEditRequest,
-} from '@/types/Caregiver/home';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import styled from 'styled-components';
+import { useState } from 'react';
+import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
+import { caretypeFormat, dayFormat } from '@/utils/caregiver';
+import { usePutMemoMutation } from '@/hooks/Caregiver/usePutMemoMutation';
 
 interface CaregiverMyworkCardProps {
   workInfo: CaregiverCompletedMatching;
 }
 
 const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
+  const work = [
+    {
+      title: '근무요일',
+      detail: dayFormat(workInfo.workDays),
+    },
+    { title: '주소', detail: workInfo.elderlyInfo.address },
+    { title: '케어항목', detail: caretypeFormat(workInfo.careTypes, 2) },
+    { title: '건강상태', detail: workInfo.elderlyInfo.healthCondition },
+    { title: '기관명', detail: workInfo.elderlyInfo.institutionName },
+  ];
+
   const [textCount, setTextCount] = useState(workInfo.note.length);
   const [memo, setMemo] = useState(workInfo.note);
   const [isMemoChange, setIsMemoChange] = useState(false);
 
-  const queryClient = useQueryClient();
-  const usePutMemoMutation = useMutation({
-    mutationFn: (note: MemoEditRequest) => putMemo(workInfo.id, note),
-    onSuccess: () => {
-      console.log('나의 일자리: 메모 수정 성공');
+  const { mutate: updateMemo } = usePutMemoMutation(workInfo.id, {
+    onSuccessCallback: () => {
       setIsMemoChange(false);
-      queryClient.invalidateQueries({
-        queryKey: ['note', workInfo.id],
-      });
-    },
-    onError: (error) => {
-      console.log('나의 일자리: 메모 수정 실패', error);
     },
   });
 
   const handleMemoBtnClick = () => {
-    usePutMemoMutation.mutate({ note: memo });
+    updateMemo({ note: memo });
   };
 
   return (
@@ -45,37 +41,21 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
       <PersonWrapper>
         <div className="left">
           <div className="infoWrapper">
-            <label className="name">{workInfo.elderlyName}</label>
+            <label className="name">{workInfo.elderlyInfo.name}</label>
             <div className="extraWrapper">
-              <label className="extra">{workInfo.elderlyAge}세</label>
+              <label className="extra">{workInfo.elderlyInfo.age}세</label>
               <Border />
               <label className="extra">
-                {GenderMapping[workInfo.elderlyGender]}
+                {Gender_Mapping[workInfo.elderlyInfo.gender]}
               </label>
             </div>
           </div>
 
-          <div className="work-info">
-            <div className="workWrapper">
-              <label className="title">근무요일</label>
-              <label className="title">주소</label>
-              <label className="title">케어항목</label>
-              <label className="title">건강상태</label>
-              <label className="title">기관이름</label>
-            </div>
-            <div className="workWrapper">
-              <label className="detail">{DayFormat(workInfo.workDays)}</label>
-              <label className="detail">{workInfo.workAddress}</label>
-              <label className="detail">
-                {CareTypeFormat(workInfo.careTypes, 2)}
-              </label>
-              <label className="detail">{workInfo.healthCondition}</label>
-              <label className="detail">{workInfo.institutionName}</label>
-            </div>
-          </div>
+          <InfoDisplay items={work} gapColumn="6px" gapRow="12px" />
         </div>
-        <img src={workInfo.elderlyProfileImageUrl} />
+        <img src={workInfo.elderlyInfo.profileImageUrl} />
       </PersonWrapper>
+
       <MemoWrapper>
         <label className="memo" htmlFor="note">
           메모
@@ -157,24 +137,11 @@ const PersonWrapper = styled.div`
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
   }
 
-  .work-info {
-    gap: 12px;
-    align-items: center;
-  }
-
-  .workWrapper {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .title {
-    color: ${({ theme }) => theme.colors.gray400};
-  }
-
   img {
     width: 80px;
     height: 80px;
     border-radius: 12px;
+    object-fit: cover;
   }
 `;
 

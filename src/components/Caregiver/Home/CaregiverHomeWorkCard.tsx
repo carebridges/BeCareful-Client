@@ -1,6 +1,8 @@
-import { CareTypeFormat, GenderMapping } from '@/constants/caregiver';
-import { WorkSchedule } from '@/types/Caregiver/home';
 import styled from 'styled-components';
+import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { WorkSchedule } from '@/types/Caregiver/home';
+import { caretypeFormat } from '@/utils/caregiver';
 
 interface CaregiverHomeWorkCardProps {
   workSchedule: WorkSchedule;
@@ -9,6 +11,14 @@ interface CaregiverHomeWorkCardProps {
 const CaregiverHomeWorkCard = ({
   workSchedule,
 }: CaregiverHomeWorkCardProps) => {
+  const workInfo = [
+    {
+      title: '케어항목',
+      detail: caretypeFormat(workSchedule.seniorCareType, 2),
+    },
+    { title: '주소', detail: workSchedule.workLocation },
+  ];
+
   return (
     <CardContainer>
       <div className="timeWrapper">
@@ -16,6 +26,7 @@ const CaregiverHomeWorkCard = ({
           {workSchedule.workStartTime} ~ {workSchedule.workEndTime}
         </label>
       </div>
+
       <div className="infoWrapper">
         <div className="personWrapper">
           <label className="name">{workSchedule.seniorName}</label>
@@ -23,22 +34,12 @@ const CaregiverHomeWorkCard = ({
             <label className="person">{workSchedule.seniorAge}세</label>
             <Border />
             <label className="person">
-              {GenderMapping[workSchedule.seniorGender]}
+              {Gender_Mapping[workSchedule.seniorGender]}
             </label>
           </div>
         </div>
-        <div className="workWrapper">
-          <div className="work">
-            <label className="title">케어항목</label>
-            <label className="detail">
-              {CareTypeFormat(workSchedule.seniorCareType, 2)}
-            </label>
-          </div>
-          <div className="work">
-            <label className="title">근무장소</label>
-            <label className="detail">{workSchedule.workLocation}</label>
-          </div>
-        </div>
+
+        <InfoDisplay items={workInfo} gapColumn="4px" gapRow="12px" />
       </div>
     </CardContainer>
   );
@@ -61,12 +62,6 @@ const CardContainer = styled.div`
     display: flex;
   }
 
-  label {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body3};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
   .timeWrapper {
     padding: 2px 6px;
     width: 100px;
@@ -78,6 +73,8 @@ const CardContainer = styled.div`
   }
 
   .time {
+    color: ${({ theme }) => theme.colors.gray500};
+    font-size: ${({ theme }) => theme.typography.fontSize.body3};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
 
@@ -105,20 +102,7 @@ const CardContainer = styled.div`
   .person {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  }
-
-  .workWrapper {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .work {
-    gap: 12px;
-    align-items: center;
-  }
-
-  .detail {
-    color: ${({ theme }) => theme.colors.gray800};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 `;
 

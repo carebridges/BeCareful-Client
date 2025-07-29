@@ -1,17 +1,12 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
-import { useQuery } from '@tanstack/react-query';
-import { MatchingMyRecruitmentDetailResponse } from '@/types/Caregiver/apply';
-import { getApplicationDetail } from '@/api/caregiver';
+import { useApplicationDetailQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverApplyDetailPage = () => {
   const { recruitmentId } = useParams();
 
-  const { data, error } = useQuery<MatchingMyRecruitmentDetailResponse, Error>({
-    queryKey: ['caregiverApplicationDetail', recruitmentId],
-    queryFn: () => getApplicationDetail(Number(recruitmentId)),
-  });
+  const { data, error } = useApplicationDetailQuery(Number(recruitmentId));
   if (error) {
     console.log('getApplicationDetail 에러: ', error);
   }

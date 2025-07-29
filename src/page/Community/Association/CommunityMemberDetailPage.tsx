@@ -9,7 +9,8 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
 import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
-import { CareTypeFormat, GenderMapping } from '@/constants/caregiver';
+import { caretypeFormat } from '@/utils/caregiver';
+import { Gender_Mapping } from '@/constants/caregiverMapping';
 import { Association_Rank_Mapping } from '@/constants/associationRank';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { useMemberExpel, useMembersDetail } from '@/api/communityAssociation';
@@ -72,7 +73,7 @@ const CommunityMemberDetailPage = () => {
         nickname={data.nickName}
         phoneNumber={data.phoneNumber}
         age={data.age}
-        gender={GenderMapping[data.gender]}
+        gender={Gender_Mapping[data.gender]}
       />
 
       <SectionWrapper>
@@ -81,7 +82,7 @@ const CommunityMemberDetailPage = () => {
           date={data?.institutionLastUpdate}
           institution={data?.institutionName}
           year={2001}
-          types={CareTypeFormat(data?.facilityTypes, 2)}
+          types={caretypeFormat(data?.facilityTypes, 2)}
           phoneNumber={data?.institutionPhoneNumber}
         />
       </SectionWrapper>

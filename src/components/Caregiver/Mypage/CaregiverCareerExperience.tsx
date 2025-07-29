@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ReactComponent as Add } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Delete } from '@/assets/icons/ButtonMinus.svg';
-import { CareerDetail } from '@/types/Caregiver/mypage';
+import { Button } from '@/components/common/Button/Button';
 import { CareerDropdown } from '@/components/Caregiver/Mypage/CareerDropdown';
+import { CareerDetail } from '@/types/Caregiver/mypage';
 
 interface CareerExpProps {
   careerDetails?: CareerDetail[];
@@ -98,7 +99,7 @@ const CaregiverCareerExperience = ({
           </InstitutionWrapper>
 
           {experiences.length > 1 && (
-            <Button isBlue={false} onClick={deleteExperience}>
+            <Button height="52px" variant="disabled" onClick={deleteExperience}>
               <Delete />
               경력 삭제하기
             </Button>
@@ -106,7 +107,7 @@ const CaregiverCareerExperience = ({
         </CareerWrapper>
       ))}
 
-      <Button isBlue={true} onClick={addExperience}>
+      <Button height="52px" variant="subBlue" onClick={addExperience}>
         <Add />
         경력 추가하기
       </Button>
@@ -175,20 +176,4 @@ const Institution = styled.input`
     outline: none;
     caret-color: ${({ theme }) => theme.colors.mainBlue};
   }
-`;
-
-const Button = styled.button<{ isBlue: boolean }>`
-  width: 100%;
-  height: 52px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  background: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.subBlue : theme.colors.gray50};
-  color: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.mainBlue : theme.colors.gray900};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;

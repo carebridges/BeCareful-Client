@@ -71,6 +71,7 @@ const Container = styled.div`
   .profile-img {
     min-width: 72px;
     height: 72px;
+    object-fit: cover;
   }
 `;
 
@@ -90,6 +91,7 @@ const Writer = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 50%;
+    object-fit: cover;
   }
 
   label {

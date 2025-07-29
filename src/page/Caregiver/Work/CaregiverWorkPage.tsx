@@ -1,28 +1,24 @@
 import styled from 'styled-components';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Chat } from '@/assets/icons/ChatNewBlack.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
-import {
-  getApplication,
-  getRecruitmentList,
-  workApplicationActive,
-  workApplicationInactive,
-} from '@/api/caregiver';
-import {
-  MatchingListResponse,
-  WorkApplicationResponse,
-} from '@/types/Caregiver/work';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  CareTypeFormat,
-  DayFormat,
-  LocationFormat,
-  TimeFormat,
-} from '@/constants/caregiver';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
+import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiverWorkFilters';
+import {
+  caretypeFormat,
+  dayFormat,
+  locationFormat,
+  timeFormat,
+} from '@/utils/caregiver';
+import {
+  useApplicationQuery,
+  useRecruitmentListQuery,
+} from '@/hooks/Caregiver/caregiverQuery';
+import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/useWorkApplicationToggleMutation';
 
 const CaregiverWorkPage = () => {
   const navigate = useNavigate();
@@ -30,63 +26,37 @@ const CaregiverWorkPage = () => {
   const chatNew = false;
 
   // 신청서 조회
-  const { data: applicationData, error: applicationError } = useQuery<
-    WorkApplicationResponse,
-    Error
-  >({
-    queryKey: ['caregiveApplication'],
-    queryFn: getApplication,
-  });
+  const { data: applicationData, error: applicationError } =
+    useApplicationQuery();
   if (applicationError) {
     console.log('getApplication 에러: ', applicationError);
   }
 
   // 매칭 공고 리스트 조회
-  const { data: matchingListData, error: matchingListError } = useQuery<
-    MatchingListResponse,
-    Error
-  >({
-    queryKey: ['caregiveWorkList'],
-    queryFn: getRecruitmentList,
-  });
+  const { data: matchingListData, error: matchingListError } =
+    useRecruitmentListQuery();
   if (matchingListError) {
     console.log('getMatchingList 에러: ', matchingListError);
   }
 
-  const queryClient = useQueryClient();
-  const workApplicationToggle = useMutation({
-    mutationFn: (isActive: boolean) => {
-      if (isActive) {
-        return workApplicationInactive();
-      } else {
-        return workApplicationActive();
-      }
-    },
-    onSuccess: () => {
-      console.log('일자리 매칭 상태 변경 성공');
-      setIsToggleChecked((prev) => !prev);
-      queryClient.invalidateQueries({
-        queryKey: ['caregiveApplication'],
-      });
-    },
-    onError: (error) => {
-      console.log('일자리 매칭 상태 변경 실패', error);
+  const [isToggleChecked, setIsToggleChecked] = useState(false);
+  useEffect(() => {
+    if (applicationData) {
+      setIsToggleChecked(true);
+    } else {
+      setIsToggleChecked(false);
+    }
+  }, [applicationData]);
+
+  const { mutate: toggleWorkApplication } = useWorkApplicationToggleMutation({
+    onSuccessCallback: (newIsActive) => {
+      setIsToggleChecked(newIsActive);
     },
   });
-
-  const [isToggleChecked, setIsToggleChecked] = useState(
-    applicationData ? true : false,
-  );
   const handleToggleChange = () => {
-    workApplicationToggle.mutate(isToggleChecked ? true : false);
+    toggleWorkApplication(isToggleChecked);
   };
 
-  const filters = [
-    { icon: '', name: '전체' },
-    { icon: '👑', name: '시급 TOP' },
-    { icon: '🔥', name: '인기공고' },
-    { icon: '✅', name: '조건일치' },
-  ];
   const [activeTab, setActiveTab] = useState('전체');
   const handleTabChange = (tabName: string) => {
     setActiveTab(tabName);
@@ -104,13 +74,43 @@ const CaregiverWorkPage = () => {
       case '인기공고':
         return matchingListData.filter((item) => item.isHotRecruitment);
       case '조건일치':
-        return matchingListData.filter(
-          (item) => item.matchingResultStatus === '높음',
+        return matchingListData.filter((item) =>
+          ['높음', '보통'].includes(item.matchingResultStatus),
         );
       default:
         return matchingListData;
     }
   }, [matchingListData, activeTab]);
+
+  const applyInfo = [
+    {
+      title: '케어항목',
+      detail: applicationData
+        ? caretypeFormat(applicationData.careTypes, 2)
+        : '-',
+    },
+    {
+      title: '근무요일',
+      detail: applicationData ? dayFormat(applicationData.workDays) : '-',
+    },
+    {
+      title: '근무시간',
+      detail: applicationData ? timeFormat(applicationData.workTimes) : '-',
+    },
+
+    {
+      title: '희망급여',
+      detail: applicationData
+        ? `${applicationData.workSalaryAmount.toLocaleString('ko-KR')}원`
+        : '-',
+    },
+    {
+      title: '근무지역',
+      detail: applicationData
+        ? locationFormat(applicationData.workLocations, 2)
+        : '-',
+    },
+  ];
 
   return (
     <Container>
@@ -135,10 +135,9 @@ const CaregiverWorkPage = () => {
             {applicationData ? (
               <div className="dateWrapper">
                 <label className="date">최근 수정일 </label>
-                {/* <span>
-                  {applicationData?.workApplicationLastModifyDate.replaceAll('-', '.')}
-                </span> */}
-                <span>2025.02.14</span>
+                <span>
+                  {applicationData.lastModifiedDate.replaceAll('-', '.')}
+                </span>
               </div>
             ) : (
               <label className="date">아직 등록된 신청서가 없어요!</label>
@@ -158,39 +157,7 @@ const CaregiverWorkPage = () => {
           </div>
         </Top>
 
-        <Bottom>
-          <div className="apply">
-            <label className="title">케어항목</label>
-            <label className="title">근무요일</label>
-            <label className="title">근무시간</label>
-            <label className="title">희망급여</label>
-            <label className="title">근무지역</label>
-          </div>
-
-          <div className="apply">
-            <label className="detail">
-              {applicationData
-                ? CareTypeFormat(applicationData.careTypes, 2)
-                : '-'}
-            </label>
-            <label className="detail">
-              {applicationData ? DayFormat(applicationData.workDays) : '-'}
-            </label>
-            <label className="detail">
-              {applicationData ? TimeFormat(applicationData.workTimes) : '-'}
-            </label>
-            <label className="detail">
-              {applicationData
-                ? `${applicationData.workSalaryAmount.toLocaleString('ko-KR')}원`
-                : '-'}
-            </label>
-            <label className="detail">
-              {applicationData
-                ? LocationFormat(applicationData.workLocations, 2)
-                : '-'}
-            </label>
-          </div>
-        </Bottom>
+        <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
 
         <Button
           onClick={() => {
@@ -205,7 +172,7 @@ const CaregiverWorkPage = () => {
       <Border />
 
       <FiltersWrapper>
-        {filters.map((filter) => (
+        {CAREGIVER_WORK_FILTERS.map((filter) => (
           <Filter
             key={filter.name}
             active={activeTab === filter.name}
@@ -309,27 +276,6 @@ const Top = styled.div`
     flex-direction: column;
     gap: 4px;
     align-items: center;
-  }
-`;
-
-const Bottom = styled.div`
-  gap: 32px;
-
-  .apply {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .title {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .detail {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 `;
 

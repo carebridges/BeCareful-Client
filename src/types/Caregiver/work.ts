@@ -1,59 +1,50 @@
-import { Recruitment, WorkApplication, WorkDay } from './common';
+import {
+  WorkDay,
+  WorkLocation,
+  WorkSalaryUnitType,
+  WorkTime,
+  WorkApplication,
+  ElderlyInfo,
+  Recruitment,
+  RecruitmentInfo,
+  MatchingResultStatus,
+} from '@/types/Caregiver/common';
 
 /* 요양보호사 일자리 화면 */
 // 일자리 신청 정보 조회 응답
 export type WorkApplicationResponse = WorkApplication;
 
 // 일자리 신청 정보 등록/수정 요청
-export type WorkApplicationRequest = WorkApplication;
+export type WorkApplicationRequest = {
+  workLocations: WorkLocation[];
+  workDays: WorkDay[];
+  workTimes: WorkTime[];
+  careTypes: string[];
+  workSalaryAmount: number;
+  workSalaryUnitType: WorkSalaryUnitType;
+};
 
 // 매칭 공고 리스트 조회 응답
 export type MatchingListResponse = Recruitment[];
 
-export interface ElderlyInfo {
-  name: string;
-  address: string;
-  gender: 'MALE' | 'FEMALE';
-  age: number;
-  hasInmate: boolean;
-  hasPet: boolean;
-  profileImageUrl: string;
-  careLevel: string;
-  healthCondition: string;
-}
-
-export interface InstitutionInfo {
-  name: string;
-  address: string;
-}
-
-export interface CareType {
-  careType: string;
-  detailCareTypes: string[];
-}
-
-export interface RecruitmentDetailInfo {
-  recruitmentId: number;
-  title: string;
-  careTypes: CareType[];
-  workDays: WorkDay[];
-  workStartTime: string;
-  workEndTime: string;
-  workSalaryType: 'HOUR' | 'MONTH' | 'YEAR';
-  workSalaryAmount: number;
-  description: string;
-  isRecruiting: boolean;
+interface InstitutionInfo {
   institutionName: string;
+  institutionImageUrl: string;
+  institutionLastUpdate: string;
+  institutionOpenYear: number;
+  facilityTypes: string[];
+  institutionPhoneNumber: string;
 }
 
 // 매칭 공고 상세 조회 응답
 export interface MatchingRecruitmentResponse {
-  recruitmentInfo: RecruitmentDetailInfo;
+  recruitmentInfo: RecruitmentInfo;
   elderlyInfo: ElderlyInfo;
   institutionInfo: InstitutionInfo;
   isHotRecruitment: boolean;
   isHourlySalaryTop: boolean;
-  matchingResultStatus: '높음' | '보통' | '낮음';
+  // TODO : 백엔드 타입 확인
+  matchingResultStatus: MatchingResultStatus;
 }
 
 export type MediationType = 'TIME' | 'DAY' | 'PAY';

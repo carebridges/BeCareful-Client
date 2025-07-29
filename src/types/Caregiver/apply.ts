@@ -1,10 +1,11 @@
-import { Recruitment } from './common';
-import { MatchingRecruitmentResponse } from './work';
+import { Recruitment } from '@/types/Caregiver/common';
+import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 
 /* 요양보호사 지원 현황 화면 */
-export interface MatchingRecruitment {
+interface MatchingRecruitment {
   recruitmentInfo: Recruitment;
-  matchingStatus: '검토중' | '합격' | '거절';
+  // TODO : 백엔드 타입 확인
+  matchingApplicationStatus: '검토중' | '합격' | '거절';
 }
 
 // 지원 현황 조회 응답

@@ -3,74 +3,46 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  MatchingRecruitmentMediateRequest,
-  MatchingRecruitmentResponse,
-} from '@/types/Caregiver/work';
-import {
-  getRecruitmentDetail,
-  postApply,
-  postMediate,
-  postReject,
-} from '@/api/caregiver';
+import { MatchingRecruitmentMediateRequest } from '@/types/Caregiver/work';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { APIMediationFormat } from '@/constants/caregiver';
+import { apiMediationFormat } from '@/utils/caregiver';
+import { useRecruitmentDetailQuery } from '@/hooks/Caregiver/caregiverQuery';
+import {
+  usePostApplyMutation,
+  usePostMediateMutation,
+  usePostRejectMutation,
+} from '@/hooks/Caregiver/useApplyMutation';
 
 const CaregiverWorkDetailPage = () => {
-  const { recruitmentId } = useParams();
+  const { recruitmentId } = useParams<{ recruitmentId: string }>();
+  const numRecruitmentId = Number(recruitmentId);
+
   const navigate = useNavigate();
 
   // 매칭 공고 상세 조회
-  const { data, error } = useQuery<MatchingRecruitmentResponse, Error>({
-    queryKey: ['caregiverRecruitmentDetail', recruitmentId],
-    queryFn: () => getRecruitmentDetail(Number(recruitmentId)),
-  });
+  const { data, error } = useRecruitmentDetailQuery(Number(recruitmentId));
   if (error) {
     console.log('getRecruitmentDetail 에러: ', error);
   }
 
-  const queryClient = useQueryClient();
   // 매칭 공고 지원
-  const usePostApplyMutation = useMutation({
-    mutationFn: () => postApply(Number(recruitmentId)),
-    onSuccess: () => {
-      console.log('매칭 공고 지원 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverRecruitmentDetail', recruitmentId],
-      });
-    },
-    onError: (error) => {
-      console.log('매칭 공고 지원 실패', error);
+  const { mutate: applyMutation } = usePostApplyMutation(numRecruitmentId, {
+    onSuccessCallback: () => {
+      setIsApplyModalOpen(false); // 모달 닫기
     },
   });
   // 매칭 공고 거절
-  const usePostRejectMutation = useMutation({
-    mutationFn: () => postReject(Number(recruitmentId)),
-    onSuccess: () => {
-      console.log('매칭 공고 거절 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverRecruitmentDetail', recruitmentId],
-      });
-    },
-    onError: (error) => {
-      console.log('매칭 공고 거절 실패', error);
+  const { mutate: rejectMutation } = usePostRejectMutation(numRecruitmentId, {
+    onSuccessCallback: () => {
+      handleModal(setIsDeleteModalOpen, setIsRejectModalOpen);
     },
   });
   // 매칭 공고 근무 조건 조율
-  const usePostMediateMutation = useMutation({
-    mutationFn: (mediateData: MatchingRecruitmentMediateRequest) =>
-      postMediate(Number(recruitmentId), mediateData),
-    onSuccess: () => {
-      console.log('매칭 공고 근무 조건 조율 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverRecruitmentDetail', recruitmentId],
-      });
-    },
-    onError: (error) => {
-      console.log('매칭 공고 근무 조건 조율 실패', error);
+  const { mutate: mediateMutation } = usePostMediateMutation(numRecruitmentId, {
+    onSuccessCallback: () => {
+      handleModal(setIsCompleteMediateModalOpen, setIsMediateModalOpen);
     },
   });
 
@@ -92,9 +64,7 @@ const CaregiverWorkDetailPage = () => {
   // 지원하기 팝업
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const handleCompleteApply = () => {
-    // 지원하기 post api
-    usePostApplyMutation.mutate();
-    setIsApplyModalOpen(!isApplyModalOpen);
+    applyMutation();
   };
 
   // 거절하기 팝업
@@ -103,9 +73,7 @@ const CaregiverWorkDetailPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   // 거절하기 팝업 - 거절하기 버튼
   const handleReject = () => {
-    // 거절하기 api
-    usePostRejectMutation.mutate();
-    handleModal(setIsDeleteModalOpen, setIsRejectModalOpen);
+    rejectMutation();
   };
 
   // 근무 조건 조율하기 팝업
@@ -116,13 +84,11 @@ const CaregiverWorkDetailPage = () => {
   const handleMediate = () => {
     // 조율하여 지원하기 api
     const mediateData: MatchingRecruitmentMediateRequest = {
-      mediationTypes: APIMediationFormat(mediationTypes),
+      mediationTypes: apiMediationFormat(mediationTypes),
       mediationDescription: mediationDescription,
     };
     console.log(mediateData);
-
-    usePostMediateMutation.mutate(mediateData);
-    handleModal(setIsCompleteMediateModalOpen, setIsMediateModalOpen);
+    mediateMutation(mediateData);
   };
 
   // 근무조건 조율하기 필터

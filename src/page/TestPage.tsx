@@ -9,10 +9,6 @@ import { BooleanNoCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/
 import { BooleanYesCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/BooleanYesCard';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
 
-import { ApplyChip } from '@/components/common/ApplyCard/ApplyChip';
-import { ApplyTag } from '@/components/common/ApplyCard/ApplyTag';
-import { ApplyCard } from '@/components/common/ApplyCard/ApplyCard';
-
 import { CheckBox } from '../components/common/CheckBox/CheckBox';
 import { CareGiverCard } from '@/components/SignUp/common/CareGiverCard';
 import { InstitutionCard } from '@/components/SignUp/common/InstitutionCard';
@@ -65,20 +61,6 @@ export const TestPage = () => {
         <CareGiverCard pressed={pressed} />
         <InstitutionCard pressed={pressed} />
       </div>
-
-      <ApplyChip state={'pass'} />
-      <ApplyTag label="인기공고" />
-      <ApplyTag label="시급 TOP" />
-      <ApplyCard
-        chipState="fail"
-        centerName="행복사랑요양센터"
-        description="방문요양/1일 9시간씩 주6일 모집"
-        tags={['인기공고', '시급 TOP']}
-        careItems={['식사보조', '이동보조']}
-        workingDays={['목', '일']}
-        workingHours="15:00~19:00"
-        hourlyRate="12,000원"
-      />
 
       <Button variant="blue" width="320px" height="52px">
         다음 단계로 이동

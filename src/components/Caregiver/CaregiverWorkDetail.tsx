@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Chat } from '@/assets/icons/ChatNewBlack.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
-import { NavBar } from '../common/NavBar/NavBar';
-import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
+import { NavBar } from '@/components/common/NavBar/NavBar';
+import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import {
-  DayFormat,
-  GenderMapping,
-  SalaryTypeMapping,
-} from '@/constants/caregiver';
+  Gender_Mapping,
+  Salary_Type_Mapping,
+} from '@/constants/caregiverMapping';
+import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
+import { dayFormat } from '@/utils/caregiver';
 
 interface CaregiverWorkDetailProps {
   work: MatchingRecruitmentResponse;
@@ -20,6 +21,78 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   const navigate = useNavigate();
 
   const chatNew = false;
+
+  const workInfo = [
+    {
+      title: '장기요양등급',
+      detail: work.elderlyInfo.careLevel,
+    },
+    {
+      title: '근무요일',
+      detail: dayFormat(work.recruitmentInfo.workDays),
+    },
+    {
+      title: '근무시간',
+      detail: `${work.recruitmentInfo.workStartTime} ~ ${work.recruitmentInfo.workEndTime}`,
+    },
+    {
+      title: Salary_Type_Mapping[work.recruitmentInfo.workSalaryUnitType],
+      detail: work.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR'),
+    },
+  ];
+
+  const elderlyInfo = [
+    {
+      title: '나이/성별',
+      detail: `${work.elderlyInfo.age}세 ${Gender_Mapping[work.elderlyInfo.gender]}`,
+    },
+    {
+      title: '주소',
+      detail: work.elderlyInfo.address,
+    },
+    {
+      title: '건강상태',
+      detail: work.elderlyInfo.healthCondition,
+    },
+    {
+      title: '거주형태',
+      detail: work.elderlyInfo.hasInmate ? '동거중' : '독거중',
+    },
+    {
+      title: '애완동물',
+      detail: work.elderlyInfo.hasPet ? '있음' : '없음',
+    },
+  ];
+
+  const workContentInfo = [
+    {
+      title: '케어항목',
+      detail: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {work.recruitmentInfo.careTypes.map((caretype) => (
+            <label key={caretype.careType} className="detail">
+              {caretype.careType} - {caretype.detailCareTypes}
+            </label>
+          ))}
+        </div>
+      ),
+    },
+    {
+      title: '기타',
+      detail: work.recruitmentInfo.description,
+    },
+  ];
+
+  const institutionInfo = [
+    {
+      title: '기관명',
+      detail: work.institutionInfo.institutionName,
+    },
+    {
+      title: '주소',
+      detail: work.institutionInfo.institutionOpenYear,
+    },
+  ];
 
   return (
     <Container style={{ marginBottom: date ? '' : '92px' }}>
@@ -73,30 +146,12 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
           )}
         </div>
 
-        <div className="bottom">
-          <div className="apply">
-            <label className="title">장기요양등급</label>
-            <label className="title">근무요일</label>
-            <label className="title">근무시간</label>
-            <label className="title">
-              {SalaryTypeMapping[work.recruitmentInfo.workSalaryType]}
-            </label>
-          </div>
-
-          <div className="apply">
-            <label className="detail">{work.elderlyInfo.careLevel}</label>
-            <label className="detail">
-              {DayFormat(work.recruitmentInfo.workDays)}
-            </label>
-            <label className="detail">
-              {work.recruitmentInfo.workStartTime} ~{' '}
-              {work.recruitmentInfo.workEndTime}
-            </label>
-            <label className="detail">
-              {work.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR')}
-            </label>
-          </div>
-        </div>
+        <InfoDisplay
+          width="72px"
+          gapColumn="8px"
+          gapRow="20px"
+          items={workInfo}
+        />
       </WorkInfoWrapper>
 
       <Border />
@@ -109,66 +164,38 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
           <label className="section-title">{work.elderlyInfo.name}</label>
         </div>
 
-        <div className="applyWrapper">
-          <div className="apply">
-            <label className="title">나이/성별</label>
-            <label className="title">주소</label>
-            <label className="title">건강상태</label>
-            <label className="title">거주형태</label>
-            <label className="title">애완동물</label>
-          </div>
-          <div className="apply">
-            <label className="detail">
-              {work.elderlyInfo.age}세 {GenderMapping[work.elderlyInfo.gender]}
-            </label>
-            <label className="detail">{work.elderlyInfo.address}</label>
-            <label className="detail">{work.elderlyInfo.healthCondition}</label>
-            <label className="detail">
-              {work.elderlyInfo.hasInmate ? '동거중' : '독거중'}
-            </label>
-            <label className="detail">
-              {work.elderlyInfo.hasPet ? '있음' : '없음'}
-            </label>
-          </div>
-        </div>
+        <InfoDisplay
+          width="56px"
+          gapColumn="8px"
+          gapRow="24px"
+          items={elderlyInfo}
+        />
       </SectionWrapper>
 
       <Border />
 
       <SectionWrapper>
         <label className="section-title">근무 내용</label>
-        <div className="apply">
-          <div className="applyWrapper">
-            <label className="title">케어항목</label>
-            <div className="apply">
-              {work.recruitmentInfo.careTypes.map((caretype) => (
-                <label key={caretype.careType} className="detail">
-                  {caretype.careType} - {caretype.detailCareTypes}
-                </label>
-              ))}
-            </div>
-          </div>
-          <div className="applyWrapper">
-            <label className="title">기타</label>
-            <label className="detail">{work.recruitmentInfo.description}</label>
-          </div>
-        </div>
+
+        <InfoDisplay
+          width="56px"
+          gapColumn="8px"
+          gapRow="24px"
+          items={workContentInfo}
+        />
       </SectionWrapper>
 
       <Border />
 
       <SectionWrapper>
         <label className="section-title">기관 정보</label>
-        <div className="applyWrapper">
-          <div className="apply">
-            <label className="title">기관명</label>
-            <label className="title">주소</label>
-          </div>
-          <div className="apply">
-            <label className="detail">{work.institutionInfo.name}</label>
-            <label className="detail">{work.institutionInfo.address}</label>
-          </div>
-        </div>
+
+        <InfoDisplay
+          width="56px"
+          gapColumn="8px"
+          gapRow="24px"
+          items={institutionInfo}
+        />
       </SectionWrapper>
     </Container>
   );
@@ -187,20 +214,6 @@ const Container = styled.div`
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .applyWrapper {
-    gap: 24px;
-  }
-
-  .apply {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .title {
-    width: 56px;
-    color: ${({ theme }) => theme.colors.gray500};
   }
 `;
 
@@ -228,14 +241,6 @@ const WorkInfoWrapper = styled.div`
   .work-title {
     font-size: ${({ theme }) => theme.typography.fontSize.title3};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  }
-
-  .bottom {
-    gap: 20px;
-  }
-
-  .title {
-    width: 72px;
   }
 `;
 
@@ -287,6 +292,7 @@ const SectionWrapper = styled.div`
     height: 32px;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 `;
 

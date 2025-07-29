@@ -1,6 +1,5 @@
-import { NavBar } from '@/components/common/NavBar/NavBar';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
@@ -11,10 +10,9 @@ import { ReactComponent as ArrowRight } from '@/assets/icons/ArrowRight.svg';
 import { ReactComponent as ArrowRightCircle } from '@/assets/icons/caregiver/home/ArrowRightCircle.svg';
 import { ReactComponent as Notice } from '@/assets/icons/caregiver/home/Notice.svg';
 import { ReactComponent as Status } from '@/assets/icons/caregiver/home/Status.svg';
+import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
-import { useQuery } from '@tanstack/react-query';
-import { CaregiverHomeResponse } from '@/types/Caregiver/home';
-import { getCaregiverHomeInfo } from '@/api/caregiver';
+import { useCaregiverHomeInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverHomePage = () => {
   const navigate = useNavigate();
@@ -22,13 +20,7 @@ const CaregiverHomePage = () => {
   // const [chatNew, setChatNew] = useState(true);
   const chatNew = true;
 
-  const { data, isLoading, error } = useQuery<CaregiverHomeResponse, Error>({
-    queryKey: ['caregiverHomeInfo'],
-    queryFn: getCaregiverHomeInfo,
-  });
-  if (isLoading) {
-    console.log('getCaregiverHomeInfo: 로딩 중');
-  }
+  const { data, error } = useCaregiverHomeInfoQuery();
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);
   }
@@ -36,14 +28,7 @@ const CaregiverHomePage = () => {
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate('/caregiver');
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft />}
         right={
           <NavRight
             onClick={() => {
@@ -123,8 +108,9 @@ const CaregiverHomePage = () => {
           >
             <div className="top">
               <label>일자리 신청</label>
-              {/* <ApplyTitle>{apply ? '신청중' : '미신청'}</ApplyTitle> */}
-              <label className="title">신청중</label>
+              <label className="title">
+                {data?.isApplying ? '신청중' : '미신청'}
+              </label>
             </div>
             <div className="bottom">
               <label>변경하기</label>

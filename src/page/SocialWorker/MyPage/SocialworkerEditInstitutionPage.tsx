@@ -2,10 +2,9 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { NavBar } from '@/components/common/NavBar/NavBar';
-
-import { FACILITY_TYPES } from '@/constants/institutionFacilityTypes';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
+import { NavBar } from '@/components/common/NavBar/NavBar';
+import { FACILITY_TYPES } from '@/constants/institutionFacilityTypes';
 
 interface SocialworkerEditInstitutionPageProps {
   institution: string;
@@ -184,6 +183,7 @@ const Profile = styled.div`
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 

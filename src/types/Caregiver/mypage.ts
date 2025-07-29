@@ -1,20 +1,48 @@
-import { WorkApplication } from './common';
+import { CertificateInfo, WorkApplication } from '@/types/Caregiver/common';
 
 /* 요양보호사 마이페이지 */
+// 요양보호사 정보
+export interface CaregiverDetailInfo {
+  caregiverCertificate: CertificateInfo;
+  socialWorkerCertificate: CertificateInfo;
+  nursingCareCertificate: CertificateInfo;
+  havingCar: boolean;
+  completeDementiaEducation: boolean;
+  certificateNames: string[];
+}
+export interface CaregiverInfo {
+  caregiverId: number;
+  name: string;
+  phoneNumber: string;
+  gender: 'MALE' | 'FEMALE';
+  age: number;
+  profileImageUrl: string;
+  caregiverDetailInfo: CaregiverDetailInfo;
+  certificates: string[];
+}
+
+// 요양보호사 경력 정보
+export interface CareerInfo {
+  careerId: number;
+  careerTitle: string;
+  lastModifiedDate: string;
+}
+
 // 요양보호사 마이페이지 데이터 조회 응답
 export interface CaregiverMyResponse {
-  name: string;
-  gender: 'MALE' | 'FEMALE';
+  caregiverInfo: CaregiverInfo;
+  careerInfo: CareerInfo;
+  workApplicationInfo: WorkApplication;
+}
+
+// 요양보호사 마이페이지 수정
+export interface CaregiverMyRequest {
   phoneNumber: string;
-  profileImageUrl: string;
-  certificateNames: string[];
+  caregiverCertificate: CertificateInfo;
+  socialWorkerCertificate: CertificateInfo;
+  nursingCareCertificate: CertificateInfo;
   isHavingCar: boolean;
   isCompleteDementiaEducation: boolean;
-  careerTitle: string;
-  careerLastModifyDate: string;
-  workApplicationInfo: WorkApplication;
-  isWorkApplicationActive: boolean;
-  workApplicationLastModifyDate: string;
 }
 
 /* 요양보호사 경력서 */

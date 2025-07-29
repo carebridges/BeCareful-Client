@@ -1,4 +1,4 @@
-import { WorkDay } from './common';
+import { WorkDay, ElderlyInfo } from '@/types/Caregiver/common';
 
 /* 요양보호사 홈 화면 */
 export interface WorkSchedule {
@@ -18,21 +18,16 @@ export interface CaregiverHomeResponse {
   recruitmentCount: number;
   workScheduleList: WorkSchedule[];
   isWorking: boolean;
+  isApplying: boolean;
 }
 
 /* 요양보호사 나의 일자리 */
 export interface CaregiverCompletedMatching {
   id: number;
-  elderlyName: string;
-  elderlyAge: number;
-  elderlyGender: 'MALE' | 'FEMALE';
-  elderlyProfileImageUrl: string;
   workDays: WorkDay[];
-  workAddress: string;
   careTypes: string[];
-  healthCondition: string;
-  institutionName: string;
   note: string;
+  elderlyInfo: ElderlyInfo;
 }
 
 // 요양보호사 확정된 일자리 리스트 조회 응답
