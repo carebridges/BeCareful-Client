@@ -11,8 +11,8 @@ import { AddressSelectSection } from '@/components/SocialWorker/ElderyRegister/A
 import { HealthConditionSection } from '@/components/SocialWorker/ElderyRegister/HealthConditionSection';
 import { CareTypeSection } from '@/components/SocialWorker/ElderyRegister/CareTypeSection';
 import { InmateSection } from '@/components/SocialWorker/ElderyRegister/InmateSection';
-
 import { SubmitSection } from '@/components/SocialWorker/ElderyRegister/SubmitSection';
+
 import { AreaSocials } from '@/data/AreaSocial';
 import { useElderlyRegisterForm } from '@/hooks/Elderly/useElderlyRegisterForm';
 import { useUploadElderlyProfileImage } from '@/api/elderly';
@@ -82,13 +82,14 @@ const ElderlyRegisterPage = () => {
         />
         <CareTypeSection
           selectedCare={form.selectedCare}
-          onSelectCare={form.setSelectedCare}
+          setSelectedCare={form.setSelectedCare}
           selectedDetails={form.selectedDetails}
-          onSelectDetail={form.setSelectedDetails}
+          setSelectedDetails={form.setSelectedDetails}
         />
+
         <InmateSection inmate={form.inmate} onChange={form.setInmate} />
         <PetSection pet={form.pet} onChange={form.setPet} />
-        <SubmitSection onSubmit={form.handleSubmit} />
+        <SubmitSection onSubmit={form.handleSubmit} isValid={form.isValid} />
       </MainContent>
     </Container>
   );

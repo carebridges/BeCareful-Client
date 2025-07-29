@@ -40,7 +40,7 @@ export const AreaSelectModal = ({
       onSelect({
         siDo: city,
         siGuGun: gu,
-        dongEupMyeon: dong,
+        eupMyeonDong: dong,
       });
     }
   };

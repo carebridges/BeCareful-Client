@@ -92,14 +92,14 @@ export const Label = styled.label`
 `;
 
 export const ModalWrapper = styled.div`
-  width: 272px;
-  height: 328px;
+  width: 312px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 28px 20px 20px 20px;
   border-radius: 12px;
   background: ${({ theme }) => theme.colors.white};
+  overflow-x: hidden;
 `;
 
 export const AreaSelectWrapper = styled.div`
@@ -129,13 +129,14 @@ export const AreasWrapper = styled.div`
   display: flex;
   gap: 1px;
   height: 216px;
-  overflow: hidden;
+  width: 100%;
+  overflow-x: hidden;
 `;
 
-//TODO: 다른 곳이랑 합칠 부분 찾기
 export const AreaWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 `;
 
 export const AreaTitle = styled.label`
@@ -153,6 +154,7 @@ export const AreaTitle = styled.label`
 export const AreaAreaWrapper = styled.button`
   overflow-y: auto;
   flex: 1;
+  width: 100%;
 `;
 
 export const AreaArea = styled.div<{ color: boolean }>`
@@ -178,7 +180,6 @@ export const CareWrapper = styled.div`
   gap: 8px;
 `;
 
-//TODO 마찬가지
 export const CareButton = styled.button`
   width: 100%;
   height: 54px;
@@ -194,7 +195,7 @@ export const CareButton = styled.button`
   color: ${({ theme }) => theme.colors.gray900};
   font-size: ${({ theme }) => theme.typography.fontSize.body1};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  line-height: 140%; /* 22.4px */ //TODO 이것도 기존 버튼이 아닌 이유 찾기
+  line-height: 140%;
 `;
 
 export const CareLabel = styled.div`
@@ -215,24 +216,22 @@ export const ModalXImg = styled.div`
   height: 24px;
 `;
 
-//TODO: 기존 모달 사용가능한지 체크 필요
 export const CaretypeModal = styled.div`
   padding: 28px 20px 20px 20px;
   background: ${({ theme }) => theme.colors.white};
-  width: 272px;
-  height: 240px;
+  width: 312px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-radius: 12px;
 `;
 
 export const CareModalButtonWrapper = styled.div`
   padding-bottom: 32px;
   display: flex;
   width: 100%;
-  gap: 16px;
+  gap: 8px;
   flex-wrap: wrap;
-  border: 1px solid;
 `;
 
 export const ModalTitleLabel = styled.label`

@@ -82,7 +82,7 @@ function App() {
         path="/matching/:recruitmentId/caregiver/:caregiverId"
         element={<CareGiverDetailInfoPage />}
       />
-      {/*<Route path="/matching/caregiver" element={<CareGiverInfoPage />} />*/}
+      {/*<Route path="/matching/caregiver" element={<CareGiverDetailInfoPage />} />*/}
       <Route path="/matching/dashboard" element={<MatchingStatus />} />
 
       {/* 채팅 - 요양보호사, 사회복지사 */}

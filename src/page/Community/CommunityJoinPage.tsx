@@ -13,10 +13,9 @@ export const CommunityJoinPage = () => {
     <>
       <Header>
         <NavbarWrapper>
-          <ArrowLeft
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate(-1)}
-          />
+          <BackButtonWrapper>
+            <ArrowLeft onClick={() => navigate('/community')} />
+          </BackButtonWrapper>
           <NavTitle>커뮤니티</NavTitle>
         </NavbarWrapper>
         <CommunityJoinSearchInput onCommunitySelect={setCommunityName} />
@@ -62,4 +61,13 @@ const NavTitle = styled.div`
 
 const ContentWrapper = styled.div`
   margin-top: 116px;
+`;
+
+const BackButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  align-items: center;
+  height: 56px;
+  width: 100%;
 `;

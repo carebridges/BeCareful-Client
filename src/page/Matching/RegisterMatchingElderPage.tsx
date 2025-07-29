@@ -122,7 +122,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  margin: 24px 16px auto 16px;
+  margin: 0px 16px auto 16px;
 `;
 const TopContainer = styled.div`
   display: flex;

@@ -34,7 +34,9 @@ export const CommunityJoinPendingModal = ({
           </span>
         </ModalMiddleContainer>
         <ModalBottomContainer>
-          <Button onClick={onCancelJoin}>가입 취소하기</Button>
+          <Button onClick={onCancelJoin} height="52px">
+            가입 취소하기
+          </Button>
         </ModalBottomContainer>
       </ModalContent>
     </Overlay>

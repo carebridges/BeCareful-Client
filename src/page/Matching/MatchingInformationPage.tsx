@@ -4,6 +4,9 @@ import { MatchingElderInfo } from '@/components/Matching/MatchingElderInfo';
 import { styled } from 'styled-components';
 import { MatchingTab } from '@/components/Matching/Modal/MatchingTab';
 import { useMatchingRecruitment } from '@/api/matching.socialWorker';
+import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 export const MatchingInformationPage = () => {
   const navigate = useNavigate();
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
@@ -23,8 +26,11 @@ export const MatchingInformationPage = () => {
         <HideIconContainer />
       </TopContainer>
 
-      {isLoading && <p>로딩 중...</p>}
-      {isError && <p>에러가 발생했습니다.</p>}
+      {isLoading && <LoadingIndicator />}
+      {isError && <ErrorIndicator />}
+      {!isLoading && !isError && !elderData && (
+        <EmptyStateIndicator message="매칭 정보를 불러올 수 없습니다." />
+      )}
 
       {elderData && (
         <>

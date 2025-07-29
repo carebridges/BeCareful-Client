@@ -1,25 +1,24 @@
-import { useState } from 'react';
-
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
 import { styled } from 'styled-components';
 
 export const MatchingSearchBox = ({
   placeholder,
+  value,
+  onChange,
 }: {
   placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchTerm(value);
+    onChange(e.target.value);
   };
 
   return (
     <SearchContainer>
       <StyledInput
         placeholder={placeholder}
-        value={searchTerm}
+        value={value}
         onChange={handleChange}
       />
       <IconWrapper>

@@ -6,13 +6,21 @@ import { ElderData } from '@/types/Matching';
 import { styled } from 'styled-components';
 import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
 import { useElderlyList } from '@/api/elderly';
+import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 
 export const SocialWorkerMatchingPage = () => {
-  const { data: elderList = [], isError } = useElderlyList();
+  const { data: elderList = [], isError, isLoading } = useElderlyList();
   const [modalData, setModalData] = useState<ElderData | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const openModal = (elder: ElderData) => setModalData(elder);
   const closeModal = () => setModalData(null);
+
+  const filteredList = elderList.filter((elder) =>
+    elder.name.includes(searchTerm),
+  );
 
   return (
     <>
@@ -20,13 +28,21 @@ export const SocialWorkerMatchingPage = () => {
         <TopContainer>매칭 등록하기</TopContainer>
 
         <SearchContainer>
-          <MatchingSearchBox placeholder="검색할 이름을 입력해주세요." />
+          <MatchingSearchBox
+            placeholder="검색할 이름을 입력해주세요."
+            value={searchTerm}
+            onChange={(value) => setSearchTerm(value)}
+          />
         </SearchContainer>
 
         <CardContainer>
-          {isError && <div>에러가 발생했습니다</div>}
-          {elderList.length === 0 && <div>어르신 정보가 없습니다</div>}
-          {elderList.map((elder) => (
+          {isError && <ErrorIndicator />}
+          {isLoading && <LoadingIndicator />}
+          {!isLoading && !isError && elderList.length === 0 && (
+            <EmptyStateIndicator message="어르신 정보가 없습니다" />
+          )}
+
+          {filteredList.map((elder) => (
             <ElderCard
               key={elder.elderlyId}
               {...elder}

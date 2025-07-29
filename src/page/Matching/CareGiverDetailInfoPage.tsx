@@ -9,6 +9,9 @@ import { useCaregiverDetail } from '@/api/matching.socialWorker';
 import { Button } from '@/components/common/Button/Button';
 import { SelectStartDateModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/SelectStartDateModal';
 import { useState } from 'react';
+import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
+import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 
 export const CareGiverDetailInfoPage = () => {
   const navigate = useNavigate();
@@ -25,11 +28,11 @@ export const CareGiverDetailInfoPage = () => {
   );
 
   if (!recruitmentId || !caregiverId) {
-    return <div>잘못된 접근입니다.</div>;
+    return <EmptyStateIndicator message="잘못된 접근입니다." />;
   }
 
-  if (isLoading) return <div>로딩 중...</div>;
-  if (error || !data) return <div>데이터를 불러오지 못했습니다.</div>;
+  if (isLoading) return <LoadingIndicator />;
+  if (error || !data) return <ErrorIndicator />;
 
   return (
     <Container>

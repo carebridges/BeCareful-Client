@@ -28,20 +28,19 @@ export const useElderlyRegisterForm = () => {
   const [selectedDetails, setSelectedDetails] = useState<string[]>([]);
 
   const { mutate: registerElderly } = useRegisterElderly();
+  const isValid =
+    name !== '' &&
+    birth !== '' &&
+    gender !== '' &&
+    inmate !== '' &&
+    pet !== '' &&
+    selectedGrade !== '' &&
+    selectedArea !== null &&
+    detailAddress !== '' &&
+    healthCondition !== '' &&
+    selectedDetails.length > 0;
 
   const handleSubmit = async () => {
-    const isValid =
-      name &&
-      birth &&
-      gender &&
-      inmate &&
-      pet &&
-      selectedGrade &&
-      selectedArea &&
-      detailAddress &&
-      healthCondition &&
-      selectedDetails.length > 0;
-
     if (!isValid) {
       //TODO
       return;
@@ -56,7 +55,7 @@ export const useElderlyRegisterForm = () => {
       careLevel: selectedGrade,
       siDo: selectedArea.siDo,
       siGuGun: selectedArea.siGuGun,
-      dongEupMyeon: selectedArea.dongEupMyeon,
+      eupMyeonDong: selectedArea.eupMyeonDong,
       detailAddress,
       profileImageUrl,
       healthCondition,
@@ -92,5 +91,6 @@ export const useElderlyRegisterForm = () => {
     selectedDetails,
     setSelectedDetails,
     handleSubmit,
+    isValid,
   };
 };

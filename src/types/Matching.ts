@@ -1,9 +1,13 @@
+import { Gender } from '@/types/SocialSignUp';
+
 export interface ElderData {
+  isMatching?: boolean;
   elderlyId: number;
   name: string;
   age: number;
-  gender: 'MALE' | 'FEMALE';
+  gender: Gender;
   careLevel: string;
-  cognitiveLevel?: string;
+  caregiverNum?: number;
   imageUrl?: string;
+  cognitiveLevel?: string;
 }

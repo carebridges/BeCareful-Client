@@ -44,8 +44,8 @@ const Label = styled.label<{ border: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px 2px;
-
+  padding: 8px 12px;
+  box-sizing: border-box;
   border-radius: 12px;
   border: 1px solid
     ${({ theme, border }) =>
@@ -53,7 +53,7 @@ const Label = styled.label<{ border: boolean }>`
 
   color: ${({ theme }) => theme.colors.gray900};
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const Check = styled.input`

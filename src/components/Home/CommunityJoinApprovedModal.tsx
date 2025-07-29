@@ -32,7 +32,9 @@ export const CommunityJoinApprovedModal = ({
           </span>
         </ModalMiddleContainer>
         <ModalBottomContainer>
-          <Button onClick={onClose}>확인</Button>
+          <Button onClick={onClose} height="52px">
+            확인
+          </Button>
         </ModalBottomContainer>
       </ModalContent>
     </Overlay>

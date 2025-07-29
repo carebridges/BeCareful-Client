@@ -4,6 +4,7 @@ import { ASSOCIATION_JOIN_RANKS_LABELS } from '@/constants/associationRank';
 import { AssociationRank } from '@/types/CommunityAssociation';
 import { styled } from 'styled-components';
 import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
+import { useNavigate } from 'react-router-dom';
 
 interface CommunityJoinSelectRoleProps {
   selectedRank: AssociationRank | null;
@@ -20,10 +21,11 @@ export const CommunityJoinSelectRole = ({
   onCancel,
   associationName,
 }: CommunityJoinSelectRoleProps) => {
+  const navigate = useNavigate();
   return (
     <>
       <IconContainer>
-        <IconArrowLeft />
+        <IconArrowLeft onClick={() => navigate(-1)} />
       </IconContainer>
       <Wrapper>
         <HeaderSection>
@@ -78,7 +80,7 @@ const HeaderSection = styled.header`
   gap: 8px;
   width: 100%;
   box-sizing: border-box;
-  padding: 16px 20px 0 20px;
+  padding: 0 20px 0 20px;
 `;
 
 const Title = styled.h1`
@@ -123,5 +125,4 @@ const IconContainer = styled.div`
   padding: 0px 20px;
   height: 56px;
   width: 100%;
-  margin: 24px 0 auto 0;
 `;

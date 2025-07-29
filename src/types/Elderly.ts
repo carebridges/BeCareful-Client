@@ -4,7 +4,7 @@ import { CARE_TYPES } from '@/constants/careTypes.socialWorker';
 export interface AreaSocial {
   siDo: string;
   siGuGun: string;
-  dongEupMyeon: string;
+  eupMyeonDong: string;
 }
 
 export interface AreaSelectData {
@@ -30,7 +30,7 @@ export interface ElderlyRegisterPayload {
   careLevel: CareLevel;
   siDo: AreaSocial['siDo'];
   siGuGun: AreaSocial['siGuGun'];
-  dongEupMyeon: AreaSocial['dongEupMyeon'];
+  eupMyeonDong: AreaSocial['eupMyeonDong'];
   detailAddress: string;
   profileImageUrl: string;
   healthCondition: string;

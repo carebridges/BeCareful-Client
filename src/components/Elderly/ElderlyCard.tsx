@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as ElderList } from '@/assets/icons/elderly/ElderList.svg';
-
-interface ElderlyCardProps {
-  isMatching: boolean;
-  name: string;
-  age: number;
-  gender: string;
-  careLevel: string;
-  caregiver: number;
-}
+import { ElderData } from '@/types/Matching';
 
 export const ElderlyCard = ({
   isMatching,
@@ -16,10 +8,11 @@ export const ElderlyCard = ({
   age,
   gender,
   careLevel,
-  caregiver,
-}: ElderlyCardProps) => {
+  caregiverNum,
+  imageUrl,
+}: ElderData) => {
   return (
-    <CardContainer isMatching={isMatching}>
+    <CardContainer isMatching={!!isMatching}>
       {isMatching && (
         <MatchingStatus>
           <MatchingCircle />
@@ -33,22 +26,26 @@ export const ElderlyCard = ({
             <AgeGenderWrapper>
               <Detail>{age}세</Detail>
               <Border />
-              <Detail>{gender}</Detail>
+              <Detail>{gender === 'FEMALE' ? '여' : '남'}</Detail>
             </AgeGenderWrapper>
           </NameWrapper>
           <LabelWrapper>
             <Label>
               <LabelTitle>장기요양등급</LabelTitle>
-              <LabelDetail color="">{careLevel}</LabelDetail>
+              <LabelDetail>{careLevel}</LabelDetail>
             </Label>
             <Label>
               <LabelTitle>요양보호자수</LabelTitle>
-              <LabelDetail color="blue">{caregiver}</LabelDetail>
+              <LabelDetail color="blue">{caregiverNum}</LabelDetail>
             </Label>
           </LabelWrapper>
         </InfoWrapper>
         <PersonImg>
-          <ElderList />
+          {imageUrl ? (
+            <img src={imageUrl} alt={`${name}님 프로필 이미지`} />
+          ) : (
+            <ElderList />
+          )}
         </PersonImg>
       </PersonWrapper>
     </CardContainer>
@@ -151,9 +148,9 @@ const LabelTitle = styled.label`
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
-const LabelDetail = styled.label<{ color: string }>`
-  color: ${({ theme, color }) =>
-    color === 'blue' ? theme.colors.mainBlue : theme.colors.gray700};
+const LabelDetail = styled.label<{ isBlue?: boolean }>`
+  color: ${({ theme, isBlue }) =>
+    isBlue ? theme.colors.mainBlue : theme.colors.gray700};
   font-size: ${({ theme }) => theme.typography.fontSize.body3};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
@@ -162,4 +159,15 @@ const PersonImg = styled.div`
   width: 56px;
   height: 56px;
   border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
 `;

@@ -1,78 +1,73 @@
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ElderlyCard } from '@/components/Elderly/ElderlyCard';
 import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useElderlyList } from '@/api/elderly';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
-interface ElderlyInfo {
-  elderlyId: number;
-  name: string;
-  age: number;
-  gender: string;
-  profileImageUrl: string;
-  careLevel: string;
-  caregiverNum: number;
-  isMatching: boolean;
-}
+import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
+import { MatchingSearchBox } from '@/components/Matching/MatchingSearchBox';
+import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
+import { useState } from 'react';
 
 const ElderlyPage = () => {
   const navigate = useNavigate();
-  const [datas, setDatas] = useState<ElderlyInfo[]>([]);
-
-  const apiBaseURL = import.meta.env.VITE_APP_API_URL;
-  const getData = async () => {
-    try {
-      const response = await axios.get(`${apiBaseURL}/elderly/list`);
-      console.log(response.data);
-      setDatas(response.data);
-    } catch (e) {
-      console.log('어르신 목록 get 에러: ', e);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  });
+  const { data: elderlyList = [], isLoading, error } = useElderlyList();
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredList = elderlyList.filter((elder) =>
+    elder.name.includes(searchTerm),
+  );
 
   return (
     <Container>
       <NavBar
         left={
-          <NavLeft
-            onClick={() => {
-              navigate('/elderly');
-            }}
-          >
-            어르신 목록
+          <NavLeft onClick={() => navigate(-1)}>
+            <ArrowLeft />
           </NavLeft>
         }
+        center={
+          <NavCenter onClick={() => navigate('/elderly')}>
+            어르신 목록
+          </NavCenter>
+        }
         right={
-          <NavRight
-            onClick={() => {
-              navigate('/elderly/new');
-            }}
-          >
-            등록하기
-          </NavRight>
+          <NavRight onClick={() => navigate('/elderly/new')}>등록하기</NavRight>
         }
         color=""
       />
+      <SearchContainer>
+        <MatchingSearchBox
+          placeholder="검색할 이름을 입력해주세요."
+          value={searchTerm}
+          onChange={(value) => setSearchTerm(value)}
+        />
+      </SearchContainer>
 
       <MainContent>
-        <Counting>총 {datas.length}명</Counting>
-        {datas.map((data) => (
+        <Counting>총 {filteredList.length}명</Counting>
+        {isLoading && <LoadingIndicator />}
+        {error && <ErrorIndicator />}
+        {!isLoading && !error && elderlyList.length === 0 && (
+          <EmptyStateIndicator message="어르신 정보가 없습니다" />
+        )}
+
+        {filteredList.map((elder) => (
           <ElderlyCard
-            isMatching={data.isMatching}
-            name={data.name}
-            age={data.age}
-            gender={data.gender === 'FEMALE' ? '여' : '남'}
-            careLevel={data.careLevel}
-            caregiver={data.caregiverNum}
+            key={elder.elderlyId}
+            elderlyId={elder.elderlyId}
+            isMatching={elder.isMatching}
+            name={elder.name}
+            age={elder.age}
+            gender={elder.gender}
+            careLevel={elder.careLevel}
+            caregiverNum={elder.caregiverNum}
+            imageUrl={elder.imageUrl}
           />
         ))}
       </MainContent>
+
       <SocialWorkerTabBar />
     </Container>
   );
@@ -84,18 +79,21 @@ const Container = styled.div`
   margin-bottom: 107px;
 `;
 
-const NavLeft = styled.label`
+const NavLeft = styled.div`
   cursor: pointer;
-  color: ${({ theme }) => theme.colors.gray900};
-  font-size: ${({ theme }) => theme.typography.fontSize.title3};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   margin-left: 20px;
 `;
 
-const NavRight = styled.button`
+const NavCenter = styled.div`
+  color: ${({ theme }) => theme.colors.gray900};
+  font-size: ${({ theme }) => theme.typography.fontSize.body1};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+`;
+
+const NavRight = styled.div`
   cursor: pointer;
   color: ${({ theme }) => theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-size: ${({ theme }) => theme.typography.fontSize.body1};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   margin-right: 20px;
 `;
@@ -112,4 +110,9 @@ const Counting = styled.label`
   color: ${({ theme }) => theme.colors.gray700};
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  margin: 12px 20px 0px 20px;
 `;

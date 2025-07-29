@@ -41,7 +41,7 @@ export const AddressSelectSection = ({
           state="default"
           placeholder="근무지역 선택"
           guide=""
-          value={selectedArea?.dongEupMyeon ?? ''}
+          value={selectedArea?.eupMyeonDong ?? ''}
           onChange={() => {}}
           onKeyDown={(e) => e.preventDefault()}
           suffix={null}

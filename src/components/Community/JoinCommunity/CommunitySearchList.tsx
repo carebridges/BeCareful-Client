@@ -1,4 +1,6 @@
 import { useGetAssociationList } from '@/api/communityAssociation';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { AssociationListCard } from '@/components/Community/JoinCommunity/AssociationListCard';
 import { CommunityNotFound } from '@/components/Community/JoinCommunity/CommunityNotFound';
 import { styled } from 'styled-components';
@@ -12,8 +14,8 @@ export const CommunitySearchList = ({ keyword }: Props) => {
   const isSearching = trimmed.length > 0;
 
   const { data, isLoading, isError } = useGetAssociationList();
-  if (isLoading) return <div>로딩 중...</div>;
-  if (isError || !data) return <div>목록 불러오는 중 오류가 발생했습니다.</div>;
+  if (isLoading) return <LoadingIndicator />;
+  if (isError || !data) return <ErrorIndicator />;
 
   const associations = (data?.associationSimpleDtoList ?? []).map((item) => ({
     id: item.associationId,
