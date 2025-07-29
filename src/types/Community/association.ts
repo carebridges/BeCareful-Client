@@ -1,11 +1,37 @@
+import { AssociationRank, InstitutionRank } from '@/types/Community/common';
+
+/* 협회 정보 조회 */
+export interface AssociationInfoResponse {
+  associationName: string;
+  associationEstablishedYear: number;
+  associationMemberCount: number;
+  associationProfileImageUrl: string;
+  chairmanRealName: string;
+  chairmanNickName: string;
+  chairmanPhoneNumber: string;
+}
+
+/* 협회 정보 수정 */
+export interface AssociationInfoRequest {
+  associationImageUrl: string;
+  associationName: string;
+  associationEstablishedYear: number;
+}
+
+/* 회장 정보 수정 */
+export interface AssociationChairmanRequest {
+  newChairmanId: number;
+  nextRankOfCurrentChairman: AssociationRank;
+}
+
 /* 회원 관리 - 회원 */
 export interface Member {
   memberId: number;
   name: string;
   phoneNumber: string;
-  associationRank: 'CHAIRMAN' | 'EXECUTIVE' | 'MEMBER';
+  associationRank: AssociationRank;
   institutionName: string;
-  institutionRank: 'CENTER_DIRECTOR' | 'REPRESENTATIVE' | 'SOCIAL_WORKER';
+  institutionRank: InstitutionRank;
   institutionImageUrl: string;
 }
 
@@ -32,21 +58,28 @@ export interface MemberDetailResponse {
   gender: 'MALE' | 'FEMALE';
   institutionImageUrl: string;
   institutionName: string;
+  institutionOpenYear: number;
   institutionLastUpdate: string;
   facilityTypes: string[];
   institutionPhoneNumber: string;
   associationName: string;
-  associationRank: 'CHAIRMAN' | 'EXECUTIVE' | 'MEMBER';
-  institutionRank: 'CENTER_DIRECTOR' | 'REPRESENTATIVE' | 'SOCIAL_WORKER';
+  associationRank: AssociationRank;
+  institutionRank: InstitutionRank;
+}
+
+// 회원 등급 변경
+export interface MemberRankRequest {
+  memberId: number;
+  associationRank: AssociationRank;
 }
 
 /* 회원 관리 - 가입 신청 */
 export interface Application {
   joinApplicationId: number;
   name: string;
-  associationRank: 'CHAIRMAN' | 'EXECUTIVE' | 'MEMBER';
+  associationRank: AssociationRank;
   institutionName: string;
-  institutionRank: 'CENTER_DIRECTOR' | 'REPRESENTATIVE' | 'SOCIAL_WORKER';
+  institutionRank: InstitutionRank;
   institutionImageUrl: string;
 }
 

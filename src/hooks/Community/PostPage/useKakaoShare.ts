@@ -19,7 +19,7 @@ export const useKakaoShare = () => {
       const title = '돌봄다리 커뮤니티 새소식';
       const content = '요양기관 센터장들의 소통 공간';
       const defaultImgUrl =
-        'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/kakao_share_thumbnail.png';
+        'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/kakaotalk_share_thumbnail.png';
       const imgUrl = post?.imageUrls.length
         ? post?.imageUrls[0].mediaUrl
         : defaultImgUrl;

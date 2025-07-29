@@ -62,7 +62,7 @@ export const SEARCH_DATA: PostListItem[] = [
     author: {
       authorId: 104,
       authorName: '최보안',
-      authorInstitutionRank: 'none',
+      authorInstitutionRank: 'REPRESENTATIVE',
       institutionImageUrl: 'author_url4',
     },
   },

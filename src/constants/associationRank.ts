@@ -1,4 +1,4 @@
-import { AssociationRank } from '@/types/CommunityAssociation';
+import { AssociationRank } from '@/types/Community/common';
 
 export const Association_Rank_Mapping: { [key: string]: string } = {
   CHAIRMAN: '회장',
@@ -7,7 +7,9 @@ export const Association_Rank_Mapping: { [key: string]: string } = {
   none: '회원',
 };
 
-export const API_Association_Rank_Mapping: { [key: string]: string } = {
+export const API_Association_Rank_Mapping: {
+  [key: string]: AssociationRank;
+} = {
   회장: 'CHAIRMAN',
   임원진: 'EXECUTIVE',
   회원: 'MEMBER',

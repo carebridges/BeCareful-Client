@@ -9,7 +9,8 @@ import CommunityPage from '@/page/Community/CommunityPage';
 import CommunityPostPage from '@/page/Community/CommunityPostPage';
 import CommunitySearchPage from '@/page/Community/CommunitySearchPage';
 import CommunityAssociationInfoPage from '@/page/Community/Association/CommunityAssociationInfoPage';
-import CommunityAssociationEditPage from '@/page/Community/Association/CommunityAssociationEditPage';
+import CommunityEditAssociationPage from '@/page/Community/Association/CommunityEditAssociationPage';
+import CommunityEditChairmanPage from '@/page/Community/Association/CommunityEditChairmanPage';
 import CommunityMembersPage from '@/page/Community/Association/CommunityMembersPage';
 import CommnunityMemberDetailPage from '@/page/Community/Association/CommunityMemberDetailPage';
 import { CommunityRouteGuard } from '@/page/Community/CommunityRouteGuard';
@@ -43,7 +44,14 @@ const CommunityRoute = () => {
 
             <Route path="/:associationId">
               <Route path="info" element={<CommunityAssociationInfoPage />} />
-              <Route path="edit" element={<CommunityAssociationEditPage />} />
+              <Route
+                path="edit/association"
+                element={<CommunityEditAssociationPage />}
+              />
+              <Route
+                path="edit/chairman"
+                element={<CommunityEditChairmanPage />}
+              />
               <Route path="members" element={<CommunityMembersPage />} />
               <Route
                 path="members/:memberId"

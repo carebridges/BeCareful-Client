@@ -1,4 +1,4 @@
-import { AuthorInfo } from './common';
+import { AuthorInfo } from '@/types/Community/common';
 
 /* 댓글 */
 // 댓글 항목

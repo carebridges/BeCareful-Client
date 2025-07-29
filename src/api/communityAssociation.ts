@@ -1,7 +1,11 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import {
+  AssociationChairmanRequest,
+  AssociationInfoRequest,
+  AssociationInfoResponse,
   JoinRequestsResponse,
   MemberDetailResponse,
+  MemberRankRequest,
   MembersOverviewResponse,
   MembersResponse,
 } from '@/types/Community/association';
@@ -44,6 +48,68 @@ export const useCommunityAccess = (): UseQueryResult<CommunityAccessResponse> =>
     staleTime: 1000 * 60, //TODO
   });
 
+// 협회 정보 조회
+export const useAssociationInfo = () => {
+  return useQuery<AssociationInfoResponse, Error>({
+    queryKey: ['associationInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/association/info');
+      return response.data;
+    },
+  });
+};
+
+// 협회 정보 수정
+export const usePutAssociationInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (associationInfo: AssociationInfoRequest) => {
+      const response = await axiosInstance.put(
+        '/association/info',
+        associationInfo,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log(
+        'usePutAssociationInfo - 협회 정보 수정 성공:',
+        response.data,
+      );
+      queryClient.invalidateQueries({
+        queryKey: ['associationInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('usePutAssociationInfo - 협회 정보 수정 실패:', error);
+    },
+  });
+};
+
+// 협회장 위임
+export const useChangeChairman = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (chairman: AssociationChairmanRequest) => {
+      const response = await axiosInstance.put(
+        '/association/chairman/delegate',
+        chairman,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('useChangeChairman - 협회장 위임 성공:', response.data);
+      queryClient.invalidateQueries({
+        queryKey: ['associationInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('useChangeChairman - 협회장 위임 실패:', error);
+    },
+  });
+};
+
 // 회원관리 탭 목록(협회 회원 + 가입 신청자 요약)
 export const useMembersOverview = () => {
   return useQuery<MembersOverviewResponse, Error>({
@@ -75,6 +141,32 @@ export const useMembersDetail = (memberId: number) => {
         `/association/members/${memberId}`,
       );
       return response.data;
+    },
+  });
+};
+
+// 회원 등급 변경
+export const usePutMembersRank = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (memberInfo: MemberRankRequest) => {
+      const response = await axiosInstance.put(
+        '/association/members/rank',
+        memberInfo,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('usePutMembersRank - 회원 등급 변경 성공:', response.data);
+      queryClient.invalidateQueries({
+        queryKey: ['memberRank'],
+      });
+      queryClient.invalidateQueries({ queryKey: ['memberDetail'] });
+      queryClient.invalidateQueries({ queryKey: ['members'] });
+    },
+    onError: (error) => {
+      console.error('usePutMembersRank - 회원 등급 변경 실패:', error);
     },
   });
 };

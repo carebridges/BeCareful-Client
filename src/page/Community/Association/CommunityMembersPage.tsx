@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import MemberListCard from '@/components/Community/association/MemberListCard';
@@ -18,7 +20,8 @@ const CommunityMembersPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const isBoss = true;
+  const userInfo = useRecoilValue(currentUserInfo);
+  const isChairman = userInfo.associationRank === 'CHAIRMAN';
 
   const [activeTab, setActiveTab] = useState('회원');
   const handleTabChange = (tabName: string) => {
@@ -30,7 +33,7 @@ const CommunityMembersPage = () => {
   const { data: members } = useMembers();
   const { data: requests } = useJoinRequest();
 
-  const tabs = isBoss
+  const tabs = isChairman
     ? [
         { name: '회원', count: tabData?.memberCount },
         { name: '가입 신청', count: tabData?.pendingApplicationCount },

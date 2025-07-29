@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
-import ChairmanCard from '@/components/shared/ChairmanCard';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { useAssociationInfo } from '@/api/communityAssociation';
 
 const CommunityAssociationInfoPage = () => {
   const { associationId } = useParams<{ associationId: string }>();
@@ -19,22 +21,31 @@ const CommunityAssociationInfoPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const dynamicBackgroundUrl = '';
+  const { data } = useAssociationInfo();
 
-  const isChairman = true;
+  const userInfo = useRecoilValue(currentUserInfo);
+  const isChairman = userInfo.associationRank === 'CHAIRMAN';
 
   const associationInfo = [
-    { title: '설립일', detail: '2000년' },
-    { title: '회원수', detail: '112명' },
+    { title: '설립일', detail: data?.associationEstablishedYear },
+    { title: '회원수', detail: data?.associationMemberCount },
+  ];
+
+  const chairmanInfo = [
+    { title: '성함', detail: data?.chairmanRealName },
+    { title: '닉네임', detail: data?.chairmanNickName },
+    { title: '연락처', detail: data?.chairmanPhoneNumber },
   ];
 
   return (
     <Container>
-      <NavbarWrapper $backgroundImageUrl={dynamicBackgroundUrl}>
+      <NavbarWrapper
+        $backgroundImageUrl={data?.associationProfileImageUrl ?? ''}
+      >
         <NavLeft onClick={handleGoBack} />
       </NavbarWrapper>
 
-      <AssociationName>장기요양협회명</AssociationName>
+      <AssociationName>{data?.associationName}</AssociationName>
 
       <Border />
 
@@ -46,7 +57,9 @@ const CommunityAssociationInfoPage = () => {
             <Button
               variant="mainBlue"
               height="52px"
-              onClick={() => handleNavigate(`/community/${associationId}/edit`)}
+              onClick={() =>
+                handleNavigate(`/community/${associationId}/edit/association`)
+              }
             >
               협회 정보 수정하기
             </Button>
@@ -56,11 +69,20 @@ const CommunityAssociationInfoPage = () => {
 
       <SectionWrapper>
         <label className="section-title">회장 정보</label>
-        <ChairmanCard
-          name="김회장"
-          nickname="kimboss"
-          phoneNumber="010-1234-5678"
-        />
+        <InfoWrapper>
+          <InfoDisplay items={chairmanInfo} />
+          {isChairman && (
+            <Button
+              variant="mainBlue"
+              height="52px"
+              onClick={() =>
+                handleNavigate(`/community/${associationId}/edit/chairman`)
+              }
+            >
+              회장 정보 수정하기
+            </Button>
+          )}
+        </InfoWrapper>
       </SectionWrapper>
     </Container>
   );

@@ -1,3 +1,11 @@
+/* 커뮤니티 공통 타입 */
+export type AssociationRank = 'CHAIRMAN' | 'EXECUTIVE' | 'MEMBER';
+
+export type InstitutionRank =
+  | 'CENTER_DIRECTOR'
+  | 'REPRESENTATIVE'
+  | 'SOCIAL_WORKER';
+
 /* 커뮤니티 공통 인터페이스 */
 // pageable 파라미터
 export interface PageableRequest {
@@ -10,11 +18,7 @@ export interface PageableRequest {
 export interface AuthorInfo {
   authorId: number;
   authorName: string;
-  authorInstitutionRank:
-    | 'CENTER_DIRECTOR'
-    | 'REPRESENTATIVE'
-    | 'SOCIAL_WORKER'
-    | 'none';
+  authorInstitutionRank: InstitutionRank;
   institutionImageUrl: string;
 }
 
