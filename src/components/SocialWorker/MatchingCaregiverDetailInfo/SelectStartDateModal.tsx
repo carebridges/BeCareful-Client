@@ -7,11 +7,13 @@ interface SelectStartDateModalProps {
   width: string;
   onClose: () => void;
   onCancel?: () => void;
+  onConfirm: (date: string) => void;
 }
 
 export const SelectStartDateModal = ({
   width,
   onClose,
+  onConfirm,
   onCancel,
 }: SelectStartDateModalProps) => {
   const [selectedYear, setSelectedYear] = useState<string[]>([]);
@@ -28,8 +30,15 @@ export const SelectStartDateModal = ({
   };
 
   const handleApply = () => {
-    onClose();
-    onCancel?.();
+    const year = selectedYear[0];
+    const month = selectedMonth[0]?.padStart(2, '0');
+    const day = selectedDay[0]?.padStart(2, '0');
+
+    if (year && month && day) {
+      const date = `${year}-${month}-${day}`;
+      onClose();
+      onConfirm(date);
+    }
   };
 
   useEffect(() => {

@@ -2,9 +2,13 @@ import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
-import { CheckBox } from '@/components/common/CheckBox/CheckBox';
-import { ReactComponent as ChevronRight } from '@/assets/icons/signup/ChevronRight.svg';
-import { AGREE_ITEMS } from '@/constants/signUpAgreeItems';
+import { useState } from 'react';
+import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';
+import {
+  CENTER_TERMS,
+  MARKETING_TERMS,
+  PRIVACY_TERMS,
+} from '@/constants/termText';
 
 type AgreeField =
   | 'isAgreedToTerms'
@@ -39,8 +43,15 @@ export const Step5AcceptTerms = () => {
     setAllAgreed(!isAllAgreed);
   };
 
+  const [expandedState, setExpandedState] = useState({
+    terms: false,
+    privacy: false,
+    marketing: false,
+  });
+  const isAnyExpanded = Object.values(expandedState).some(Boolean);
+
   return (
-    <StepWrapper>
+    <StepWrapper $isAnyExpanded={isAnyExpanded}>
       <HeaderSection>
         <Title>
           이용약관에 동의하시겠습니까?
@@ -55,20 +66,39 @@ export const Step5AcceptTerms = () => {
           onClick={handleAgreeAll}
         />
         <AgreeCheckContainer>
-          {AGREE_ITEMS.map(({ key, id, select, guide }) => (
-            <AgreeCheck key={id}>
-              <CheckBox
-                id={id}
-                checked={formData[key]}
-                onChange={handleCheckboxChange(key)}
-                borderRadius=""
-                label=""
-                select={select}
-                guide={guide}
-              />
-              <ChevronRight />
-            </AgreeCheck>
-          ))}
+          <CaregiverAgreeItem
+            id="1"
+            checked={formData.isAgreedToTerms}
+            onChange={handleCheckboxChange('isAgreedToTerms')}
+            select="필수"
+            guide="이용약관"
+            content={CENTER_TERMS}
+            onToggle={(v) =>
+              setExpandedState((prev) => ({ ...prev, terms: v }))
+            }
+          />
+          <CaregiverAgreeItem
+            id="2"
+            checked={formData.isAgreedToCollectPersonalInfo}
+            onChange={handleCheckboxChange('isAgreedToCollectPersonalInfo')}
+            select="필수"
+            guide="개인정보 수집 및 이용 동의"
+            content={PRIVACY_TERMS}
+            onToggle={(v) =>
+              setExpandedState((prev) => ({ ...prev, privacy: v }))
+            }
+          />
+          <CaregiverAgreeItem
+            id="3"
+            checked={formData.isAgreedToReceiveMarketingInfo}
+            onChange={handleCheckboxChange('isAgreedToReceiveMarketingInfo')}
+            select="선택"
+            guide="마케팅 정보 수신 동의"
+            content={MARKETING_TERMS}
+            onToggle={(v) =>
+              setExpandedState((prev) => ({ ...prev, marketing: v }))
+            }
+          />
         </AgreeCheckContainer>
       </AgreeWrapper>
 
@@ -89,7 +119,7 @@ export const Step5AcceptTerms = () => {
   );
 };
 
-const StepWrapper = styled.div`
+const StepWrapper = styled.div<{ $isAnyExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -149,14 +179,4 @@ const AgreeCheckContainer = styled.div`
   flex-direction: column;
   width: 100%;
   gap: 8px;
-`;
-
-const AgreeCheck = styled.div`
-  display: flex;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 8px;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
 `;

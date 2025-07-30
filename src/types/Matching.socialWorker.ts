@@ -154,4 +154,3 @@ export interface ElderMatchingStatus {
   matchingCount: number;
   applyCount: number;
 }
-

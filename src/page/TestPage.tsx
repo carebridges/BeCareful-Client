@@ -12,7 +12,6 @@ import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/Agre
 import { CheckBox } from '../components/common/CheckBox/CheckBox';
 import { CareGiverCard } from '@/components/SignUp/common/CareGiverCard';
 import { InstitutionCard } from '@/components/SignUp/common/InstitutionCard';
-import { SelectStartDateModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/SelectStartDateModal';
 
 export const TestPage = () => {
   const [selectedDropContents, setSelectedDropContents] = useState<string[]>(
@@ -39,19 +38,9 @@ export const TestPage = () => {
     setPressed(!pressed);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   return (
     <div>
       <h1>Test Page</h1>
-      <Button variant="blue" width="320px" height="52px" onClick={openModal}>
-        채용제안 모달 열기
-      </Button>
-      {isModalOpen && (
-        <SelectStartDateModal onClose={closeModal} width={'312px'} />
-      )}
 
       <BooleanNoCard pressed={true} text="네, 소유하고 있습니다." />
       <BooleanNoCard pressed={false} text="네, 소유하고 있습니다." />

@@ -8,6 +8,26 @@ import {
 } from '@/types/Matching.socialWorker';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+export const useHireCaregiver = () =>
+  useMutation({
+    mutationFn: async ({
+      matchingId,
+      workStartDate,
+    }: {
+      matchingId: number;
+      workStartDate: string;
+    }) => {
+      const { data } = await axiosInstance.post(
+        `/matching/social-worker/${matchingId}/hire`,
+        undefined,
+        {
+          params: { workStartDate },
+        },
+      );
+      return data;
+    },
+  });
+
 export const getElderMatchingList = async (
   status: string,
 ): Promise<ElderMatchingStatus[]> => {

@@ -7,8 +7,10 @@ import {
   Gender,
 } from '@/types/Elderly';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useElderlyRegisterForm = () => {
+  const navigate = useNavigate();
   const [profileImageUrl, setProfileImageUrl] = useState('');
 
   const [name, setName] = useState('');
@@ -28,6 +30,7 @@ export const useElderlyRegisterForm = () => {
   const [selectedDetails, setSelectedDetails] = useState<string[]>([]);
 
   const { mutate: registerElderly } = useRegisterElderly();
+
   const isValid =
     name !== '' &&
     birth !== '' &&
@@ -42,7 +45,7 @@ export const useElderlyRegisterForm = () => {
 
   const handleSubmit = async () => {
     if (!isValid) {
-      //TODO
+      alert('모든 항목을 입력해주세요.');
       return;
     }
 
@@ -62,9 +65,13 @@ export const useElderlyRegisterForm = () => {
       detailCareTypeList: selectedDetails as CareType[],
     };
 
-    registerElderly(payload);
+    registerElderly(payload, {
+      onSuccess: () => {
+        navigate('/socialworker/elderly');
+        window.scrollTo(0, 0);
+      },
+    });
   };
-
   return {
     profileImageUrl,
     setProfileImageUrl,

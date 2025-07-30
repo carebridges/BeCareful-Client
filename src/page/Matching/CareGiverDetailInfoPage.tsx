@@ -5,14 +5,17 @@ import { CaregiverBasicInfoSection } from '@/components/SocialWorker/MatchingCar
 import { WorkPreferenceSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/WorkPreferenceSection';
 import { CareerSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CareerSection';
 import { MATCH_REASON_TEXT } from '@/constants/matching.socialWorker';
-import { useCaregiverDetail } from '@/api/matching.socialWorker';
+import {
+  useCaregiverDetail,
+  useHireCaregiver,
+} from '@/api/matching.socialWorker';
 import { Button } from '@/components/common/Button/Button';
 import { SelectStartDateModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/SelectStartDateModal';
 import { useState } from 'react';
-import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { ProposalModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalSentModal';
+import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 
 export const CareGiverDetailInfoPage = () => {
   const navigate = useNavigate();
@@ -23,6 +26,8 @@ export const CareGiverDetailInfoPage = () => {
     recruitmentId: string;
     caregiverId: string;
   }>();
+
+  const { mutate: hireCaregiver } = useHireCaregiver();
 
   const { data, isLoading, error } = useCaregiverDetail(
     recruitmentId ?? '',
@@ -91,7 +96,24 @@ export const CareGiverDetailInfoPage = () => {
           onClose={() => setStartDateModalOpen(false)}
           onCancel={() => {
             setStartDateModalOpen(false);
-            setProposalModalOpen(true);
+          }}
+          onConfirm={(selectedDate) => {
+            if (!data) return;
+            hireCaregiver(
+              {
+                matchingId: data.matchingId,
+                workStartDate: selectedDate,
+              },
+              {
+                onSuccess: () => {
+                  setStartDateModalOpen(false);
+                  setProposalModalOpen(true);
+                },
+                onError: () => {
+                  alert('채용 제안에 실패했습니다. 다시 시도해주세요.');
+                },
+              },
+            );
           }}
         />
       )}

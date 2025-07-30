@@ -66,7 +66,7 @@ export const SocialWorkerMatchingPage = () => {
 };
 
 const Container = styled.div`
-  margin-bottom: 107px;
+  padding-bottom: 77px;
   margin: auto 20px;
 `;
 const TopContainer = styled.div`

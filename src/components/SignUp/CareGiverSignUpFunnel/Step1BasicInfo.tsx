@@ -1,15 +1,19 @@
+import { useState } from 'react';
+import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
 import { NameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/NameInput';
 import { PhoneNumberInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/PhoneNumberInput';
 import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
-import { AGREE_ITEMS } from '@/constants/signUpAgreeItems';
 import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
 import { useCaregiverBasicInfoForm } from '@/hooks/SignUp/useCaregiverBasicInfoForm';
-import { CheckBox } from '@/components/common/CheckBox/CheckBox';
-import { ReactComponent as ChevronRight } from '@/assets/icons/signup/ChevronRight.svg';
-import { styled } from 'styled-components';
 import { AgreeField } from '@/types/Socialworker/common';
+import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';
+import {
+  CAREGIVER_TERMS,
+  MARKETING_TERMS,
+  PRIVACY_TERMS,
+} from '@/constants/termText';
 
 export const Step1BasicInfo = () => {
   const { goToNext } = useCaregiverSignUpContext();
@@ -20,6 +24,14 @@ export const Step1BasicInfo = () => {
     handleChange,
     handleBirthAndGenderChange,
   } = useCaregiverBasicInfoForm();
+
+  const [expandedState, setExpandedState] = useState({
+    terms: false,
+    privacy: false,
+    marketing: false,
+  });
+
+  const isAnyExpanded = Object.values(expandedState).some(Boolean);
 
   const updateAgreement = (field: AgreeField, value: boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -47,7 +59,7 @@ export const Step1BasicInfo = () => {
   const isNextEnabled = isFormValid && isRequiredAgreed();
 
   return (
-    <StepWrapper>
+    <StepWrapper $isAnyExpanded={isAnyExpanded}>
       <HeaderSection>
         <Title>담당자 기본 정보를 입력하세요.</Title>
       </HeaderSection>
@@ -86,20 +98,43 @@ export const Step1BasicInfo = () => {
         />
 
         <AgreeCheckContainer>
-          {AGREE_ITEMS.map(({ key, id, select, guide }) => (
-            <AgreeCheck key={id}>
-              <CheckBox
-                id={id}
-                checked={formData[key]}
-                onChange={(checked) => updateAgreement(key, checked)}
-                borderRadius=""
-                label=""
-                select={select}
-                guide={guide}
-              />
-              <ChevronRight />
-            </AgreeCheck>
-          ))}
+          <CaregiverAgreeItem
+            id="1"
+            checked={formData.isAgreedToTerms}
+            onChange={(checked) => updateAgreement('isAgreedToTerms', checked)}
+            select="필수"
+            guide="이용약관"
+            content={CAREGIVER_TERMS}
+            onToggle={(v) =>
+              setExpandedState((prev) => ({ ...prev, terms: v }))
+            }
+          />
+          <CaregiverAgreeItem
+            id="2"
+            checked={formData.isAgreedToCollectPersonalInfo}
+            onChange={(checked) =>
+              updateAgreement('isAgreedToCollectPersonalInfo', checked)
+            }
+            select="필수"
+            guide="개인정보 수집 및 이용 동의"
+            content={PRIVACY_TERMS}
+            onToggle={(v) =>
+              setExpandedState((prev) => ({ ...prev, privacy: v }))
+            }
+          />
+          <CaregiverAgreeItem
+            id="3"
+            checked={formData.isAgreedToReceiveMarketingInfo}
+            onChange={(checked) =>
+              updateAgreement('isAgreedToReceiveMarketingInfo', checked)
+            }
+            select="선택"
+            guide="마케팅 정보 수신 동의"
+            content={MARKETING_TERMS}
+            onToggle={(v) =>
+              setExpandedState((prev) => ({ ...prev, marketing: v }))
+            }
+          />
         </AgreeCheckContainer>
       </AgreeWrapper>
 
@@ -117,7 +152,7 @@ export const Step1BasicInfo = () => {
   );
 };
 
-const StepWrapper = styled.div`
+const StepWrapper = styled.div<{ $isAnyExpanded: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -157,13 +192,11 @@ const ButtonContainer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.gray50};
   box-sizing: border-box;
   width: 100%;
-
   background: ${({ theme }) => theme.colors.white};
 `;
 
 const AgreeWrapper = styled.div`
   display: flex;
-  height: 218px;
   width: 100%;
   padding: 16px;
   flex-direction: column;
@@ -177,14 +210,4 @@ const AgreeCheckContainer = styled.div`
   flex-direction: column;
   width: 100%;
   gap: 8px;
-`;
-
-const AgreeCheck = styled.div`
-  display: flex;
-  height: 40px;
-  box-sizing: border-box;
-  padding: 8px;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
 `;

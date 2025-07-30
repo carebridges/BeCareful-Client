@@ -50,6 +50,10 @@ const SocialworkerRoute = () => {
             path="/matching/:recruitmentId/caregiver/:caregiverId"
             element={<CareGiverDetailInfoPage />}
           />
+          <Route
+            path="/apply/:recruitmentId/caregiver/:caregiverId"
+            element={<CareGiverDetailInfoPage />}
+          />
         </Routes>
       </main>
 
