@@ -48,6 +48,7 @@ const Overlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  bottom: 57px;
 `;
 
 const ModalContent = styled.div<{ width: string }>`
@@ -94,4 +95,3 @@ const ModalBottomContainer = styled.div`
   align-items: center;
   gap: 8px;
 `;
-
