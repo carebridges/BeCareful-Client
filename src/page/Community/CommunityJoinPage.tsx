@@ -71,5 +71,4 @@ const BackButtonWrapper = styled.div`
   align-items: center;
   height: 56px;
   width: 100%;
-  cursor: pointer;
 `;

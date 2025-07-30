@@ -18,9 +18,9 @@ export const useJoinStatusModal = () => {
 
     const { accessStatus, associationName } = data;
     setAssociationName(associationName);
-
     if (accessStatus in modals) {
       setModals((prev) => ({ ...prev, [accessStatus]: true }));
+
     }
   }, [isSuccess, data]);
 

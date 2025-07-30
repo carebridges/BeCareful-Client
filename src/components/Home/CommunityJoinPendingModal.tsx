@@ -1,5 +1,4 @@
 import { styled } from 'styled-components';
-
 import { Button } from '@/components/common/Button/Button';
 
 interface CommunityJoinPendingModalProps {
@@ -48,7 +47,6 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 57px;
   z-index: 1000;
 `;
 
@@ -96,3 +94,4 @@ const ModalBottomContainer = styled.div`
   align-items: center;
   gap: 8px;
 `;
+
