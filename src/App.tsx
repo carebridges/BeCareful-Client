@@ -9,13 +9,6 @@ import { CareGiverSignUpPage } from './page/SignUp/CareGiverSignUpPage';
 import CaregiverRoute from '@/route/CaregiverRoute';
 import CommunityRoute from '@/route/CommunityRoute';
 import SocialworkerRoute from '@/route/SocialworkerRoute';
-import ElderlyPage from '@/page/Elderly/ElderlyPage';
-import ElderlyRegisterPage from '@/page/Elderly/ElderlyRegisterPage';
-import { CareGiverDetailInfoPage } from '@/page/Matching/CareGiverDetailInfoPage';
-import { MatchingInformationPage } from '@/page/Matching/MatchingInformationPage';
-import MatchingStatus from '@/page/Matching/MatchingStatus';
-import { RegisterMatchingElderPage } from '@/page/Matching/RegisterMatchingElderPage';
-import { SocialWorkerMatchingPage } from '@/page/SocialWorkerMatching/SocialWorkerMatchingPage';
 import ChatListCaregiver from '@/page/Chat/ChatListCaregiver';
 import ChatListPage from '@/page/Chat/ChatListPage';
 import ChatRoomPage from '@/page/Chat/ChatRoomPage';
@@ -67,23 +60,7 @@ function App() {
       {/*기관 관리자 */}
       <Route path="/socialworker/*" element={<SocialworkerRoute />} />
 
-      <Route path="/elderly" element={<ElderlyPage />} />
-      <Route path="/elderly/new" element={<ElderlyRegisterPage />} />
-      <Route path="/match/social" element={<SocialWorkerMatchingPage />} />
-      <Route
-        path="/social/matching/new"
-        element={<RegisterMatchingElderPage />}
-      />
-      <Route
-        path="/matching/info/:recruitmentId"
-        element={<MatchingInformationPage />}
-      />
-      <Route
-        path="/matching/:recruitmentId/caregiver/:caregiverId"
-        element={<CareGiverDetailInfoPage />}
-      />
       {/*<Route path="/matching/caregiver" element={<CareGiverDetailInfoPage />} />*/}
-      <Route path="/matching/dashboard" element={<MatchingStatus />} />
 
       {/* 채팅 - 요양보호사, 사회복지사 */}
       <Route path="/chatList/social" element={<ChatListPage />} />

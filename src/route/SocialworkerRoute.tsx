@@ -3,6 +3,13 @@ import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorke
 import PointPage from '@/page/Common/PointPage';
 import SocialworkerHomePage from '@/page/SocialWorker/Home/SocialworkerHomePage';
 import SocialworkerMyRoute from '@/route/SocialworkerMyRoute';
+import ElderlyPage from '@/page/Elderly/ElderlyPage';
+import ElderlyRegisterPage from '@/page/Elderly/ElderlyRegisterPage';
+import { SocialWorkerMatchingPage } from '@/page/SocialWorkerMatching/SocialWorkerMatchingPage';
+import { RegisterMatchingElderPage } from '@/page/Matching/RegisterMatchingElderPage';
+import MatchingStatusPage from '@/page/Matching/MatchingStatusPage';
+import { MatchingInformationPage } from '@/page/Matching/MatchingInformationPage';
+import { CareGiverDetailInfoPage } from '@/page/Matching/CareGiverDetailInfoPage';
 
 const SocialworkerRoute = () => {
   const location = useLocation();
@@ -11,6 +18,8 @@ const SocialworkerRoute = () => {
     '/socialworker/my/profile',
     '/socialworker/my/institution',
     '/socialworker/my/association',
+    '/socialworker/elderly/*',
+    '/socialworker/matching/new',
   ];
   const shouldHideTabBar = () => {
     return hideTabBarPaths.some((pathPattern) => {
@@ -27,8 +36,20 @@ const SocialworkerRoute = () => {
         <Routes>
           <Route path="/" element={<SocialworkerHomePage />} />
           <Route path="/my/*" element={<SocialworkerMyRoute />} />
-
+          <Route path="/elderly" element={<ElderlyPage />} />
+          <Route path="/elderly/new" element={<ElderlyRegisterPage />} />
           <Route path="/point" element={<PointPage />} />
+          <Route path="/match/social" element={<SocialWorkerMatchingPage />} />
+          <Route path="/matching/new" element={<RegisterMatchingElderPage />} />
+          <Route path="/matching/dashboard" element={<MatchingStatusPage />} />
+          <Route
+            path="/matching/info/:recruitmentId"
+            element={<MatchingInformationPage />}
+          />
+          <Route
+            path="/matching/:recruitmentId/caregiver/:caregiverId"
+            element={<CareGiverDetailInfoPage />}
+          />
         </Routes>
       </main>
 

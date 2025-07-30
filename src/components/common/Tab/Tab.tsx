@@ -3,13 +3,22 @@ import styled from 'styled-components';
 
 interface TabProps {
   tabs: { name: string; content: React.ReactNode }[];
+  currentTab?: number;
+  onTabChange?: (index: number) => void;
 }
 
-export const Tab = ({ tabs }: TabProps) => {
-  const [currentTab, setCurrentTab] = useState(0);
+export const Tab = ({ tabs, currentTab, onTabChange }: TabProps) => {
+  const [internalTab, setInternalTab] = useState(0);
+
+  const isControlled = currentTab !== undefined && onTabChange !== undefined;
+  const selectedTab = isControlled ? currentTab : internalTab;
 
   const selectTabHandler = (index: number) => {
-    setCurrentTab(index);
+    if (isControlled) {
+      onTabChange(index);
+    } else {
+      setInternalTab(index);
+    }
   };
 
   return (
@@ -19,17 +28,17 @@ export const Tab = ({ tabs }: TabProps) => {
           {tabs.map((item, index) => (
             <TabItem
               key={index}
-              className={index === currentTab ? 'active' : ''}
+              className={index === selectedTab ? 'active' : ''}
               onClick={() => selectTabHandler(index)}
             >
-              <TabText className={index === currentTab ? 'active' : ''}>
+              <TabText className={index === selectedTab ? 'active' : ''}>
                 {item.name}
               </TabText>
             </TabItem>
           ))}
         </TabItems>
       </TabContainer>
-      <TabContent>{tabs[currentTab].content}</TabContent>
+      <TabContent>{tabs[selectedTab].content}</TabContent>
     </div>
   );
 };

@@ -1,9 +1,28 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import {
+  ElderMatchingStatus,
+  MatchingCaregiver,
   MatchingElderData,
   MatchingRecruitmentPayload,
+  RawCaregiver,
 } from '@/types/Matching.socialWorker';
 import { useMutation, useQuery } from '@tanstack/react-query';
+
+export const getElderMatchingList = async (
+  status: string,
+): Promise<ElderMatchingStatus[]> => {
+  const { data } = await axiosInstance.get(
+    `/matching/social-worker/list?matchingStatusFilter=${status}`,
+  );
+  return data;
+};
+
+export const useElderMatchingList = (status: string) => {
+  return useQuery({
+    queryKey: ['elder-matching-list', status],
+    queryFn: () => getElderMatchingList(status),
+  });
+};
 
 export const useRegisterMatchingRecruitment = () =>
   useMutation({
@@ -23,10 +42,28 @@ export const getMatchingRecruitment = async (recruitmentId: string) => {
   return data;
 };
 
+const flattenCaregiver = (raw: RawCaregiver): MatchingCaregiver => ({
+  caregiverInfo: {
+    caregiverId: raw.caregiverInfo?.caregiverInfo?.caregiverId ?? 0,
+    name: raw.caregiverInfo?.caregiverInfo?.name ?? '',
+    profileImageUrl: raw.caregiverInfo?.caregiverInfo?.profileImageUrl ?? '',
+    applicationTitle: raw.caregiverInfo?.applicationTitle ?? '',
+  },
+  matchingResultStatus: raw.matchingResultStatus,
+});
+
 export const useMatchingRecruitment = (recruitmentId: string) =>
   useQuery({
     queryKey: ['matching-recruitment', recruitmentId],
-    queryFn: () => getMatchingRecruitment(recruitmentId),
+    queryFn: async () => {
+      const data = await getMatchingRecruitment(recruitmentId);
+
+      return {
+        ...data,
+        matchedCaregivers: data.matchedCaregivers.map(flattenCaregiver),
+        appliedCaregivers: data.appliedCaregivers.map(flattenCaregiver),
+      };
+    },
     enabled: !!recruitmentId,
   });
 
@@ -49,4 +86,3 @@ export const useCaregiverDetail = (
     queryFn: () => getCaregiverDetail(recruitmentId, caregiverId),
     enabled: !!recruitmentId && !!caregiverId,
   });
-

@@ -26,7 +26,7 @@ export const MatchListTab = ({
           careerTitle={caregiver.caregiverInfo.applicationTitle}
           onClick={() =>
             navigate(
-              `/matching/${recruitmentId}/caregiver/${caregiver.caregiverInfo.caregiverId}`,
+              `/socialworker/matching/${recruitmentId}/caregiver/${caregiver.caregiverInfo.caregiverId}`,
             )
           }
         />

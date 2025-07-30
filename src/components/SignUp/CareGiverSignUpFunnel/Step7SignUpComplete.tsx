@@ -1,8 +1,10 @@
 import { Button } from '@/components/common/Button/Button';
 import { styled } from 'styled-components';
 import { ReactComponent as SignUpComplete } from '@/assets/icons/signup/SignUpComplete.svg';
+import { useNavigate } from 'react-router-dom';
 
 export const Step7SignUpComplete = () => {
+  const navigate = useNavigate();
   return (
     <StepWrapper>
       <HeaderSection>
@@ -18,7 +20,11 @@ export const Step7SignUpComplete = () => {
       </SignUpCompleteContainer>
 
       <ButtonContainer>
-        <Button height="52px" variant="blue" disabled>
+        <Button
+          height="52px"
+          variant="blue"
+          onClick={() => navigate('/caregiver')}
+        >
           돌봄다리 시작하기
         </Button>
       </ButtonContainer>

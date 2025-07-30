@@ -19,7 +19,7 @@ export const MatchingInformationPage = () => {
   return (
     <Container>
       <TopContainer>
-        <IconContainer onClick={() => navigate(-2)}>
+        <IconContainer onClick={() => navigate(-1)}>
           <IconArrowLeft />
         </IconContainer>
         매칭 정보
@@ -54,8 +54,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  margin: 24px 16px auto 16px;
 `;
 const TopContainer = styled.div`
   display: flex;
@@ -87,11 +85,13 @@ const IconContainer = styled.div`
 const GapContainer = styled.div`
   display: flex;
   height: 6px;
+  width: 100%;
   background-color: ${({ theme }) => theme.colors.gray50};
 `;
 
 const TabContainer = styled.div`
   display: flex;
-  padding: 16px 20px 0px 20px;
+  padding: 16px 20px 20px 20px;
+  box-sizing: border-box;
   width: 100%;
 `;

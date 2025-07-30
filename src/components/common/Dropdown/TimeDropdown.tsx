@@ -18,15 +18,16 @@ export const TimeDropdown = ({
   );
   const [isOpen, setIsOpen] = useState(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const hourRef = useRef<HTMLDivElement>(null);
+  const minuteRef = useRef<HTMLDivElement>(null);
+
   const hours = Array.from({ length: 24 }, (_, i) =>
     i.toString().padStart(2, '0'),
   );
   const minutes = Array.from({ length: 60 }, (_, i) =>
     i.toString().padStart(2, '0'),
   );
-
-  const hourRef = useRef<HTMLDivElement>(null);
-  const minuteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (hourRef.current) {
@@ -41,6 +42,25 @@ export const TimeDropdown = ({
     }
   }, [selectedHour, selectedMinute]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   const handleHourChange = (hour: string) => {
     setSelectedHour(hour);
     onChange(`${hour}:${selectedMinute}`);
@@ -52,9 +72,11 @@ export const TimeDropdown = ({
   };
 
   return (
-    <DropdownContainer width={width}>
+    <DropdownContainer width={width} ref={dropdownRef}>
       <TimeDropdownHeader onClick={() => setIsOpen(!isOpen)}>
-        <TimeDropdownLabel>{`${selectedHour}:${selectedMinute}`}</TimeDropdownLabel>
+        <TimeDropdownLabel>
+          {`${selectedHour}시 ${selectedMinute}분`}
+        </TimeDropdownLabel>
       </TimeDropdownHeader>
       {isOpen && (
         <DropdownMenu>
@@ -68,7 +90,7 @@ export const TimeDropdown = ({
                   >
                     {hour}
                   </TimeItem>
-                  {index < hours.length - 1 && <Divider> </Divider>}
+                  {index < hours.length - 1 && <Divider />}
                 </React.Fragment>
               ))}
             </ScrollableColumn>
@@ -82,7 +104,7 @@ export const TimeDropdown = ({
                   >
                     {minute}
                   </TimeItem>
-                  {index < minutes.length - 1 && <Divider> </Divider>}
+                  {index < minutes.length - 1 && <Divider />}
                 </React.Fragment>
               ))}
             </ScrollableColumn>
@@ -124,7 +146,7 @@ const TimeDropdownLabel = styled.div`
 
 const DropdownMenu = styled.div`
   position: absolute;
-  top: 80px;
+  top: 56px;
   left: 0;
   width: 147px;
   justify-content: center;

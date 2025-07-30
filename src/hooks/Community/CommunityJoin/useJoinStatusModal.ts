@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useCommunityAccess } from '@/api/communityAssociation';
-import { COMMUNITY_ACCESS_SESSION_KEYS } from '@/constants/communityAssociation';
 
 export const useJoinStatusModal = () => {
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
@@ -20,15 +19,8 @@ export const useJoinStatusModal = () => {
     const { accessStatus, associationName } = data;
     setAssociationName(associationName);
 
-    const sessionKey = COMMUNITY_ACCESS_SESSION_KEYS[accessStatus];
-
-    if (!sessionKey) return;
-
-    if (sessionStorage.getItem(sessionKey) !== 'true') {
-      if (accessStatus in modals) {
-        setModals((prev) => ({ ...prev, [accessStatus]: true }));
-        sessionStorage.setItem(sessionKey, 'true');
-      }
+    if (accessStatus in modals) {
+      setModals((prev) => ({ ...prev, [accessStatus]: true }));
     }
   }, [isSuccess, data]);
 

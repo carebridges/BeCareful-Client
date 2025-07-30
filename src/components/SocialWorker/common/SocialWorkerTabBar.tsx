@@ -8,7 +8,11 @@ export const SocialWorkerTabBar = () => {
   return (
     <TabBarWrapper>
       {SOCIAL_WORKER_TAB.map(({ key, path, label, Icon }) => {
-        const isActive = location.pathname === path;
+        const isActive =
+          (key === 'home' &&
+            (location.pathname === '/socialworker/matching/dashboard' ||
+              location.pathname === '/socialworker/elderly')) ||
+          location.pathname === path;
 
         return (
           <TabBarContentWrapper as={Link} to={path} key={key}>

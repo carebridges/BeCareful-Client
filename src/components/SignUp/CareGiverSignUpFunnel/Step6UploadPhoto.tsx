@@ -60,7 +60,12 @@ export const Step6UploadPhoto = () => {
         />
       </ProfileContainer>
       <ButtonContainer>
-        <Button onClick={handleSubmit} height="52px" disabled={isPending}>
+        <Button
+          onClick={handleSubmit}
+          height="52px"
+          variant="blue"
+          disabled={isPending}
+        >
           {isPending ? '등록 중...' : '시작하기'}
         </Button>
       </ButtonContainer>

@@ -12,10 +12,12 @@ import { useState } from 'react';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { ProposalModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalSentModal';
 
 export const CareGiverDetailInfoPage = () => {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStartDateModalOpen, setStartDateModalOpen] = useState(false);
+  const [isProposalModalOpen, setProposalModalOpen] = useState(false);
 
   const { recruitmentId, caregiverId } = useParams<{
     recruitmentId: string;
@@ -79,16 +81,27 @@ export const CareGiverDetailInfoPage = () => {
       </ContentContainer>
 
       <ButtonContainer>
-        <Button onClick={() => setIsModalOpen(true)} height="52px">
+        <Button onClick={() => setStartDateModalOpen(true)} height="52px">
           채용제안하기
         </Button>
       </ButtonContainer>
-      {isModalOpen && (
+      {isStartDateModalOpen && (
         <SelectStartDateModal
           width="400px"
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setStartDateModalOpen(false)}
           onCancel={() => {
-            // TODO
+            setStartDateModalOpen(false);
+            setProposalModalOpen(true);
+          }}
+        />
+      )}
+
+      {isProposalModalOpen && (
+        <ProposalModal
+          width="400px"
+          onClose={() => setProposalModalOpen(false)}
+          onCancel={() => {
+            //TODO
           }}
         />
       )}

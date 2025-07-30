@@ -46,7 +46,7 @@ export const RegisterMatchingElderPage = () => {
     const payload = getPayload();
     registerMatchingRecruitment(payload, {
       onSuccess: (data) => {
-        navigate(`/matching/info/${data}`);
+        navigate(`/socialworker/matching/info/${data}`);
       },
       onError: (error) => {
         console.error('공고 등록 실패:', error);

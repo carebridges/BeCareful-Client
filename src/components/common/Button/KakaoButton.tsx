@@ -34,6 +34,10 @@ const KakaoContainer = styled.button`
   color: ${({ theme }) => theme.colors.black};
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+
+  &:active {
+    transform: scale(0.99);
+  }
 `;
 
 const ButtonText = styled.span`

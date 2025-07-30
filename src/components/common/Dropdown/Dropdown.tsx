@@ -116,7 +116,14 @@ const DropdownExpandContent = styled.div`
   box-sizing: border-box;
   border-radius: 8px;
   min-width: 100%;
+  max-height: 200px;
   overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
 `;
 
 const DropdownItem = styled.button<{ selected: boolean }>`

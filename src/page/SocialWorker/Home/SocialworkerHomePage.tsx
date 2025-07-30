@@ -128,7 +128,14 @@ const SocialworkerHomePage = () => {
       <SectionWrapper>
         <div className="titleWrapper">
           <label className="title">매칭 통계</label>
-          <div className="detailWrapper">
+          <div
+            className="detailWrapper"
+            onClick={() => {
+              navigate('/socialworker/matching/dashboard');
+              window.scrollTo(0, 0);
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <label className="detail">자세히 보기</label>
             <ChevronRight />
           </div>
@@ -166,7 +173,14 @@ const SocialworkerHomePage = () => {
       <SectionWrapper>
         <div className="titleWrapper">
           <label className="title">매칭 대기중인 어르신</label>
-          <div className="detailWrapper">
+          <div
+            className="detailWrapper"
+            onClick={() => {
+              navigate('/socialworker/elderly');
+              window.scrollTo(0, 0);
+            }}
+            style={{ cursor: 'pointer' }}
+          >
             <label className="detail">자세히 보기</label>
             <ChevronRight />
           </div>

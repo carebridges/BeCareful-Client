@@ -23,6 +23,11 @@ export const CheckCard = ({
 };
 
 const CardContainer = styled.div<{ $pressed: boolean }>`
+  will-change: background-color, border;
+  transition:
+    background-color 0.2s ease,
+    border 0.2s ease;
+
   display: flex;
   height: 64px;
   padding: 24px 16px;

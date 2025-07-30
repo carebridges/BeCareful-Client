@@ -130,3 +130,27 @@ export interface CaregiverDetailData {
   mediationTypes: string[];
   mediationDescription: string;
 }
+
+export type RawCaregiver = {
+  caregiverInfo?: {
+    caregiverInfo?: {
+      caregiverId: number;
+      name: string;
+      profileImageUrl: string;
+    };
+    applicationTitle: string;
+  };
+  matchingResultStatus: string;
+};
+
+export interface ElderMatchingStatus {
+  recruitmentId: number;
+  elderlyInfo: {
+    elderlyName: string;
+    elderlyAge: number;
+    elderlyGender: Gender;
+    elderlyProfileImageUrl: string;
+  };
+  matchingCount: number;
+  applyCount: number;
+}

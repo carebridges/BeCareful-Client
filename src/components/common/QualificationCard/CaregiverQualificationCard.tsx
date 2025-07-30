@@ -16,12 +16,13 @@ export const CareGiverQualificationCard = ({
 }: CareGiverQualificationCardProps) => {
   const [cardState, setCardState] = useState<CardState>('default');
   const [certificateNumber, setCertificateNumber] = useState('');
-
+  const [certificateLevel] = useState('1급');
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCertificateNumber(value);
     onChange({
       certificateType: initialType,
+      certificateLevel,
       certificateNumber: value,
     });
   };

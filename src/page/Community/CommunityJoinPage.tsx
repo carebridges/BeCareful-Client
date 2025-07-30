@@ -13,8 +13,8 @@ export const CommunityJoinPage = () => {
     <>
       <Header>
         <NavbarWrapper>
-          <BackButtonWrapper>
-            <ArrowLeft onClick={() => navigate('/community')} />
+          <BackButtonWrapper onClick={() => navigate('/community')}>
+            <ArrowLeft />
           </BackButtonWrapper>
           <NavTitle>커뮤니티</NavTitle>
         </NavbarWrapper>
@@ -51,6 +51,7 @@ const NavbarWrapper = styled.div`
 
 const NavTitle = styled.div`
   position: absolute;
+  pointer-events: none;
   left: 0;
   right: 0;
   text-align: center;
@@ -70,4 +71,5 @@ const BackButtonWrapper = styled.div`
   align-items: center;
   height: 56px;
   width: 100%;
+  cursor: pointer;
 `;

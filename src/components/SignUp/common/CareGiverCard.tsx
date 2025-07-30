@@ -32,6 +32,7 @@ const RoleCardWrapper = styled.div`
 `;
 
 const RoleCardContainer = styled.div<{ $pressed: boolean }>`
+  will-change: background-color, border;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -46,6 +47,10 @@ const RoleCardContainer = styled.div<{ $pressed: boolean }>`
   border: 2px solid
     ${({ theme, $pressed }) =>
       $pressed ? theme.colors.mainOrange : theme.colors.gray50};
+
+  transition:
+    background-color 0.3s ease,
+    border 0.3s ease;
 `;
 
 const RoleCardText = styled.div`

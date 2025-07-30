@@ -28,12 +28,14 @@ const ElderlyPage = () => {
           </NavLeft>
         }
         center={
-          <NavCenter onClick={() => navigate('/elderly')}>
+          <NavCenter onClick={() => navigate('/socialworker/elderly')}>
             어르신 목록
           </NavCenter>
         }
         right={
-          <NavRight onClick={() => navigate('/elderly/new')}>등록하기</NavRight>
+          <NavRight onClick={() => navigate('/socialworker/elderly/new')}>
+            등록하기
+          </NavRight>
         }
         color=""
       />

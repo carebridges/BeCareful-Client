@@ -17,7 +17,7 @@ export const MatchingApplyModal = ({
 }: MatchingApplyModalProps) => {
   const navigate = useNavigate();
   const handleApply = () => {
-    navigate('/social/matching/new', {
+    navigate('/socialworker/matching/new', {
       state: { elderlyId: data.elderlyId },
     });
   };

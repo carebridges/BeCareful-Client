@@ -44,7 +44,7 @@ export const useCommunityAccess = (): UseQueryResult<CommunityAccessResponse> =>
       const { data } = await axiosInstance.get('/community/access');
       return data;
     },
-    refetchOnWindowFocus: false,
+    //refetchOnWindowFocus: false,
     staleTime: 1000 * 60, //TODO
   });
 

@@ -2,17 +2,22 @@ import { styled } from 'styled-components';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { Button } from '@/components/common/Button/Button';
 
-interface CommunityJoinApprovedModalProps {
+interface ProposalModalProps {
   width: string;
-  associationName: string;
   onClose: () => void;
+  onCancel?: () => void;
 }
 
-export const CommunityJoinApprovedModal = ({
+export const ProposalModal = ({
   width,
-  associationName,
   onClose,
-}: CommunityJoinApprovedModalProps) => {
+  onCancel,
+}: ProposalModalProps) => {
+  const handleApply = () => {
+    onClose();
+    onCancel?.();
+  };
+
   return (
     <Overlay>
       <ModalContent width={width}>
@@ -22,17 +27,15 @@ export const CommunityJoinApprovedModal = ({
           </ModalCloseButton>
         </ModalTopContainer>
         <ModalMiddleContainer>
-          <span>
-            ‘{associationName}’
-            <br />
-            커뮤니티 가입이 승인되었습니다!
-          </span>
+          <span>채용 제안이 완료되었습니다.</span>
           <span className="highlight">
-            이제 커뮤니티 내부를 둘러볼 수 있어요.
+            요양보호사님에게 합격 메시지를 전달했어요!
+            <br />
+            채팅을 통해 최종 승인을 진행하세요.
           </span>
         </ModalMiddleContainer>
         <ModalBottomContainer>
-          <Button onClick={onClose} height="52px" variant="blue">
+          <Button variant="blue" height="52px" onClick={handleApply}>
             확인
           </Button>
         </ModalBottomContainer>
@@ -46,12 +49,12 @@ const Overlay = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(5px);
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 57px;
+
   z-index: 1000;
 `;
 

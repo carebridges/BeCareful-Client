@@ -65,4 +65,7 @@ const Label = styled.label<{ $border: boolean }>`
     color: ${({ theme }) => theme.colors.mainBlue};
     border-color: ${({ theme }) => theme.colors.mainBlue};
   }
+  &:active {
+    transform: scale(0.97);
+  }
 `;

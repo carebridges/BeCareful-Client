@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dropdown } from '@/components/common/Dropdown/Dropdown';
 
 interface SelectStartDateModalProps {
@@ -18,7 +18,7 @@ export const SelectStartDateModal = ({
   const [selectedMonth, setSelectedMonth] = useState<string[]>([]);
   const [selectedDay, setSelectedDay] = useState<string[]>([]);
 
-  const years = Array.from({ length: 5 }, (_, i) => `${2024 + i}`);
+  const years = Array.from({ length: 50 }, (_, i) => `${2024 + i}`);
   const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
   const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
 
@@ -31,6 +31,14 @@ export const SelectStartDateModal = ({
     onClose();
     onCancel?.();
   };
+
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
 
   return (
     <Overlay>

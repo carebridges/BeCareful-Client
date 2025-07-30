@@ -53,6 +53,9 @@ const StyledButton = styled.button<StyledButtonProps>`
   &:disabled {
     cursor: default;
   }
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 const getVariantStyle = (variant: ButtonVariant) => {

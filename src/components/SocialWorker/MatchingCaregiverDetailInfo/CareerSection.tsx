@@ -16,6 +16,8 @@ interface CareerSectionProps {
 }
 
 export const CareerSection = ({ careerInfo }: CareerSectionProps) => {
+  if (!careerInfo.careerType) return null;
+
   if (careerInfo.careerType === '신입') {
     return (
       <>
