@@ -20,6 +20,9 @@ const SocialworkerRoute = () => {
     '/socialworker/my/association',
     '/socialworker/elderly/*',
     '/socialworker/matching/new',
+    '/socialworker/matching/:recruitmentId/caregiver/:caregiverId',
+    '/socialworker/apply/:recruitmentId/caregiver/:caregiverId',
+    '/socialworker/matching/info/:recruitmentId',
   ];
   const shouldHideTabBar = () => {
     return hideTabBarPaths.some((pathPattern) => {

@@ -86,7 +86,11 @@ export const CareGiverDetailInfoPage = () => {
       </ContentContainer>
 
       <ButtonContainer>
-        <Button onClick={() => setStartDateModalOpen(true)} height="52px">
+        <Button
+          onClick={() => setStartDateModalOpen(true)}
+          height="52px"
+          variant="blue"
+        >
           채용제안하기
         </Button>
       </ButtonContainer>
