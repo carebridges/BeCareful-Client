@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { Button } from '@/components/common/Button/Button';
+import { useNavigate } from 'react-router-dom';
 
 interface ProposalModalProps {
   width: string;
@@ -13,9 +14,11 @@ export const ProposalModal = ({
   onClose,
   onCancel,
 }: ProposalModalProps) => {
+  const navigate = useNavigate();
   const handleApply = () => {
     onClose();
     onCancel?.();
+    navigate('/socialworker/chat');
   };
 
   return (
