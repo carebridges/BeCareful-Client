@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { PostListItem } from '@/types/Community/post';
-import { textTruncateFormat } from '@/hooks/Community/PostOverview/textFormat';
+import { textTruncateFormat } from '@/utils/textFormat';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
 
 interface PostOverviewProps extends PostListItem {

@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/api/axiosInstance';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   MatchingMyRecruitmentDetailResponse,
   MatchingMyRecruitmentResponse,
@@ -21,6 +22,10 @@ import {
   WorkApplicationRequest,
   WorkApplicationResponse,
 } from '@/types/Caregiver/work';
+import {
+  CaregiverChatListResponse,
+  CaregiverChatResponse,
+} from '@/types/Caregiver/chat';
 
 /* 홈화면 */
 // 요양보호사 홈 화면 구성 데이터 조회
@@ -178,4 +183,53 @@ export const getApplicationDetail = async (
     `/matching/caregiver/my/recruitment/${recruitmentId}`,
   );
   return response.data;
+};
+
+/* 채팅 */
+// 요양보호사 채팅 목록
+export const useGetCaregiverChatList = () =>
+  useQuery<CaregiverChatListResponse>({
+    queryKey: ['caregiverChatList'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get('/chat/caregiver/list');
+      return data;
+    },
+  });
+
+// 요양보호사 채팅 데이터 조회
+export const useGetCaregiverChat = (matchingId: number) =>
+  useQuery<CaregiverChatResponse>({
+    queryKey: ['caregiverChat', matchingId],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get(
+        `/chat/caregiver?matchingId=${matchingId}`,
+      );
+      return data;
+    },
+  });
+
+// 계약서를 기반으로 매칭 확정
+export const usePostCaregiverContract = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (contractId: number) => {
+      const response = await axiosInstance.post(
+        `/chat/caregiver/contract/${contractId}/confirm`,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log(
+        'usePostCaregiverContract - 요양보호사 매칭 성공:',
+        response.data,
+      );
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverContract'],
+      });
+    },
+    onError: (error) => {
+      console.error('usePostCaregiverContract - 요양보호사 매칭 실패:', error);
+    },
+  });
 };
