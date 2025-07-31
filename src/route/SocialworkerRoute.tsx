@@ -64,7 +64,6 @@ const SocialworkerRoute = () => {
             path="/apply/:recruitmentId/caregiver/:caregiverId"
             element={<CareGiverDetailInfoPage />}
           />
-
           <Route path="/chat" element={<SocialworkerChatListPage />} />
           <Route path="/chat/:matchingId" element={<SocialworkerChatPage />} />
           <Route
