@@ -43,35 +43,35 @@ const SocialworkerRoute = () => {
     >
       <main>
         <Routes>
-          <Route path="/" element={<SocialworkerHomePage />} />
-          <Route path="/my/*" element={<SocialworkerMyRoute />} />
+          <Route index element={<SocialworkerHomePage />} />
+          <Route path="my/*" element={<SocialworkerMyRoute />} />
 
-          <Route path="/elderly" element={<ElderlyPage />} />
-          <Route path="/elderly/new" element={<ElderlyRegisterPage />} />
+          <Route path="elderly" element={<ElderlyPage />} />
+          <Route path="elderly/new" element={<ElderlyRegisterPage />} />
 
-          <Route path="/match/social" element={<SocialWorkerMatchingPage />} />
-          <Route path="/matching/new" element={<RegisterMatchingElderPage />} />
-          <Route path="/matching/dashboard" element={<MatchingStatusPage />} />
+          <Route path="match/social" element={<SocialWorkerMatchingPage />} />
+          <Route path="matching/new" element={<RegisterMatchingElderPage />} />
+          <Route path="matching/dashboard" element={<MatchingStatusPage />} />
           <Route
-            path="/matching/info/:recruitmentId"
+            path="matching/info/:recruitmentId"
             element={<MatchingInformationPage />}
           />
           <Route
-            path="/matching/:recruitmentId/caregiver/:caregiverId"
+            path="matching/:recruitmentId/caregiver/:caregiverId"
             element={<CareGiverDetailInfoPage />}
           />
           <Route
-            path="/apply/:recruitmentId/caregiver/:caregiverId"
+            path="apply/:recruitmentId/caregiver/:caregiverId"
             element={<CareGiverDetailInfoPage />}
           />
-          <Route path="/chat" element={<SocialworkerChatListPage />} />
-          <Route path="/chat/:matchingId" element={<SocialworkerChatPage />} />
+          <Route path="chat" element={<SocialworkerChatListPage />} />
+          <Route path="chat/:matchingId" element={<SocialworkerChatPage />} />
           <Route
-            path="/socialworker/chat/:contractId/edit"
+            path="chat/:contractId/edit"
             element={<SocialworkerEditContractPage />}
           />
 
-          <Route path="/point" element={<PointPage />} />
+          <Route path="point" element={<PointPage />} />
         </Routes>
       </main>
 

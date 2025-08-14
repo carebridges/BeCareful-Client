@@ -38,24 +38,24 @@ const CaregiverRoute = () => {
     >
       <main>
         <Routes>
-          <Route path="/" element={<CaregiverHomePage />} />
-          <Route path="/mywork" element={<CaregiverMyworkPage />} />
-          <Route path="/work" element={<CaregiverWorkPage />} />
+          <Route index element={<CaregiverHomePage />} />
+          <Route path="mywork" element={<CaregiverMyworkPage />} />
+          <Route path="work" element={<CaregiverWorkPage />} />
           <Route
-            path="/work/:recruitmentId"
+            path="work/:recruitmentId"
             element={<CaregiverWorkDetailPage />}
           />
-          <Route path="/apply" element={<CaregiverApplyPage />} />
+          <Route path="apply" element={<CaregiverApplyPage />} />
           <Route
-            path="/apply/:recruitmentId"
+            path="apply/:recruitmentId"
             element={<CaregiverApplyDetailPage />}
           />
-          <Route path="/my/*" element={<CaregiverMyRoute />} />
+          <Route path="my/*" element={<CaregiverMyRoute />} />
 
-          <Route path="/chat" element={<CaregiverChatListPage />} />
-          <Route path="/chat/:matchingId" element={<CaregiverChatPage />} />
+          <Route path="chat" element={<CaregiverChatListPage />} />
+          <Route path="chat/:matchingId" element={<CaregiverChatPage />} />
 
-          <Route path="/point" element={<PointPage />} />
+          <Route path="point" element={<PointPage />} />
         </Routes>
       </main>
 

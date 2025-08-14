@@ -108,7 +108,7 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
         right={
           <NavRight
             onClick={() => {
-              navigate('/caregiver/chatlist');
+              navigate('/caregiver/chat');
               window.scrollTo(0, 0);
             }}
           >

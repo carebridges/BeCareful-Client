@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ReactComponent as Search } from '@/assets/icons/Search.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
@@ -21,7 +21,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const navigate = useNavigate();
   const handleNavigate = (path: string) => {
     navigate(path);
-    scrollTo(0, 0);
+    window.scrollTo(0, 0);
   };
 
   const location = useLocation();
@@ -47,6 +47,10 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     closeApprovedModal,
   } = useJoinStatusModal();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
       {isWriting ? (
@@ -59,7 +63,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
           <Top>
             <div>
               <Search />
-              <Chat />
+              <Chat onClick={() => handleNavigate('/socialworker/chat')} />
             </div>
           </Top>
 

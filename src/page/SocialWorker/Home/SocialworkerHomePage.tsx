@@ -61,7 +61,7 @@ const SocialworkerHomePage = () => {
       <NavBar
         left={<NavLeft />}
         right={
-          <NavRight onClick={() => handleNavigate('chatlist')}>
+          <NavRight onClick={() => handleNavigate('chat')}>
             {chatNew ? <ChatNew /> : <Chat />}
           </NavRight>
         }

@@ -22,7 +22,7 @@ export const CommunityCreatePage = () => {
   };
 
   const handleChatClick = () => {
-    navigate('/chatlist/caregiver'); //TODO
+    navigate('/caregiver/chat'); //TODO
   };
 
   return (

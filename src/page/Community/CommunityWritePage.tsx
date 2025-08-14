@@ -21,6 +21,7 @@ import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
 import { PostDetailResponse, PostRequest } from '@/types/Community/post';
 import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
+import { useEffect } from 'react';
 
 interface WritingProp {
   boardType: string;
@@ -139,6 +140,10 @@ const CommunityWritePage = ({
     console.log(postData);
     await handleSubmit(postData);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Container>

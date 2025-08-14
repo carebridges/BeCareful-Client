@@ -9,9 +9,6 @@ import { CareGiverSignUpPage } from './page/SignUp/CareGiverSignUpPage';
 import CaregiverRoute from '@/route/CaregiverRoute';
 import CommunityRoute from '@/route/CommunityRoute';
 import SocialworkerRoute from '@/route/SocialworkerRoute';
-import ChatListCaregiver from '@/page/Chat/ChatListCaregiver';
-import ChatListPage from '@/page/Chat/ChatListPage';
-import ChatRoomPage from '@/page/Chat/ChatRoomPage';
 import LandingPage from '@/page/Landing/LandingPage';
 import { TestPage } from '@/page/TestPage';
 import { ErrorPage } from '@/page/Error/ErrorPage';
@@ -61,11 +58,6 @@ function App() {
       <Route path="/socialworker/*" element={<SocialworkerRoute />} />
 
       {/*<Route path="/matching/caregiver" element={<CareGiverDetailInfoPage />} />*/}
-
-      {/* 채팅 - 요양보호사, 사회복지사 */}
-      <Route path="/chatList/social" element={<ChatListPage />} />
-      <Route path="/caregiver/chatList" element={<ChatListCaregiver />} />
-      <Route path="/chatroom/:matchingId" element={<ChatRoomPage />} />
 
       {/* 협회 랜딩페이지 */}
       <Route path="/landing" element={<LandingPage />} />

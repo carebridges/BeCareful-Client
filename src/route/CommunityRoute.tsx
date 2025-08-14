@@ -23,26 +23,23 @@ const CommunityRoute = () => {
       >
         <main>
           <Routes>
-            <Route path="/splash" element={<CommunitySplashPage />} />
+            <Route path="splash" element={<CommunitySplashPage />} />
 
-            <Route path="/create" element={<CommunityCreatePage />} />
+            <Route path="create" element={<CommunityCreatePage />} />
             {/*서버 수정되면 삭제 예정*/}
-            <Route path="/signup" element={<CommunitySignUpPage />} />
-            <Route path="/members/new" element={<CommunityJoinPage />} />
+            <Route path="signup" element={<CommunitySignUpPage />} />
+            <Route path="members/new" element={<CommunityJoinPage />} />
+            <Route path=":id/preview" element={<CommunityPage previewMode />} />
             <Route
-              path="/:id/preview"
-              element={<CommunityPage previewMode />}
-            />
-            <Route
-              path="/join/:id/role"
+              path="join/:id/role"
               element={<CommunityJoinSelectRolePage />}
             />
 
             <Route index element={<CommunityRouteGuard />} />
-            <Route path="/:postId" element={<CommunityPostPage />} />
-            <Route path="/search" element={<CommunitySearchPage />} />
+            <Route path=":postId" element={<CommunityPostPage />} />
+            <Route path="search" element={<CommunitySearchPage />} />
 
-            <Route path="/:associationId">
+            <Route path=":associationId">
               <Route path="info" element={<CommunityAssociationInfoPage />} />
               <Route
                 path="edit/association"
