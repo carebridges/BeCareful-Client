@@ -33,14 +33,14 @@ export const InstitutionFunnel = ({
 }: InstitutionFunnelProps) => {
   const [institutionFormData, setInstitutionFormData] =
     useState<InstitutionFormData>(() => {
-      const { street, detail } = getRandomAddress();
+      const { detail } = getRandomAddress();
       return {
         institutionName: '',
         institutionCode: '',
         openYear: 0,
         facilityTypeList: [],
         phoneNumber: '',
-        streetAddress: street,
+        streetAddress: '',
         detailAddress: detail,
         profileImageUrl: null,
       };

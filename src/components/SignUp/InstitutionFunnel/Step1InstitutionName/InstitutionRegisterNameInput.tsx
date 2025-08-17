@@ -1,39 +1,45 @@
-import { useState } from 'react';
+import { useAllInstitutions } from '@/hooks/SignUp/useAllInstitutions';
+import { Institution } from '@/types/SocialSignUp';
+import { useState, useMemo, useRef } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
 import { styled } from 'styled-components';
-import { useSearchInstitution } from '@/api/signupFunnel';
-import { Institution } from '@/types/SocialSignUp';
 
 export const InstitutionRegisterNameInput = ({
   onInstitutionSelect,
   onChangeText,
 }: {
-  onInstitutionSelect: (name: string, id?: number) => void;
+  onInstitutionSelect: (name: string, id?: number, address?: string) => void;
   onChangeText?: (text: string) => void;
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
+  const institutions = useAllInstitutions();
+  const [term, setTerm] = useState('');
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const { data: institutions = [] } = useSearchInstitution(searchTerm.trim(), {
-    enabled: searchTerm.trim().length > 0,
-  });
+  const filtered = useMemo(() => {
+    const q = term.trim();
+    if (!q) return [];
+    return institutions.filter((i) => i.institutionName.includes(q));
+  }, [term, institutions]);
 
-  const handleSelect = (inst: Institution) => {
-    setSearchTerm(inst.institutionName);
-    setShowDropdown(false);
-    onInstitutionSelect(inst.institutionName, inst.institutionId);
+  const handleSelect = (inst: Institution & { address?: string }) => {
+    setTerm(inst.institutionName);
+    setOpen(false);
+    onInstitutionSelect(inst.institutionName, inst.institutionId, inst.address);
   };
 
   return (
-    <Wrapper>
+    <Wrapper ref={containerRef}>
       <SearchContainer>
         <StyledInput
           placeholder="기관명 검색"
-          value={searchTerm}
+          value={term}
+          onFocus={() => setOpen(true)}
           onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setShowDropdown(true);
-            onChangeText?.(e.target.value);
+            const v = e.target.value;
+            setTerm(v);
+            setOpen(true);
+            onChangeText?.(v);
           }}
         />
         <IconWrapper>
@@ -41,14 +47,15 @@ export const InstitutionRegisterNameInput = ({
         </IconWrapper>
       </SearchContainer>
 
-      {showDropdown && institutions.length > 0 && (
+      {open && filtered.length > 0 && (
         <Dropdown>
-          {institutions.map((inst: Institution) => (
+          {filtered.map((inst) => (
             <DropdownItem
               key={inst.institutionId}
               onClick={() => handleSelect(inst)}
             >
-              {inst.institutionName}
+              <Name>{inst.institutionName}</Name>
+              <Address>{inst.address}</Address>
             </DropdownItem>
           ))}
         </Dropdown>
@@ -119,13 +126,26 @@ const Dropdown = styled.ul`
 `;
 
 const DropdownItem = styled.li`
-  padding: 12px 16px;
+  padding: 8px 16px;
   cursor: pointer;
-  font-size: ${({ theme }) => theme.typography.fontSize.title5};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
   color: ${({ theme }) => theme.colors.gray900};
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     background: ${({ theme }) => theme.colors.subBlue};
   }
+`;
+
+const Name = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+`;
+
+const Address = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  color: ${({ theme }) => theme.colors.gray500};
 `;

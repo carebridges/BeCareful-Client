@@ -1,5 +1,8 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
+import { PublicApiDto } from '@/types/Institution';
+import { Institution } from '@/types/SocialSignUp';
+import { getAddressFromPublicApi } from '@/utils/getAddressFromPublicApi';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 export const useUploadInstitutionProfileImage = () =>
@@ -48,4 +51,34 @@ export const useCheckInstitutionCode = (
     enabled: !!code,
     ...options,
   });
+};
+
+const PUBLIC_API_SERVICE_KEY = import.meta.env.VITE_APP_PUBLIC_API_KEY;
+
+export const fetchInstitutionsBySiDo = async (siDoCd: string) => {
+  const url = `https://apis.data.go.kr/B550928/searchLtcInsttService01/getLtcInsttSeachList01?siDoCd=${siDoCd}&numOfRows=10000&_type=json&serviceKey=${PUBLIC_API_SERVICE_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return (data?.response?.body?.items?.item ?? []) as PublicApiDto[];
+};
+
+export const mapPublicApiDtoToInstitution = (
+  it: PublicApiDto,
+):
+  | (Institution & { address?: string; siDoCd?: number; siGunGuCd?: number })
+  | null => {
+  if (!it.longTermAdminSym || !it.adminNm) return null;
+
+  const siDoCdNum = Number(it.siDoCd);
+  const siGunGuCdNum = Number(it.siGunGuCd);
+
+  return {
+    institutionId: Number(it.longTermAdminSym),
+    institutionName: it.adminNm.trim(),
+    institutionStreetAddress: '',
+    institutionDetailAddress: '',
+    address: getAddressFromPublicApi(siDoCdNum, siGunGuCdNum),
+    siDoCd: siDoCdNum,
+    siGunGuCd: siGunGuCdNum,
+  };
 };

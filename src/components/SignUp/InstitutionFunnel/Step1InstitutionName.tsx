@@ -21,6 +21,19 @@ export const Step1InstitutionName = ({
   institutionFormData,
   setInstitutionFormData,
 }: StepProps) => {
+  const handleInstitutionSelect = (
+    name: string,
+    _id?: number,
+    address?: string,
+  ) => {
+    setInstitutionFormData((prev) => ({
+      ...prev,
+      institutionName: name,
+      streetAddress: address || '',
+      detailAddress: '',
+    }));
+  };
+
   const handleInstitutionNameChange = (name: string) => {
     setInstitutionFormData((prev) => ({ ...prev, institutionName: name }));
   };
@@ -49,7 +62,7 @@ export const Step1InstitutionName = ({
       </HeaderSection>
       <SearchContainer>
         <InstitutionRegisterNameInput
-          onInstitutionSelect={handleInstitutionNameChange}
+          onInstitutionSelect={handleInstitutionSelect}
           onChangeText={handleInstitutionNameChange}
         />
       </SearchContainer>

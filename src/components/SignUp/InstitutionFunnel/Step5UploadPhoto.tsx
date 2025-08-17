@@ -68,6 +68,7 @@ export const Step5UploadPhoto = ({
     </StepWrapper>
   );
 };
+
 const StepWrapper = styled.div`
   display: flex;
   flex-direction: column;
