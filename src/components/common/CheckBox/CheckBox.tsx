@@ -36,7 +36,9 @@ export const CheckBox = ({
             <SelectLabel htmlFor={id} $select={select}>
               {select}
             </SelectLabel>
-            <GuideLabel htmlFor={id}>{guide}</GuideLabel>
+            <GuideLabel $select={select} htmlFor={id}>
+              {guide}
+            </GuideLabel>
           </>
         )}
       </LabelWrapper>
@@ -103,12 +105,13 @@ const SelectLabel = styled.label<{ $select: string }>`
     $select === '선택' ? theme.colors.gray300 : theme.colors.gray900};
 `;
 
-const GuideLabel = styled.label`
+const GuideLabel = styled.label<{ $select: string }>`
   position: relative;
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
-  color: ${({ theme }) => theme.colors.gray900};
+  color: ${({ theme, $select }) =>
+    $select === '선택' ? theme.colors.gray700 : theme.colors.gray900};
 `;
 
 const Check = styled(CheckHidden)`

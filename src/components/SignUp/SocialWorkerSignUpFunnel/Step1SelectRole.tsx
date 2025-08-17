@@ -18,15 +18,11 @@ const mapToInstitutionRank = (kor: string) => {
 };
 
 export const Step1SelectRole = () => {
-  const { goToNext, setStep, formData, setFormData } = useSignUpContext();
+  const { goToNext, formData, setFormData } = useSignUpContext();
 
   const handleRoleChange = (korLabel: string) => {
     const rank = mapToInstitutionRank(korLabel);
     setFormData((prev) => ({ ...prev, institutionRank: rank }));
-
-    if (rank === 'SOCIAL_WORKER') {
-      setStep(2);
-    }
   };
 
   const navigate = useNavigate();

@@ -13,7 +13,7 @@ export const useUploadInstitutionProfileImage = () =>
       formData.append('institutionName', name);
 
       const { data } = await axiosInstance.post(
-        '/nursingInstitution/for-guest/upload-profile-img',
+        '/nursingInstitution/upload-profile-img',
         formData,
       );
       return data.profileImageUrl as string;

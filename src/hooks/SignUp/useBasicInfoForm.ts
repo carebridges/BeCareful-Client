@@ -1,11 +1,6 @@
 import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
-
-const getGenderCode = (char: string): number => {
-  if (char === '1' || char === '3') return 1;
-  if (char === '2' || char === '4') return 2;
-  return 0;
-};
+import { getGenderCode } from '@/utils/getGenderCode';
 
 export const useBasicInfoForm = () => {
   const { formData, setFormData } = useSignUpContext();
@@ -43,7 +38,7 @@ export const useBasicInfoForm = () => {
     formData.realName.trim().length > 0 &&
     formData.nickName.trim().length > 0 &&
     formData.birthYymmdd.trim().length === 6 &&
-    (formData.genderCode === 1 || formData.genderCode === 2) &&
+    formData.genderCode > 0 &&
     formData.phoneNumber.trim().length > 0 &&
     isNicknameValid;
 

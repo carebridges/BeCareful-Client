@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import { useInstitutionSearch } from '@/hooks/SignUp/useInstitutionSearch';
+import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 
 export const Step3InstitutionName = () => {
   const {
@@ -16,6 +17,8 @@ export const Step3InstitutionName = () => {
     handleRegisterCancel,
     handleNext,
   } = useInstitutionSearch();
+
+  const { formData } = useSignUpContext();
 
   if (isRegisteringInstitution) {
     return (
@@ -43,16 +46,19 @@ export const Step3InstitutionName = () => {
           }}
         />
       </SearchContainer>
-      <SearchContainer>
-        <AskText>
-          <span className="highlight">* 소속된 기관이 검색되지 않나요?</span>
-          <br />
-          <span className="bold" onClick={handleClickRegisterInstitution}>
-            이곳
-          </span>
-          을 클릭해 기관을 등록해 보세요.
-        </AskText>
-      </SearchContainer>
+
+      {formData.institutionRank !== 'SOCIAL_WORKER' && (
+        <SearchContainer>
+          <AskText>
+            <span className="highlight">* 소속된 기관이 검색되지 않나요?</span>
+            <br />
+            <span className="bold" onClick={handleClickRegisterInstitution}>
+              이곳
+            </span>
+            을 클릭해 기관을 등록해 보세요.
+          </AskText>
+        </SearchContainer>
+      )}
 
       <ButtonContainer>
         <Button onClick={handleRegisterCancel} height="52px" variant="blue2">

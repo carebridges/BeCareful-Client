@@ -9,7 +9,7 @@ export const useNicknameValidation = () => {
   const [state, setState] = useState<ValidationState>('default');
 
   const validateFormat = (nickname: string) => {
-    const regex = /^[A-Za-z0-9]{6,12}$/;
+    const regex = /^[A-Za-z0-9가-힣]{6,12}$/;
     return regex.test(nickname);
   };
 

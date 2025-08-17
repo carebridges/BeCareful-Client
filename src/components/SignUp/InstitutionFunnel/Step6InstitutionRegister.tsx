@@ -4,6 +4,8 @@ import { Button } from '@/components/common/Button/Button';
 import { ReactComponent as SignUpComplete } from '@/assets/icons/signup/SignUpComplete.svg';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
 import { useRegisterInstitution } from '@/api/institutionFunnel';
+import { useState } from 'react';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 
 interface StepProps {
   onComplete: (newInstitutionId: number) => void;
@@ -15,6 +17,7 @@ export const Step6InstitutionRegister = ({
   institutionFormData,
 }: StepProps) => {
   const { mutate } = useRegisterInstitution();
+  const [isError, setIsError] = useState(false);
 
   const handleRegister = () => {
     mutate(institutionFormData, {
@@ -22,7 +25,7 @@ export const Step6InstitutionRegister = ({
         onComplete(newInstitutionId);
       },
       onError: () => {
-        alert('기관 등록에 실패했습니다.');
+        setIsError(true);
       },
     });
   };
@@ -37,11 +40,21 @@ export const Step6InstitutionRegister = ({
         </Title>
       </HeaderSection>
       <SignUpCompleteContainer>
-        <SignUpComplete />
+        {!isError && <SignUpComplete />}
       </SignUpCompleteContainer>
 
+      {isError && (
+        <ErrorContainer>
+          <ErrorIndicator />
+        </ErrorContainer>
+      )}
+
       <ButtonContainer>
-        <Button onClick={handleRegister} height="52px" variant="blue">
+        <Button
+          onClick={handleRegister}
+          height="52px"
+          variant={isError ? 'gray' : 'blue'}
+        >
           회원 가입 진행하기
         </Button>
       </ButtonContainer>
@@ -106,4 +119,15 @@ const SignUpCompleteContainer = styled.div`
     height: auto;
     display: block;
   }
+`;
+
+const ErrorContainer = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
 `;

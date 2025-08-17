@@ -165,7 +165,6 @@ const ButtonContainer = styled.div`
 
 const AgreeWrapper = styled.div`
   display: flex;
-  height: 218px;
   width: 100%;
   padding: 16px;
   flex-direction: column;
