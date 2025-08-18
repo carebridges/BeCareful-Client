@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { ReactComponent as SymbolIcon } from '@/assets/icons/landing/Symbol.svg';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -79,6 +79,24 @@ const CommunityGuideWrapper = styled.div`
   }
 `;
 
+const shake = keyframes`
+  0% {
+        transform: rotate(0deg)
+    }
+    25% {
+        transform: rotate(-4deg);
+    }
+    50% {
+        transform: rotate(4deg);
+    }
+    75% {
+        transform: rotate(-4deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+`;
+
 const CommunityGuide = styled.div`
   display: flex;
   flex-direction: column;
@@ -128,5 +146,10 @@ const CommunityGuide = styled.div`
       width: 156px;
       font-size: ${({ theme }) => theme.typography.fontSize.body1};
     `)}
+
+    &:hover {
+      transition: transform 0.5s ease;
+      animation: ${shake} 0.7s;
+    }
   }
 `;

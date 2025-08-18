@@ -17,7 +17,7 @@
     "@types/xml2js": "^0.4.14",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.23.7",
+    "framer-motion": "^12.23.12",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.1",
     "react": "18",

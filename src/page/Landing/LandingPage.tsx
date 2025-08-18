@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import { useEffect, useRef, useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import BackgroundIcon from '@/assets/icons/landing/Background.svg';
 import { ReactComponent as AssoLogo } from '@/assets/icons/landing/AssociationLogo.svg';
 import { ReactComponent as AssoLogoM } from '@/assets/icons/landing/AssociationLogoM.svg';
@@ -28,17 +28,26 @@ const LandingPage = () => {
       setIsScrolled(false);
     }
   };
-
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.scrollTo(0, 0);
 
+    window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
+  const landingRef = useRef<HTMLDivElement>(null);
+  const scrollToAssociation = () => {
+    if (landingRef.current) {
+      const offset = isMobile ? 606 : 650;
+      const associationGuide = landingRef.current.offsetTop + offset;
+      window.scrollTo({ top: associationGuide, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <Container>
+    <Container ref={landingRef}>
       {isMobile ? (
         <Header isScrolled={isScrolled}>
           <AssoLogoM />
@@ -69,7 +78,9 @@ const LandingPage = () => {
           <button className="community" onClick={handleToCommunity}>
             커뮤니티 바로가기
           </button>
-          <button className="asso">협회 소개 보기</button>
+          <button className="asso" onClick={scrollToAssociation}>
+            협회 소개 보기
+          </button>
         </div>
       </MainBanner>
 
@@ -144,6 +155,24 @@ const Background = styled.img`
   `)}
 `;
 
+const shake = keyframes`
+  0% {
+        transform: rotate(0deg)
+    }
+    25% {
+        transform: rotate(-8deg);
+    }
+    50% {
+        transform: rotate(8deg);
+    }
+    75% {
+        transform: rotate(-8deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+`;
+
 const MainBanner = styled.div`
   position: absolute;
   top: 180px;
@@ -174,6 +203,7 @@ const MainBanner = styled.div`
     font-weight: 800;
 
     ${mobile(css`
+      margin-top: 40px;
       margin-bottom: 18px;
       font-size: 35px;
     `)}
@@ -218,6 +248,11 @@ const MainBanner = styled.div`
       height: 52px;
       font-size: 16px;
     `)}
+
+    &:hover {
+      transition: transform 0.5s ease;
+      animation: ${shake} 0.7s;
+    }
   }
 
   .community {

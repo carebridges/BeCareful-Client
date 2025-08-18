@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components';
+import React, { useEffect, useRef, useState } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import Feature1 from '@/assets/icons/landing/Feature1.svg';
 import Feature2 from '@/assets/icons/landing/Feature2.svg';
 import Feature3 from '@/assets/icons/landing/Feature3.svg';
@@ -7,7 +8,7 @@ import Introduce2 from '@/assets/icons/landing/Introduce2.svg';
 import PresidentProfile from '@/assets/icons/landing/President.svg';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { mobile } from '@/utils/mobileStyle';
-import React from 'react';
+import { motion, useInView } from 'framer-motion';
 
 const AssociationInfoSection = () => {
   const isMobile = useIsMobile();
@@ -51,9 +52,63 @@ const AssociationInfoSection = () => {
     ));
   };
 
+  const associationInnerRef = useRef(null);
+  const presidentInnerRef = useRef(null);
+  const timelineInnerRef = useRef(null);
+  const isAssociationInView = useInView(associationInnerRef, {
+    once: true,
+    amount: 0.3,
+  });
+  const isPresidentInView = useInView(presidentInnerRef, {
+    once: true,
+    amount: 0.2,
+  });
+  const isTimelineInView = useInView(timelineInnerRef, {
+    once: true,
+    amount: 0.2,
+  });
+  const fadeInRiseVariants = {
+    hidden: { opacity: 0, y: 100 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 1.5 },
+    },
+  };
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const currentRef = timelineInnerRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // 애니메이션이 실행되면 옵저버 해제
+        }
+      },
+      { threshold: 0.1 }, // 10%가 보일 때 트리거
+    );
+
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
   return (
     <Container>
-      <Association>
+      <Association
+        ref={associationInnerRef}
+        variants={fadeInRiseVariants}
+        initial="hidden"
+        animate={isAssociationInView ? 'visible' : 'hidden'}
+      >
         <div className="titleWrapper">
           <label className="title">협회 소개</label>
           <label className="detail">
@@ -93,7 +148,13 @@ const AssociationInfoSection = () => {
         </div>
       </Association>
 
-      <President>
+      <President
+        ref={presidentInnerRef}
+        variants={fadeInRiseVariants}
+        initial="hidden"
+        animate={isPresidentInView ? 'visible' : 'hidden'}
+        transition={{ delay: 0.2, ...fadeInRiseVariants.visible.transition }}
+      >
         <label className="title">협회장 인사</label>
         <PresidentMiddle>
           {isMobile ? (
@@ -146,27 +207,38 @@ const AssociationInfoSection = () => {
         </PresidentMiddle>
       </President>
 
-      <TimelineContainer>
+      <TimelineContainer
+        ref={timelineInnerRef}
+        variants={fadeInRiseVariants}
+        initial="hidden"
+        animate={isTimelineInView ? 'visible' : 'hidden'}
+        transition={{ delay: 0.4, ...fadeInRiseVariants.visible.transition }}
+      >
         <label className="title">주요 활동</label>
         <div className="timeline">
           <TimelineBar>
-            <div className="line" />
-            <div className="points">
+            <Timeline isVisible={isVisible} />
+            <TimelinePoints>
               {timelineData.map((_, idx) => (
-                <div className="point" key={idx} />
+                <TimelinePoint key={idx} isVisible={isVisible} index={idx} />
               ))}
-            </div>
+            </TimelinePoints>
           </TimelineBar>
           <ScheduleItems>
             {timelineData.map((data, index) => (
-              <div className="item" key={index}>
+              <IconsWrapper
+                className="item"
+                key={index}
+                isVisible={isVisible}
+                index={index}
+              >
                 <label className="year">{data.year}년</label>
                 <label className="title">
                   {isMobile
                     ? formatTimelineContent(data.content)
                     : data.content}
                 </label>
-              </div>
+              </IconsWrapper>
             ))}
           </ScheduleItems>
         </div>
@@ -202,7 +274,7 @@ const Container = styled.div`
   }
 `;
 
-const Association = styled.div`
+const Association = styled(motion.div)`
   padding: 40px 20px;
   display: flex;
   flex-direction: column;
@@ -287,7 +359,7 @@ const Feature = styled.div`
   }
 `;
 
-const President = styled.div`
+const President = styled(motion.div)`
   margin-bottom: 50px;
   padding: 40px 20px;
   display: flex;
@@ -392,7 +464,7 @@ const Profile = styled.div`
   }
 `;
 
-const TimelineContainer = styled.div`
+const TimelineContainer = styled(motion.div)`
   width: 100%;
   height: 852px;
   padding: 40px 20px;
@@ -432,46 +504,76 @@ const TimelineBar = styled.div`
   `)}
 
   position: relative;
+`;
 
-  .line {
-    width: 5px;
+// 타임라인 라인 애니메이션
+const drawLine = keyframes`
+  from {
+    height: 0;
+  }
+  to {
     height: 100%;
-    background: ${({ theme }) => theme.colors.white};
-    padding-bottom: 21px;
-
-    position: absolute;
-    top: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    ${mobile(css`
-      top: 25px;
-      padding-bottom: 66px;
-    `)}
   }
+`;
 
-  .points {
-    display: flex;
-    flex-direction: column;
-    gap: 90px;
-    z-index: 1;
+const Timeline = styled.div<{ isVisible: boolean }>`
+  width: 5px;
+  height: 100%;
+  background: ${({ theme }) => theme.colors.white};
+  padding-bottom: 21px;
 
-    ${mobile(css`
-      gap: 100px;
-    `)}
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  ${mobile(css`
+    top: 25px;
+    padding-bottom: 66px;
+  `)}
+
+  animation: ${(props) => (props.isVisible ? drawLine : 'none')} 2s ease
+    forwards;
+`;
+
+const TimelinePoints = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 90px;
+  z-index: 1;
+
+  ${mobile(css`
+    gap: 100px;
+  `)}
+`;
+
+// 타임라인 포인트 애니메이션
+const scaleUp = keyframes`
+  0% {
+    transform: scale(0);
+    opacity: 0;
   }
-
-  .point {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: ${({ theme }) => theme.colors.white};
-
-    ${mobile(css`
-      width: 25px;
-      height: 25px;
-    `)}
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
+`;
+
+const TimelinePoint = styled.div<{ isVisible: boolean; index: number }>`
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: ${({ theme }) => theme.colors.white};
+
+  ${mobile(css`
+    width: 25px;
+    height: 25px;
+  `)}
+
+  opacity: 0;
+  animation: ${({ isVisible }) => (isVisible ? scaleUp : 'none')} 0.5s ease
+    forwards;
+  animation-delay: ${({ index }) => index * 0.5}s;
 `;
 
 const ScheduleItems = styled.div`
@@ -482,19 +584,6 @@ const ScheduleItems = styled.div`
   ${mobile(css`
     gap: 28px;
   `)}
-
-  .item {
-    padding-bottom: 20px;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.white};
-    display: flex;
-    gap: 60px;
-
-    ${mobile(css`
-      flex-direction: column;
-      gap: 10px;
-      font-size: ${({ theme }) => theme.typography.fontSize.title5};
-    `)}
-  }
 
   .year {
     color: ${({ theme }) => theme.colors.white};
@@ -514,5 +603,56 @@ const ScheduleItems = styled.div`
       gap: 10px;
       font-size: ${({ theme }) => theme.typography.fontSize.title5};
     `)}
+  }
+`;
+
+// 스케줄 아이템 애니메이션
+const fadeInUp = keyframes`
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+// 아이템 border bottom
+const borderLine = keyframes`
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+`;
+
+const IconsWrapper = styled(motion.div)<{ isVisible: boolean; index: number }>`
+  padding-bottom: 20px;
+  display: flex;
+  gap: 60px;
+
+  ${mobile(css`
+    flex-direction: column;
+    gap: 10px;
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  `)}
+
+  opacity: 0;
+  transform: translateY(1.25rem);
+  animation: ${({ isVisible }) => (isVisible ? fadeInUp : 'none')} 0.5s ease
+    forwards;
+  animation-delay: ${({ index }) => (index + 0.5) * 0.5}s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background-color: ${({ theme }) => theme.colors.white};
+    width: 0;
+    transform-origin: left;
+
+    animation: ${({ isVisible }) => (isVisible ? borderLine : 'none')} 0.5s ease
+      forwards;
+    animation-delay: ${({ isVisible, index }) =>
+      isVisible ? `${(index + 0.5) * 0.5 + 0.3}s` : '0s'};
   }
 `;
