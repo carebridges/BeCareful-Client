@@ -2,6 +2,7 @@ import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SocialworkerHomeResponse } from '@/types/Socialworker/home';
 import {
+  NursingAssociationInfoRequest,
   SocialworkerMyRequest,
   SocialworkerMyResponse,
 } from '@/types/Socialworker/mypage';
@@ -61,18 +62,69 @@ export const usePutSocialworkerMy = () => {
   });
 };
 
-// 닉네임 중복 확인
-export const useCheckNickName = (nickname: string) =>
-  useQuery({
-    queryKey: ['checkNickname', nickname],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get(
-        `/socialworker/check-nickname?nickname=${nickname}`,
+// 기관 정보 수정
+export const usePutInstitutionInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (institutionInfo: NursingAssociationInfoRequest) => {
+      const response = await axiosInstance.put(
+        '/nursingInstitution/info',
+        institutionInfo,
       );
-      return data;
+      return response;
     },
-    enabled: !!nickname,
+    onSuccess: (response) => {
+      console.log('usePutInstitutionInfo - 요양기관 수정 성공:', response.data);
+      queryClient.invalidateQueries({ queryKey: ['institutionInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerHome'] });
+    },
+    onError: (error) => {
+      console.error('usePutInstitutionInfo - 요양기관 수정 실패:', error);
+    },
   });
+};
+
+// 로그아웃
+export const useSocialworkerLogout = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.put('/socialworker/logout');
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log(
+        'useSocialworkerLogout - 사회복지사 로그아웃 성공:',
+        response,
+      );
+      queryClient.clear();
+    },
+    onError: (error) => {
+      console.error('useSocialworkerLogout - 사회복지사 로그아웃 실패:', error);
+    },
+  });
+};
+
+// 회원탈퇴
+export const useDeleteSocialworker = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.delete('/socialworker/leave');
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('useDeleteSocialworker - 사회복지사 탈퇴 성공:', response);
+      queryClient.clear();
+    },
+    onError: (error) => {
+      console.error('useDeleteSocialworker - 사회복지사 탈퇴 실패:', error);
+    },
+  });
+};
 
 /* 채팅 */
 // 사회복지사 채팅 목록

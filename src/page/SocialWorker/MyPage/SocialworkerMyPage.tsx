@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as LogoutIcon } from '@/assets/icons/caregiver/my/Logout.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -15,17 +14,18 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { Association_Rank_Mapping } from '@/constants/associationRank';
-import { useGetSocialWorkerMy } from '@/api/socialworker';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import {
+  useDeleteSocialworker,
+  useGetSocialWorkerMy,
+  useSocialworkerLogout,
+} from '@/api/socialworker';
 
 const SocialworkerMyPage = () => {
-  const navigate = useNavigate();
-  const handleNavigate = (path: string) => {
-    navigate(`/socialworker/${path}`);
-    scrollTo(0, 0);
-  };
-
   const userInfo = useRecoilValue(currentUserInfo);
-  const isDirector = userInfo.institutionRank === 'CENTER_DIRECTOR';
+  const isMember = userInfo.associationRank === 'MEMBER';
+
+  const { handleNavigate } = useHandleNavigate();
 
   const { data } = useGetSocialWorkerMy();
 
@@ -42,20 +42,40 @@ const SocialworkerMyPage = () => {
     setter((prev) => !prev);
   };
 
+  const { mutate: logout } = useSocialworkerLogout();
+  const { mutate: leave } = useDeleteSocialworker();
+  const setUserInfo = useSetRecoilState(currentUserInfo);
+
   const handleLogout = () => {
-    console.log('로그아웃');
-
-    // 로그아웃 api
-
-    handleModal(setIsLogoutModalOpen);
+    logout(undefined, {
+      onSuccess: () => {
+        localStorage.clear();
+        setUserInfo({
+          realName: '',
+          nickName: '',
+          institutionRank: '',
+          associationRank: '',
+        });
+        handleModal(setIsLogoutModalOpen);
+        handleNavigate('/');
+      },
+    });
   };
 
   const handleWithdraw = () => {
-    console.log('회원탈퇴');
-
-    // 회원탈퇴 api
-
-    handleModal(setIsWithdrawModalOpen);
+    leave(undefined, {
+      onSuccess: () => {
+        localStorage.clear();
+        setUserInfo({
+          realName: '',
+          nickName: '',
+          institutionRank: '',
+          associationRank: '',
+        });
+        handleModal(setIsWithdrawModalOpen);
+        handleNavigate('/');
+      },
+    });
   };
 
   return (
@@ -82,7 +102,7 @@ const SocialworkerMyPage = () => {
           }
         />
 
-        {isDirector && (
+        {!isMember && (
           <BelongCard
             title={data?.associationName ?? ''}
             rank={
@@ -96,7 +116,7 @@ const SocialworkerMyPage = () => {
         <Button
           height="52px"
           variant="subBlue"
-          onClick={() => handleNavigate('my/profile')}
+          onClick={() => handleNavigate('/socialworker/my/profile')}
         >
           프로필 수정하기
         </Button>
@@ -116,27 +136,27 @@ const SocialworkerMyPage = () => {
         <Button
           height="52px"
           variant="subBlue"
-          onClick={() => handleNavigate('my/institution')}
+          onClick={() => handleNavigate('/socialworker/my/institution')}
         >
           기관 정보 수정하기
         </Button>
       </SectionWrapper>
 
-      {isDirector && (
+      {!isMember && (
         <>
           <Border />
 
           <SectionWrapper>
             <label className="section-title">협회 정보</label>
             <AssociationCard
-              association="전주완주장기요양기관협회"
-              type="회원"
-              rank="센터장"
+              association={data?.associationName ?? ''}
+              type={Association_Rank_Mapping[userInfo.associationRank]}
+              rank={Institution_Rank_Mapping[userInfo.institutionRank]}
             />
             <Button
               height="52px"
               variant="subBlue"
-              onClick={() => handleNavigate('my/association')}
+              onClick={() => handleNavigate('/socialworker/my/association')}
             >
               협회 정보 변경하기
             </Button>
@@ -242,6 +262,7 @@ const Logout = styled.div<{ isRed: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.gray50};
   background: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
 
   color: ${({ theme, isRed }) =>
     isRed ? theme.colors.mainOrange : theme.colors.gray500};

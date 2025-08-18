@@ -1,14 +1,10 @@
 import styled from 'styled-components';
-import {
-  NavigateOptions,
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import ChatCard from '@/components/Chat/ChatCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   formatDateLabel,
   formatTimeLabel,
@@ -19,15 +15,8 @@ import { useGetSocialworkerChat } from '@/api/socialworker';
 const SocialworkerChatPage = () => {
   const { matchingId } = useParams<{ matchingId: string }>();
 
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
-  const handleNavigate = (path: string, options?: NavigateOptions) => {
-    navigate(path, options);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack, handleNavigate, handleNavigateState } =
+    useHandleNavigate();
 
   const { data } = useGetSocialworkerChat(Number(matchingId));
 
@@ -84,7 +73,7 @@ const SocialworkerChatPage = () => {
                       hasButton={isLastDate && isLastItem}
                       buttonContent="근무조건 수정하기"
                       buttonClick={() =>
-                        handleNavigate(
+                        handleNavigateState(
                           `/socialworker/chat/${contract.contractId}/edit`,
                           { state: { matchingId: data?.matchingId } },
                         )

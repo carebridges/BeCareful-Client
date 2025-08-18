@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import BackgroundIcon from '@/assets/icons/landing/Background.svg';
 import { ReactComponent as AssoLogo } from '@/assets/icons/landing/AssociationLogo.svg';
 import { ReactComponent as AssoLogoM } from '@/assets/icons/landing/AssociationLogoM.svg';
 import { ReactComponent as Logo } from '@/assets/icons/landing/Logo.svg';
 import { ReactComponent as LogoBlack } from '@/assets/icons/landing/LogoBlack.svg';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { mobile } from '@/utils/mobileStyle';
 import AssociationInfoSection from '@/components/Landing/AssociationInfoSection';
 import CommunityGuideSection from '@/components/Landing/CommunityGuideSection';
 import Footer from '@/components/Landing/Footer';
+import { useIsMobile } from '@/hooks/useIsMobile';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { mobile } from '@/utils/mobileStyle';
 
 const LandingPage = () => {
   const isMobile = useIsMobile();
 
-  const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate('/community/splash');
-    scrollTo(0, 0);
+  const { handleNavigate } = useHandleNavigate();
+  const handleToCommunity = () => {
+    handleNavigate('/community/splash');
   };
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,7 +46,7 @@ const LandingPage = () => {
       ) : (
         <Header isScrolled={isScrolled}>
           <AssoLogo />
-          <HeaderRight onClick={handleNavigate}>
+          <HeaderRight onClick={handleToCommunity}>
             {isScrolled ? <LogoBlack /> : <Logo />}
             커뮤니티 바로가기
           </HeaderRight>
@@ -67,7 +66,7 @@ const LandingPage = () => {
           <label className="eng">JEONJU WANJU SENIOR LONGTERMCARE</label>
         </div>
         <div className="buttons">
-          <button className="community" onClick={handleNavigate}>
+          <button className="community" onClick={handleToCommunity}>
             커뮤니티 바로가기
           </button>
           <button className="asso">협회 소개 보기</button>

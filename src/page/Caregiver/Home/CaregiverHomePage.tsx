@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
@@ -12,12 +11,12 @@ import { ReactComponent as Notice } from '@/assets/icons/caregiver/home/Notice.s
 import { ReactComponent as Status } from '@/assets/icons/caregiver/home/Status.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverHomeInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverHomePage = () => {
-  const navigate = useNavigate();
+  const { handleNavigate } = useHandleNavigate();
 
-  // const [chatNew, setChatNew] = useState(true);
   const chatNew = true;
 
   const { data, error } = useCaregiverHomeInfoQuery();
@@ -30,13 +29,7 @@ const CaregiverHomePage = () => {
       <NavBar
         left={<NavLeft />}
         right={
-          <NavRight
-            onClick={() => {
-              navigate('/caregiver/chat');
-              window.scrollTo(0, 0);
-            }}
-          >
-            {/* <Chat /> */}
+          <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
             {chatNew ? <ChatNew /> : <Chat />}
           </NavRight>
         }
@@ -59,10 +52,7 @@ const CaregiverHomePage = () => {
           )}
           <div
             className="pointWrapper"
-            onClick={() => {
-              navigate('/caregiver/point');
-              window.scrollTo(0, 0);
-            }}
+            onClick={() => handleNavigate('/caregiver/point')}
           >
             <Point />
             {/* <label className="point">{data.point}</label> */}
@@ -100,12 +90,7 @@ const CaregiverHomePage = () => {
         )}
 
         <ButtonsWrapper>
-          <ApplyButton
-            onClick={() => {
-              navigate('/caregiver/my');
-              window.scrollTo(0, 0);
-            }}
-          >
+          <ApplyButton onClick={() => handleNavigate('/caregiver/my')}>
             <div className="top">
               <label>일자리 신청</label>
               <label className="title">
@@ -119,12 +104,7 @@ const CaregiverHomePage = () => {
           </ApplyButton>
 
           <WorkButtons>
-            <WorkButton
-              onClick={() => {
-                navigate('/caregiver/work');
-                window.scrollTo(0, 0);
-              }}
-            >
+            <WorkButton onClick={() => handleNavigate('/caregiver/work')}>
               <div className="left">
                 <label className="title">모집공고</label>
                 <div className="detail">
@@ -134,12 +114,7 @@ const CaregiverHomePage = () => {
               </div>
               <Notice />
             </WorkButton>
-            <WorkButton
-              onClick={() => {
-                navigate('/caregiver/apply');
-                window.scrollTo(0, 0);
-              }}
-            >
+            <WorkButton onClick={() => handleNavigate('/caregiver/apply')}>
               <div className="left">
                 <label className="title">지원현황</label>
                 <div className="detail">
@@ -152,12 +127,7 @@ const CaregiverHomePage = () => {
           </WorkButtons>
         </ButtonsWrapper>
 
-        <MyWorkButton
-          onClick={() => {
-            navigate('/caregiver/mywork');
-            window.scrollTo(0, 0);
-          }}
-        >
+        <MyWorkButton onClick={() => handleNavigate('/caregiver/mywork')}>
           <label>나의 일자리</label>
           <ArrowRight />
         </MyWorkButton>

@@ -1,23 +1,16 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as PointIcon } from '@/assets/icons/Point.svg';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 const PointPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack } = useHandleNavigate();
 
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<label>포인트 적립 내역</label>}
         color="white"
       />

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
-
 import { caretypeFormat, dayFormat } from '@/utils/caregiver';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
 import { ChatElderlyInfo, Contract } from '@/types/Common/chat';

@@ -29,24 +29,27 @@ export const PostReadStatusProvider: React.FC<PostReadStatusProviderProps> = ({
   children,
 }) => {
   // 게시글 ID를 키로, 읽음 여부를 값으로 하는 상태 맵
-  const [readStatuses, setReadStatuses] = useState<Record<number, boolean>>({});
+  const [readStatuses, setReadStatuses] = useState<Record<number, boolean>>(
+    () => {
+      const stored = localStorage.getItem('readStatuses');
+      return stored ? JSON.parse(stored) : {};
+    },
+  );
 
   // 게시글을 읽음으로 표시하는 함수
   const markAsRead = useCallback((postId: number) => {
-    setReadStatuses((prevStatuses) => ({
-      ...prevStatuses,
-      [postId]: true, // 해당 게시글 ID를 true로 설정
-    }));
+    setReadStatuses((prevStatuses) => {
+      const updated = {
+        ...prevStatuses,
+        [postId]: true,
+      };
+      localStorage.setItem('readStatuses', JSON.stringify(updated));
+      return updated;
+    });
   }, []);
 
-  // Context를 통해 제공할 값
-  const contextValue = {
-    readStatuses,
-    markAsRead,
-  };
-
   return (
-    <PostReadStatusContext.Provider value={contextValue}>
+    <PostReadStatusContext.Provider value={{ readStatuses, markAsRead }}>
       {children}
     </PostReadStatusContext.Provider>
   );

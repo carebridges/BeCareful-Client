@@ -1,6 +1,8 @@
 import styled from 'styled-components';
+import React from 'react';
 import { ReactComponent as NoticeIcon } from '@/assets/icons/community/Notice.svg';
 import PostOverview from '@/components/Community/common/PostOverview';
+import { Board_Type_Mapping } from '@/constants/communityBoard';
 import { PostListItem } from '@/types/Community/post';
 import { PageableRequest } from '@/types/Community/common';
 import { useBoardPostList } from '@/hooks/Community/api/useBoardPostList';
@@ -16,7 +18,10 @@ const CommunityDetail = ({ boardType }: CommunityDetailProps) => {
     sort: [],
   };
 
-  const { data, error } = useBoardPostList(boardType, pageable);
+  const { data, error } = useBoardPostList(
+    Board_Type_Mapping[boardType],
+    pageable,
+  );
   if (error) {
     console.log('getPostingList 에러: ', error);
   }
@@ -29,20 +34,11 @@ const CommunityDetail = ({ boardType }: CommunityDetailProps) => {
       </Title>
 
       <NoticeList>
-        {data?.map((post: PostListItem) => (
-          <>
-            <PostOverview
-              key={post.postId}
-              postId={post.postId}
-              title={post.title}
-              isImportant={post.isImportant}
-              thumbnailUrl={post.thumbnailUrl}
-              createdAt={post.createdAt}
-              author={post.author}
-              boardType={boardType}
-            />
-            <Border />
-          </>
+        {data?.map((post: PostListItem, index) => (
+          <React.Fragment key={post.postId}>
+            <PostOverview key={post.postId} post={post} boardType={boardType} />
+            {index !== data.length - 1 && <Border />}
+          </React.Fragment>
         ))}
       </NoticeList>
     </Container>
@@ -69,7 +65,7 @@ const Title = styled.div`
     color: ${({ theme }) => theme.colors.gray800};
     font-size: ${({ theme }) => theme.typography.fontSize.title4};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-    line-height: 140%; /* 25.2px */
+    line-height: 140%;
   }
 `;
 

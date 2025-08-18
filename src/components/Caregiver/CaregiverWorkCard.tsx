@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
-import { useNavigate } from 'react-router-dom';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
 import { Salary_Type_Mapping } from '@/constants/caregiverMapping';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Recruitment } from '@/types/Caregiver/common';
 import { caretypeFormat, dayFormat } from '@/utils/caregiver';
 
@@ -23,13 +23,7 @@ const CaregiverWorkCard = ({
   stateLabel,
   navigatePath,
 }: CaregiverWorkCardProps) => {
-  const navigate = useNavigate();
-  const handleDetailBtnClick = () => {
-    navigate(
-      `/caregiver/${navigatePath}/${recruitment.recruitmentInfo.recruitmentId}`,
-    );
-    window.scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
 
   const applyInfo = [
     {
@@ -91,7 +85,15 @@ const CaregiverWorkCard = ({
         </label>
       </Salary>
 
-      <Button height="52px" variant="subBlue" onClick={handleDetailBtnClick}>
+      <Button
+        height="52px"
+        variant="subBlue"
+        onClick={() =>
+          handleNavigate(
+            `/caregiver/${navigatePath}/${recruitment.recruitmentInfo.recruitmentId}`,
+          )
+        }
+      >
         자세히 보기
       </Button>
     </CardContainer>

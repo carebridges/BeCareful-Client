@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ReactComponent as Chat } from '@/assets/icons/ChatNewBlack.svg';
+import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationListQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverApplyPage = () => {
-  const navigate = useNavigate();
+  const { handleNavigate } = useHandleNavigate();
 
   const chatNew = false;
 
@@ -28,12 +28,7 @@ const CaregiverApplyPage = () => {
       <NavBar
         left={<NavLeft>지원현황</NavLeft>}
         right={
-          <NavRight
-            onClick={() => {
-              navigate('/caregiver/chat');
-              window.scrollTo(0, 0);
-            }}
-          >
+          <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
             {chatNew ? <ChatNew /> : <Chat />}
           </NavRight>
         }

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Association_Rank_Mapping } from '@/constants/associationRank';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Member } from '@/types/Community/association';
 
 interface MemberListCardProps {
@@ -12,11 +13,7 @@ interface MemberListCardProps {
 const MemberListCard = ({ member }: MemberListCardProps) => {
   const { associationId } = useParams<{ associationId: string }>();
 
-  const navigate = useNavigate();
-  const handleNavigate = (path: string) => {
-    navigate(path);
-    scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
 
   const memberInfo = [
     { title: '전화번호', detail: member.phoneNumber },

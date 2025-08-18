@@ -1,59 +1,53 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { PostListItem } from '@/types/Community/post';
-import { textTruncateFormat } from '@/utils/textFormat';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
+import { textTruncateFormat } from '@/utils/formatText';
+import { formatDateTime } from '@/utils/formatTime';
 
-interface PostOverviewProps extends PostListItem {
+interface PostOverviewProps {
   boardType: string;
+  post: PostListItem;
 }
 
-const PostOverview = ({
-  postId,
-  title,
-  isImportant,
-  thumbnailUrl,
-  createdAt,
-  author,
-  boardType,
-}: PostOverviewProps) => {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/community/${postId}`, {
-      state: { boardType: boardType },
-    }); // 클릭 시 해당 ID의 게시글 상세 페이지로 이동
-    window.scrollTo(0, 0);
-  };
+const PostOverview = ({ post, boardType }: PostOverviewProps) => {
+  const { handleNavigateState } = useHandleNavigate();
 
   const { readStatuses } = usePostReadStatus();
-  const isRead = readStatuses[postId] || false;
+  const isRead = readStatuses[post.postId] || false;
 
   return (
-    <Container onClick={handleClick}>
+    <Container
+      onClick={() =>
+        handleNavigateState(`/community/${post.postId}`, {
+          state: { boardType: boardType },
+        })
+      }
+    >
       <Wrapper>
         <Writer>
-          <img className="writer-img" src={author.institutionImageUrl} />
-          <label>{author.authorName}</label>
+          <img className="writer-img" src={post.author.institutionImageUrl} />
+          <label>{post.author.authorName}</label>
           <label>·</label>
           <label>
-            {Institution_Rank_Mapping[author.authorInstitutionRank]}
+            {Institution_Rank_Mapping[post.author.authorInstitutionRank]}
           </label>
         </Writer>
         <Title isRead={isRead}>
           <label>
-            {isImportant && <IsMustTag>필독</IsMustTag>}{' '}
-            {textTruncateFormat(title, 33)}
+            {post.isImportant && <IsMustTag>필독</IsMustTag>}{' '}
+            {textTruncateFormat(post.title, 33)}
           </label>
         </Title>
         <Day>
-          <label>{createdAt}</label>
-          {isRecentDate(createdAt, 3) && <NewTag>N</NewTag>}
+          <label>{formatDateTime(post.createdAt)}</label>
+          {isRecentDate(post.createdAt, 3) && <NewTag>N</NewTag>}
         </Day>
       </Wrapper>
 
-      <img className="profile-img" src={thumbnailUrl} />
+      <img className="profile-img" src={post.thumbnailUrl} />
     </Container>
   );
 };

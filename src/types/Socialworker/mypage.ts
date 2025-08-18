@@ -1,7 +1,8 @@
 import { SocialWorkerInfo } from '@/types/Socialworker/common';
 import { InstitutionRank } from '@/types/Community/common';
 
-interface InstitutionInfo {
+export interface InstitutionInfo {
+  institutionCode: string;
   institutionName: string;
   institutionImageUrl: string;
   institutionLastUpdate: string;
@@ -27,4 +28,13 @@ export interface SocialworkerMyRequest {
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;
   isAgreedToReceiveMarketingInfo: boolean;
+}
+
+export interface NursingAssociationInfoRequest {
+  institutionName: string;
+  institutionCode: string;
+  openYear: number;
+  facilityTypeList: string[];
+  phoneNumber: string;
+  profileImageUrl: string;
 }

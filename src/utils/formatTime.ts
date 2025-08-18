@@ -18,6 +18,19 @@ export const formatDateLabel = (dateStr: string) => {
   }).format(date);
 };
 
+// 2025-08-15T08:15:45.072466를 2025.05.05 09:07의 형식으로
+export const formatDateTime = (isoStr: string) => {
+  const date = new Date(isoStr);
+
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+
+  return `${year}.${month}.${day} ${hours}:${minutes}`;
+};
+
 // 시간 "오후 01:32" 형식 변환
 export const formatTimeLabel = (isoStr: string) => {
   const date = new Date(isoStr);

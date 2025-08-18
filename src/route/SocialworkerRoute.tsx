@@ -29,6 +29,7 @@ const SocialworkerRoute = () => {
     '/socialworker/chat',
     '/socialworker/chat/:matchingId',
     '/socialworker/chat/:contractId/edit',
+    '/socialworker/point',
   ];
   const shouldHideTabBar = () => {
     return hideTabBarPaths.some((pathPattern) => {

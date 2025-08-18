@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
@@ -21,11 +20,12 @@ import {
 import { WorkLocation } from '@/types/Caregiver/common';
 import { WorkApplicationRequest } from '@/types/Caregiver/work';
 import { apiDayFormat, apiTimeFormat } from '@/utils/caregiver';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationQuery } from '@/hooks/Caregiver/caregiverQuery';
-import { usePutApplicationMutation } from '@/hooks/Caregiver/usePutApplicationMutation';
+import { usePutApplicationMutation } from '@/hooks/Caregiver/mutation/usePutApplicationMutation';
 
 const CaregiverApplicationPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const { data, error } = useApplicationQuery();
   if (error) {
@@ -185,14 +185,7 @@ const CaregiverApplicationPage = () => {
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={
           <NavCenter>{data ? '신청서 수정하기' : '신청서 등록하기'}</NavCenter>
         }
@@ -433,10 +426,7 @@ const CaregiverApplicationPage = () => {
           left="닫기"
           right="내 신청서 보기"
           handleLeftBtnClick={() => setIsRegisterModalOpen(false)}
-          handleRightBtnClick={() => {
-            navigate('/caregiver/my');
-            window.scrollTo(0, 0);
-          }}
+          handleRightBtnClick={() => handleNavigate('/caregiver/my')}
         />
       </Modal>
 

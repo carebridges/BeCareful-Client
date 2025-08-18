@@ -1,14 +1,14 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Mywork } from '@/assets/icons/caregiver/MyWork.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverMyworkCard from '@/components/Caregiver/Home/CaregiverMyworkCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useMyWorkListQuery } from '@/hooks/Caregiver/caregiverQuery';
 
 const CaregiverMyworkPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const { data, error } = useMyWorkListQuery();
   if (error) {
@@ -18,14 +18,7 @@ const CaregiverMyworkPage = () => {
   return (
     <Container isData={!!(data && data.length > 0)}>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>나의 일자리</NavCenter>}
         color="white"
       />
@@ -49,10 +42,7 @@ const CaregiverMyworkPage = () => {
           <Button
             variant="subBlue"
             height="52px"
-            onClick={() => {
-              navigate('/caregiver/my');
-              window.scrollTo(0, 0);
-            }}
+            onClick={() => handleNavigate('/caregiver/my')}
           >
             일자리 등록하기
           </Button>

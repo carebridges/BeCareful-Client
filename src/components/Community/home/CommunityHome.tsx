@@ -20,7 +20,7 @@ interface CommunityHomeProps {
 const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
   const importantPageable: PageableRequest = {
     page: 0,
-    size: 1,
+    size: 3,
     sort: [],
   };
 
@@ -30,7 +30,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
     console.log('getImportantPosting 에러: ', importantError);
   }
 
-  const boardPageable: PageableRequest = { page: 1, size: 5, sort: [] };
+  const boardPageable: PageableRequest = { page: 0, size: 5, sort: [] };
   const boardPostings = useBoardPostings(boardPageable);
 
   const getContent = (
@@ -50,18 +50,10 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
 
     return (
       <>
-        {data?.map((post: PostListItem) => (
+        {data?.map((post: PostListItem, index) => (
           <React.Fragment key={post.postId}>
-            <PostOverview
-              postId={post.postId}
-              title={post.title}
-              isImportant={post.isImportant}
-              thumbnailUrl={post.thumbnailUrl}
-              createdAt={post.createdAt}
-              author={post.author}
-              boardType={board}
-            />
-            <Border />
+            <PostOverview post={post} boardType={board} />
+            {index !== data.length - 1 && <Border />}
           </React.Fragment>
         ))}
       </>
@@ -87,16 +79,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
           {importantPostings?.map((post: PostListItem) => (
             <SwiperSlide key={post.postId}>
               <NoticeList>
-                <PostOverview
-                  key={post.postId}
-                  postId={post.postId}
-                  title={post.title}
-                  isImportant={post.isImportant}
-                  thumbnailUrl={post.thumbnailUrl}
-                  createdAt={post.createdAt}
-                  author={post.author}
-                  boardType="필독"
-                />
+                <PostOverview key={post.postId} post={post} boardType="필독" />
               </NoticeList>
             </SwiperSlide>
           ))}

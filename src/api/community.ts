@@ -1,4 +1,4 @@
-import { AssociationInfoResponse } from '@/types/Community/community';
+import { MyAssociationResponse } from '@/types/Community/community';
 import { axiosInstance } from './axiosInstance';
 import { MediaItem, PageableRequest } from '@/types/Community/common';
 import {
@@ -13,8 +13,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 /* CommunityPage */
 // 커뮤니티 탭 협회 정보 조회
-export const useAssociationInfo = (enabled: boolean) => {
-  return useQuery<AssociationInfoResponse, Error>({
+export const useMyAssociation = (enabled: boolean) => {
+  return useQuery<MyAssociationResponse, Error>({
     queryKey: ['associationInfo'],
     queryFn: async () => {
       const response = await axiosInstance.get('/community/my/association');
@@ -115,7 +115,7 @@ export const useImportantPostings = (pageable: PageableRequest) => {
   return useQuery<ImportantPostListResponse, Error>({
     queryKey: ['importantPostingList', pageable],
     queryFn: async () => {
-      const response = await axiosInstance.get('/community/board/important', {
+      const response = await axiosInstance.get('/community/post/important', {
         params: {
           page: pageable.page,
           size: pageable.size,

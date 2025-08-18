@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
@@ -7,6 +6,7 @@ import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import MemberListCard from '@/components/Community/association/MemberListCard';
 import MemberRequestCard from '@/components/Community/association/MemberRequestCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   useJoinRequest,
   useMembers,
@@ -14,11 +14,7 @@ import {
 } from '@/api/communityAssociation';
 
 const CommunityMembersPage = () => {
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
 
   const userInfo = useRecoilValue(currentUserInfo);
   const isChairman = userInfo.associationRank === 'CHAIRMAN';

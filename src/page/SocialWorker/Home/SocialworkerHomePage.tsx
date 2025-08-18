@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
@@ -16,20 +15,16 @@ import MatchingSection from '@/components/SocialWorker/Home/MatchingSection';
 import ApplySection from '@/components/SocialWorker/Home/ApplySection';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { useGetSocialWorkerHome } from '@/api/socialworker';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useGetSocialWorkerHome } from '@/api/socialworker';
 
 const SocialworkerHomePage = () => {
-  const navigate = useNavigate();
-
   const [isNew, setIsNew] = useState(false);
   const chatNew = true;
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
 
-  const handleNavigate = (path: string) => {
-    navigate(`/socialworker/${path}`);
-    scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
   const handleModal = (
     setter: React.Dispatch<React.SetStateAction<boolean>>,
     before?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -52,7 +47,7 @@ const SocialworkerHomePage = () => {
             detail="가입 보상 포인트 5,000P가 지급되었습니다."
             left="내 포인트 확인"
             right="홈으로"
-            handleLeftBtnClick={() => handleNavigate('point')}
+            handleLeftBtnClick={() => handleNavigate('/socialworker/point')}
             handleRightBtnClick={() => handleModal(setIsNew)}
           />
         </Modal>
@@ -61,7 +56,7 @@ const SocialworkerHomePage = () => {
       <NavBar
         left={<NavLeft />}
         right={
-          <NavRight onClick={() => handleNavigate('chat')}>
+          <NavRight onClick={() => handleNavigate('/socialworker/chat')}>
             {chatNew ? <ChatNew /> : <Chat />}
           </NavRight>
         }
@@ -77,7 +72,10 @@ const SocialworkerHomePage = () => {
           />
         </div>
 
-        <div className="pointWrapper" onClick={() => handleNavigate('point')}>
+        <div
+          className="pointWrapper"
+          onClick={() => handleNavigate('/socialworker/point')}
+        >
           <Point />
           {/* <label className="point">{data.point}</label> */}
           <label className="point">1,500P</label>
@@ -130,10 +128,7 @@ const SocialworkerHomePage = () => {
           <label className="title">매칭 통계</label>
           <div
             className="detailWrapper"
-            onClick={() => {
-              navigate('/socialworker/matching/dashboard');
-              window.scrollTo(0, 0);
-            }}
+            onClick={() => handleNavigate('/socialworker/matching/dashboard')}
             style={{ cursor: 'pointer' }}
           >
             <label className="detail">자세히 보기</label>
@@ -175,10 +170,7 @@ const SocialworkerHomePage = () => {
           <label className="title">매칭 대기중인 어르신</label>
           <div
             className="detailWrapper"
-            onClick={() => {
-              navigate('/socialworker/elderly');
-              window.scrollTo(0, 0);
-            }}
+            onClick={() => handleNavigate('/socialworker/elderly')}
             style={{ cursor: 'pointer' }}
           >
             <label className="detail">자세히 보기</label>
@@ -292,9 +284,10 @@ const NavLeft = styled(Logo)`
 `;
 
 const NavRight = styled.div`
+  padding-right: 20px;
   width: 28px;
   height: 28px;
-  padding-right: 20px;
+  color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
 `;
 
@@ -420,8 +413,9 @@ const Edler = styled.div`
   }
 
   .elder {
-    width: 88px;
     padding: 16px;
+    width: 88px;
+    flex: 0 0 auto;
     flex-direction: column;
     align-items: center;
     gap: 10px;

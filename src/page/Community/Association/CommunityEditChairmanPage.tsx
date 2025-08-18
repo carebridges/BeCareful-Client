@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
 import InputBox from '@/components/common/InputBox/InputBox';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useAssociationInfo } from '@/api/communityAssociation';
 
 const CommunityEditChairmanPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack } = useHandleNavigate();
 
   const { data } = useAssociationInfo();
 
@@ -48,14 +48,7 @@ const CommunityEditChairmanPage = () => {
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>회장 정보 수정</NavCenter>}
         color=""
       />

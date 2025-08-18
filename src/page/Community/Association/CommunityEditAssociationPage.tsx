@@ -1,11 +1,13 @@
 import styled from 'styled-components';
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
 import InputBox from '@/components/common/InputBox/InputBox';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import { useAssociationChangeForm } from '@/hooks/Community/Association/useAssociationChangeForm';
 import { AssociationInfoRequest } from '@/types/Community/association';
 import {
   useAssociationInfo,
@@ -14,82 +16,32 @@ import {
 import { useUploadAssociationProfileImage } from '@/api/communityFunnel';
 
 const CommunityEditAssociationPage = () => {
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
+  const [isChanged, setIsChanged] = useState(false);
   const { data } = useAssociationInfo();
 
-  const [imgUrl, setImgUrl] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const [name, setName] = useState('');
-  const [year, setYear] = useState('');
-  const [isChanged, setIsChanged] = useState(false);
-
-  useEffect(() => {
-    if (data) {
-      setImgUrl(data.associationProfileImageUrl);
-      setName(data.associationName);
-      setYear(String(data.associationEstablishedYear));
-    }
-  }, [data]);
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-    setIsChanged(true);
-  };
-  const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setYear(e.target.value);
-    setIsChanged(true);
-  };
-
   const { mutate: uploadImage } = useUploadAssociationProfileImage();
-
-  const handleImageUpload = (file: File) => {
-    uploadImage(file, {
-      onSuccess: (url) => {
-        setImgUrl(url);
-        setIsChanged(true);
-      },
-      onError: (error) => {
-        console.log('이미지 업로드 실패', error);
-      },
+  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
+    useProfileImageUpload<File>({
+      initialImgUrl: data?.associationProfileImageUrl,
+      setIsChanged,
+      uploadMutate: uploadImage,
     });
-  };
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImgUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-
-      handleImageUpload(file);
-    } else {
-      setImgUrl(data?.associationProfileImageUrl || '');
-      setIsChanged(false);
-    }
-  };
-  const handleCameraClick = () => {
-    fileInputRef.current?.click();
-  };
+  const { name, year, handleNameChange, handleYearChange } =
+    useAssociationChangeForm(data, setIsChanged);
 
   const { mutate: updateAssociation } = usePutAssociationInfo();
-
   const handleEditBtnClick = async () => {
     const associationRequest: AssociationInfoRequest = {
-      associationImageUrl: imgUrl,
+      associationImageUrl: imgUrl ?? data?.associationProfileImageUrl ?? '',
       associationName: name,
       associationEstablishedYear: Number(year),
     };
-    // console.log(associationRequest);
     updateAssociation(associationRequest, {
       onSuccess: () => {
         handleGoBack();
+        setIsChanged(false);
       },
     });
   };
@@ -117,7 +69,7 @@ const CommunityEditAssociationPage = () => {
 
       <InputBox
         title="협회명"
-        detail="협회의 정확한 명칭을 검색해 주세요."
+        detail="협회의 정확한 명칭을 입력해 주세요."
         placeholder="협회명을 입력해주세요"
         value={name}
         onChange={handleNameChange}
@@ -185,6 +137,7 @@ const ProfileImgWrapper = styled.div`
     height: 100px;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 
   input {

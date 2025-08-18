@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
@@ -9,11 +9,11 @@ import {
   usePostSocialworkerContract,
 } from '@/api/socialworker';
 import { SocialworkerContractEditRequest } from '@/types/Socialworker/chat';
-
 import { CareTypeSection } from '@/components/SocialWorker/RegisterMatchingElder/CareTypeSection';
 import { DaySelectSection } from '@/components/SocialWorker/RegisterMatchingElder/DaySelectSection';
 import { TimeSelectSection } from '@/components/SocialWorker/RegisterMatchingElder/TimeSelectSection';
 import { PaySection } from '@/components/SocialWorker/RegisterMatchingElder/PaySection';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { apiDayFormat } from '@/utils/caregiver';
 
 const SocialworkerEditContractPage = () => {
@@ -22,11 +22,7 @@ const SocialworkerEditContractPage = () => {
   const { matchingId } = (location.state as { matchingId?: number }) || {};
   const confirmedMatchingId: number = matchingId as number;
 
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack, handleNavigateState } = useHandleNavigate();
 
   const { data } = useGetSocialworkerContract(Number(contractId));
   const { mutate: updateContract } = usePostSocialworkerContract();
@@ -85,10 +81,9 @@ const SocialworkerEditContractPage = () => {
     console.log(contractData);
     updateContract(contractData, {
       onSuccess: () => {
-        navigate(`/socialworker/chat/${matchingId}`, {
+        handleNavigateState(`/socialworker/chat/${matchingId}`, {
           state: { finalConfirm: true },
         });
-        window.scrollTo(0, 0);
       },
     });
   };

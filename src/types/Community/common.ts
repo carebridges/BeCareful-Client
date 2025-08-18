@@ -24,6 +24,7 @@ export interface AuthorInfo {
 
 // 미디어, 파일 항목 구조
 export interface MediaItem {
+  id: number;
   fileName: string;
   mediaUrl: string;
   fileType: 'FILE' | 'IMAGE' | 'VIDEO';

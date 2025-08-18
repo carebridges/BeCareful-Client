@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ReactComponent as Chat } from '@/assets/icons/ChatNewBlack.svg';
+import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { useRecoilValue } from 'recoil';
+import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiverWorkFilters';
 import {
   caretypeFormat,
@@ -14,15 +15,17 @@ import {
   locationFormat,
   timeFormat,
 } from '@/utils/caregiver';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   useApplicationQuery,
   useRecruitmentListQuery,
 } from '@/hooks/Caregiver/caregiverQuery';
-import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/useWorkApplicationToggleMutation';
+import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/mutation/useWorkApplicationToggleMutation';
 
 const CaregiverWorkPage = () => {
-  const navigate = useNavigate();
+  const { handleNavigate } = useHandleNavigate();
 
+  const userInfo = useRecoilValue(currentUserInfo);
   const chatNew = false;
 
   // 신청서 조회
@@ -117,12 +120,7 @@ const CaregiverWorkPage = () => {
       <NavBar
         left={<NavLeft>일자리</NavLeft>}
         right={
-          <NavRight
-            onClick={() => {
-              navigate('/caregiver/chat');
-              window.scrollTo(0, 0);
-            }}
-          >
+          <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
             {chatNew ? <ChatNew /> : <Chat />}
           </NavRight>
         }
@@ -142,8 +140,7 @@ const CaregiverWorkPage = () => {
             ) : (
               <label className="date">아직 등록된 신청서가 없어요!</label>
             )}
-            {/* <label className="title">{applicationData.name}일자리 신청서</label> */}
-            <label className="title">이선혜 일자리 신청서</label>
+            <label className="title">{userInfo.realName} 일자리 신청서</label>
           </div>
 
           <div className="right">
@@ -159,12 +156,7 @@ const CaregiverWorkPage = () => {
 
         <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
 
-        <Button
-          onClick={() => {
-            navigate('/caregiver/my/application');
-            window.scrollTo(0, 0);
-          }}
-        >
+        <Button onClick={() => handleNavigate('/caregiver/my/application')}>
           {applicationData ? '내 신청서 수정하기' : '내 신청서 등록하기'}
         </Button>
       </Application>

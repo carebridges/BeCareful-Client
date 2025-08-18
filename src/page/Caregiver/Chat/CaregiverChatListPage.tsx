@@ -1,16 +1,12 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverChatCard from '@/components/Chat/CaregiverChatCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetCaregiverChatList } from '@/api/caregiver';
 
 const CaregiverChatListPage = () => {
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
 
   const { data } = useGetCaregiverChatList();
 

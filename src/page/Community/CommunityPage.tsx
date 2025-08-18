@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ReactComponent as Search } from '@/assets/icons/Search.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Write } from '@/assets/icons/community/Write.svg';
@@ -11,24 +12,23 @@ import CommunityHome from '@/components/Community/home/CommunityHome';
 import CommunityDetail from '@/components/Community/home/CommunityDetail';
 import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
 import { CommunityJoinRequestModal } from '@/components/Community/JoinCommunity/CommunityJoinRequestModal';
-import { COMMUNITY_BOARDS } from '@/constants/communityBoard';
-import { useAssociationInfo } from '@/api/community';
-import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 import { CommunityJoinPendingModal } from '@/components/Home/CommunityJoinPendingModal';
 import { CommunityJoinApprovedModal } from '@/components/Home/CommunityJoinApprovedModal';
+import { COMMUNITY_BOARDS } from '@/constants/communityBoard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
+import { useMyAssociation } from '@/api/community';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
-  const navigate = useNavigate();
-  const handleNavigate = (path: string) => {
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const location = useLocation();
   const selectedAssociation = location.state as {
     associationId: number;
     associationName: string;
   };
+
+  const chatNew = false;
 
   const [activeTab, setActiveTab] = useState('전체');
   const handleTabChange = (tabName: string) => {
@@ -38,7 +38,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
 
   const [isWriting, setIsWriting] = useState(false);
 
-  const { data } = useAssociationInfo(!previewMode);
+  const { data } = useMyAssociation(!previewMode);
   const {
     isPendingModalOpen,
     isApprovedModalOpen,
@@ -60,10 +60,12 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         />
       ) : (
         <Container>
-          <Top>
-            <div>
+          <Top $backgroundImageUrl={data?.associationProfileImageUrl || ''}>
+            <div className="right">
               <Search />
-              <Chat onClick={() => handleNavigate('/socialworker/chat')} />
+              <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
+                {chatNew ? <ChatNew /> : <Chat />}
+              </ChatWrapper>
             </div>
           </Top>
 
@@ -126,7 +128,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
               width="343px"
               associationId={selectedAssociation?.associationId}
               associationName={selectedAssociation?.associationName ?? ''}
-              onClose={() => navigate(-1)}
+              onClose={handleGoBack}
             />
           )}
           {isPendingModalOpen && (
@@ -166,14 +168,17 @@ const Container = styled.div`
   background: ${({ theme }) => theme.colors.gray50};
 `;
 
-const Top = styled.div`
+const Top = styled.div<{ $backgroundImageUrl: string }>`
   height: 88px;
   position: sticky;
   top: 0;
   z-index: 10;
-  background: ${({ theme }) => theme.colors.mainBlue};
+  background-image: url(${(props) => props.$backgroundImageUrl});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 
-  div {
+  .right {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -181,6 +186,13 @@ const Top = styled.div`
     top: 20px;
     right: 20px;
   }
+`;
+
+const ChatWrapper = styled.div`
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const Association = styled.div`

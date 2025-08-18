@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 
 export const useUploadCareGiverProfileImage = () =>
   useMutation({
-    mutationFn: async ({ file }: { file: File }) => {
+    mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
 

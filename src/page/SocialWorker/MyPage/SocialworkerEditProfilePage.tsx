@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
@@ -9,16 +8,13 @@ import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
 import { AgreementValues } from '@/types/Socialworker/common';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
 import { Button } from '@/components/common/Button/Button';
-import { useGetSocialWorkerMy, usePutSocialworkerMy } from '@/api/socialworker';
-import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import { API_Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useGetSocialWorkerMy, usePutSocialworkerMy } from '@/api/socialworker';
 
 const SocialworkerEditProfilePage = () => {
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
 
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
@@ -114,7 +110,7 @@ const SocialworkerEditProfilePage = () => {
       birthYymmdd: birth,
       genderCode: genderCode,
       phoneNumber: phoneNumber,
-      // TODO:협회검색해서 id 받아오기
+      // TODO: 기관 검색해서 id 받아오기
       nursingInstitutionId: 0,
       institutionRank: API_Institution_Rank_Mapping[rank],
       isAgreedToTerms: agreementStates.isAgreedToTerms,
@@ -127,6 +123,7 @@ const SocialworkerEditProfilePage = () => {
     updateSocialMy(myData, {
       onSuccess: () => {
         handleGoBack();
+        setIsChanged(false);
       },
     });
   };
@@ -186,6 +183,7 @@ const SocialworkerEditProfilePage = () => {
           onGenderChange={(e) =>
             handleBirthAndGenderChange(birth, e.target.value)
           }
+          isEditProfile={true}
         />
 
         <CardContainer>

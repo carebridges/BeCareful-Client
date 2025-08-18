@@ -1,22 +1,20 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { SocialworkerChatList } from '@/types/Socialworker/chat';
-import { textTruncateFormat } from '@/utils/textFormat';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { SocialworkerChatList } from '@/types/Socialworker/chat';
+import { textTruncateFormat } from '@/utils/formatText';
 
 interface ChatListCardProps {
   chat: SocialworkerChatList;
 }
 
 const SocialworkerChatCard = ({ chat }: ChatListCardProps) => {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/socialworker/chat/${chat.matchingId}`);
-    window.scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
 
   return (
-    <Container onClick={handleClick}>
+    <Container
+      onClick={() => handleNavigate(`/socialworker/chat/${chat.matchingId}`)}
+    >
       <img src={chat.caregiverInfo.profileImageUrl} />
       <div className="left">
         <label className="caregiver">

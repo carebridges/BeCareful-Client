@@ -4,7 +4,7 @@ import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
 import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
 import { caretypeFormat, dayFormat } from '@/utils/caregiver';
-import { usePutMemoMutation } from '@/hooks/Caregiver/usePutMemoMutation';
+import { usePutMemoMutation } from '@/hooks/Caregiver/mutation/usePutMemoMutation';
 
 interface CaregiverMyworkCardProps {
   workInfo: CaregiverCompletedMatching;

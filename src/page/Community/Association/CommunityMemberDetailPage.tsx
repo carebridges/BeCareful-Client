@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
@@ -20,6 +20,7 @@ import {
   Association_Rank_Mapping,
 } from '@/constants/associationRank';
 import { MemberRankRequest } from '@/types/Community/association';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   useMemberExpel,
   useMembersDetail,
@@ -36,11 +37,7 @@ const CommunityMemberDetailPage = () => {
 
   const { data } = useMembersDetail(Number(memberId));
 
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
 
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
   const memberTypes = ['임원진', '회원'];

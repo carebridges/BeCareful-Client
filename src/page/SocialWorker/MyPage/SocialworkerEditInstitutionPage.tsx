@@ -1,83 +1,85 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
+import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
+import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { FACILITY_TYPES } from '@/constants/institutionFacilityTypes';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';
+import { NursingAssociationInfoRequest } from '@/types/Socialworker/mypage';
+import { useUploadInstitutionProfileImage } from '@/api/institutionFunnel';
+import {
+  useGetSocialWorkerMy,
+  usePutInstitutionInfo,
+} from '@/api/socialworker';
 
-interface SocialworkerEditInstitutionPageProps {
-  institution: string;
-  institutionCode: string;
-  year: string;
-  types: string[];
-  phoneNumber: string;
-}
+const SocialworkerEditInstitutionPage = () => {
+  const { handleGoBack } = useHandleNavigate();
+  const [isChanged, setIsChanged] = useState(false);
+  const { data } = useGetSocialWorkerMy();
 
-const SocialworkerEditInstitutionPage = ({
-  institution: initialInstitution,
-  institutionCode: initialInstitutionCode,
-  year: initialYear,
-  types: initialTypes,
-  phoneNumber: initialPhoneNumber,
-}: SocialworkerEditInstitutionPageProps) => {
-  const navigate = useNavigate();
+  const {
+    institutionName,
+    institutionCode,
+    year,
+    types,
+    phoneNumber,
+    handleChange,
+    handleTypesChange,
+  } = useInstitutionForm(data?.institutionInfo, setIsChanged);
 
-  const [institution, setInstitution] = useState(initialInstitution);
-  const [institutionCode, setInstitutionCode] = useState(
-    initialInstitutionCode,
-  );
-  const [year, setYear] = useState(initialYear);
-  const [types, setTypes] = useState(initialTypes);
-  const [phoneNumber, setPhoneNumber] = useState(initialPhoneNumber);
+  const { mutate: uploadImage } = useUploadInstitutionProfileImage();
+  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
+    useProfileImageUpload<{ file: File; name: string }>({
+      initialImgUrl: data?.institutionInfo.institutionImageUrl,
+      setIsChanged,
+      uploadMutate: uploadImage,
+      additionalUploadData: { name: institutionName },
+    });
 
-  const handleChange = (fieldName: string, value: string) => {
-    switch (fieldName) {
-      case 'institution':
-        setInstitution(value);
-        break;
-      case 'institutionCode':
-        setInstitutionCode(value);
-        break;
-      case 'year':
-        setYear(value);
-        break;
-      case 'phoneNumber':
-        setPhoneNumber(value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleTypesChange = (selectedType: string) => {
-    setTypes((prev) => {
-      if (prev.includes(selectedType)) {
-        return prev.filter((type) => type !== selectedType);
-      } else {
-        return [...prev, selectedType];
-      }
+  const { mutate: updateInstitution } = usePutInstitutionInfo();
+  const handleEditBtnClick = async () => {
+    const institutionData: NursingAssociationInfoRequest = {
+      institutionName: institutionName,
+      institutionCode: institutionCode,
+      openYear: year,
+      facilityTypeList: types,
+      phoneNumber: phoneNumber,
+      profileImageUrl:
+        imgUrl ?? data?.institutionInfo.institutionImageUrl ?? '',
+    };
+    console.log(institutionData);
+    updateInstitution(institutionData, {
+      onSuccess: () => {
+        handleGoBack();
+        setIsChanged(false);
+      },
     });
   };
 
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>기관 정보 수정</NavCenter>}
         color="white"
       />
 
-      <Profile>
-        <img src="" />
-      </Profile>
+      <ProfileImgWrapper>
+        <div>
+          <img src={imgUrl} alt="기관 프로필 이미지" />
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+          />
+          <Camera onClick={handleCameraClick} />
+        </div>
+      </ProfileImgWrapper>
 
       <CardContainer>
         <label className="title">
@@ -88,8 +90,8 @@ const SocialworkerEditInstitutionPage = ({
         </label>
         <Input
           placeholder="소속된 기관명"
-          value={institution}
-          onChange={(e) => handleChange('institution', e.target.value)}
+          value={institutionName}
+          onChange={(e) => handleChange('institutionName', e.target.value)}
         />
       </CardContainer>
 
@@ -144,7 +146,14 @@ const SocialworkerEditInstitutionPage = ({
       </CardContainer>
 
       <Bottom>
-        <Button>기관 정보 수정하기</Button>
+        <Button
+          height="56px"
+          variant={isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!isChanged}
+          onClick={handleEditBtnClick}
+        >
+          기관 정보 수정하기
+        </Button>
       </Bottom>
     </Container>
   );
@@ -173,17 +182,35 @@ const NavCenter = styled.div`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
-const Profile = styled.div`
+const ProfileImgWrapper = styled.div`
   margin-top: -16px;
   display: flex;
   align-items: center;
   justify-content: center;
 
+  div {
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
+
   img {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.colors.gray100};
     object-fit: cover;
+  }
+
+  input {
+    display: none;
+  }
+
+  svg {
+    position: absolute;
+    top: 68px;
+    left: 68px;
+    cursor: pointer;
   }
 `;
 
@@ -233,16 +260,6 @@ const Input = styled.input`
     outline: none;
     caret-color: ${({ theme }) => theme.colors.mainBlue};
   }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 56px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.mainBlue};
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
 const Bottom = styled.div`

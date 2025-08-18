@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ApplicationIcon } from '@/assets/icons/caregiver/MyWork.svg';
 import { ReactComponent as CareerIcon } from '@/assets/icons/caregiver/my/Career.svg';
 import { ReactComponent as LogoutIcon } from '@/assets/icons/caregiver/my/Logout.svg';
@@ -9,15 +10,19 @@ import { Toggle } from '@/components/common/Toggle/Toggle';
 import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import ProfileCard from '@/components/shared/ProfileCard';
+import Modal from '@/components/common/Modal/Modal';
+import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverMyPageInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
-import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/useWorkApplicationToggleMutation';
+import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/mutation/useWorkApplicationToggleMutation';
 import {
   caretypeFormat,
   dayFormat,
   locationFormat,
   timeFormat,
 } from '@/utils/caregiver';
+import { useCaregiverLogout } from '@/api/caregiver';
 
 const CaregiverMyPage = () => {
   const { data, error } = useCaregiverMyPageInfoQuery();
@@ -25,11 +30,7 @@ const CaregiverMyPage = () => {
     console.log('getCaregiverMyPageInfo 에러: ', error);
   }
 
-  const navigate = useNavigate();
-  const handleNavigate = (path: string) => {
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
 
   const { mutate: toggleWorkApplication } = useWorkApplicationToggleMutation({
     onSuccessCallback: (newIsActive) => {
@@ -72,8 +73,49 @@ const CaregiverMyPage = () => {
     },
   ];
 
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
+  const handleModal = (
+    setter: React.Dispatch<React.SetStateAction<boolean>>,
+    before?: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {
+    if (before) {
+      before(false);
+    }
+    setter((prev) => !prev);
+  };
+
+  const { mutate: logout } = useCaregiverLogout();
+  // const { mutate: leave } = useDeleteSocialworker();
+  const setUserInfo = useSetRecoilState(currentUserInfo);
+
   const handleLogout = () => {
     console.log('로그아웃');
+    logout();
+    localStorage.clear();
+    setUserInfo({
+      realName: '',
+      nickName: '',
+      institutionRank: '',
+      associationRank: '',
+    });
+    handleModal(setIsLogoutModalOpen);
+    handleNavigate('/');
+  };
+
+  const handleWithdraw = () => {
+    console.log('회원탈퇴');
+    // leave();
+    localStorage.clear();
+    setUserInfo({
+      realName: '',
+      nickName: '',
+      institutionRank: '',
+      associationRank: '',
+    });
+    handleModal(setIsWithdrawModalOpen);
+    handleNavigate('/');
   };
 
   return (
@@ -228,15 +270,48 @@ const CaregiverMyPage = () => {
 
       <SectionWrapper>
         <label className="title-label">계정</label>
-        <Logout isRed={true} onClick={handleLogout}>
+        <Logout isRed={true} onClick={() => handleModal(setIsLogoutModalOpen)}>
           <LogoutIcon />
           로그아웃
         </Logout>
-        <Logout isRed={false}>
+        <Logout
+          isRed={false}
+          onClick={() => handleModal(setIsWithdrawModalOpen)}
+        >
           <LogoutIcon />
           탈퇴하기
         </Logout>
       </SectionWrapper>
+
+      <Modal
+        isOpen={isLogoutModalOpen}
+        onClose={() => handleModal(setIsLogoutModalOpen)}
+      >
+        <ModalButtons
+          onClose={() => handleModal(setIsLogoutModalOpen)}
+          title="로그아웃 하시겠습니까?"
+          detail="현재 계정에서 로그아웃됩니다. 계속하시겠습니까?"
+          left="취소"
+          right="로그아웃"
+          handleLeftBtnClick={() => handleModal(setIsLogoutModalOpen)}
+          handleRightBtnClick={handleLogout}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isWithdrawModalOpen}
+        onClose={() => handleModal(setIsWithdrawModalOpen)}
+      >
+        <ModalButtons
+          onClose={() => handleModal(setIsWithdrawModalOpen)}
+          title="정말 탈퇴 하시겠습니까?"
+          detail={'돌봄다리 통합 서비스에서 탈퇴됩니다.\n계속하시겠습니까?'}
+          left="취소"
+          right="탈퇴하기"
+          handleLeftBtnClick={() => handleModal(setIsWithdrawModalOpen)}
+          handleRightBtnClick={handleWithdraw}
+        />
+      </Modal>
     </Container>
   );
 };

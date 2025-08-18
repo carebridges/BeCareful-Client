@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
@@ -8,18 +8,19 @@ import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { apiMediationFormat } from '@/utils/caregiver';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useRecruitmentDetailQuery } from '@/hooks/Caregiver/caregiverQuery';
 import {
   usePostApplyMutation,
   usePostMediateMutation,
   usePostRejectMutation,
-} from '@/hooks/Caregiver/useApplyMutation';
+} from '@/hooks/Caregiver/mutation/useApplyMutation';
 
 const CaregiverWorkDetailPage = () => {
   const { recruitmentId } = useParams<{ recruitmentId: string }>();
   const numRecruitmentId = Number(recruitmentId);
 
-  const navigate = useNavigate();
+  const { handleNavigate } = useHandleNavigate();
 
   // 매칭 공고 상세 조회
   const { data, error } = useRecruitmentDetailQuery(Number(recruitmentId));
@@ -47,10 +48,6 @@ const CaregiverWorkDetailPage = () => {
   });
 
   // 팝업 공통
-  const handleNavigate = (path: string) => {
-    navigate(`/caregiver/${path}`);
-    window.scrollTo(0, 0);
-  };
   const handleModal = (
     setter: React.Dispatch<React.SetStateAction<boolean>>,
     before?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -142,8 +139,8 @@ const CaregiverWorkDetailPage = () => {
           }
           left="다른 일자리 보기"
           right="지원 내역 보기"
-          handleLeftBtnClick={() => handleNavigate('work')}
-          handleRightBtnClick={() => handleNavigate('apply')}
+          handleLeftBtnClick={() => handleNavigate('/caregiver/work')}
+          handleRightBtnClick={() => handleNavigate('/caregiver/apply')}
         />
       </Modal>
 
@@ -178,7 +175,7 @@ const CaregiverWorkDetailPage = () => {
           // detail={`${name}님께 맞는 다른 일자리를 찾아볼게요!`}
           detail="이선혜님께 맞는 다른 일자리를 찾아볼게요!"
           button="다른 일자리 보러가기"
-          handleBtnClick={() => handleNavigate('work')}
+          handleBtnClick={() => handleNavigate('/caregiver/work')}
         />
       </Modal>
 
@@ -256,8 +253,8 @@ const CaregiverWorkDetailPage = () => {
           }
           left="다른 일자리 보기"
           right="지원 내역 보기"
-          handleLeftBtnClick={() => handleNavigate('work')}
-          handleRightBtnClick={() => handleNavigate('apply')}
+          handleLeftBtnClick={() => handleNavigate('/caregiver/work')}
+          handleRightBtnClick={() => handleNavigate('/caregiver/apply')}
         />
       </Modal>
     </Container>

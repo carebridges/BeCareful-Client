@@ -1,16 +1,12 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import SocialworkerChatCard from '@/components/Chat/SocialworkerChatCard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialworkerChatList } from '@/api/socialworker';
 
 const SocialworkerChatListPage = () => {
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
 
   const { data } = useGetSocialworkerChatList();
 

@@ -99,7 +99,17 @@ const CaregiverCareerExperience = ({
           </InstitutionWrapper>
 
           {experiences.length > 1 && (
-            <Button height="52px" variant="disabled" onClick={deleteExperience}>
+            <Button
+              height="52px"
+              variant="disabled"
+              onClick={deleteExperience}
+              style={{
+                display: 'flex',
+                gap: '8px',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <Delete />
               경력 삭제하기
             </Button>
@@ -107,7 +117,17 @@ const CaregiverCareerExperience = ({
         </CareerWrapper>
       ))}
 
-      <Button height="52px" variant="subBlue" onClick={addExperience}>
+      <Button
+        height="52px"
+        variant="subBlue"
+        onClick={addExperience}
+        style={{
+          display: 'flex',
+          gap: '8px',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Add />
         경력 추가하기
       </Button>

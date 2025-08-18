@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as NoRecentSearch } from '@/assets/icons/community/Search.svg';
 import { ReactComponent as SearchIcon } from '@/assets/icons/Search.svg';
@@ -14,11 +13,12 @@ import {
 import { searchPost } from '@/utils/searchPosts';
 import { useRecentSearches } from '@/hooks/Community/SearchPage/useRecentSearches';
 import { PageableRequest } from '@/types/Community/common';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useBoardPostings } from '@/hooks/Community/api/useBoardPostings';
 import { useBoardPostList } from '@/hooks/Community/api/useBoardPostList';
 
 const CommunitySearchPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack } = useHandleNavigate();
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showRecentSearches, setShowRecentSearches] = useState<boolean>(true);
@@ -102,14 +102,7 @@ const CommunitySearchPage = () => {
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>검색</NavCenter>}
         color=""
       />
@@ -188,12 +181,7 @@ const CommunitySearchPage = () => {
                 <>
                   <PostOverview
                     key={post.postId}
-                    postId={post.postId}
-                    title={post.title}
-                    isImportant={post.isImportant}
-                    thumbnailUrl={post.thumbnailUrl}
-                    createdAt={post.createdAt}
-                    author={post.author}
+                    post={post}
                     boardType={selectedBoard}
                   />
                   <Border />

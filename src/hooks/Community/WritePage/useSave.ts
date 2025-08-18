@@ -77,7 +77,7 @@ export const useSave = ({
         // localStorage.removeItem(storageKey);
       }
     }
-  }, [board, setPostData, setMediaData]);
+  }, [board]);
 
   return { handleSaveDraft };
 };

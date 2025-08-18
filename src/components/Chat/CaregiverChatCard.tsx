@@ -1,21 +1,19 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { CaregiverChatList } from '@/types/Caregiver/chat';
-import { textTruncateFormat } from '@/utils/textFormat';
+import { textTruncateFormat } from '@/utils/formatText';
 
 interface ChatListCardProps {
   chat: CaregiverChatList;
 }
 
 const CaregiverChatCard = ({ chat }: ChatListCardProps) => {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/caregiver/chat/${chat.matchingId}`);
-    window.scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
 
   return (
-    <Container onClick={handleClick}>
+    <Container
+      onClick={() => handleNavigate(`/caregiver/chat/${chat.matchingId}`)}
+    >
       <img src={chat.nursingInstitutionProfileImageUrl} />
       <div className="left">
         <label className="institution">{chat.nursingInstitutionName}</label>

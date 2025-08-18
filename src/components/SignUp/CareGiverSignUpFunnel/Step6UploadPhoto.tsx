@@ -15,20 +15,17 @@ export const Step6UploadPhoto = () => {
   const { mutate: registerCaregiver, isPending } = useRegisterCaregiver();
 
   const handleImageUpload = (file: File) => {
-    uploadImage(
-      { file },
-      {
-        onSuccess: (url) => {
-          setFormData((prev) => ({
-            ...prev,
-            profileImageUrl: url,
-          }));
-        },
-        onError: () => {
-          alert('이미지 업로드에 실패했습니다.');
-        },
+    uploadImage(file, {
+      onSuccess: (url) => {
+        setFormData((prev) => ({
+          ...prev,
+          profileImageUrl: url,
+        }));
       },
-    );
+      onError: () => {
+        alert('이미지 업로드에 실패했습니다.');
+      },
+    });
   };
 
   const handleSubmit = () => {

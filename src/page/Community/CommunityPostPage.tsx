@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Dots } from '@/assets/icons/community/Dots.svg';
@@ -19,15 +19,17 @@ import CommunityWritePage from '@/page/Community/CommunityWritePage';
 import { Board_Type_Mapping } from '@/constants/communityBoard';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
 import { useComments, useDeletePost, usePostDetail } from '@/api/community';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useLinkCopy } from '@/hooks/Community/PostPage/useLinkCopy';
 import { useCommentSend } from '@/hooks/Community/PostPage/useCommentSend';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
 import { useFileHandling } from '@/hooks/Community/PostPage/useFileHandling';
 import { useKakaoShare } from '@/hooks/Community/PostPage/useKakaoShare';
 import { usePostActions } from '@/hooks/Community/PostPage/usePostActions';
+import { formatDateTime } from '@/utils/formatTime';
 
 const CommunityPostPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack } = useHandleNavigate();
 
   const { postId: postIdParam } = useParams<{ postId: string }>();
   const postId = postIdParam ? parseInt(postIdParam, 10) : 0;
@@ -116,14 +118,7 @@ const CommunityPostPage = () => {
       ) : (
         <Container>
           <NavBar
-            left={
-              <NavLeft
-                onClick={() => {
-                  navigate(-1);
-                  window.scrollTo(0, 0);
-                }}
-              />
-            }
+            left={<NavLeft onClick={handleGoBack} />}
             center={<NavCenter>{boardType}</NavCenter>}
             color="white"
           />
@@ -149,11 +144,16 @@ const CommunityPostPage = () => {
                     </label>
                   </div>
                   <div className="wrapper">
-                    <label className="date">{post?.postedDate}</label>
-                    {isRecentDate(post?.postedDate ?? '', 3) && (
-                      <label className="new">N</label>
+                    {post?.postedDate && (
+                      <>
+                        <label className="date">
+                          {formatDateTime(post.postedDate)}
+                        </label>
+                        {isRecentDate(post.postedDate, 3) && (
+                          <label className="new">N</label>
+                        )}
+                      </>
                     )}
-
                     <label className="date">수정됨</label>
                     <label className="date">조회 101</label>
                   </div>
@@ -163,9 +163,9 @@ const CommunityPostPage = () => {
             </Writer>
           </TitleWrapper>
 
-          {post?.fileUrls && post.fileUrls.length > 0 && (
+          {post?.fileUList && post.fileUList.length > 0 && (
             <Files>
-              {post.fileUrls.map((fileUrl, index) => {
+              {post.fileUList.map((fileUrl, index) => {
                 const fileName = fileUrl.fileName;
                 return (
                   <label
@@ -179,26 +179,20 @@ const CommunityPostPage = () => {
             </Files>
           )}
 
-          <Border style={{ marginBottom: '14px' }} />
-
           <ContentWrapper>
             <label>{post?.content}</label>
             <MediaWrapper>
-              {post?.imageUrls &&
-                post?.imageUrls.map((imageUrl, index) => (
+              {post?.imageList &&
+                post?.imageList.map((image, index) => (
                   <img
                     key={`image-${index}`}
-                    src={imageUrl.mediaUrl}
+                    src={image.mediaUrl}
                     alt={`게시글 이미지 ${index + 1}`}
                   />
                 ))}
-              {post?.videoUrls &&
-                post?.videoUrls.map((videoUrl, index) => (
-                  <video
-                    key={`video-${index}`}
-                    src={videoUrl.mediaUrl}
-                    controls
-                  />
+              {post?.videoList &&
+                post?.videoList.map((video, index) => (
+                  <video key={`video-${index}`} src={video.mediaUrl} controls />
                 ))}
             </MediaWrapper>
           </ContentWrapper>
@@ -384,9 +378,10 @@ const NavCenter = styled.div`
 `;
 
 const TitleWrapper = styled.div`
+  padding-top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
 `;
 
 const Title = styled.div`
@@ -416,6 +411,7 @@ const Tag = styled.span`
 `;
 
 const Writer = styled.div`
+  padding: 20px 0;
   display: flex;
   justify-content: space-between;
 
@@ -428,7 +424,7 @@ const Writer = styled.div`
     width: 47px;
     height: 47px;
     border-radius: 50%;
-    border: 1px solid gray;
+    border: 1px solid ${({ theme }) => theme.colors.gray100};
     object-fit: cover;
   }
 
@@ -477,23 +473,26 @@ const Writer = styled.div`
 `;
 
 const Files = styled.div`
-  display: flex;
-  flex-direction: column;
   padding-top: 20px;
   padding-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
 
   label {
     color: ${({ theme }) => theme.colors.mainBlue};
     font-size: ${({ theme }) => theme.typography.fontSize.body1};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+    cursor: pointer;
   }
 `;
 
 const ContentWrapper = styled.div`
+  margin-top: 14px;
+  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
   gap: 300px;
-  margin-bottom: 50px;
 
   label {
     color: ${({ theme }) => theme.colors.black};
@@ -516,10 +515,9 @@ const MediaWrapper = styled.div`
 
   img,
   video {
-    border: 1px solid gray;
     width: 320px;
     height: 320px;
-    object-fit: cover;
+    object-fit: contain;
   }
 `;
 
@@ -601,7 +599,7 @@ const ReplyWrapper = styled.div`
 
   img {
     border-radius: 50%;
-    border: 1px solid gray;
+    border: 1px solid ${({ theme }) => theme.colors.gray100};
     width: 32px;
     height: 32px;
     object-fit: cover;

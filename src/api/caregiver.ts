@@ -114,6 +114,27 @@ export const workApplicationInactive = async () => {
   return response;
 };
 
+// 로그아웃
+export const useCaregiverLogout = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.put('/caregiver/logout');
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('useCaregiverLogout - 요양보호사 로그아웃 성공:', response);
+      queryClient.clear();
+    },
+    onError: (error) => {
+      console.error('useCaregiverLogout - 요양보호사 로그아웃 실패:', error);
+    },
+  });
+};
+
+// 회원탈퇴
+
 /* 일자리 */
 // 매칭 공고 리스트 조회
 export const getRecruitmentList = async (): Promise<MatchingListResponse> => {

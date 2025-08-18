@@ -1,25 +1,17 @@
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useAssociationInfo } from '@/api/communityAssociation';
 
 const CommunityAssociationInfoPage = () => {
   const { associationId } = useParams<{ associationId: string }>();
 
-  const navigate = useNavigate();
-  const handleNavigate = (path: string) => {
-    navigate(path);
-    scrollTo(0, 0);
-  };
-
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const { data } = useAssociationInfo();
 

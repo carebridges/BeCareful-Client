@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as Chat } from '@/assets/icons/ChatNewBlack.svg';
+import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
@@ -9,6 +8,7 @@ import {
   Gender_Mapping,
   Salary_Type_Mapping,
 } from '@/constants/caregiverMapping';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 import { dayFormat } from '@/utils/caregiver';
 
@@ -18,7 +18,7 @@ interface CaregiverWorkDetailProps {
 }
 
 const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
-  const navigate = useNavigate();
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const chatNew = false;
 
@@ -97,21 +97,9 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   return (
     <Container style={{ marginBottom: date ? '' : '92px' }}>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate('-1');
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         right={
-          <NavRight
-            onClick={() => {
-              navigate('/caregiver/chat');
-              window.scrollTo(0, 0);
-            }}
-          >
+          <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
             {chatNew ? <ChatNew /> : <Chat />}
           </NavRight>
         }
@@ -221,7 +209,7 @@ const NavLeft = styled(ArrowLeft)`
   cursor: pointer;
 `;
 
-const NavRight = styled.div`
+const NavRight = styled(ChatNew)`
   width: 28px;
   height: 28px;
   cursor: pointer;

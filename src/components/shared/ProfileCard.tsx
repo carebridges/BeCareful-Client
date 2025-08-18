@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Point } from '@/assets/icons/Point.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ProfileCardProps {
   profileImgURL: string;
@@ -23,11 +23,7 @@ const ProfileCard = ({
   age,
   gender,
 }: ProfileCardProps) => {
-  const navigate = useNavigate();
-  const handleNavigate = (path: string) => {
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
+  const { handleNavigate } = useHandleNavigate();
 
   return (
     <CardContainter>
@@ -42,11 +38,7 @@ const ProfileCard = ({
         {!point && <label className="nickname">{nickname}</label>}
 
         {point && (
-          <PointWrapper
-            onClick={() => {
-              handleNavigate('/socialworker/point');
-            }}
-          >
+          <PointWrapper onClick={() => handleNavigate('/socialworker/point')}>
             <Point />
             <label className="point">{point.toLocaleString('ko-KR')}P</label>
             <Chevron />

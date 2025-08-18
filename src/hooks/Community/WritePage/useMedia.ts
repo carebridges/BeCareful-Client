@@ -22,13 +22,13 @@ export const useMedia = (initialData?: PostDetailResponse) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [photos, setPhotos] = useState<MediaItem[]>(
-    initialData?.imageUrls || [],
+    initialData?.imageList || [],
   );
   const [videos, setVideos] = useState<MediaItem[]>(
-    initialData?.videoUrls || [],
+    initialData?.videoList || [],
   );
   const [attachedFiles, setAttachedFiles] = useState<MediaItem[]>(
-    initialData?.fileUrls || [],
+    initialData?.fileUList || [],
   );
 
   const handlePhotoClick = () => {

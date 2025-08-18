@@ -1,14 +1,10 @@
 import { styled } from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ErrorIcon } from '@/assets/icons/Error.svg';
 import { Button } from '@/components/common/Button/Button';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 export const ErrorPage = () => {
-  const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack } = useHandleNavigate();
 
   return (
     <PageLayout>
@@ -24,7 +20,7 @@ export const ErrorPage = () => {
       </Labels>
 
       <Bottom>
-        <Button variant="mainBlue" height="52px" onClick={handleNavigate}>
+        <Button variant="mainBlue" height="52px" onClick={handleGoBack}>
           이전 화면으로
         </Button>
       </Bottom>

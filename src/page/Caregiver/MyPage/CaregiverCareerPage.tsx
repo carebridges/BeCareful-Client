@@ -1,17 +1,17 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import CaregiverCareerExperience from '@/components/Caregiver/Mypage/CaregiverCareerExperience';
 import CaregiverCareerNew from '@/components/Caregiver/Mypage/CaregiverCareerNew';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCareerQuery } from '@/hooks/Caregiver/caregiverQuery';
-import { usePutCareerMutation } from '@/hooks/Caregiver/usePutCareerMutation';
+import { usePutCareerMutation } from '@/hooks/Caregiver/mutation/usePutCareerMutation';
 
 const CaregiverCareerPage = () => {
-  const navigate = useNavigate();
+  const { handleGoBack } = useHandleNavigate();
 
   const { data, error } = useCareerQuery();
   if (error) {
@@ -54,14 +54,7 @@ const CaregiverCareerPage = () => {
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>{data ? '경력서 수정' : '경력서 등록'}</NavCenter>}
         color="white"
       />

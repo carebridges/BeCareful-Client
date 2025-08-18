@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import ChatCard from '@/components/Chat/ChatCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   formatDateLabel,
   formatTimeLabel,
@@ -17,15 +18,7 @@ import { useGetCaregiverChat, usePostCaregiverContract } from '@/api/caregiver';
 const CaregiverChatPage = () => {
   const { matchingId } = useParams<{ matchingId: string }>();
 
-  const navigate = useNavigate();
-  const handleGoBack = () => {
-    navigate(-1);
-    window.scrollTo(0, 0);
-  };
-  const handleNavigate = (path: string) => {
-    navigate(path);
-    window.scrollTo(0, 0);
-  };
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const handleModal = (
     setter: React.Dispatch<React.SetStateAction<boolean>>,

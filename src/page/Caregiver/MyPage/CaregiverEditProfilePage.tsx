@@ -1,129 +1,64 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
+import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
+import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import InputBox from '@/components/common/InputBox/InputBox';
 import { CertificateSelectModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateSelectModal';
 import { CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateComponentMap';
 import { CERTIFICATE_LABEL } from '@/constants/certificateLabel';
-import { CertificateFormInput, CertificateKey } from '@/types/CareGiverSignUp';
-import { CertificateInfo } from '@/types/Caregiver/common';
 import { CaregiverMyRequest } from '@/types/Caregiver/mypage';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
 import { useCaregiverMyPageInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
-import { usePutMyMutation } from '@/hooks/Caregiver/usePutMyMutation';
+import { usePutMyMutation } from '@/hooks/Caregiver/mutation/usePutMyMutation';
+import { useUploadCareGiverProfileImage } from '@/api/caregiverFunnel';
+import { useCaregiverBasicForm } from '@/hooks/Caregiver/mypage/useCaregiverBasicForm';
+import { useCaregiverCertForm } from '@/hooks/Caregiver/mypage/useCaregiverCertForm';
 
 const CaregiverEditProfilePage = () => {
-  const navigate = useNavigate();
-
+  const { handleGoBack } = useHandleNavigate();
+  const [isChanged, setIsChanged] = useState(false);
   const { data, error } = useCaregiverMyPageInfoQuery();
   if (error) {
     console.log('getCaregiverMyPageInfo 에러: ', error);
   }
 
-  const defaultCert: CertificateInfo = {
-    grade: 'FIRST',
-    certificateNumber: '',
-  };
+  const {
+    phoneNumber,
+    isEduChecked,
+    isCarChecked,
+    handlePhoneNumber,
+    handleEduToggleChange,
+    handleCarToggleChange,
+  } = useCaregiverBasicForm(data?.caregiverInfo, setIsChanged);
 
-  const [caregiverCert, setCaregiverCert] =
-    useState<CertificateInfo>(defaultCert);
-  const [socialworkerCert, setSocialworkerCert] =
-    useState<CertificateInfo>(defaultCert);
-  const [nursingCert, setNursingCert] = useState<CertificateInfo>(defaultCert);
+  const {
+    caregiverCert,
+    socialworkerCert,
+    nursingCert,
+    selectedKeys,
+    isModalOpen,
+    setIsModalOpen,
+    handleCertificateChange,
+    handleAddCertificate,
+  } = useCaregiverCertForm(
+    data?.caregiverInfo.caregiverDetailInfo,
+    setIsChanged,
+  );
 
-  const [selectedKeys, setSelectedKeys] = useState<CertificateKey[]>([
-    'caregiverCertificate',
-  ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleCertificateChange = (
-    key: CertificateKey,
-    cert: CertificateFormInput,
-  ) => {
-    const grade: CertificateInfo['grade'] =
-      cert.certificateLevel === '2급' ? 'SECOND' : 'FIRST';
-
-    const newCert: CertificateInfo = {
-      grade,
-      certificateNumber: cert.certificateNumber,
-    };
-
-    if (key === 'caregiverCertificate') {
-      setCaregiverCert(newCert);
-    } else if (key === 'socialWorkerCertificate') {
-      setSocialworkerCert(newCert);
-    } else if (key === 'nursingCareCertificate') {
-      setNursingCert(newCert);
-    }
-  };
-
-  const handleAddCertificate = (label: string) => {
-    const key = Object.entries(CERTIFICATE_LABEL).find(
-      ([, value]) => value === label,
-    )?.[0] as CertificateKey;
-
-    if (!key || selectedKeys.includes(key)) return;
-
-    setSelectedKeys((prev) => [...prev, key]);
-    setIsModalOpen(false);
-  };
-
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value);
-  };
-  const [isEduChecked, setIsEduChecked] = useState(false);
-  const handleEduToggleChange = () => {
-    setIsEduChecked((prevChecked) => !prevChecked);
-  };
-  const [isCarChecked, setIsCarChecked] = useState(false);
-  const handleCarToggleChange = () => {
-    setIsCarChecked((prevChecked) => !prevChecked);
-  };
-
-  useEffect(() => {
-    if (data) {
-      setPhoneNumber(data.caregiverInfo.phoneNumber);
-      setIsEduChecked(
-        data.caregiverInfo.caregiverDetailInfo.completeDementiaEducation,
-      );
-      setIsCarChecked(data.caregiverInfo.caregiverDetailInfo.havingCar);
-
-      const initialSelectedKeys: CertificateKey[] = [];
-      if (data.caregiverInfo.caregiverDetailInfo.caregiverCertificate) {
-        setCaregiverCert(
-          data.caregiverInfo.caregiverDetailInfo.caregiverCertificate,
-        );
-        initialSelectedKeys.push('caregiverCertificate');
-      } else {
-        setCaregiverCert(defaultCert);
-      }
-      if (data.caregiverInfo.caregiverDetailInfo.socialWorkerCertificate) {
-        setSocialworkerCert(
-          data.caregiverInfo.caregiverDetailInfo.socialWorkerCertificate,
-        );
-        initialSelectedKeys.push('socialWorkerCertificate');
-      } else {
-        setSocialworkerCert(defaultCert);
-      }
-      if (data.caregiverInfo.caregiverDetailInfo.nursingCareCertificate) {
-        setNursingCert(
-          data.caregiverInfo.caregiverDetailInfo.nursingCareCertificate,
-        );
-        initialSelectedKeys.push('nursingCareCertificate');
-      } else {
-        setNursingCert(defaultCert);
-      }
-
-      setSelectedKeys(initialSelectedKeys);
-    }
-  }, [data]);
+  const { mutate: uploadImage } = useUploadCareGiverProfileImage();
+  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
+    useProfileImageUpload<File>({
+      initialImgUrl: data?.caregiverInfo.profileImageUrl,
+      setIsChanged,
+      uploadMutate: uploadImage,
+    });
 
   const { mutate: updateMy } = usePutMyMutation();
-
   const handleEditBtnClick = () => {
     const caregiverData: CaregiverMyRequest = {
       phoneNumber: phoneNumber,
@@ -133,28 +68,33 @@ const CaregiverEditProfilePage = () => {
       isHavingCar: isCarChecked,
       isCompleteDementiaEducation: isEduChecked,
     };
-
-    // console.log(caregiverData);
-    updateMy(caregiverData);
+    updateMy(caregiverData, {
+      onSuccess: () => {
+        handleGoBack();
+        setIsChanged(false);
+      },
+    });
   };
 
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>프로필 수정하기</NavCenter>}
         color="white"
       />
 
       <ProfileImgWrapper>
-        <img src="" />
+        <div>
+          <img src={imgUrl} alt="협회 프로필 이미지" />
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+          />
+          <Camera onClick={handleCameraClick} />
+        </div>
       </ProfileImgWrapper>
 
       <InputBox
@@ -181,7 +121,11 @@ const CaregiverEditProfilePage = () => {
 
       {selectedKeys.length < 3 && (
         <CardWrapper>
-          <Button isBlue={false} onClick={() => setIsModalOpen(true)}>
+          <Button
+            height="52px"
+            variant="subBlue"
+            onClick={() => setIsModalOpen(true)}
+          >
             <Plus />
             자격증 추가하기
           </Button>
@@ -209,7 +153,12 @@ const CaregiverEditProfilePage = () => {
       </ToggleWrapper>
 
       <Bottom>
-        <Button isBlue={true} onClick={handleEditBtnClick}>
+        <Button
+          height="56px"
+          variant={isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!isChanged}
+          onClick={handleEditBtnClick}
+        >
           프로필 수정하기
         </Button>
       </Bottom>
@@ -254,8 +203,15 @@ const Border = styled.div`
 `;
 
 const ProfileImgWrapper = styled.div`
-  padding: 24px 0px 16px 0px;
+  margin-top: -16px;
+  display: flex;
   justify-content: center;
+
+  div {
+    width: 100px;
+    height: 100px;
+    position: relative;
+  }
 
   img {
     width: 100px;
@@ -263,6 +219,17 @@ const ProfileImgWrapper = styled.div`
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.colors.gray100};
     object-fit: cover;
+  }
+
+  input {
+    display: none;
+  }
+
+  svg {
+    position: absolute;
+    top: 68px;
+    left: 68px;
+    cursor: pointer;
   }
 `;
 
@@ -303,20 +270,4 @@ const Bottom = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-`;
-
-const Button = styled.button<{ isBlue: boolean }>`
-  width: 100%;
-  height: 52px;
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  background: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.mainBlue : theme.colors.subBlue};
-  color: ${({ theme, isBlue }) =>
-    isBlue ? theme.colors.white : theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;

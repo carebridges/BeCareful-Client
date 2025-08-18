@@ -1,55 +1,41 @@
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
+import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { ReactComponent as WithdrawIcon } from '@/assets/icons/caregiver/my/Logout.svg';
+import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
+import InputBox from '@/components/common/InputBox/InputBox';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
-import { AgreementValues } from '@/types/Socialworker/common';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useAssociationChangeForm } from '@/hooks/Community/Association/useAssociationChangeForm';
+import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import {
+  useAssociationInfo,
+  usePutAssociationInfo,
+  usePutAssociationLeave,
+} from '@/api/communityAssociation';
+import { AssociationInfoRequest } from '@/types/Community/association';
+import { useUploadAssociationProfileImage } from '@/api/communityFunnel';
 
-interface SocialworkerEditAssociationPageProps {
-  association: string;
-  rank: string;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
-}
+const SocialworkerEditAssociationPage = () => {
+  const { handleGoBack } = useHandleNavigate();
+  const [isChanged, setIsChanged] = useState(false);
+  const { data } = useAssociationInfo();
 
-const SocialworkerEditAssociationPage = ({
-  association: initialAssociation,
-  rank: initialRank,
-  isAgreedToTerms: initialIsAgreedToTerms,
-  isAgreedToCollectPersonalInfo: initialIsAgreedToCollectPersonalInfo,
-  isAgreedToReceiveMarketingInfo: initialIsAgreedToReceiveMarketingInfo,
-}: SocialworkerEditAssociationPageProps) => {
-  const navigate = useNavigate();
+  const { name, year, handleNameChange, handleYearChange } =
+    useAssociationChangeForm(data, setIsChanged);
 
-  const [association, setAssociation] = useState(initialAssociation);
-  const [rank, setRank] = useState(initialRank);
+  const { mutate: uploadImage } = useUploadAssociationProfileImage();
+  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
+    useProfileImageUpload<File>({
+      initialImgUrl: data?.associationProfileImageUrl,
+      setIsChanged,
+      uploadMutate: uploadImage,
+    });
 
-  const handleAssociationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAssociation(e.target.value);
-  };
-  const handleRankChange = (rank: string) => {
-    setRank(rank);
-  };
-
-  const [agreementStates, setAgreementStates] = useState({
-    isAgreedToTerms: initialIsAgreedToTerms,
-    isAgreedToCollectPersonalInfo: initialIsAgreedToCollectPersonalInfo,
-    isAgreedToReceiveMarketingInfo: initialIsAgreedToReceiveMarketingInfo,
-  });
-
-  const handleAgreementChange = useCallback(
-    (updatedAgreements: AgreementValues) => {
-      setAgreementStates(updatedAgreements);
-    },
-    [],
-  );
-
+  const { mutate: leaveAssociation } = usePutAssociationLeave();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const handleModal = (
     setter: React.Dispatch<React.SetStateAction<boolean>>,
@@ -61,72 +47,65 @@ const SocialworkerEditAssociationPage = ({
     setter((prev) => !prev);
   };
   const handleWithdraw = () => {
-    console.log('회원탈퇴');
-
-    // 회원탈퇴 api
-
+    console.log('협회탈퇴');
+    leaveAssociation();
     handleModal(setIsWithdrawModalOpen);
+    handleGoBack();
+  };
+
+  const { mutate: updateAssociation } = usePutAssociationInfo();
+  const handleEditBtnClick = async () => {
+    const associationRequest: AssociationInfoRequest = {
+      associationImageUrl: imgUrl ?? data?.associationProfileImageUrl ?? '',
+      associationName: name,
+      associationEstablishedYear: Number(year),
+    };
+    updateAssociation(associationRequest, {
+      onSuccess: () => {
+        handleGoBack();
+        setIsChanged(false);
+      },
+    });
   };
 
   return (
     <Container>
       <NavBar
-        left={
-          <NavLeft
-            onClick={() => {
-              navigate(-1);
-              window.scrollTo(0, 0);
-            }}
-          />
-        }
+        left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>협회 정보 수정</NavCenter>}
         color="white"
       />
 
-      <CardContainer style={{ marginTop: '-16px' }}>
-        <label className="title">
-          소속된 협회명 <span className="star">*</span>
-        </label>
-        <label className="detail">
-          소속된 협회의 정확한 명칭을 검색해 주세요.
-        </label>
-        <Input
-          placeholder="소속된 협회명"
-          value={association}
-          onChange={handleAssociationChange}
-        />
-      </CardContainer>
+      <ProfileImgWrapper>
+        <div>
+          <img src={imgUrl} alt="협회 프로필 이미지" />
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+          />
+          <Camera onClick={handleCameraClick} />
+        </div>
+      </ProfileImgWrapper>
 
-      <CardContainer>
-        <label className="title">
-          직급 <span className="star">*</span>
-        </label>
-        <CheckCard
-          pressed={rank === 'CENTER_DIRECTOR'}
-          text="센터장 입니다."
-          onClick={() => handleRankChange('CENTER_DIRECTOR')}
-        />
-        <CheckCard
-          pressed={rank === 'REPRESENTATIVE'}
-          text="대표 입니다."
-          onClick={() => handleRankChange('REPRESENTATIVE')}
-        />
-        <CheckCard
-          pressed={rank === 'SOCIAL_WORKER'}
-          text="사회복지사 입니다."
-          onClick={() => handleRankChange('SOCIAL_WORKER')}
-        />
-      </CardContainer>
+      <InputBox
+        title="협회명"
+        detail="협회의 정확한 명칭을 입력해 주세요."
+        placeholder="협회명을 입력해주세요"
+        value={name}
+        onChange={handleNameChange}
+      />
 
-      <AgreeSection
-        initialIsAgreedToTerms={agreementStates.isAgreedToTerms}
-        initialIsAgreedToCollectPersonalInfo={
-          agreementStates.isAgreedToCollectPersonalInfo
-        }
-        initialIsAgreedToReceiveMarketingInfo={
-          agreementStates.isAgreedToReceiveMarketingInfo
-        }
-        onAgreementChange={handleAgreementChange}
+      <InputBox
+        title="협회 설립일"
+        detail="협회의 설립일을 입력해 주세요."
+        placeholder="예) 2000"
+        value={year}
+        onChange={handleYearChange}
+        pattern="[0-9]{4}"
+        min="1900"
+        max={new Date().getFullYear()}
       />
 
       <Border />
@@ -140,7 +119,14 @@ const SocialworkerEditAssociationPage = ({
       </WithdrawWrapper>
 
       <Bottom>
-        <Button>협회 정보 수정하기</Button>
+        <Button
+          height="56px"
+          variant={isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!isChanged}
+          onClick={handleEditBtnClick}
+        >
+          협회 정보 수정하기
+        </Button>
       </Bottom>
 
       <Modal
@@ -150,7 +136,7 @@ const SocialworkerEditAssociationPage = ({
         <ModalButtons
           onClose={() => handleModal(setIsWithdrawModalOpen)}
           title="정말 탈퇴 하시겠습니까?"
-          detail={'돌봄다리 통합 서비스에서 탈퇴됩니다.\n계속하시겠습니까?'}
+          detail={`${data?.associationName} 커뮤니티에서 탈퇴됩니다.\n계속하시겠습니까?`}
           left="취소"
           right="탈퇴하기"
           handleLeftBtnClick={() => handleModal(setIsWithdrawModalOpen)}
@@ -184,51 +170,34 @@ const NavCenter = styled.div`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
-const CardContainer = styled.div`
-  box-sizing: border-box;
-  width: 100%;
+const ProfileImgWrapper = styled.div`
+  margin-top: -16px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: center;
 
-  .title {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.title5};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  div {
+    width: 100px;
+    height: 100px;
+    position: relative;
   }
 
-  .star {
-    color: ${({ theme }) => theme.colors.mainBlue};
+  img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
   }
 
-  .detail {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-`;
-
-const Input = styled.input`
-  //   width: 100%;
-  height: 20px;
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray100};
-  background: ${({ theme }) => theme.colors.white};
-
-  color: ${({ theme }) => theme.colors.gray900};
-  font-size: ${({ theme }) => theme.typography.fontSize.title5};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.gray300};
+  input {
+    display: none;
   }
 
-  &:hover,
-  &:focus {
-    border: 1px solid ${({ theme }) => theme.colors.mainBlue};
-    outline: none;
-    caret-color: ${({ theme }) => theme.colors.mainBlue};
+  svg {
+    position: absolute;
+    top: 68px;
+    left: 68px;
+    cursor: pointer;
   }
 `;
 
@@ -265,16 +234,6 @@ const Border = styled.div`
   height: 1px;
   background: ${({ theme }) => theme.colors.gray50};
   margin-left: -20px;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 56px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.mainBlue};
-  color: ${({ theme }) => theme.colors.white};
-  font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
 const Bottom = styled.div`
