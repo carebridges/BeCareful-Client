@@ -1,0 +1,55 @@
+name: Preview
+
+on:
+  pull_request:
+    branches: ['main']
+
+permissions:
+  contents: read
+  deployments: write
+  id-token: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vercel-preview:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (yarn)
+        run: yarn install --frozen-lockfile
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Pull Vercel env (preview)
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build (prebuilt artifacts)
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy preview
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "preview_url=$URL" >> $GITHUB_OUTPUT
+
+      - name: Comment PR with Preview URL
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            ✅ Preview: ${{ steps.deploy.outputs.preview_url }}

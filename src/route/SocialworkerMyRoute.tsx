@@ -3,7 +3,6 @@ import SocialworkerEditAssociationPage from '@/page/SocialWorker/MyPage/Socialwo
 import SocialworkerEditInstitutionPage from '@/page/SocialWorker/MyPage/SocialworkerEditInstitutionPage';
 import SocialworkerEditProfilePage from '@/page/SocialWorker/MyPage/SocialworkerEditProfilePage';
 import SocialworkerMyPage from '@/page/SocialWorker/MyPage/SocialworkerMyPage';
-import { API_Association_Rank_Mapping } from '@/constants/associationRank';
 
 const SocialworkerMyRoute = () => {
   return (
@@ -17,15 +16,7 @@ const SocialworkerMyRoute = () => {
         />
         <Route
           path="association"
-          element={
-            <SocialworkerEditAssociationPage
-              association="은파요양원"
-              rank={API_Association_Rank_Mapping['회장']}
-              isAgreedToTerms={true}
-              isAgreedToCollectPersonalInfo={true}
-              isAgreedToReceiveMarketingInfo={false}
-            />
-          }
+          element={<SocialworkerEditAssociationPage />}
         />
       </Routes>
       <Outlet />

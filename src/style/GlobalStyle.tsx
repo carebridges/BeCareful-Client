@@ -48,6 +48,12 @@ const GlobalStyle = createGlobalStyle`
   img {
     border: none;
   }
+
+  @media (hover: none) and (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+    }
+  }
 `;
 
 export default GlobalStyle;
