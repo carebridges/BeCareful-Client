@@ -62,7 +62,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         <Container>
           <Top $backgroundImageUrl={data?.associationProfileImageUrl || ''}>
             <div className="right">
-              <Search />
+              <Search onClick={() => handleNavigate('/community/search')} />
               <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
                 {chatNew ? <ChatNew /> : <Chat />}
               </ChatWrapper>
