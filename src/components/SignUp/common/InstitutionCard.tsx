@@ -14,7 +14,7 @@ export const InstitutionCard = ({ pressed }: InstitutionCardProps) => {
         </IconContainer>
         <RoleCardText>
           <RoleCardHeader>
-            <span className="highlight">기관 회원</span> <span>로 가입</span>
+            <span className="highlight">기관 회원</span> <span>으로 가입</span>
           </RoleCardHeader>
           <span>요양보호사를 매칭하고 돌봄 서비스를 관리합니다.</span>
         </RoleCardText>
