@@ -17,7 +17,7 @@ import { useGetCaregiverChat, usePostCaregiverContract } from '@/api/caregiver';
 
 const CaregiverChatPage = () => {
   const { matchingId } = useParams<{ matchingId: string }>();
-
+  
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const handleModal = (
