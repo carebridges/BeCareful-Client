@@ -60,8 +60,14 @@ export const useCaregiverCertForm = (
     key: CertificateKey,
     cert: CertificateFormInput,
   ) => {
-    const grade: CertificateInfo['grade'] =
-      cert.certificateLevel === '2급' ? 'SECOND' : 'FIRST';
+    // const grade: CertificateInfo['grade'] =
+    //   cert.certificateLevel === '2급' ? 'SECOND' : 'FIRST';
+    const grade: CertificateInfo['grade'] = (() => {
+      const level = cert.certificateLevel?.trim();
+      if (level === '1급') return 'FIRST';
+      if (level === '2급') return 'SECOND';
+      return 'none';
+    })();
 
     const newCert: CertificateInfo = {
       grade,

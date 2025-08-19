@@ -18,8 +18,8 @@ export const ResidentIdInput = ({
   isEditProfile = false,
 }: ResidentIdInputProps) => {
   return (
-    <InputWrapper isEditProfile={isEditProfile}>
-      <Label isEditProfile={isEditProfile}>
+    <InputWrapper $isEditProfile={isEditProfile}>
+      <Label $isEditProfile={isEditProfile}>
         <span>주민등록번호</span>
         <span className="highlight"> *</span>
       </Label>
@@ -52,20 +52,20 @@ export const ResidentIdInput = ({
   );
 };
 
-const InputWrapper = styled.div<{ isEditProfile: boolean }>`
+const InputWrapper = styled.div<{ $isEditProfile: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: ${({ isEditProfile }) =>
-    isEditProfile ? '16px 0px 0px 0px' : '16px 20px 0px 20px'};
+  padding: ${({ $isEditProfile }) =>
+    $isEditProfile ? '16px 0px 0px 0px' : '16px 20px 0px 20px'};
   width: 100%;
   box-sizing: border-box;
   gap: 8px;
 `;
 
-const Label = styled.div<{ isEditProfile: boolean }>`
-  font-size: ${({ theme, isEditProfile }) =>
-    isEditProfile
+const Label = styled.div<{ $isEditProfile: boolean }>`
+  font-size: ${({ theme, $isEditProfile }) =>
+    $isEditProfile
       ? theme.typography.fontSize.body1
       : theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};

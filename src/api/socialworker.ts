@@ -147,6 +147,7 @@ export const useGetSocialworkerChat = (matchingId: number) =>
       );
       return data;
     },
+    enabled: Number.isFinite(matchingId) && matchingId > 0,
   });
 
 // 계약서 상세 내용

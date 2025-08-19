@@ -183,6 +183,11 @@ const CommunitySearchPage = () => {
                     key={post.postId}
                     post={post}
                     boardType={selectedBoard}
+                    // boardType={
+                    //   selectedBoard === '전체'
+                    //     ? post.boardType
+                    //     : Board_Type_Mapping[selectedBoard]
+                    // }
                   />
                   <Border />
                 </>

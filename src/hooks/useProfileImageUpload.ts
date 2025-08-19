@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { UseMutateFunction } from '@tanstack/react-query';
 
 type UploadMutationResponse = string;
@@ -17,6 +17,9 @@ export const useProfileImageUpload = <V>({
   additionalUploadData,
 }: UseProfileImageUploadProps<V>) => {
   const [imgUrl, setImgUrl] = useState(initialImgUrl);
+  useEffect(() => {
+    setImgUrl(initialImgUrl);
+  }, [initialImgUrl]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (file: V) => {

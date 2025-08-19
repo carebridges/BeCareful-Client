@@ -21,7 +21,7 @@ const InfoDisplay = ({
   isChat,
 }: InfoDisplayProps) => {
   return (
-    <Container row={gapRow} column={gapColumn} width={width} isChat={isChat}>
+    <Container row={gapRow} column={gapColumn} width={width} $isChat={isChat}>
       <div className="leftWrapper">
         {items.map((item) => (
           <div key={item.title} className="info-title">
@@ -46,15 +46,17 @@ const Container = styled.div<{
   row?: string;
   column?: string;
   width?: string;
-  isChat?: boolean;
+  $isChat?: boolean;
 }>`
   display: flex;
   gap: ${({ row }) => row || '32px'};
 
-  justify-content: ${({ isChat }) => (isChat ? 'space-between' : 'flex-start')};
-  background: ${({ isChat, theme }) => (isChat ? theme.colors.gray50 : '')};
-  padding: ${({ isChat }) => (isChat ? '12px' : '')};
-  border-radius: ${({ isChat }) => (isChat ? '8px' : '')};
+  justify-content: ${({ $isChat }) =>
+    $isChat ? 'space-between' : 'flex-start'};
+  background: ${({ $isChat, theme }) =>
+    $isChat ? theme.colors.gray50 : 'transparent'};
+  padding: ${({ $isChat }) => ($isChat ? '12px' : '0')};
+  border-radius: ${({ $isChat }) => ($isChat ? '8px' : '0')};
 
   .leftWrapper,
   .rightWrapper {

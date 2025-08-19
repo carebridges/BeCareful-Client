@@ -269,9 +269,10 @@ export const usePutAssociationLeave = () => {
     },
     onSuccess: (response) => {
       console.log('usePutAssociationLeave - 협회 탈퇴하기 성공:', response);
-      queryClient.invalidateQueries({
-        queryKey: ['associationLeave'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['associationInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['communityAccess'] });
+      queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
+      queryClient.invalidateQueries({ queryKey: ['members'] });
     },
     onError: (error) => {
       console.error('usePutAssociationLeave - 협회 탈퇴하기 실패:', error);

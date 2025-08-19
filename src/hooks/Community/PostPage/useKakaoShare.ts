@@ -20,9 +20,7 @@ export const useKakaoShare = () => {
       const content = '요양기관 센터장들의 소통 공간';
       const defaultImgUrl =
         'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/kakaotalk_share_thumbnail.png';
-      const imgUrl = post?.imageList.length
-        ? post?.imageList[0].mediaUrl
-        : defaultImgUrl;
+      const imgUrl = post?.imageList[0]?.mediaUrl ?? defaultImgUrl;
       const currentUrl = window.location.href;
 
       kakao.Share.sendDefault({

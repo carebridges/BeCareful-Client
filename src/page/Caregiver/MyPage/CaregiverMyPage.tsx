@@ -92,16 +92,19 @@ const CaregiverMyPage = () => {
 
   const handleLogout = () => {
     console.log('로그아웃');
-    logout();
-    localStorage.clear();
-    setUserInfo({
-      realName: '',
-      nickName: '',
-      institutionRank: '',
-      associationRank: '',
+    logout(undefined, {
+      onSuccess: () => {
+        localStorage.clear();
+        setUserInfo({
+          realName: '',
+          nickName: '',
+          institutionRank: '',
+          associationRank: '',
+        });
+        handleModal(setIsLogoutModalOpen);
+        handleNavigate('/');
+      },
     });
-    handleModal(setIsLogoutModalOpen);
-    handleNavigate('/');
   };
 
   const handleWithdraw = () => {

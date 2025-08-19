@@ -33,7 +33,9 @@ const ChatCard = ({
       ? [
           {
             title: '성함/연령',
-            detail: `${elder?.elderlyName} ${elder?.elderlyAge}세 ${Gender_Mapping[elder?.elderlyGender ?? 'FEMALE']}`,
+            detail: elder
+              ? `${elder?.elderlyName} ${elder?.elderlyAge}세 ${Gender_Mapping[elder?.elderlyGender]}`
+              : '정보 없음',
           },
         ]
       : []),

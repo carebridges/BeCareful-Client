@@ -48,9 +48,12 @@ const SocialworkerEditAssociationPage = () => {
   };
   const handleWithdraw = () => {
     console.log('협회탈퇴');
-    leaveAssociation();
-    handleModal(setIsWithdrawModalOpen);
-    handleGoBack();
+    leaveAssociation(undefined, {
+      onSuccess: () => {
+        handleModal(setIsWithdrawModalOpen);
+        handleGoBack();
+      },
+    });
   };
 
   const { mutate: updateAssociation } = usePutAssociationInfo();

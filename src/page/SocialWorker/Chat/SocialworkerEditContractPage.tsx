@@ -68,6 +68,10 @@ const SocialworkerEditContractPage = () => {
   };
 
   const handleEditBtnClick = async () => {
+    if (!confirmedMatchingId || !Number.isFinite(confirmedMatchingId)) {
+      console.error('유효하지 않은 matchingId');
+      return;
+    }
     const contractData: SocialworkerContractEditRequest = {
       matchingId: confirmedMatchingId,
       workDays: apiDayFormat(selectDay),
@@ -81,7 +85,7 @@ const SocialworkerEditContractPage = () => {
     console.log(contractData);
     updateContract(contractData, {
       onSuccess: () => {
-        handleNavigateState(`/socialworker/chat/${matchingId}`, {
+        handleNavigateState(`/socialworker/chat/${confirmedMatchingId}`, {
           state: { finalConfirm: true },
         });
       },
