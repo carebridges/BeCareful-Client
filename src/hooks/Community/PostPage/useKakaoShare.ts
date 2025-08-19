@@ -7,8 +7,13 @@ export const useKakaoShare = () => {
 
   // 카카오톡 공유하기
   useEffect(() => {
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(import.meta.env.VITE_APP_JAVASCRIPT_KEY);
+    if (window.Kakao) {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(import.meta.env.VITE_APP_JAVASCRIPT_KEY);
+        console.log('Kakao 초기화 완료:', window.Kakao.isInitialized());
+      }
+    } else {
+      console.error('Kakao SDK 로드 안됨');
     }
   }, []);
 

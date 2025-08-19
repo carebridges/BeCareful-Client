@@ -47,7 +47,9 @@ const PostOverview = ({ post, boardType }: PostOverviewProps) => {
         </Day>
       </Wrapper>
 
-      <img className="profile-img" src={post.thumbnailUrl} />
+      {post.thumbnailUrl && (
+        <img className="thumnail" src={post.thumbnailUrl} alt="게시물 썸네일" />
+      )}
     </Container>
   );
 };
@@ -62,7 +64,7 @@ const Container = styled.div`
   align-items: flex-end;
   cursor: pointer;
 
-  .profile-img {
+  .thumnail {
     min-width: 72px;
     height: 72px;
     object-fit: cover;

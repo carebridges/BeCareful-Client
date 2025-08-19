@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as Close } from '@/assets/icons/Close.svg';
-import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
+// import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
 import { ReactComponent as Post } from '@/assets/icons/community/Post.svg';
 import { ReactComponent as ChevronDown } from '@/assets/icons/community/ChevronDown.svg';
 import { ReactComponent as Photo } from '@/assets/icons/community/Photo.svg';
@@ -17,7 +17,7 @@ import { COMMUNITY_BOARDS_LIST } from '@/constants/communityBoard';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
 import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
-import { useSave } from '@/hooks/Community/WritePage/useSave';
+// import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
 import { PostDetailResponse, PostRequest } from '@/types/Community/post';
 import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
@@ -68,10 +68,10 @@ const CommunityWritePage = ({
     content,
     contentRef,
     originalUrl,
-    setIsImportant,
-    setTitle,
-    setContent,
-    setOriginalUrl,
+    // setIsImportant,
+    // setTitle,
+    // setContent,
+    // setOriginalUrl,
     handleToggleChange,
     handleTitleChange,
     handleContentChange,
@@ -85,9 +85,9 @@ const CommunityWritePage = ({
     attachedFiles,
     photoRef,
     fileRef,
-    setPhotos,
-    setVideos,
-    setAttachedFiles,
+    // setPhotos,
+    // setVideos,
+    // setAttachedFiles,
     handlePhotoClick,
     handleFileClick,
     handleMediaChange,
@@ -95,22 +95,22 @@ const CommunityWritePage = ({
   } = useMedia(initialData);
 
   // 임시 저장
-  const { handleSaveDraft } = useSave({
-    board,
-    postData: { title, content, isImportant, originalUrl },
-    mediaData: { photos, videos, attachedFiles },
-    setPostData: ({ title, content, isImportant, originalUrl }) => {
-      setTitle(title);
-      setContent(content);
-      setIsImportant(isImportant);
-      setOriginalUrl(originalUrl);
-    },
-    setMediaData: ({ photos, videos, attachedFiles }) => {
-      setPhotos(photos);
-      setVideos(videos);
-      setAttachedFiles(attachedFiles);
-    },
-  });
+  // const { handleSaveDraft } = useSave({
+  //   board,
+  //   postData: { title, content, isImportant, originalUrl },
+  //   mediaData: { photos, videos, attachedFiles },
+  //   setPostData: ({ title, content, isImportant, originalUrl }) => {
+  //     setTitle(title);
+  //     setContent(content);
+  //     setIsImportant(isImportant);
+  //     setOriginalUrl(originalUrl);
+  //   },
+  //   setMediaData: ({ photos, videos, attachedFiles }) => {
+  //     setPhotos(photos);
+  //     setVideos(videos);
+  //     setAttachedFiles(attachedFiles);
+  //   },
+  // });
 
   // 내용이 다 채워져 있어야 작성 버튼 클릭 가능
   const isActive =
@@ -156,14 +156,14 @@ const CommunityWritePage = ({
         }
         right={
           <NavRight isActive={isActive}>
-            <button
+            {/* <button
               className="store"
               onClick={handleSaveDraft}
               disabled={!isActive}
             >
               <Store className="store-svg" />
               임시저장
-            </button>
+            </button> */}
             <button
               className="post"
               onClick={() => setIsPostModalOpen(!isPostModalOpen)}
