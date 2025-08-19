@@ -8,7 +8,7 @@ import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
 import { AgreementValues } from '@/types/Socialworker/common';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
 import { Button } from '@/components/common/Button/Button';
-import { API_Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { Institution_Rank_Mapping_ENG } from '@/constants/institutionRank';
 import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialWorkerMy, usePutSocialworkerMy } from '@/api/socialworker';
@@ -104,6 +104,7 @@ const SocialworkerEditProfilePage = () => {
   const { mutate: updateSocialMy } = usePutSocialworkerMy();
 
   const handleEditBtnClick = async () => {
+    console.log(rank);
     const myData: SocialworkerMyRequest = {
       realName: name,
       nickName: nickname,
@@ -111,8 +112,8 @@ const SocialworkerEditProfilePage = () => {
       genderCode: genderCode,
       phoneNumber: phoneNumber,
       // TODO: 기관 검색해서 id 받아오기
-      nursingInstitutionId: 0,
-      institutionRank: API_Institution_Rank_Mapping[rank],
+      nursingInstitutionId: 4,
+      institutionRank: Institution_Rank_Mapping_ENG[rank],
       isAgreedToTerms: agreementStates.isAgreedToTerms,
       isAgreedToCollectPersonalInfo:
         agreementStates.isAgreedToCollectPersonalInfo,

@@ -13,3 +13,11 @@ export const API_Institution_Rank_Mapping: { [key: string]: InstitutionRank } =
     대표: 'REPRESENTATIVE',
     사회복지사: 'SOCIAL_WORKER',
   };
+
+export const Institution_Rank_Mapping_ENG: {
+  [key: string]: InstitutionRank;
+} = {
+  CENTER_DIRECTOR: 'CENTER_DIRECTOR',
+  REPRESENTATIVE: 'REPRESENTATIVE',
+  SOCIAL_WORKER: 'SOCIAL_WORKER',
+};
