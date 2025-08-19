@@ -23,7 +23,7 @@ import {
 
 const SocialworkerMyPage = () => {
   const userInfo = useRecoilValue(currentUserInfo);
-  const isMember = userInfo.associationRank === 'MEMBER';
+  const isMember = userInfo.institutionRank === 'SOCIAL_WORKER';
 
   const { handleNavigate } = useHandleNavigate();
 
