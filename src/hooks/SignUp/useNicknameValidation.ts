@@ -9,7 +9,7 @@ export const useNicknameValidation = () => {
   const [state, setState] = useState<ValidationState>('default');
 
   const validateFormat = (nickname: string) => {
-    const regex = /^[A-Za-z0-9가-힣]{6,12}$/;
+    const regex = /^[A-Za-z0-9가-힣]{4,12}$/;
     return regex.test(nickname);
   };
 
@@ -36,7 +36,7 @@ export const useNicknameValidation = () => {
 
   const checkNicknameWithFormat = (nickname: string) => {
     if (!validateFormat(nickname)) {
-      setMessage('* 닉네임은 영문, 숫자 조합 6~12자여야 합니다.');
+      setMessage('* 닉네임은 한글, 영문, 숫자 조합 4~12자여야 합니다. ');
       setState('error');
       return;
     }
@@ -44,7 +44,9 @@ export const useNicknameValidation = () => {
   };
 
   const resetMessage = () => {
-    setMessage('* 영문, 숫자를 포함한 6~12자로 입력하세요. (특수문자 불가)');
+    setMessage(
+      '* 한글, 영문, 숫자를 포함한 4~12자로 입력하세요. (특수문자 불가)',
+    );
     setState('default');
   };
 

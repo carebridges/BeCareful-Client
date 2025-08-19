@@ -2,6 +2,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 
 interface Step4Props {
   goToNext: () => void;
@@ -24,7 +25,7 @@ export const Step4InstitutionContact = ({
     const { value } = e.target;
     setInstitutionFormData((prev) => ({
       ...prev,
-      phoneNumber: value,
+      phoneNumber: formatPhoneNumber(value),
     }));
   };
 
