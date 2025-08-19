@@ -14,10 +14,6 @@ import { TestPage } from '@/page/TestPage';
 import { ErrorPage } from '@/page/Error/ErrorPage';
 
 function App() {
-
-  console.log(import.meta.env.VITE_APP_JAVASCRIPT_KEY);
-
-  
   return (
     <Routes>
       {/* 초기 - 스플래시, 온보딩, 회원가입 페이지 */}
