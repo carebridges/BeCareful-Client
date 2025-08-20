@@ -23,7 +23,7 @@ export const SecretInputBox = ({
     <InputWrapper width={width}>
       <InputContainer>
         <InputDefault
-          type={masked ? 'password' : 'number'}
+          type={masked ? 'password' : 'text'}
           placeholder={placeholder}
           state={state}
           value={value}

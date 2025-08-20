@@ -24,7 +24,7 @@ export const PlainInputBox = ({
   return (
     <InputWrapper width={width}>
       <InputDefault
-        type="number"
+        type="text"
         placeholder={placeholder}
         state={state}
         value={value}
