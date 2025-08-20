@@ -18,8 +18,13 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Gender_Mapping } from '@/constants/caregiverMapping';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialWorkerHome } from '@/api/socialworker';
+import { ComingSoonModal } from '@/components/SocialWorker/common/ComingSoonModal';
 
-const SocialworkerHomePage = () => {
+const SocialworkerHomePage = ({
+  previewMode = false,
+}: {
+  previewMode?: boolean;
+}) => {
   const [isNew, setIsNew] = useState(false);
   const chatNew = true;
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
@@ -196,6 +201,8 @@ const SocialworkerHomePage = () => {
           ))}
         </Edler>
       </SectionWrapper>
+
+      {previewMode && <ComingSoonModal width="312px" />}
 
       <Modal
         isOpen={isInstitutionModalOpen}

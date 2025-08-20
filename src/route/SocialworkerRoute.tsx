@@ -45,11 +45,18 @@ const SocialworkerRoute = () => {
       <main>
         <Routes>
           <Route index element={<SocialworkerHomePage />} />
-          <Route path="my/*" element={<SocialworkerMyRoute />} />
+          <Route
+            path="/preview"
+            element={<SocialworkerHomePage previewMode />}
+          />
+          <Route
+            path="/match/social/preview"
+            element={<SocialWorkerMatchingPage previewMode />}
+          />
 
+          <Route path="my/*" element={<SocialworkerMyRoute />} />
           <Route path="elderly" element={<ElderlyPage />} />
           <Route path="elderly/new" element={<ElderlyRegisterPage />} />
-
           <Route path="match/social" element={<SocialWorkerMatchingPage />} />
           <Route path="matching/new" element={<RegisterMatchingElderPage />} />
           <Route path="matching/dashboard" element={<MatchingStatusPage />} />
@@ -71,7 +78,6 @@ const SocialworkerRoute = () => {
             path="chat/:contractId/edit"
             element={<SocialworkerEditContractPage />}
           />
-
           <Route path="point" element={<PointPage />} />
         </Routes>
       </main>

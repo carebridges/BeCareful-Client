@@ -75,9 +75,6 @@ const LandingPage = () => {
           <label className="eng">JEONJU WANJU SENIOR LONGTERMCARE</label>
         </div>
         <div className="buttons">
-          <button className="community" onClick={handleToCommunity}>
-            커뮤니티 바로가기
-          </button>
           <button className="asso" onClick={scrollToAssociation}>
             협회 소개 보기
           </button>
