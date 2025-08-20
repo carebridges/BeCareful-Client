@@ -201,7 +201,9 @@ const SocialworkerHomePage = ({
           ))}
         </Edler>
       </SectionWrapper>
-      {previewMode && <ComingSoonModal width="343px" />}
+
+      {previewMode && <ComingSoonModal width="312px" />}
+
       <Modal
         isOpen={isInstitutionModalOpen}
         onClose={() => handleModal(setIsInstitutionModalOpen)}

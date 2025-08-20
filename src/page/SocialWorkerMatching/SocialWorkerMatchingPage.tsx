@@ -64,7 +64,9 @@ export const SocialWorkerMatchingPage = ({
           />
         )}
       </Container>
-      {previewMode && <ComingSoonModal width="343px" />}
+
+      {previewMode && <ComingSoonModal width="312px" />}
+
       <SocialWorkerTabBar />
     </>
   );
