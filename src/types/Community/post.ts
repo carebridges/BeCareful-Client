@@ -28,10 +28,16 @@ export interface PostRequest {
   fileList: MediaItem[];
 }
 
+export type BoardList =
+  | 'association-notice'
+  | 'service-notice'
+  | 'information-sharing';
+
 // 게시글 목록 항목 (특정 게시판 목록 및 필독 게시글 목록에서 사용)
 export interface PostListItem {
   postId: number;
   title: string;
+  boardType: BoardList;
   isImportant: boolean;
   thumbnailUrl: string;
   createdAt: string;

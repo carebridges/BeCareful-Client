@@ -17,6 +17,19 @@ export interface SocialworkerMyResponse {
   associationName: string;
 }
 
+export interface SocialworkerMyEditResponse {
+  name: string;
+  nickName: string;
+  birthYymmdd: number;
+  genderCode: number;
+  phoneNumber: string;
+  institutionName: string;
+  institutionRank: InstitutionRank;
+  isAgreedToTerms: boolean;
+  isAgreedToCollectPersonalInfo: boolean;
+  isAgreedToReceiveMarketingInfo: boolean;
+}
+
 export interface SocialworkerMyRequest {
   realName: string;
   nickName: string;

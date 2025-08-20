@@ -1,37 +1,54 @@
 import { PostDetailResponse } from '@/types/Community/post';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const useKakaoShare = () => {
   // bottomsheet - 공유 버튼
   const [isShareSheetOpen, setIsShareSheetOpen] = useState(false);
 
-  // 카카오톡 공유하기
+  const [isKakaoReady, setIsKakaoReady] = useState(false);
+
+  // SDK 로드 함수
+  const loadKakaoSDK = () => {
+    return new Promise<void>((resolve) => {
+      if (window.Kakao) return resolve();
+      const script = document.createElement('script');
+      script.src = 'https://developers.kakao.com/sdk/js/kakao.js';
+      script.onload = () => resolve();
+      document.body.appendChild(script);
+    });
+  };
+
+  // SDK 로드 후 init
   useEffect(() => {
-    if (window.Kakao) {
+    loadKakaoSDK().then(() => {
+      const key = import.meta.env.VITE_APP_JAVASCRIPT_KEY;
       if (!window.Kakao.isInitialized()) {
-        window.Kakao.init(import.meta.env.VITE_APP_JAVASCRIPT_KEY);
-        console.log('Kakao 초기화 완료:', window.Kakao.isInitialized());
+        window.Kakao.init(key);
       }
-    } else {
-      console.error('Kakao SDK 로드 안됨');
-    }
+      setIsKakaoReady(true);
+    });
   }, []);
 
-  const handleKakaoShare = (post?: PostDetailResponse) => {
-    if (window.Kakao) {
-      const kakao = window.Kakao;
+  // 카카오톡 공유하기
+  const handleKakaoShare = useCallback(
+    (post?: PostDetailResponse) => {
+      if (!isKakaoReady) {
+        console.error('Kakao SDK not ready yet');
+        return;
+      }
 
+      const kakao = window.Kakao;
       const title = '돌봄다리 커뮤니티 새소식';
       const content = '요양기관 센터장들의 소통 공간';
       const defaultImgUrl =
         'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/kakaotalk_share_thumbnail.png';
-      const imgUrl = post?.imageList[0]?.mediaUrl ?? defaultImgUrl;
+      const imgUrl = post?.imageList?.[0]?.mediaUrl ?? defaultImgUrl;
       const currentUrl = window.location.href;
 
       kakao.Share.sendDefault({
         objectType: 'feed',
         content: {
-          title: title,
+          title,
           description: content,
           imageUrl: imgUrl,
           link: {
@@ -40,8 +57,9 @@ export const useKakaoShare = () => {
           },
         },
       });
-    }
-  };
+    },
+    [isKakaoReady],
+  );
 
   return {
     isShareSheetOpen,

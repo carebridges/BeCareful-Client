@@ -20,7 +20,7 @@ interface CommunityHomeProps {
 const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
   const importantPageable: PageableRequest = {
     page: 0,
-    size: 3,
+    size: 5,
     sort: [],
   };
 
@@ -52,7 +52,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
       <>
         {data?.map((post: PostListItem, index) => (
           <React.Fragment key={post.postId}>
-            <PostOverview post={post} boardType={board} />
+            <PostOverview post={post} />
             {index !== data.length - 1 && <Border />}
           </React.Fragment>
         ))}
@@ -79,7 +79,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
           {importantPostings?.map((post: PostListItem) => (
             <SwiperSlide key={post.postId}>
               <NoticeList>
-                <PostOverview key={post.postId} post={post} boardType="필독" />
+                <PostOverview key={post.postId} post={post} />
               </NoticeList>
             </SwiperSlide>
           ))}
@@ -92,6 +92,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
           pagination={{ clickable: true }}
           loop={true}
           slidesPerView={1}
+          autoHeight={true}
           style={{ width: '100%', height: 'auto' }}
         >
           {Board_List.map((board, index) => {

@@ -23,7 +23,8 @@ import {
 
 const SocialworkerMyPage = () => {
   const userInfo = useRecoilValue(currentUserInfo);
-  const isMember = userInfo.institutionRank === 'SOCIAL_WORKER';
+  const isNone = userInfo.associationRank === 'NONE';
+  const isMember = userInfo.associationRank === 'MEMBER';
 
   const { handleNavigate } = useHandleNavigate();
 
@@ -102,7 +103,7 @@ const SocialworkerMyPage = () => {
           }
         />
 
-        {!isMember && (
+        {!isNone && (
           <BelongCard
             title={data?.associationName ?? ''}
             rank={
@@ -133,16 +134,18 @@ const SocialworkerMyPage = () => {
           types={data?.institutionInfo.facilityTypes ?? []}
           phoneNumber={data?.institutionInfo.institutionPhoneNumber ?? ''}
         />
-        <Button
-          height="52px"
-          variant="subBlue"
-          onClick={() => handleNavigate('/socialworker/my/institution')}
-        >
-          기관 정보 수정하기
-        </Button>
+        {!isNone && !isMember && (
+          <Button
+            height="52px"
+            variant="subBlue"
+            onClick={() => handleNavigate('/socialworker/my/institution')}
+          >
+            기관 정보 수정하기
+          </Button>
+        )}
       </SectionWrapper>
 
-      {!isMember && (
+      {!isNone && (
         <>
           <Border />
 
@@ -150,16 +153,26 @@ const SocialworkerMyPage = () => {
             <label className="section-title">협회 정보</label>
             <AssociationCard
               association={data?.associationName ?? ''}
-              type={Association_Rank_Mapping[userInfo.associationRank]}
-              rank={Institution_Rank_Mapping[userInfo.institutionRank]}
+              type={
+                Association_Rank_Mapping[
+                  data?.socialWorkerInfo.associationRank ?? 'MEMBER'
+                ]
+              }
+              rank={
+                Institution_Rank_Mapping[
+                  data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
+                ]
+              }
             />
-            <Button
-              height="52px"
-              variant="subBlue"
-              onClick={() => handleNavigate('/socialworker/my/association')}
-            >
-              협회 정보 변경하기
-            </Button>
+            {!isMember && (
+              <Button
+                height="52px"
+                variant="subBlue"
+                onClick={() => handleNavigate('/socialworker/my/association')}
+              >
+                협회 정보 변경하기
+              </Button>
+            )}
           </SectionWrapper>
         </>
       )}

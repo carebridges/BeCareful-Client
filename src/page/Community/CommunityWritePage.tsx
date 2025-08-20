@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import { useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { ReactComponent as Close } from '@/assets/icons/Close.svg';
 // import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
 import { ReactComponent as Post } from '@/assets/icons/community/Post.svg';
@@ -13,27 +15,39 @@ import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { COMMUNITY_BOARDS_LIST } from '@/constants/communityBoard';
+import {
+  API_Board_Type_Param,
+  Board_Type_Param_KOR,
+  COMMUNITY_BOARDS_LIST,
+} from '@/constants/communityBoard';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
 import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
 // import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
-import { PostDetailResponse, PostRequest } from '@/types/Community/post';
-import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
-import { useEffect } from 'react';
+import { PostRequest } from '@/types/Community/post';
+import { usePostDetail } from '@/api/community';
 
-interface WritingProp {
-  boardType: string;
-  onClose: () => void;
-  initialData?: PostDetailResponse;
-}
+const CommunityWritePage = () => {
+  const [searchParams] = useSearchParams();
+  const { boardType: boardTypeParam, postId: postIdParam } = useParams<{
+    boardType?: string;
+    postId?: string;
+  }>();
+  const postId = postIdParam ? parseInt(postIdParam, 10) : 0;
+  const isEditMode = !!postId;
+  const boardType = isEditMode
+    ? Board_Type_Param_KOR[boardTypeParam || '']
+    : Board_Type_Param_KOR[searchParams.get('boardType') || ''];
+  const { data: initialData } = usePostDetail(
+    API_Board_Type_Param[boardTypeParam || ''],
+    postId,
+  );
 
-const CommunityWritePage = ({
-  boardType,
-  onClose,
-  initialData,
-}: WritingProp) => {
+  const { handleNavigate } = useHandleNavigate();
+
   // 게시판 관련
   const {
     isBoardSheetOpen,
@@ -114,17 +128,16 @@ const CommunityWritePage = ({
 
   // 내용이 다 채워져 있어야 작성 버튼 클릭 가능
   const isActive =
-    title.length > 0 && content.length > 0 && board !== '게시판 선택';
-
-  // 수정 모드인지 판단 - initialData 있고 id가 있으면 수정 모드
-  const isEditMode = !!initialData?.postId;
+    title.length > 0 &&
+    content.length > 0 &&
+    (isEditMode || board !== '게시판 선택');
 
   // 게시글 전송(post), 수정(put)
   const { handleSubmit } = usePostingSubmit(
     board,
-    onClose,
+    () => handleNavigate('/community'),
     isEditMode,
-    isEditMode ? initialData.postId : undefined,
+    postId,
   );
   const handlePostBtnClick = async () => {
     const postData: PostRequest = {
@@ -136,7 +149,6 @@ const CommunityWritePage = ({
       videoList: videos,
       fileList: attachedFiles,
     };
-
     console.log(postData);
     await handleSubmit(postData);
   };
@@ -299,7 +311,7 @@ const CommunityWritePage = ({
           left="계속 작성하기"
           right="나가기"
           handleLeftBtnClick={() => setIsCloseModalOpen(!isCloseModalOpen)}
-          handleRightBtnClick={onClose}
+          handleRightBtnClick={() => handleNavigate('/community')}
         />
       </Modal>
 

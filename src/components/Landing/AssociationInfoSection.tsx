@@ -114,7 +114,9 @@ const AssociationInfoSection = () => {
           <label className="detail">
             {isMobile ? (
               <>
-                우리 협회는 전북 지역 최대 규모의 장기요양기관 협회로,
+                우리 협회는
+                <br />
+                전북 지역 최대 규모의 장기요양기관 협회로,
                 <br />
                 센터 간의 소통과 협력을 통해
                 <br />
@@ -214,7 +216,7 @@ const AssociationInfoSection = () => {
         animate={isTimelineInView ? 'visible' : 'hidden'}
         transition={{ delay: 0.4, ...fadeInRiseVariants.visible.transition }}
       >
-        <label className="title">주요 활동</label>
+        <label className="title">주요 연혁</label>
         <div className="timeline">
           <TimelineBar>
             <Timeline isVisible={isVisible} />

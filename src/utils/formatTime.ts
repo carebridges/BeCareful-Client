@@ -22,13 +22,23 @@ export const formatDateLabel = (dateStr: string) => {
 export const formatDateTime = (isoStr: string) => {
   const date = new Date(isoStr);
 
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const day = date.getDate().toString().padStart(2, '0');
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const utcYear = date.getUTCFullYear();
+  const utcMonth = date.getUTCMonth();
+  const utcDay = date.getUTCDate();
+  const utcHour = date.getUTCHours();
+  const utcMinute = date.getUTCMinutes();
 
-  return `${year}.${month}.${day} ${hours}:${minutes}`;
+  const kstDate = new Date(
+    Date.UTC(utcYear, utcMonth, utcDay, utcHour + 9, utcMinute),
+  );
+
+  const year = kstDate.getFullYear();
+  const month = (kstDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = kstDate.getDate().toString().padStart(2, '0');
+  const hour = kstDate.getHours().toString().padStart(2, '0');
+  const minute = kstDate.getMinutes().toString().padStart(2, '0');
+
+  return `${year}.${month}.${day} ${hour}:${minute}`;
 };
 
 // 시간 "오후 01:32" 형식 변환

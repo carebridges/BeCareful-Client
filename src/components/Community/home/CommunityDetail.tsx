@@ -14,7 +14,7 @@ interface CommunityDetailProps {
 const CommunityDetail = ({ boardType }: CommunityDetailProps) => {
   const pageable: PageableRequest = {
     page: 0,
-    size: 1,
+    size: 100,
     sort: [],
   };
 
@@ -36,7 +36,7 @@ const CommunityDetail = ({ boardType }: CommunityDetailProps) => {
       <NoticeList>
         {data?.map((post: PostListItem, index) => (
           <React.Fragment key={post.postId}>
-            <PostOverview key={post.postId} post={post} boardType={boardType} />
+            <PostOverview key={post.postId} post={post} />
             {index !== data.length - 1 && <Border />}
           </React.Fragment>
         ))}
