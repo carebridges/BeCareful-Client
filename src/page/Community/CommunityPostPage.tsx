@@ -175,7 +175,14 @@ const CommunityPostPage = () => {
       )}
 
       <ContentWrapper>
-        <label>{post?.content}</label>
+        <label>
+          {post?.content.split('\n').map((line, index) => (
+            <React.Fragment key={index}>
+              <label>{line}</label>
+              {index < post?.content.split('\n').length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </label>
         <MediaWrapper>
           {post?.imageList &&
             post?.imageList.map((image, index) => (
