@@ -85,7 +85,10 @@ const CommunityPostPage = () => {
     handleActionSheetConfirm,
   } = usePostActions({
     onEditSuccess: handleEditPost,
-    onDelete: handleDeletetPost,
+    onDelete: () => {
+      handleDeletetPost();
+      handleNavigate('/community');
+    },
     post: post,
   });
 
@@ -459,6 +462,7 @@ const Files = styled.div`
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
+  overflow-x: hidden;
 
   label {
     color: ${({ theme }) => theme.colors.mainBlue};
