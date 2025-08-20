@@ -224,7 +224,9 @@ const CommunityPostPage = () => {
                     </label>
                   </div>
                   <label className="content">{comment.content}</label>
-                  <label className="date">{comment.createdAt}</label>
+                  <label className="date">
+                    {formatDateTime(comment.createdAt)}
+                  </label>
                 </div>
               </div>
               <Border />
