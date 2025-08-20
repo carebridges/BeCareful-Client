@@ -5,7 +5,7 @@ import { ReactComponent as Mypage } from '@/assets/icons/tabbar/Mypage.svg';
 export const SOCIAL_WORKER_TAB = [
   {
     key: 'home',
-    path: '/landing',
+    path: '/socialworker/preview',
     label: '홈',
     Icon: Home,
   },
