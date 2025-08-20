@@ -5,60 +5,64 @@ import { ReactComponent as Logo } from '@/assets/icons/landing/LogoBlack.svg';
 import { ReactComponent as LogoS } from '@/assets/icons/landing/LogoS.svg';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { mobile } from '@/utils/mobileStyle';
+import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
 
 const Footer = () => {
   const isMobile = useIsMobile();
 
   return (
-    <Container>
-      <div className="labels">
-        <label>개인정보처리방침</label>
-        <label>|</label>
-        <label>이용약관</label>
-      </div>
+    <>
+      <Container>
+        <div className="labels">
+          <label>개인정보처리방침</label>
+          <label>|</label>
+          <label>이용약관</label>
+        </div>
 
-      {isMobile ? (
-        <MiddleMobile>
-          <AssociationLogoS />
-          <div className="manager">
-            <label>담당자 : 이승현</label>
-            <label>연락처 : 010 - 0000 - 0000</label>
-          </div>
-          <div className="dolbom">
-            <div className="labels">
-              <label>운영지원</label>
-              <LogoS />
-            </div>
-            <label>연락처 : 010 - 0000 - 0000</label>
-          </div>
-        </MiddleMobile>
-      ) : (
-        <Middle>
-          <AssociationLogo />
-          <div className="right">
-            <div className="labels">
-              <label>전주완주장기요양기관협회</label>
-              <label>|</label>
+        {isMobile ? (
+          <MiddleMobile>
+            <AssociationLogoS />
+            <div className="manager">
               <label>담당자 : 이승현</label>
-              <label>|</label>
               <label>연락처 : 010 - 0000 - 0000</label>
             </div>
-            <div className="labels">
+            <div className="dolbom">
               <div className="labels">
                 <label>운영지원</label>
-                <Logo />
+                <LogoS />
               </div>
-              <label>|</label>
               <label>연락처 : 010 - 0000 - 0000</label>
             </div>
-          </div>
-        </Middle>
-      )}
+          </MiddleMobile>
+        ) : (
+          <Middle>
+            <AssociationLogo />
+            <div className="right">
+              <div className="labels">
+                <label>전주완주장기요양기관협회</label>
+                <label>|</label>
+                <label>담당자 : 이승현</label>
+                <label>|</label>
+                <label>연락처 : 010 - 0000 - 0000</label>
+              </div>
+              <div className="labels">
+                <div className="labels">
+                  <label>운영지원</label>
+                  <Logo />
+                </div>
+                <label>|</label>
+                <label>연락처 : 010 - 0000 - 0000</label>
+              </div>
+            </div>
+          </Middle>
+        )}
 
-      <label className="gray200">
-        © 전주완주장기요양기관협회. 돌봄다리. ALL RIGHTS RESERVED
-      </label>
-    </Container>
+        <label className="gray200">
+          © 전주완주장기요양기관협회. 돌봄다리. ALL RIGHTS RESERVED
+        </label>
+      </Container>
+      <SocialWorkerTabBar />
+    </>
   );
 };
 
