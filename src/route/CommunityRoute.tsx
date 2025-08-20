@@ -6,14 +6,15 @@ import { CommunitySignUpPage } from '@/page/SignUp/CommunitySignUpPage';
 import { CommunityJoinPage } from '@/page/Community/CommunityJoinPage';
 import CommunityJoinSelectRolePage from '@/page/Community/CommunityJoinSelectRolePage';
 import CommunityPage from '@/page/Community/CommunityPage';
+import { CommunityRouteGuard } from '@/page/Community/CommunityRouteGuard';
 import CommunityPostPage from '@/page/Community/CommunityPostPage';
+import CommunityWritePage from '@/page/Community/CommunityWritePage';
 import CommunitySearchPage from '@/page/Community/CommunitySearchPage';
 import CommunityAssociationInfoPage from '@/page/Community/Association/CommunityAssociationInfoPage';
 import CommunityEditAssociationPage from '@/page/Community/Association/CommunityEditAssociationPage';
 import CommunityEditChairmanPage from '@/page/Community/Association/CommunityEditChairmanPage';
 import CommunityMembersPage from '@/page/Community/Association/CommunityMembersPage';
 import CommnunityMemberDetailPage from '@/page/Community/Association/CommunityMemberDetailPage';
-import { CommunityRouteGuard } from '@/page/Community/CommunityRouteGuard';
 
 const CommunityRoute = () => {
   return (
@@ -36,8 +37,13 @@ const CommunityRoute = () => {
             />
 
             <Route index element={<CommunityRouteGuard />} />
-            <Route path=":postId" element={<CommunityPostPage />} />
+            <Route path=":boardType/:postId" element={<CommunityPostPage />} />
             <Route path="search" element={<CommunitySearchPage />} />
+            <Route path="write" element={<CommunityWritePage />} />
+            <Route
+              path="edit/:boardType/:postId"
+              element={<CommunityWritePage />}
+            />
 
             <Route path=":associationId">
               <Route path="info" element={<CommunityAssociationInfoPage />} />

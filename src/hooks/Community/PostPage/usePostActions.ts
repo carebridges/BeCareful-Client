@@ -16,9 +16,6 @@ export const usePostActions = ({
   const [isActionSheetOpen, setIsActionSheetOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState('');
 
-  // 게시글 수정 페이지 열림/닫힘 상태
-  const [isEditPageOpen, setIsEditPageOpen] = useState(false);
-
   const openActionSheet = () => setIsActionSheetOpen(true);
   const closeActionSheet = () => setIsActionSheetOpen(false);
 
@@ -42,8 +39,6 @@ export const usePostActions = ({
     closeActionSheet,
     selectedAction,
     setSelectedAction,
-    isEditPageOpen,
-    setIsEditPageOpen,
     handleActionSheetConfirm,
   };
 };

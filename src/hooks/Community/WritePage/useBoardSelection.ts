@@ -5,9 +5,7 @@ export const useBoardSelection = (boardType: string) => {
   const [isBoardSheetOpen, setIsBoardSheetOpen] = useState(false);
 
   // 메인으로 표시될 게시판 유형 상태
-  const [board, setBoard] = useState(
-    boardType === '전체' ? '게시판 선택' : boardType,
-  );
+  const [board, setBoard] = useState(boardType ?? '게시판 선택');
 
   const toggleBoardSheet = () => {
     if (!isBoardSheetOpen) {

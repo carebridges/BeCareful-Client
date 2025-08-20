@@ -7,14 +7,16 @@ import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 // import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Write } from '@/assets/icons/community/Write.svg';
-import CommunityWritePage from '@/page/Community/CommunityWritePage';
 import CommunityHome from '@/components/Community/home/CommunityHome';
 import CommunityDetail from '@/components/Community/home/CommunityDetail';
 import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
 import { CommunityJoinRequestModal } from '@/components/Community/JoinCommunity/CommunityJoinRequestModal';
 import { CommunityJoinPendingModal } from '@/components/Home/CommunityJoinPendingModal';
 import { CommunityJoinApprovedModal } from '@/components/Home/CommunityJoinApprovedModal';
-import { COMMUNITY_BOARDS } from '@/constants/communityBoard';
+import {
+  Board_Type_Param_ENG,
+  COMMUNITY_BOARDS,
+} from '@/constants/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 import { useMyAssociation } from '@/api/community';
@@ -36,8 +38,6 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     window.scrollTo(0, 0);
   };
 
-  const [isWriting, setIsWriting] = useState(false);
-
   const { data } = useMyAssociation(!previewMode);
   const {
     isPendingModalOpen,
@@ -52,111 +52,109 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   }, []);
 
   return (
-    <>
-      {isWriting ? (
-        <CommunityWritePage
-          onClose={() => setIsWriting(false)}
-          boardType={activeTab}
-        />
-      ) : (
-        <Container>
-          <Top $backgroundImageUrl={data?.associationProfileImageUrl || ''}>
-            <div className="right">
-              <Search onClick={() => handleNavigate('/community/search')} />
-              <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
-                {chatNew ? <ChatNew /> : <Chat />}
-              </ChatWrapper>
-            </div>
-          </Top>
+    <Container>
+      <Top $backgroundImageUrl={data?.associationProfileImageUrl || ''}>
+        <div className="right">
+          <Search onClick={() => handleNavigate('/community/search')} />
+          <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
+            {chatNew ? <ChatNew /> : <Chat />}
+          </ChatWrapper>
+        </div>
+      </Top>
 
-          <Association>
-            <div
-              className="chevronWrapper"
-              onClick={() =>
-                handleNavigate(`/community/${data?.associationId}/info`)
-              }
-            >
-              <label className="title">{data?.associationName}</label>
-              <Chevron />
-            </div>
-            <div className="bottom">
-              <div
-                className="chevronWrapper"
-                onClick={() =>
-                  handleNavigate(`/community/${data?.associationId}/members`)
-                }
-              >
-                <label className="member">
-                  멤버 {data?.associationMemberCount}
-                </label>
-                <Chevron />
-              </div>
-              {/* <div className="invite">
+      <Association>
+        <div
+          className="chevronWrapper"
+          onClick={() =>
+            handleNavigate(`/community/${data?.associationId}/info`)
+          }
+        >
+          <label className="title">{data?.associationName}</label>
+          <Chevron />
+        </div>
+        <div className="bottom">
+          <div
+            className="chevronWrapper"
+            onClick={() =>
+              handleNavigate(`/community/${data?.associationId}/members`)
+            }
+          >
+            <label className="member">
+              멤버 {data?.associationMemberCount}
+            </label>
+            <Chevron />
+          </div>
+          {/* <div className="invite">
                 <Plus />
                 <label className="invite-label">초대하기</label>
               </div> */}
-            </div>
-          </Association>
+        </div>
+      </Association>
 
-          <CommunityTabs>
-            {COMMUNITY_BOARDS.map((tab) => (
-              <Tab
-                key={tab}
-                active={activeTab === tab}
-                onClick={() => handleTabChange(tab)}
-              >
-                {tab}
-              </Tab>
-            ))}
-          </CommunityTabs>
+      <CommunityTabs>
+        {COMMUNITY_BOARDS.map((tab) => (
+          <Tab
+            key={tab}
+            active={activeTab === tab}
+            onClick={() => handleTabChange(tab)}
+          >
+            {tab}
+          </Tab>
+        ))}
+      </CommunityTabs>
 
-          {activeTab === '전체' ? (
-            <CommunityHome onTabChange={handleTabChange} />
-          ) : (
-            <CommunityDetail boardType={activeTab} />
-          )}
-
-          <Button onClick={() => setIsWriting(true)}>
-            <Write />
-            글쓰기
-          </Button>
-
-          <SocialWorkerTabBar />
-
-          {previewMode && (
-            <CommunityJoinRequestModal
-              width="343px"
-              associationId={selectedAssociation?.associationId}
-              associationName={selectedAssociation?.associationName ?? ''}
-              onClose={handleGoBack}
-            />
-          )}
-          {isPendingModalOpen && (
-            <CommunityJoinPendingModal
-              width="343px"
-              associationName={associationName}
-              onCancelJoin={() => {
-                //TODO
-                closePendingModal();
-              }}
-              onClose={() => {
-                closePendingModal();
-              }}
-            />
-          )}
-
-          {isApprovedModalOpen && (
-            <CommunityJoinApprovedModal
-              width="343px"
-              associationName={associationName}
-              onClose={() => {
-                closeApprovedModal();
-              }}
-            />
-          )}
-        </Container>
+      {activeTab === '전체' ? (
+        <CommunityHome onTabChange={handleTabChange} />
+      ) : (
+        <CommunityDetail boardType={activeTab} />
       )}
-    </>
+
+      <Button
+        onClick={() => {
+          const board = Board_Type_Param_ENG[activeTab];
+          handleNavigate(
+            board ? `/community/write?boardType=${board}` : '/community/write',
+          );
+        }}
+      >
+        <Write />
+        글쓰기
+      </Button>
+
+      <SocialWorkerTabBar />
+
+      {previewMode && (
+        <CommunityJoinRequestModal
+          width="343px"
+          associationId={selectedAssociation?.associationId}
+          associationName={selectedAssociation?.associationName ?? ''}
+          onClose={handleGoBack}
+        />
+      )}
+      {isPendingModalOpen && (
+        <CommunityJoinPendingModal
+          width="343px"
+          associationName={associationName}
+          onCancelJoin={() => {
+            //TODO
+            closePendingModal();
+          }}
+          onClose={() => {
+            closePendingModal();
+          }}
+        />
+      )}
+
+      {isApprovedModalOpen && (
+        <CommunityJoinApprovedModal
+          width="343px"
+          associationName={associationName}
+          onClose={() => {
+            closeApprovedModal();
+          }}
+        />
+      )}
+    </Container>
   );
 };
 

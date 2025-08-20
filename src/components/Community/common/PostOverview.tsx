@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { Board_Type_Param } from '@/constants/communityBoard';
 import { PostListItem } from '@/types/Community/post';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
@@ -8,11 +9,10 @@ import { textTruncateFormat } from '@/utils/formatText';
 import { formatDateTime } from '@/utils/formatTime';
 
 interface PostOverviewProps {
-  boardType: string;
   post: PostListItem;
 }
 
-const PostOverview = ({ post, boardType }: PostOverviewProps) => {
+const PostOverview = ({ post }: PostOverviewProps) => {
   const { handleNavigateState } = useHandleNavigate();
 
   const { readStatuses } = usePostReadStatus();
@@ -20,11 +20,11 @@ const PostOverview = ({ post, boardType }: PostOverviewProps) => {
 
   return (
     <Container
-      onClick={() =>
-        handleNavigateState(`/community/${post.postId}`, {
-          state: { boardType: boardType },
-        })
-      }
+      onClick={() => {
+        handleNavigateState(
+          `/community/${Board_Type_Param[post.boardType]}/${post.postId}`,
+        );
+      }}
     >
       <Wrapper>
         <Writer>

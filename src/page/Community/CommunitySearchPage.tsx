@@ -38,7 +38,7 @@ const CommunitySearchPage = () => {
   };
 
   // 게시판 데이터
-  const pageable: PageableRequest = { page: 1, size: 5, sort: [] };
+  const pageable: PageableRequest = { page: 0, size: 50, sort: [] };
   const allBoardData = useBoardPostings(pageable);
   const { data: boardData } = useBoardPostList(
     Board_Type_Mapping[selectedBoard],
@@ -182,7 +182,6 @@ const CommunitySearchPage = () => {
                   <PostOverview
                     key={post.postId}
                     post={post}
-                    boardType={selectedBoard}
                     // boardType={
                     //   selectedBoard === '전체'
                     //     ? post.boardType

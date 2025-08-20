@@ -19,7 +19,7 @@ const CommunityJoinSelectRolePage = () => {
   const { mutate: joinAssociation } = useJoinAssociation();
   const handleSuccessModalClose = () => {
     setIsSuccessModalOpen(false);
-    navigate('/community');
+    window.location.href = '/community';
   };
 
   const handleSubmit = () => {

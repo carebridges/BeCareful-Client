@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SocialworkerHomeResponse } from '@/types/Socialworker/home';
 import {
   NursingAssociationInfoRequest,
+  SocialworkerMyEditResponse,
   SocialworkerMyRequest,
   SocialworkerMyResponse,
 } from '@/types/Socialworker/mypage';
@@ -31,6 +32,16 @@ export const useGetSocialWorkerMy = () =>
     queryKey: ['socialworkerMy'],
     queryFn: async () => {
       const { data } = await axiosInstance.get('/socialworker/me');
+      return data;
+    },
+  });
+
+// 회원정보 수정화면 정보 반환
+export const useGetSocialWorkerMyEdit = () =>
+  useQuery<SocialworkerMyEditResponse>({
+    queryKey: ['socialworkerMyEdit'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get('/socialworker/me/edit');
       return data;
     },
   });

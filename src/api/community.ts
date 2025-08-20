@@ -74,8 +74,12 @@ export const usePostPostingMutation = (boardType: string) => {
     onSuccess: (response) => {
       console.log('usePostPostingMutation - 게시글 작성 성공:', response.data);
       queryClient.invalidateQueries({
-        queryKey: ['posts', boardType],
+        queryKey: ['postingList', boardType],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['boardPostingList', boardType],
+      });
+      queryClient.invalidateQueries({ queryKey: ['importantPostingList'] });
     },
     onError: (error) => {
       console.error('usePostPostingMutation - 게시글 작성 실패:', error);
@@ -100,7 +104,10 @@ export const usePutPostingMutation = (boardType: string, postId: number) => {
       queryClient.invalidateQueries({
         queryKey: ['postDetail', boardType, postId],
       });
-      queryClient.invalidateQueries({ queryKey: ['posts', boardType] });
+      queryClient.invalidateQueries({ queryKey: ['postingList', boardType] });
+      queryClient.invalidateQueries({
+        queryKey: ['boardPostingList', boardType],
+      });
       queryClient.invalidateQueries({ queryKey: ['importantPostingList'] });
     },
     onError: (error) => {

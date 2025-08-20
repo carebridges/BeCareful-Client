@@ -1,5 +1,5 @@
 import { MediaItem } from '@/types/Community/common';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   processUploadResults,
   validateAttachedFile,
@@ -30,6 +30,18 @@ export const useMedia = (initialData?: PostDetailResponse) => {
   const [attachedFiles, setAttachedFiles] = useState<MediaItem[]>(
     initialData?.fileUList || [],
   );
+
+  useEffect(() => {
+    if (initialData) {
+      setPhotos(initialData.imageList || []);
+      setVideos(initialData.videoList || []);
+      setAttachedFiles(initialData.fileUList || []);
+    } else {
+      setPhotos([]);
+      setVideos([]);
+      setAttachedFiles([]);
+    }
+  }, [initialData]);
 
   const handlePhotoClick = () => {
     photoRef.current?.click();

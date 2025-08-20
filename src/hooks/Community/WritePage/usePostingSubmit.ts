@@ -8,7 +8,7 @@ export const usePostingSubmit = (
   board: string,
   onClose: () => void,
   isEditMode: boolean,
-  postId: number | undefined,
+  postId: number,
 ) => {
   if (isEditMode && !postId) {
     throw new Error('글쓰기 수정하기 - postId가 필요합니다.');
