@@ -5,7 +5,6 @@ import { ReactComponent as Logo } from '@/assets/icons/landing/LogoBlack.svg';
 import { ReactComponent as LogoS } from '@/assets/icons/landing/LogoS.svg';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { mobile } from '@/utils/mobileStyle';
-import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
 
 const Footer = () => {
   const isMobile = useIsMobile();

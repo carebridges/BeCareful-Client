@@ -13,7 +13,6 @@ const CommunityGuideSection = () => {
     handleNavigate('/community/splash');
   };
 
-
   return isMobile ? (
     <CommunityGuideWrapper>
       <label className="title">커뮤니티 안내</label>
@@ -29,8 +28,8 @@ const CommunityGuideSection = () => {
           <br />
           다양한 교육과 교류가 이루어집니다.
         </label>
-        <button>커뮤니티 참여하기</button>
-        <SymbolIcon />
+        <button onClick={handleToCommunity}>커뮤니티 참여하기</button>
+        <SymbolIcon onClick={handleToCommunity} />
       </CommunityGuide>
     </CommunityGuideWrapper>
   ) : (
@@ -47,9 +46,9 @@ const CommunityGuideSection = () => {
           <br />
           다양한 교육과 교류가 이루어집니다.
         </label>
-        <button>커뮤니티 참여하기</button>
+        <button onClick={handleToCommunity}>커뮤니티 참여하기</button>
       </CommunityGuide>
-      <SymbolIcon />
+      <SymbolIcon onClick={handleToCommunity} />
     </CommunityGuideWrapper>
   );
 };
