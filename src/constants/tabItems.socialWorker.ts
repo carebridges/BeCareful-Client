@@ -5,13 +5,13 @@ import { ReactComponent as Mypage } from '@/assets/icons/tabbar/Mypage.svg';
 export const SOCIAL_WORKER_TAB = [
   {
     key: 'home',
-    path: '/landing',
+    path: '/socialworker',
     label: '홈',
     Icon: Home,
   },
   {
     key: 'matching',
-    path: '/socialworker/match/social/preview',
+    path: '/socialworker/match/social',
     label: '매칭하기',
     Icon: Matching,
   },

@@ -3,9 +3,15 @@ import { ReactComponent as SymbolIcon } from '@/assets/icons/landing/Symbol.svg'
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 import { mobile } from '@/utils/mobileStyle';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 const CommunityGuideSection = () => {
   const isMobile = useIsMobile();
+
+  const { handleNavigate } = useHandleNavigate();
+  const handleToCommunity = () => {
+    handleNavigate('/community/splash');
+  };
 
   return isMobile ? (
     <CommunityGuideWrapper>
@@ -22,8 +28,8 @@ const CommunityGuideSection = () => {
           <br />
           다양한 교육과 교류가 이루어집니다.
         </label>
-        <button>커뮤니티 참여하기</button>
-        <SymbolIcon />
+        <button onClick={handleToCommunity}>커뮤니티 참여하기</button>
+        <SymbolIcon onClick={handleToCommunity} />
       </CommunityGuide>
     </CommunityGuideWrapper>
   ) : (
@@ -40,9 +46,9 @@ const CommunityGuideSection = () => {
           <br />
           다양한 교육과 교류가 이루어집니다.
         </label>
-        <button>커뮤니티 참여하기</button>
+        <button onClick={handleToCommunity}>커뮤니티 참여하기</button>
       </CommunityGuide>
-      <SymbolIcon />
+      <SymbolIcon onClick={handleToCommunity} />
     </CommunityGuideWrapper>
   );
 };
