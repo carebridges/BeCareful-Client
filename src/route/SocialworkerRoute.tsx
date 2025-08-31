@@ -45,14 +45,6 @@ const SocialworkerRoute = () => {
       <main>
         <Routes>
           <Route index element={<SocialworkerHomePage />} />
-          <Route
-            path="/preview"
-            element={<SocialworkerHomePage previewMode />}
-          />
-          <Route
-            path="/match/social/preview"
-            element={<SocialWorkerMatchingPage previewMode />}
-          />
 
           <Route path="my/*" element={<SocialworkerMyRoute />} />
           <Route path="elderly" element={<ElderlyPage />} />

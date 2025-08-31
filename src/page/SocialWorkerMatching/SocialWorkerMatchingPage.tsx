@@ -9,13 +9,8 @@ import { useElderlyList } from '@/api/elderly';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
-import { ComingSoonModal } from '@/components/SocialWorker/common/ComingSoonModal';
 
-export const SocialWorkerMatchingPage = ({
-  previewMode = false,
-}: {
-  previewMode?: boolean;
-}) => {
+export const SocialWorkerMatchingPage = () => {
   const { data: elderList = [], isError, isLoading } = useElderlyList();
   const [modalData, setModalData] = useState<ElderData | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -64,8 +59,6 @@ export const SocialWorkerMatchingPage = ({
           />
         )}
       </Container>
-
-      {previewMode && <ComingSoonModal width="312px" />}
 
       <SocialWorkerTabBar />
     </>
