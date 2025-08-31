@@ -7,10 +7,12 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 const CommunityGuideSection = () => {
   const isMobile = useIsMobile();
+
   const { handleNavigate } = useHandleNavigate();
   const handleToCommunity = () => {
     handleNavigate('/community/splash');
   };
+
 
   return isMobile ? (
     <CommunityGuideWrapper>
@@ -27,8 +29,8 @@ const CommunityGuideSection = () => {
           <br />
           다양한 교육과 교류가 이루어집니다.
         </label>
-        <button onClick={handleToCommunity}>커뮤니티 참여하기</button>
-        <SymbolIcon onClick={handleToCommunity} />
+        <button>커뮤니티 참여하기</button>
+        <SymbolIcon />
       </CommunityGuide>
     </CommunityGuideWrapper>
   ) : (
@@ -45,9 +47,9 @@ const CommunityGuideSection = () => {
           <br />
           다양한 교육과 교류가 이루어집니다.
         </label>
-        <button onClick={handleToCommunity}>커뮤니티 참여하기</button>
+        <button>커뮤니티 참여하기</button>
       </CommunityGuide>
-      <SymbolIcon onClick={handleToCommunity} />
+      <SymbolIcon />
     </CommunityGuideWrapper>
   );
 };
