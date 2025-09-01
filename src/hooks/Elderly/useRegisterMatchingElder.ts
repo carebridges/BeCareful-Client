@@ -1,4 +1,4 @@
-import { DAY_KO_TO_EN } from '@/constants/day.socialWorker';
+import { DAY_KO_TO_EN } from '@/constants/socialworker/day.socialWorker';
 import { PayCode } from '@/types/Matching.socialWorker';
 import { useState } from 'react';
 

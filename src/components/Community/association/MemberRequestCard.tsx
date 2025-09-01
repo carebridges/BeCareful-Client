@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { Association_Rank_Mapping } from '@/constants/associationRank';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
+import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import { Application } from '@/types/Community/association';
 import {
   useJoinRequestAccept,
@@ -18,7 +18,7 @@ const MemberRequestCard = ({ request }: MemberRequestCardProps) => {
     { title: '기관명', detail: request.institutionName },
     {
       title: '직급',
-      detail: Institution_Rank_Mapping[request.institutionRank],
+      detail: INSTITUTION_RANK_EN_TO_KR[request.institutionRank],
     },
   ];
 
@@ -36,7 +36,7 @@ const MemberRequestCard = ({ request }: MemberRequestCardProps) => {
           <div className="top">
             <label className="name">{request.name}</label>
             <label className="rank">
-              {Association_Rank_Mapping[request.associationRank]}
+              {ASSOCIATION_RANK_EN_TO_KR[request.associationRank]}
             </label>
           </div>
           <InfoDisplay items={memberInfo} gapRow="12px" gapColumn="5px" />

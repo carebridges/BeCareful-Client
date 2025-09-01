@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { SOCIAL_WORKER_TAB } from '@/constants/tabItems.socialWorker';
+import { SOCIAL_WORKER_TAB } from '@/constants/socialworker/tabItems.socialWorker';
 import { Link, useLocation } from 'react-router-dom';
 
 export const SocialWorkerTabBar = () => {

@@ -1,15 +1,11 @@
-import {
-  API_Day_Mapping,
-  API_Mediation_Type_Mapping,
-  API_Time_Mapping,
-  Day_Mapping,
-  Time_Mapping,
-} from '@/constants/caregiverMapping';
+import { DAY_EN_TO_KR, DAY_KR_TO_EN } from '@/constants/common/day';
+import { MEDIATION_KR_TO_EN } from '@/constants/common/mediation';
+import { TIME_EN_TO_KR, TIME_KR_TO_EN } from '@/constants/common/time';
 import { WorkLocation } from '@/types/Caregiver/common';
 
 /* 요양보호사 관련 format 함수들 */
 // caretype
-export const caretypeFormat = (caretypes: string[], length: number) => {
+export const formatCaretype = (caretypes: string[], length: number) => {
   if (caretypes.length <= length) {
     return caretypes.join(', ');
   } else {
@@ -19,25 +15,25 @@ export const caretypeFormat = (caretypes: string[], length: number) => {
 };
 
 // workday
-export const dayFormat = (days: string[]) => {
-  return days.map((day) => Day_Mapping[day]).join(', ');
+export const formatDaysToKR = (days: string[]) => {
+  return days.map((day) => DAY_EN_TO_KR[day]).join(', ');
 };
 
-export const apiDayFormat = (days: string[]) => {
-  return days.map((day) => API_Day_Mapping[day]);
+export const formatDaysToEN = (days: string[]) => {
+  return days.map((day) => DAY_KR_TO_EN[day]);
 };
 
 // worktime
-export const timeFormat = (times: string[]) => {
-  return times.map((time) => Time_Mapping[time]).join(', ');
+export const formatTimeToKR = (times: string[]) => {
+  return times.map((time) => TIME_EN_TO_KR[time]).join(', ');
 };
 
-export const apiTimeFormat = (times: string[]) => {
-  return times.map((time) => API_Time_Mapping[time]);
+export const formatTimeToEN = (times: string[]) => {
+  return times.map((time) => TIME_KR_TO_EN[time]);
 };
 
 // location
-export const locationFormat = (
+export const formatLocation = (
   workLocations: WorkLocation[],
   length: number,
 ) => {
@@ -56,8 +52,8 @@ export const locationFormat = (
 };
 
 // mediation type
-export const apiMediationFormat = (mediationTypes: string[]) => {
+export const formatMediationTypeToEN = (mediationTypes: string[]) => {
   return mediationTypes.map(
-    (mediationType) => API_Mediation_Type_Mapping[mediationType],
+    (mediationType) => MEDIATION_KR_TO_EN[mediationType],
   );
 };

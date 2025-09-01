@@ -11,5 +11,6 @@ export const useBoardPostList = (
   return useQuery<BoardPostListResponse, Error>({
     queryKey: ['postingList', boardType, pageable],
     queryFn: () => getPostingList(pageable, boardType),
+    enabled: boardType !== '전체',
   });
 };

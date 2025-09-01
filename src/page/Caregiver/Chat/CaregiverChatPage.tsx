@@ -14,21 +14,12 @@ import {
   groupByDate,
 } from '@/utils/formatTime';
 import { useGetCaregiverChat, usePostCaregiverContract } from '@/api/caregiver';
+import { handleModal } from '@/utils/handleModal';
 
 const CaregiverChatPage = () => {
   const { matchingId } = useParams<{ matchingId: string }>();
 
   const { handleGoBack, handleNavigate } = useHandleNavigate();
-
-  const handleModal = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>,
-    before?: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    if (before) {
-      before(false);
-    }
-    setter((prev) => !prev);
-  };
 
   // 매칭 공고 지원
   const { mutate: confirmApply } = usePostCaregiverContract();
@@ -106,7 +97,7 @@ const CaregiverChatPage = () => {
                           items={contract}
                           hasButton={isLastDate && isLastItem}
                           buttonContent="최종 승인하기"
-                          buttonClick={() => handleModal(setIsConfirmModalOpen)}
+                          buttonClick={() => setIsConfirmModalOpen(true)}
                         />
                       </div>
                       <label className="time">
@@ -152,27 +143,27 @@ const CaregiverChatPage = () => {
 
       <Modal
         isOpen={isConfirmModalOpen}
-        onClose={() => handleModal(setIsConfirmModalOpen)}
+        onClose={() => setIsConfirmModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsConfirmModalOpen)}
+          onClose={() => setIsConfirmModalOpen(false)}
           title={'일자리 지원을\n최종 확정하시겠습니까?'}
           detail={
             '최종 승인시 조율 요청이 불가능하며,\n기관 담당자에게 근무 확정 알림이 가요.'
           }
           left="취소"
           right="최종 승인하기"
-          handleLeftBtnClick={() => handleModal(setIsConfirmModalOpen)}
+          handleLeftBtnClick={() => setIsConfirmModalOpen(false)}
           handleRightBtnClick={handleConfirm}
         />
       </Modal>
 
       <Modal
         isOpen={isCompleteModalOpen}
-        onClose={() => handleModal(setIsCompleteModalOpen)}
+        onClose={() => setIsCompleteModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsCompleteModalOpen)}
+          onClose={() => setIsCompleteModalOpen(false)}
           title={'일자리 지원이\n최종 확정되었습니다!'}
           detail={'지원 보상 포인트 1,000P가 지급되었습니다.'}
           left="일정 보러가기"
@@ -180,7 +171,7 @@ const CaregiverChatPage = () => {
           handleLeftBtnClick={() =>
             handleNavigate(`/caregiver/apply/${data?.recruitmentId}`)
           }
-          handleRightBtnClick={() => handleModal(setIsCompleteModalOpen)}
+          handleRightBtnClick={() => setIsCompleteModalOpen(false)}
         />
       </Modal>
     </Container>

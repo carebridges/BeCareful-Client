@@ -1,25 +1,25 @@
 import { SocialWorkerInfo } from '@/types/Socialworker/common';
 
-interface InstitutionInfo {
+export interface InstitutionInfo {
   institutionName: string;
   elderlyCount: number;
   socialWorkerCount: number;
   socialWorkerList: SocialWorkerInfo[];
 }
 
-interface MatchingStatistics {
+export interface MatchingStatistics {
   matchingProcessingCount: number;
   recentlyMatchedCount: number;
   totalMatchingCompletedCount: number;
 }
 
-interface ApplicationStatistics {
+export interface ApplicationStatistics {
   appliedCaregiverCount: number;
   averageAppliedCaregiver: number;
   averageApplyingRate: number;
 }
 
-interface MatchingElderlyList {
+export interface MatchingElderlyList {
   elderlyName: string;
   elderlyAge: number;
   elderlyGender: 'FEMALE' | 'MALE';

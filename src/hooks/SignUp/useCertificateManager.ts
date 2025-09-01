@@ -5,7 +5,7 @@ import {
   CertificateKey,
   CaregiverSignUpFormData,
 } from '@/types/CareGiverSignUp';
-import { CERTIFICATE_LABEL } from '@/constants/certificateLabel';
+import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
 
 export const useCertificateManager = (
   setFormData: (

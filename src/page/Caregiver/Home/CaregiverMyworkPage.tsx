@@ -5,7 +5,7 @@ import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverMyworkCard from '@/components/Caregiver/Home/CaregiverMyworkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useMyWorkListQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { useMyWorkListQuery } from '@/api/caregiver';
 
 const CaregiverMyworkPage = () => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();

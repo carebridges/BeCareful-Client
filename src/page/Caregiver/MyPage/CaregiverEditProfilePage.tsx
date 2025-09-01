@@ -9,15 +9,15 @@ import { Toggle } from '@/components/common/Toggle/Toggle';
 import InputBox from '@/components/common/InputBox/InputBox';
 import { CertificateSelectModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateSelectModal';
 import { CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateComponentMap';
-import { CERTIFICATE_LABEL } from '@/constants/certificateLabel';
+import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
 import { CaregiverMyRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
-import { useCaregiverMyPageInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
 import { usePutMyMutation } from '@/hooks/Caregiver/mutation/usePutMyMutation';
-import { useUploadCareGiverProfileImage } from '@/api/caregiverFunnel';
 import { useCaregiverBasicForm } from '@/hooks/Caregiver/mypage/useCaregiverBasicForm';
 import { useCaregiverCertForm } from '@/hooks/Caregiver/mypage/useCaregiverCertForm';
+import { useCaregiverMyPageInfoQuery } from '@/api/caregiver';
+import { useUploadCareGiverProfileImage } from '@/api/caregiverFunnel';
 
 const CaregiverEditProfilePage = () => {
   const { handleGoBack } = useHandleNavigate();

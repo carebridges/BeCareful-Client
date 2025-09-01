@@ -7,7 +7,7 @@ import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/St
 import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
 import { AgreementValues } from '@/types/Socialworker/common';
 import { Button } from '@/components/common/Button/Button';
-import { Institution_Rank_Mapping_ENG } from '@/constants/institutionRank';
+import { INSTITUTION_RANK_EN_TO_RANK } from '@/constants/common/institutionRank';
 import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 // import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
@@ -117,7 +117,7 @@ const SocialworkerEditProfilePage = () => {
       phoneNumber: phoneNumber,
       // TODO: 기관 검색해서 id 받아오기
       nursingInstitutionId: 4,
-      institutionRank: Institution_Rank_Mapping_ENG[rank],
+      institutionRank: INSTITUTION_RANK_EN_TO_RANK[rank],
       isAgreedToTerms: agreementStates.isAgreedToTerms,
       isAgreedToCollectPersonalInfo:
         agreementStates.isAgreedToCollectPersonalInfo,

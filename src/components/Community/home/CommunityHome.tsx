@@ -7,7 +7,7 @@ import { Pagination } from 'swiper/modules';
 import 'swiper/css/pagination';
 import { Button } from '@/components/common/Button/Button';
 import PostOverview from '@/components/Community/common/PostOverview';
-import { Board_List } from '@/constants/communityBoard';
+import { BOARD_LIST } from '@/constants/community/communityBoard';
 import { PageableRequest } from '@/types/Community/common';
 import { BoardPostListResponse, PostListItem } from '@/types/Community/post';
 import { useImportantPostings } from '@/api/community';
@@ -95,7 +95,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
           autoHeight={true}
           style={{ width: '100%', height: 'auto' }}
         >
-          {Board_List.map((board, index) => {
+          {BOARD_LIST.map((board, index) => {
             const { data, isError, error } = boardPostings[index];
             const Icon = board.icon;
 

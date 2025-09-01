@@ -7,8 +7,8 @@ import CaregiverCareerNew from '@/components/Caregiver/Mypage/CaregiverCareerNew
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useCareerQuery } from '@/hooks/Caregiver/caregiverQuery';
 import { usePutCareerMutation } from '@/hooks/Caregiver/mutation/usePutCareerMutation';
+import { useCareerQuery } from '@/api/caregiver';
 
 const CaregiverCareerPage = () => {
   const { handleGoBack } = useHandleNavigate();

@@ -1,24 +1,22 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
-import { MatchingRecruitmentMediateRequest } from '@/types/Caregiver/work';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { apiMediationFormat } from '@/utils/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useRecruitmentDetailQuery } from '@/hooks/Caregiver/caregiverQuery';
-import {
-  usePostApplyMutation,
-  usePostMediateMutation,
-  usePostRejectMutation,
-} from '@/hooks/Caregiver/mutation/useApplyMutation';
+import { useApply } from '@/hooks/Caregiver/work/useApply';
+import { useReject } from '@/hooks/Caregiver/work/useReject';
+import { useMediate } from '@/hooks/Caregiver/work/useMediate';
+import { handleModal } from '@/utils/handleModal';
+import { useRecruitmentDetailQuery } from '@/api/caregiver';
 
 const CaregiverWorkDetailPage = () => {
-  const { recruitmentId } = useParams<{ recruitmentId: string }>();
-  const numRecruitmentId = Number(recruitmentId);
+  const { recruitmentId: recruitmentIdParam } = useParams<{
+    recruitmentId: string;
+  }>();
+  const recruitmentId = Number(recruitmentIdParam);
 
   const { handleNavigate } = useHandleNavigate();
 
@@ -28,84 +26,31 @@ const CaregiverWorkDetailPage = () => {
     console.log('getRecruitmentDetail 에러: ', error);
   }
 
-  // 매칭 공고 지원
-  const { mutate: applyMutation } = usePostApplyMutation(numRecruitmentId, {
-    onSuccessCallback: () => {
-      setIsApplyModalOpen(false); // 모달 닫기
-    },
-  });
-  // 매칭 공고 거절
-  const { mutate: rejectMutation } = usePostRejectMutation(numRecruitmentId, {
-    onSuccessCallback: () => {
-      handleModal(setIsDeleteModalOpen, setIsRejectModalOpen);
-    },
-  });
-  // 매칭 공고 근무 조건 조율
-  const { mutate: mediateMutation } = usePostMediateMutation(numRecruitmentId, {
-    onSuccessCallback: () => {
-      handleModal(setIsCompleteMediateModalOpen, setIsMediateModalOpen);
-    },
-  });
+  // 지원하기
+  const { isApplyModalOpen, setIsApplyModalOpen, handleCompleteApply } =
+    useApply(recruitmentId);
 
-  // 팝업 공통
-  const handleModal = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>,
-    before?: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    if (before) {
-      before(false);
-    }
-    setter((prev) => !prev);
-  };
+  // 거절하기
+  const {
+    isRejectModalOpen,
+    setIsRejectModalOpen,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
+    handleReject,
+  } = useReject(recruitmentId);
 
-  // 지원하기 팝업
-  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
-  const handleCompleteApply = () => {
-    applyMutation();
-  };
-
-  // 거절하기 팝업
-  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  // 그래도 거절 팝업
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  // 거절하기 팝업 - 거절하기 버튼
-  const handleReject = () => {
-    rejectMutation();
-  };
-
-  // 근무 조건 조율하기 팝업
-  const [isMediateModalOpen, setIsMediateModalOpen] = useState(false);
-  const [isCompleteMediateModalOpen, setIsCompleteMediateModalOpen] =
-    useState(false);
-  // 근무조건 조율 입력 팝업 - 조율하여 지원하기 버튼
-  const handleMediate = () => {
-    // 조율하여 지원하기 api
-    const mediateData: MatchingRecruitmentMediateRequest = {
-      mediationTypes: apiMediationFormat(mediationTypes),
-      mediationDescription: mediationDescription,
-    };
-    console.log(mediateData);
-    mediateMutation(mediateData);
-  };
-
-  // 근무조건 조율하기 필터
-  const [mediationTypes, setMediationTypes] = useState<string[]>([]);
-  const handleMediationChange = (mediation: string) => {
-    setMediationTypes((prev) => {
-      if (prev.includes(mediation)) {
-        return prev.filter((f) => f !== mediation);
-      } else {
-        return [...prev, mediation];
-      }
-    });
-  };
-  // 근무조건 조율하기 설명
-  const [mediationDescription, setMediationDescription] = useState('');
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setMediationDescription(e.target.value);
-  };
+  // 조율하기
+  const {
+    isMediateModalOpen,
+    setIsMediateModalOpen,
+    isCompleteMediateModalOpen,
+    setIsCompleteMediateModalOpen,
+    mediationTypes,
+    mediationDescription,
+    handleMediate,
+    handleMediationChange,
+    handleDescriptionChange,
+  } = useMediate(recruitmentId);
 
   if (!data) {
     return <div>데이터를 불러오는 중입니다...</div>;
@@ -115,10 +60,7 @@ const CaregiverWorkDetailPage = () => {
     <Container>
       <CaregiverWorkDetail work={data} />
       <Bottom>
-        <Button
-          isBlue={false}
-          onClick={() => handleModal(setIsRejectModalOpen)}
-        >
+        <Button isBlue={false} onClick={() => setIsRejectModalOpen(true)}>
           거절하기
         </Button>
         <Button isBlue={true} onClick={handleCompleteApply}>
@@ -129,10 +71,10 @@ const CaregiverWorkDetailPage = () => {
       {/* 지원완료 팝업(지원하기 버튼 클릭한 경우) */}
       <Modal
         isOpen={isApplyModalOpen}
-        onClose={() => handleModal(setIsApplyModalOpen)}
+        onClose={() => setIsApplyModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsApplyModalOpen)}
+          onClose={() => setIsApplyModalOpen(false)}
           title={'일자리 지원이\n성공적으로 완료되었어요!'}
           detail={
             '지원해주셔서 감사합니다.\n검토 후 합격시 채팅으로 메시지를 보내드립니다.'
@@ -147,10 +89,10 @@ const CaregiverWorkDetailPage = () => {
       {/* 거절하기 팝업(거절하기 버튼 클릭한 경우) */}
       <Modal
         isOpen={isRejectModalOpen}
-        onClose={() => handleModal(setIsRejectModalOpen)}
+        onClose={() => setIsRejectModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsRejectModalOpen)}
+          onClose={() => setIsRejectModalOpen(false)}
           title={'이 일자리가\n조건에 맞지 않으신가요?'}
           detail={
             '거절하면 이 일자리는 목록에서 삭제됩니다.\n조건이 맞지 않다면 근무 조건 조율을 보내보세요.'
@@ -167,10 +109,10 @@ const CaregiverWorkDetailPage = () => {
       {/* 그래도 거절 팝업 */}
       <Modal
         isOpen={isDeleteModalOpen}
-        onClose={() => handleModal(setIsDeleteModalOpen)}
+        onClose={() => setIsDeleteModalOpen(false)}
       >
         <ModalLimit
-          onClose={() => handleModal(setIsDeleteModalOpen)}
+          onClose={() => setIsDeleteModalOpen(false)}
           title="일자리가 목록에서 삭제되었어요"
           // detail={`${name}님께 맞는 다른 일자리를 찾아볼게요!`}
           detail="이선혜님께 맞는 다른 일자리를 찾아볼게요!"
@@ -182,7 +124,7 @@ const CaregiverWorkDetailPage = () => {
       {/* 근무조건 조율 팝업 */}
       <Modal
         isOpen={isMediateModalOpen}
-        onClose={() => handleModal(setIsMediateModalOpen)}
+        onClose={() => setIsMediateModalOpen(false)}
       >
         <MediateModal>
           <MediateTitle>
@@ -196,7 +138,7 @@ const CaregiverWorkDetailPage = () => {
             </div>
             <ModalClose
               style={{ cursor: 'pointer' }}
-              onClick={() => handleModal(setIsMediateModalOpen)}
+              onClick={() => setIsMediateModalOpen(false)}
             />
           </MediateTitle>
 
@@ -243,10 +185,10 @@ const CaregiverWorkDetailPage = () => {
       {/* 조율 후 지원완료 팝업 */}
       <Modal
         isOpen={isCompleteMediateModalOpen}
-        onClose={() => handleModal(setIsCompleteMediateModalOpen)}
+        onClose={() => setIsCompleteMediateModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsCompleteMediateModalOpen)}
+          onClose={() => setIsCompleteMediateModalOpen(false)}
           title={'근무조건을\n조율하여 지원했어요!'}
           detail={
             '입력하신 조건으로 지원이 완료되었습니다.\n검토 후 합격시 채팅으로 메시지를 보내드립니다.'

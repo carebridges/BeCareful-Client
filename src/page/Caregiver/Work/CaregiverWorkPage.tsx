@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect, useMemo, useState } from 'react';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
@@ -8,19 +7,10 @@ import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { useRecoilValue } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
-import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiverWorkFilters';
-import {
-  caretypeFormat,
-  dayFormat,
-  locationFormat,
-  timeFormat,
-} from '@/utils/caregiver';
+import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilters';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import {
-  useApplicationQuery,
-  useRecruitmentListQuery,
-} from '@/hooks/Caregiver/caregiverQuery';
-import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/mutation/useWorkApplicationToggleMutation';
+import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
+import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -28,92 +18,13 @@ const CaregiverWorkPage = () => {
   const userInfo = useRecoilValue(currentUserInfo);
   const chatNew = false;
 
-  // 신청서 조회
-  const { data: applicationData, error: applicationError } =
-    useApplicationQuery();
-  if (applicationError) {
-    console.log('getApplication 에러: ', applicationError);
-  }
+  // 상단 부분(신청서 조회)
+  const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =
+    useApplicationData();
 
-  // 매칭 공고 리스트 조회
-  const { data: matchingListData, error: matchingListError } =
-    useRecruitmentListQuery();
-  if (matchingListError) {
-    console.log('getMatchingList 에러: ', matchingListError);
-  }
-
-  const [isToggleChecked, setIsToggleChecked] = useState(false);
-  useEffect(() => {
-    if (applicationData) {
-      setIsToggleChecked(true);
-    } else {
-      setIsToggleChecked(false);
-    }
-  }, [applicationData]);
-
-  const { mutate: toggleWorkApplication } = useWorkApplicationToggleMutation({
-    onSuccessCallback: (newIsActive) => {
-      setIsToggleChecked(newIsActive);
-    },
-  });
-  const handleToggleChange = () => {
-    toggleWorkApplication(isToggleChecked);
-  };
-
-  const [activeTab, setActiveTab] = useState('전체');
-  const handleTabChange = (tabName: string) => {
-    setActiveTab(tabName);
-  };
-  const filteredMatchingList = useMemo(() => {
-    if (!matchingListData) {
-      return [];
-    }
-
-    switch (activeTab) {
-      case '전체':
-        return matchingListData;
-      case '시급 TOP':
-        return matchingListData.filter((item) => item.isHourlySalaryTop);
-      case '인기공고':
-        return matchingListData.filter((item) => item.isHotRecruitment);
-      case '조건일치':
-        return matchingListData.filter((item) =>
-          ['높음', '보통'].includes(item.matchingResultStatus),
-        );
-      default:
-        return matchingListData;
-    }
-  }, [matchingListData, activeTab]);
-
-  const applyInfo = [
-    {
-      title: '케어항목',
-      detail: applicationData
-        ? caretypeFormat(applicationData.careTypes, 2)
-        : '-',
-    },
-    {
-      title: '근무요일',
-      detail: applicationData ? dayFormat(applicationData.workDays) : '-',
-    },
-    {
-      title: '근무시간',
-      detail: applicationData ? timeFormat(applicationData.workTimes) : '-',
-    },
-
-    {
-      title: '희망급여',
-      detail: applicationData
-        ? `${applicationData.workSalaryAmount.toLocaleString('ko-KR')}원`
-        : '-',
-    },
-    {
-      title: '근무지역',
-      detail: applicationData
-        ? locationFormat(applicationData.workLocations, 2)
-        : '-',
-    },
-  ];
+  // 하단 부분(일자리 조회)
+  const { activeTab, handleTabChange, filteredMatchingList } =
+    useMatchingList();
 
   return (
     <Container>
@@ -233,12 +144,10 @@ const Application = styled.div`
 `;
 
 const Top = styled.div`
-  gap: auto;
   justify-content: space-between;
 
   .left {
     flex-direction: column;
-    gap: auto;
     justify-content: space-between;
   }
 

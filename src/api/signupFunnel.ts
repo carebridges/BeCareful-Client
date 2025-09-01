@@ -29,12 +29,9 @@ export const useSignUpMember = () => {
 };
 
 export const searchInstitution = async (name: string) => {
-  const { data } = await axiosInstance.get(
-    '/nursingInstitution/for-guest/search',
-    {
-      params: { nursingInstitutionName: name },
-    },
-  );
+  const { data } = await axiosInstance.get('/nursingInstitution/search', {
+    params: { nursingInstitutionName: name },
+  });
   return data.nursingInstitutionSimpleInfoList;
 };
 

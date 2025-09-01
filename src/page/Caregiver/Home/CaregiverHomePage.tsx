@@ -12,7 +12,7 @@ import { ReactComponent as Status } from '@/assets/icons/caregiver/home/Status.s
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useCaregiverHomeInfoQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
 
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();

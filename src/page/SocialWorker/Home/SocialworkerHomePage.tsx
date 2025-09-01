@@ -4,8 +4,6 @@ import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { ReactComponent as Point } from '@/assets/icons/Point.svg';
-import { ReactComponent as Elderly } from '@/assets/icons/socialworker/home/ElderlyDefault.svg';
-import { ReactComponent as Caregiver } from '@/assets/icons/socialworker/home/CaregiverDefault.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -13,9 +11,10 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import RankCard from '@/components/SocialWorker/Home/RankCard';
 import MatchingSection from '@/components/SocialWorker/Home/MatchingSection';
 import ApplySection from '@/components/SocialWorker/Home/ApplySection';
+import ElderSection from '@/components/SocialWorker/Home/ElderSection';
+import InstitutionSection from '@/components/SocialWorker/Home/InstitutionSection';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { Gender_Mapping } from '@/constants/caregiverMapping';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialWorkerHome } from '@/api/socialworker';
 
@@ -25,30 +24,21 @@ const SocialworkerHomePage = () => {
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
 
   const { handleNavigate } = useHandleNavigate();
-  const handleModal = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>,
-    before?: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    if (before) {
-      before(false);
-    }
-    setter((prev) => !prev);
-  };
 
   const { data } = useGetSocialWorkerHome();
 
   return (
     <Container>
       {isNew && (
-        <Modal isOpen={isNew} onClose={() => handleModal(setIsNew)}>
+        <Modal isOpen={isNew} onClose={() => setIsNew(false)}>
           <ModalButtons
-            onClose={() => handleModal(setIsNew)}
+            onClose={() => setIsNew(false)}
             title="회원가입을 축하드립니다!"
             detail="가입 보상 포인트 5,000P가 지급되었습니다."
             left="내 포인트 확인"
             right="홈으로"
             handleLeftBtnClick={() => handleNavigate('/socialworker/point')}
-            handleRightBtnClick={() => handleModal(setIsNew)}
+            handleRightBtnClick={() => setIsNew(false)}
           />
         </Modal>
       )}
@@ -71,7 +61,6 @@ const SocialworkerHomePage = () => {
             rank={data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'}
           />
         </div>
-
         <div
           className="pointWrapper"
           onClick={() => handleNavigate('/socialworker/point')}
@@ -89,38 +78,10 @@ const SocialworkerHomePage = () => {
             {data?.institutionInfo.institutionName}
           </label>
         </div>
-
-        <Institution>
-          <div className="content">
-            <div className="left">
-              <Elderly />
-              <label className="type">어르신</label>
-            </div>
-            <label className="people">
-              <span>{data?.institutionInfo.elderlyCount}</span>명
-            </label>
-          </div>
-
-          <div className="border" />
-
-          <div className="content">
-            <div className="left">
-              <Caregiver />
-              <label className="type">요양보호사</label>
-            </div>
-            <label className="people">
-              <span>{data?.institutionInfo.socialWorkerCount}</span>명
-            </label>
-          </div>
-          <Button
-            height="52px"
-            variant="subBlue"
-            style={{ marginTop: '4px' }}
-            onClick={() => handleModal(setIsInstitutionModalOpen)}
-          >
-            직원 정보 보기
-          </Button>
-        </Institution>
+        <InstitutionSection
+          data={data?.institutionInfo}
+          onClick={() => setIsInstitutionModalOpen(true)}
+        />
       </SectionWrapper>
 
       <SectionWrapper>
@@ -135,34 +96,14 @@ const SocialworkerHomePage = () => {
             <ChevronRight />
           </div>
         </div>
-        <MatchingSection
-          matchingProcessingCount={
-            data?.matchingStatistics.matchingProcessingCount ?? 0
-          }
-          recentlyMatchedCount={
-            data?.matchingStatistics.recentlyMatchedCount ?? 0
-          }
-          totalMatchingCompletedCount={
-            data?.matchingStatistics.totalMatchingCompletedCount ?? 0
-          }
-        />
+        <MatchingSection data={data?.matchingStatistics} />
       </SectionWrapper>
 
       <SectionWrapper>
         <div className="titleWrapper">
           <label className="title">지원 통계</label>
         </div>
-        <ApplySection
-          averageAppliedCaregiver={
-            data?.applicationStatistics.averageAppliedCaregiver ?? 0
-          }
-          appliedCaregiverCount={
-            data?.applicationStatistics.appliedCaregiverCount ?? 0
-          }
-          averageApplyingRate={
-            data?.applicationStatistics.averageApplyingRate ?? 0
-          }
-        />
+        <ApplySection data={data?.applicationStatistics} />
       </SectionWrapper>
 
       <SectionWrapper>
@@ -177,29 +118,12 @@ const SocialworkerHomePage = () => {
             <ChevronRight />
           </div>
         </div>
-
-        <Edler>
-          {data?.matchingElderlyList.map((elderly, index) => (
-            <div className="elder" key={index}>
-              <img src={elderly.elderlyProfileImageUrl} />
-              <div className="elder-info">
-                <label className="name">{elderly.elderlyName}</label>
-                <div className="bottom">
-                  <label className="extra">{elderly.elderlyAge}세</label>
-                  <div className="border" />
-                  <label className="extra">
-                    {Gender_Mapping[elderly.elderlyGender]}
-                  </label>
-                </div>
-              </div>
-            </div>
-          ))}
-        </Edler>
+        <ElderSection data={data?.matchingElderlyList} />
       </SectionWrapper>
 
       <Modal
         isOpen={isInstitutionModalOpen}
-        onClose={() => handleModal(setIsInstitutionModalOpen)}
+        onClose={() => setIsInstitutionModalOpen(false)}
       >
         <ModalWrapper>
           <div className="modal-top">
@@ -207,7 +131,7 @@ const SocialworkerHomePage = () => {
               <label className="modal-title">소속 기관 직원</label>
               <span>{data?.institutionInfo.socialWorkerCount}</span>
             </div>
-            <ModalXImg onClick={() => handleModal(setIsInstitutionModalOpen)} />
+            <ModalXImg onClick={() => setIsInstitutionModalOpen(false)} />
           </div>
 
           <ModalSocial>
@@ -225,14 +149,14 @@ const SocialworkerHomePage = () => {
             <Button
               height="52px"
               variant="subBlue"
-              onClick={() => handleModal(setIsInstitutionModalOpen)}
+              onClick={() => setIsInstitutionModalOpen(false)}
             >
               취소
             </Button>
             <Button
               height="52px"
               variant="mainBlue"
-              onClick={() => handleModal(setIsInstitutionModalOpen)}
+              onClick={() => setIsInstitutionModalOpen(false)}
             >
               확인
             </Button>
@@ -354,107 +278,6 @@ const SectionWrapper = styled.div`
   path {
     stroke: #666666;
     fill: #666666;
-  }
-`;
-
-const Institution = styled.div`
-  padding: 24px 20px;
-  flex-direction: column;
-  gap: 12px;
-  border-radius: 12px;
-  border-top: 1px solid ${({ theme }) => theme.colors.gray50};
-  background: ${({ theme }) => theme.colors.white};
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.03);
-
-  .content {
-    justify-content: space-between;
-  }
-
-  label {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  }
-
-  .left {
-    gap: 8px;
-    align-items: center;
-  }
-
-  img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .people {
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  }
-
-  span {
-    color: ${({ theme }) => theme.colors.mainBlue};
-  }
-
-  .border {
-    height: 1px;
-    background: ${({ theme }) => theme.colors.gray50};
-  }
-`;
-
-const Edler = styled.div`
-  gap: 8px;
-  overflow-x: scroll;
-  flex-wrap: nowrap;
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .elder {
-    padding: 16px;
-    width: 88px;
-    flex: 0 0 auto;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    border-radius: 12px;
-    background: ${({ theme }) => theme.colors.white};
-    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.03);
-  }
-
-  img {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-  }
-
-  .elder-info {
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .name {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  }
-
-  .bottom {
-    gap: 4px;
-    align-items: center;
-  }
-
-  .extra {
-    color: ${({ theme }) => theme.colors.gray500};
-  }
-
-  .border {
-    width: 1px;
-    height: 12px;
-    background: ${({ theme }) => theme.colors.subBlue};
   }
 `;
 

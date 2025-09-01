@@ -1,5 +1,5 @@
-import { CARE_LEVELS } from '@/constants/careLevels.socialWorker';
-import { CARE_TYPES } from '@/constants/careTypes.socialWorker';
+import { CARE_LEVELS } from '@/constants/socialworker/careLevels.socialWorker';
+import { CARE_TYPES } from '@/constants/socialworker/careTypes.socialWorker';
 
 export interface AreaSocial {
   siDo: string;

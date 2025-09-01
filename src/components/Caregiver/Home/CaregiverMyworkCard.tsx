@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { GENDER_EN_TO_KR } from '@/constants/common/gender';
 import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
-import { caretypeFormat, dayFormat } from '@/utils/caregiver';
+import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { usePutMemoMutation } from '@/hooks/Caregiver/mutation/usePutMemoMutation';
 
 interface CaregiverMyworkCardProps {
@@ -14,10 +14,10 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
   const work = [
     {
       title: '근무요일',
-      detail: dayFormat(workInfo.workDays),
+      detail: formatDaysToKR(workInfo.workDays),
     },
     { title: '주소', detail: workInfo.elderlyInfo.address },
-    { title: '케어항목', detail: caretypeFormat(workInfo.careTypes, 2) },
+    { title: '케어항목', detail: formatCaretype(workInfo.careTypes, 2) },
     { title: '건강상태', detail: workInfo.elderlyInfo.healthCondition },
     { title: '기관명', detail: workInfo.elderlyInfo.institutionName },
   ];
@@ -46,7 +46,7 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
               <label className="extra">{workInfo.elderlyInfo.age}세</label>
               <Border />
               <label className="extra">
-                {Gender_Mapping[workInfo.elderlyInfo.gender]}
+                {GENDER_EN_TO_KR[workInfo.elderlyInfo.gender]}
               </label>
             </div>
           </div>

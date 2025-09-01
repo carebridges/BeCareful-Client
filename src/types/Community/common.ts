@@ -1,5 +1,5 @@
 /* 커뮤니티 공통 타입 */
-export type AssociationRank = 'CHAIRMAN' | 'EXECUTIVE' | 'MEMBER';
+export type AssociationRank = 'CHAIRMAN' | 'EXECUTIVE' | 'MEMBER' | 'NONE';
 
 export type InstitutionRank =
   | 'CENTER_DIRECTOR'

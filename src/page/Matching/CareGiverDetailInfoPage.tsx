@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CaregiverBasicInfoSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CaregiverBasicInfoSection';
 import { WorkPreferenceSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/WorkPreferenceSection';
 import { CareerSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CareerSection';
-import { MATCH_REASON_TEXT } from '@/constants/matching.socialWorker';
+import { MATCH_REASON_TEXT } from '@/constants/socialworker/matching.socialWorker';
 import {
   useCaregiverDetail,
   useHireCaregiver,

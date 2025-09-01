@@ -1,24 +1,25 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as ExpelIcon } from '@/assets/icons/caregiver/my/Logout.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
+import { LogoutButton } from '@/components/common/Button/LogoutButton';
 import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ProfileCard from '@/components/shared/ProfileCard';
-import { Gender_Mapping } from '@/constants/caregiverMapping';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import {
-  API_Association_Rank_Mapping,
-  Association_Rank_Mapping,
-} from '@/constants/associationRank';
+  ASSOCIATION_RANK_KR_TO_EN,
+  ASSOCIATION_RANK_EN_TO_KR,
+  ASSOCIATION_MEMBER_TYPES,
+} from '@/constants/common/associationRank';
 import { MemberRankRequest } from '@/types/Community/association';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
@@ -29,8 +30,6 @@ import {
 
 const CommunityMemberDetailPage = () => {
   const { memberId } = useParams<{ memberId: string }>();
-  // const { postId: postIdParam } = useParams<{ postId: string }>();
-  // const postId = postIdParam ? parseInt(postIdParam, 10) : 0;
 
   const userInfo = useRecoilValue(currentUserInfo);
   const isChairman = userInfo.associationRank === 'CHAIRMAN';
@@ -40,27 +39,16 @@ const CommunityMemberDetailPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
-  const memberTypes = ['임원진', '회원'];
   const [memberType, setMemberType] = useState(
-    Association_Rank_Mapping[data?.associationRank ?? 'MEMBER'],
+    ASSOCIATION_RANK_EN_TO_KR[data?.associationRank ?? 'MEMBER'],
   );
   const [isDisabled, setIsDisabled] = useState(true);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setMemberType(Association_Rank_Mapping[data.associationRank]);
-  //   }
-  // }, [data]);
-
-  const handleModal = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>,
-    before?: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    if (before) {
-      before(false);
+  useEffect(() => {
+    if (data) {
+      setMemberType(ASSOCIATION_RANK_EN_TO_KR[data.associationRank]);
     }
-    setter((prev) => !prev);
-  };
+  }, [data]);
 
   const handleMemberTypeChange = (type: string) => {
     setMemberType(type);
@@ -72,11 +60,14 @@ const CommunityMemberDetailPage = () => {
   const handleMemberModalBtn = () => {
     const memberInfo: MemberRankRequest = {
       memberId: Number(memberId),
-      associationRank: API_Association_Rank_Mapping[memberType],
+      associationRank: ASSOCIATION_RANK_KR_TO_EN[memberType],
     };
-    updateRank(memberInfo);
-    handleModal(setIsTypeModalOpen);
-    setIsDisabled(true);
+    updateRank(memberInfo, {
+      onSuccess: () => {
+        setIsTypeModalOpen(false);
+        setIsDisabled(true);
+      },
+    });
   };
 
   const { mutate: handleExpel } = useMemberExpel(Number(memberId));
@@ -99,7 +90,7 @@ const CommunityMemberDetailPage = () => {
         nickname={data.nickName}
         phoneNumber={data.phoneNumber}
         age={data.age}
-        gender={Gender_Mapping[data.gender]}
+        gender={GENDER_EN_TO_KR[data.gender]}
       />
 
       <SectionWrapper>
@@ -119,14 +110,14 @@ const CommunityMemberDetailPage = () => {
         <label className="title">협회 정보</label>
         <AssociationCard
           association={data?.associationName}
-          type={Association_Rank_Mapping[data?.associationRank]}
-          rank={Institution_Rank_Mapping[data?.institutionRank]}
+          type={ASSOCIATION_RANK_EN_TO_KR[data?.associationRank]}
+          rank={INSTITUTION_RANK_EN_TO_KR[data?.institutionRank]}
         />
         {isChairman && (
           <Button
             height="52px"
             variant="mainBlue"
-            onClick={() => handleModal(setIsTypeModalOpen)}
+            onClick={() => setIsTypeModalOpen(true)}
           >
             회원 유형 변경하기
           </Button>
@@ -138,23 +129,17 @@ const CommunityMemberDetailPage = () => {
           <Border style={{ height: '5px' }} />
           <SectionWrapper>
             <label className="title">협회 탈퇴</label>
-            <Expel onClick={() => handleExpel()}>
-              <ExpelIcon />
-              내보내기
-            </Expel>
+            <LogoutButton content="내보내기" onClick={() => handleExpel()} />
           </SectionWrapper>
         </>
       )}
 
-      <Modal
-        isOpen={isTypeModalOpen}
-        onClose={() => handleModal(setIsTypeModalOpen)}
-      >
+      <Modal isOpen={isTypeModalOpen} onClose={() => setIsTypeModalOpen(false)}>
         <ModalWrapper>
-          <ModalXImg onClick={() => handleModal(setIsTypeModalOpen)} />
+          <ModalXImg onClick={() => setIsTypeModalOpen(false)} />
           <ModalTitle>협회 회원 유형 변경</ModalTitle>
           <CheckWrapper>
-            {memberTypes.map((type) => (
+            {ASSOCIATION_MEMBER_TYPES.map((type) => (
               <CheckButton
                 key={type}
                 active={memberType === type}
@@ -169,7 +154,7 @@ const CommunityMemberDetailPage = () => {
             <Button
               height="52px"
               variant="subBlue"
-              onClick={() => handleModal(setIsTypeModalOpen)}
+              onClick={() => setIsTypeModalOpen(false)}
             >
               취소
             </Button>
@@ -220,22 +205,6 @@ const SectionWrapper = styled.div`
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   }
-`;
-
-const Expel = styled.div`
-  height: 18px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray50};
-  background: ${({ theme }) => theme.colors.white};
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
-
-  color: ${({ theme }) => theme.colors.mainOrange};
-  font-size: ${({ theme }) => theme.typography.fontSize.body3};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const Border = styled.div`

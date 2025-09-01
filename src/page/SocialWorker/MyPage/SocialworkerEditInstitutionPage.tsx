@@ -5,7 +5,7 @@ import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { FACILITY_TYPES } from '@/constants/institutionFacilityTypes';
+import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
 import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';

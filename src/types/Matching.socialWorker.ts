@@ -2,11 +2,11 @@ import {
   DAY_EN_TO_KO,
   DAY_LABELS,
   TIME_EN_TO_KO,
-} from '@/constants/day.socialWorker';
+} from '@/constants/socialworker/day.socialWorker';
 import {
   PAY_CODE_TO_LABEL,
   PAY_LABEL_TO_CODE,
-} from '@/constants/payType.socialWorker';
+} from '@/constants/socialworker/payType.socialWorker';
 import { Gender } from '@/types/Elderly';
 
 export interface MatchingRecruitmentPayload {
