@@ -4,13 +4,11 @@ import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import {
-  Gender_Mapping,
-  Salary_Type_Mapping,
-} from '@/constants/caregiverMapping';
+import { SALARY_EN_TO_KR } from '@/constants/common/salary';
+import { GENDER_EN_TO_KR } from '@/constants/common/gender';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
-import { dayFormat } from '@/utils/caregiver';
+import { formatDaysToKR } from '@/utils/caregiverFormatter';
 
 interface CaregiverWorkDetailProps {
   work: MatchingRecruitmentResponse;
@@ -29,14 +27,14 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
     },
     {
       title: '근무요일',
-      detail: dayFormat(work.recruitmentInfo.workDays),
+      detail: formatDaysToKR(work.recruitmentInfo.workDays),
     },
     {
       title: '근무시간',
       detail: `${work.recruitmentInfo.workStartTime} ~ ${work.recruitmentInfo.workEndTime}`,
     },
     {
-      title: Salary_Type_Mapping[work.recruitmentInfo.workSalaryUnitType],
+      title: SALARY_EN_TO_KR[work.recruitmentInfo.workSalaryUnitType],
       detail: work.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR'),
     },
   ];
@@ -44,7 +42,7 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   const elderlyInfo = [
     {
       title: '나이/성별',
-      detail: `${work.elderlyInfo.age}세 ${Gender_Mapping[work.elderlyInfo.gender]}`,
+      detail: `${work.elderlyInfo.age}세 ${GENDER_EN_TO_KR[work.elderlyInfo.gender]}`,
     },
     {
       title: '주소',

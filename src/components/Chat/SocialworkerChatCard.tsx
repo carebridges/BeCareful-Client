@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { GENDER_EN_TO_KR } from '@/constants/common/gender';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { SocialworkerChatList } from '@/types/Socialworker/chat';
 import { textTruncateFormat } from '@/utils/formatText';
@@ -29,7 +29,7 @@ const SocialworkerChatCard = ({ chat }: ChatListCardProps) => {
           <label className="elder">{chat.elderlyInfo.elderlyAge}세</label>
           <label className="elder">|</label>
           <label className="elder">
-            {Gender_Mapping[chat.elderlyInfo.elderlyGender]}
+            {GENDER_EN_TO_KR[chat.elderlyInfo.elderlyGender]}
           </label>
         </div>
       </div>

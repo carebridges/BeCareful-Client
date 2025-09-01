@@ -173,7 +173,6 @@ const History = styled.div`
   }
 
   .history {
-    gap: auto;
     justify-content: space-between;
   }
 

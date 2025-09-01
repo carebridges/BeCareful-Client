@@ -1,5 +1,5 @@
 import { CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateComponentMap';
-import { CERTIFICATE_LABEL } from '@/constants/certificateLabel';
+import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
 import { CertificateFormInput, CertificateKey } from '@/types/CareGiverSignUp';
 import { styled } from 'styled-components';
 

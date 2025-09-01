@@ -1,6 +1,6 @@
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
-import { ASSOCIATION_JOIN_RANKS_LABELS } from '@/constants/associationRank';
+import { ASSOCIATION_JOIN_RANKS_LABELS } from '@/constants/common/associationRank';
 import { AssociationRank } from '@/types/CommunityAssociation';
 import { styled } from 'styled-components';
 import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';

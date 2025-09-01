@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import { PostReadStatusProvider } from '@/contexts/PostReadStatusContext';
-import CommunitySplashPage from '@/page/CommunitySplashPage';
 import { CommunityCreatePage } from '@/page/Community/CommunityCreatePage';
 import { CommunitySignUpPage } from '@/page/SignUp/CommunitySignUpPage';
 import { CommunityJoinPage } from '@/page/Community/CommunityJoinPage';
@@ -24,8 +23,6 @@ const CommunityRoute = () => {
       >
         <main>
           <Routes>
-            <Route path="splash" element={<CommunitySplashPage />} />
-
             <Route path="create" element={<CommunityCreatePage />} />
             {/*서버 수정되면 삭제 예정*/}
             <Route path="signup" element={<CommunitySignUpPage />} />

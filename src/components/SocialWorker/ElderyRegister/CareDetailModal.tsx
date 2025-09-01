@@ -8,7 +8,7 @@ import {
   ModalXImg,
   CareModalButtonWrapper,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
-import { CARE_TYPE_DETAILS } from '@/constants/careTypes.socialWorker';
+import { CARE_TYPE_DETAILS } from '@/constants/socialworker/careTypes.socialWorker';
 import { CareType } from '@/types/Elderly';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 

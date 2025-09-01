@@ -10,7 +10,7 @@ import {
   MAX_VIDEO_SIZE_BYTES,
   MAX_VIDEO_SIZE_GB,
   MAX_VIDEOS_COUNT,
-} from '@/constants/mediaUploadLimit';
+} from '@/constants/community/mediaUploadLimit';
 import { MediaItem } from '@/types/Community/common';
 
 /* useMedia */

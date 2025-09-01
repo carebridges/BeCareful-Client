@@ -29,21 +29,29 @@ import {
 
 /* 홈화면 */
 // 요양보호사 홈 화면 구성 데이터 조회
-export const getCaregiverHomeInfo =
-  async (): Promise<CaregiverHomeResponse> => {
-    const response = await axiosInstance.get('/caregiver/home');
-    return response.data;
-  };
+export const useCaregiverHomeInfoQuery = () => {
+  return useQuery<CaregiverHomeResponse, Error>({
+    queryKey: ['caregiverHomeInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/caregiver/home');
+      return response.data;
+    },
+  });
+};
 
 /* 나의 일자리 */
 // 확정된 일자리의 리스트 반환 - 나의 일자리
-export const getMyWorkList =
-  async (): Promise<CaregiverCompletedMatchingResponse> => {
-    const response = await axiosInstance.get(
-      '/caregiver/my/completed-matching-list',
-    );
-    return response.data;
-  };
+export const useMyWorkListQuery = () => {
+  return useQuery<CaregiverCompletedMatchingResponse, Error>({
+    queryKey: ['caregiverCompletedMatching'],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        '/caregiver/my/completed-matching-list',
+      );
+      return response.data;
+    },
+  });
+};
 
 // 나의 일자리 화면에서 메모 수정
 export const putMemo = async (
@@ -59,11 +67,15 @@ export const putMemo = async (
 
 /* 마이페이지 */
 // 요양보호사 마이페이지 홈 화면 데이터 조회
-export const getCaregiverMyPageInfo =
-  async (): Promise<CaregiverMyResponse> => {
-    const response = await axiosInstance.get('/caregiver/my');
-    return response.data;
-  };
+export const useCaregiverMyPageInfoQuery = () => {
+  return useQuery<CaregiverMyResponse, Error>({
+    queryKey: ['caregiverMypageInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/caregiver/my');
+      return response.data;
+    },
+  });
+};
 
 // 요양보호사 마이페이지 수정
 export const putCaregiverMy = async (myData: CaregiverMyRequest) => {
@@ -72,9 +84,14 @@ export const putCaregiverMy = async (myData: CaregiverMyRequest) => {
 };
 
 // 경력서 조회
-export const getCareer = async (): Promise<CareerResponse> => {
-  const response = await axiosInstance.get('/caregiver/career');
-  return response.data;
+export const useCareerQuery = () => {
+  return useQuery<CareerResponse, Error>({
+    queryKey: ['caregiverCareer'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/caregiver/career');
+      return response.data;
+    },
+  });
 };
 
 // 경력서 등록/수정
@@ -84,9 +101,14 @@ export const putCareer = async (career: CareerRequest) => {
 };
 
 // 신청서 조회
-export const getApplication = async (): Promise<WorkApplicationResponse> => {
-  const response = await axiosInstance.get('/caregiver/work-application');
-  return response.data;
+export const useApplicationQuery = () => {
+  return useQuery<WorkApplicationResponse, Error>({
+    queryKey: ['caregiverApplication'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/caregiver/work-application');
+      return response.data;
+    },
+  });
 };
 
 // 신청서 등록
@@ -100,7 +122,7 @@ export const putApplication = async (application: WorkApplicationRequest) => {
 
 // 일자리 신청 활성화
 export const workApplicationActive = async () => {
-  const response = await axiosInstance.get(
+  const response = await axiosInstance.post(
     '/caregiver/work-application/active',
   );
   return response;
@@ -108,7 +130,7 @@ export const workApplicationActive = async () => {
 
 // 일자리 신청 비활성화
 export const workApplicationInactive = async () => {
-  const response = await axiosInstance.get(
+  const response = await axiosInstance.post(
     '/caregiver/work-application/inactive',
   );
   return response;
@@ -137,19 +159,28 @@ export const useCaregiverLogout = () => {
 
 /* 일자리 */
 // 매칭 공고 리스트 조회
-export const getRecruitmentList = async (): Promise<MatchingListResponse> => {
-  const response = await axiosInstance.get('/matching/caregiver/list');
-  return response.data;
+export const useRecruitmentListQuery = () => {
+  return useQuery<MatchingListResponse, Error>({
+    queryKey: ['caregiverWorkList'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/matching/caregiver/list');
+      return response.data;
+    },
+  });
 };
 
 // 매칭 공고 상세 조회
-export const getRecruitmentDetail = async (
-  recruitmentId: number,
-): Promise<MatchingRecruitmentResponse> => {
-  const response = await axiosInstance.get(
-    `/matching/caregiver/recruitment/${recruitmentId}`,
-  );
-  return response.data;
+export const useRecruitmentDetailQuery = (recruitmentId: number) => {
+  return useQuery<MatchingRecruitmentResponse, Error>({
+    queryKey: ['caregiverRecruitmentDetail', recruitmentId],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        `/matching/caregiver/recruitment/${recruitmentId}`,
+      );
+      return response.data;
+    },
+    enabled: !!recruitmentId,
+  });
 };
 
 // 매칭 공고 거절
@@ -182,28 +213,35 @@ export const postMediate = async (
 
 /* 지원현황 */
 // 지원 현황 조회
-export const getApplicationList = async (
-  matchingApplicationStatus: string,
-): Promise<MatchingMyRecruitmentResponse> => {
-  const response = await axiosInstance.get(
-    '/matching/caregiver/my/recruitment',
-    {
-      params: {
-        matchingApplicationStatus: matchingApplicationStatus,
-      },
+export const useApplicationListQuery = (activeTab: string) => {
+  return useQuery<MatchingMyRecruitmentResponse, Error>({
+    queryKey: ['caregiverApplicationList', activeTab],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        '/matching/caregiver/my/recruitment',
+        {
+          params: {
+            matchingApplicationStatus: activeTab,
+          },
+        },
+      );
+      return response.data;
     },
-  );
-  return response.data;
+  });
 };
 
 // 지원 현황 상세 조회
-export const getApplicationDetail = async (
-  recruitmentId: number,
-): Promise<MatchingMyRecruitmentDetailResponse> => {
-  const response = await axiosInstance.get(
-    `/matching/caregiver/my/recruitment/${recruitmentId}`,
-  );
-  return response.data;
+export const useApplicationDetailQuery = (recruitmentId: number) => {
+  return useQuery<MatchingMyRecruitmentDetailResponse, Error>({
+    queryKey: ['caregiverApplicationDetail', recruitmentId],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        `/matching/caregiver/my/recruitment/${recruitmentId}`,
+      );
+      return response.data;
+    },
+    enabled: !!recruitmentId,
+  });
 };
 
 /* 채팅 */

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
-import { useApplicationDetailQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { useApplicationDetailQuery } from '@/api/caregiver';
 
 const CaregiverApplyDetailPage = () => {
   const { recruitmentId } = useParams();

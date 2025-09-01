@@ -1,103 +1,32 @@
 import styled from 'styled-components';
-import { useCallback, useMemo, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as NoRecentSearch } from '@/assets/icons/community/Search.svg';
 import { ReactComponent as SearchIcon } from '@/assets/icons/Search.svg';
 import { ReactComponent as CloseIcon } from '@/assets/icons/community/CloseCircle.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import PostOverview from '@/components/Community/common/PostOverview';
-import {
-  Board_Type_Mapping,
-  COMMUNITY_BOARDS,
-} from '@/constants/communityBoard';
-import { searchPost } from '@/utils/searchPosts';
-import { useRecentSearches } from '@/hooks/Community/SearchPage/useRecentSearches';
-import { PageableRequest } from '@/types/Community/common';
+import { COMMUNITY_BOARDS_TAB } from '@/constants/community/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useBoardPostings } from '@/hooks/Community/api/useBoardPostings';
-import { useBoardPostList } from '@/hooks/Community/api/useBoardPostList';
+import { useCommunitySearch } from '@/hooks/Community/SearchPage/useCommunitySearch';
 
 const CommunitySearchPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [showRecentSearches, setShowRecentSearches] = useState<boolean>(true);
-
   const {
+    searchTerm,
+    setSearchTerm,
+    showRecentSearches,
+    setShowRecentSearches,
+    selectedBoard,
     recentSearches,
-    updateRecentSearch,
-    handleRemoveRecentSearch,
+    searchResults,
+    handleSearch,
+    handleSearchChange,
+    handleBoardFilterChange,
+    handleRecentSearchClick,
     handleRemoveAllRecentSearch,
-  } = useRecentSearches();
-
-  // 게시판 선택
-  const [selectedBoard, setSelectedBoard] = useState('전체');
-  const handleBoardFilterChange = (board: string) => {
-    setSelectedBoard(board);
-    setShowRecentSearches(false);
-  };
-
-  // 게시판 데이터
-  const pageable: PageableRequest = { page: 0, size: 50, sort: [] };
-  const allBoardData = useBoardPostings(pageable);
-  const { data: boardData } = useBoardPostList(
-    Board_Type_Mapping[selectedBoard],
-    pageable,
-  );
-
-  // 실제 검색할 데이터
-  const selectedBoardData = useMemo(() => {
-    if (selectedBoard === '전체') {
-      // 모든 쿼리의 content를 합쳐서 BoardPostListResponse 형태로 반환
-      const content = allBoardData.every((query) => query.isSuccess)
-        ? allBoardData.flatMap((query) => query.data || [])
-        : [];
-      return content;
-    } else {
-      // 단일 쿼리의 content를 BoardPostListResponse 형태로 반환
-      return boardData || [];
-    }
-  }, [selectedBoard, allBoardData, boardData]);
-
-  // 검색 실행
-  const handleSearch = useCallback(
-    (query: string) => {
-      const trimmedQuery = query.trim();
-
-      if (!trimmedQuery) {
-        return;
-      }
-
-      updateRecentSearch(trimmedQuery);
-      setSearchTerm(trimmedQuery); // 검색어 입력 필드 업데이트
-      setShowRecentSearches(false); // 검색 후 최근 검색어 목록 숨기기
-    },
-    [updateRecentSearch],
-  );
-
-  // 검색 결과
-  const searchResults = useMemo(() => {
-    const trimmedSearchTerm = searchTerm.trim();
-    return searchPost(trimmedSearchTerm, selectedBoardData);
-  }, [searchTerm, selectedBoardData]);
-
-  // 검색어 입력
-  const handleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(e.target.value);
-      setShowRecentSearches(true);
-    },
-    [],
-  );
-
-  // 최근 검색어 클릭
-  const handleRecentSearchClick = useCallback(
-    (query: string) => {
-      setSearchTerm(query);
-      handleSearch(query);
-    },
-    [handleSearch],
-  );
+    handleRemoveRecentSearch,
+  } = useCommunitySearch();
 
   return (
     <Container>
@@ -165,7 +94,7 @@ const CommunitySearchPage = () => {
         ) : (
           <>
             <BoardFilterWrapper>
-              {COMMUNITY_BOARDS.map((board) => (
+              {COMMUNITY_BOARDS_TAB.map((board) => (
                 <Board
                   key={board}
                   active={selectedBoard === board}
@@ -179,15 +108,7 @@ const CommunitySearchPage = () => {
             <PostWrapper>
               {searchResults.map((post) => (
                 <>
-                  <PostOverview
-                    key={post.postId}
-                    post={post}
-                    // boardType={
-                    //   selectedBoard === '전체'
-                    //     ? post.boardType
-                    //     : Board_Type_Mapping[selectedBoard]
-                    // }
-                  />
+                  <PostOverview key={post.postId} post={post} />
                   <Border />
                 </>
               ))}

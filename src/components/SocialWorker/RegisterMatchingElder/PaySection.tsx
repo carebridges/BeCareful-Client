@@ -3,7 +3,7 @@ import { MatchingApplicationDropdown } from '@/components/Matching/MatchingAppli
 import {
   PAY_CODE_TO_LABEL,
   PAY_LABEL_TO_CODE,
-} from '@/constants/payType.socialWorker';
+} from '@/constants/socialworker/payType.socialWorker';
 import { PayCode, PayLabel } from '@/types/Matching.socialWorker';
 
 interface Props {

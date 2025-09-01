@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
-import { caretypeFormat, dayFormat } from '@/utils/caregiver';
-import { Gender_Mapping } from '@/constants/caregiverMapping';
+import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
+import { GENDER_EN_TO_KR } from '@/constants/common/gender';
 import { ChatElderlyInfo, Contract } from '@/types/Common/chat';
 
 interface ChatCardProps {
@@ -34,13 +34,13 @@ const ChatCard = ({
           {
             title: '성함/연령',
             detail: elder
-              ? `${elder?.elderlyName} ${elder?.elderlyAge}세 ${Gender_Mapping[elder?.elderlyGender]}`
+              ? `${elder?.elderlyName} ${elder?.elderlyAge}세 ${GENDER_EN_TO_KR[elder?.elderlyGender]}`
               : '정보 없음',
           },
         ]
       : []),
-    { title: '케어항목', detail: caretypeFormat(items.careTypes, 1) },
-    { title: '근무요일', detail: dayFormat(items.workDays) },
+    { title: '케어항목', detail: formatCaretype(items.careTypes ?? [], 1) },
+    { title: '근무요일', detail: formatDaysToKR(items.workDays ?? []) },
     {
       title: '근무시간',
       detail: `${items.workStartTime} ~ ${items.workEndTime}`,

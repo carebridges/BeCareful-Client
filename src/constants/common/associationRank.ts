@@ -1,13 +1,13 @@
 import { AssociationRank } from '@/types/Community/common';
 
-export const Association_Rank_Mapping: { [key: string]: string } = {
+export const ASSOCIATION_RANK_EN_TO_KR: { [key: string]: string } = {
   CHAIRMAN: '회장',
   EXECUTIVE: '임원진',
   MEMBER: '회원',
   none: '회원',
 };
 
-export const API_Association_Rank_Mapping: {
+export const ASSOCIATION_RANK_KR_TO_EN: {
   [key: string]: AssociationRank;
 } = {
   회장: 'CHAIRMAN',
@@ -26,3 +26,5 @@ export const ASSOCIATION_JOIN_RANKS_LABELS = {
   EXECUTIVE: '임원진 입니다.',
   MEMBER: '회원 입니다.',
 } as Partial<Record<AssociationRank, string>>;
+
+export const ASSOCIATION_MEMBER_TYPES = ['임원진', '회원'];

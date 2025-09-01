@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { CheckBoxSelect } from '@/components/common/CheckBox/CheckBoxSelect';
-import { DAY_LABELS } from '@/constants/day.socialWorker';
+import { DAY_LABELS } from '@/constants/socialworker/day.socialWorker';
 
 interface Props {
   selectedDays: string[];

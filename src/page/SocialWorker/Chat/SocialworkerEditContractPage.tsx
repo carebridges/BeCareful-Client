@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -14,67 +13,45 @@ import { DaySelectSection } from '@/components/SocialWorker/RegisterMatchingElde
 import { TimeSelectSection } from '@/components/SocialWorker/RegisterMatchingElder/TimeSelectSection';
 import { PaySection } from '@/components/SocialWorker/RegisterMatchingElder/PaySection';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { apiDayFormat } from '@/utils/caregiver';
+import { useContractForm } from '@/hooks/Socialworker/useContractForm';
+import { formatDaysToEN } from '@/utils/caregiverFormatter';
 
 const SocialworkerEditContractPage = () => {
   const { contractId } = useParams<{ contractId: string }>();
   const location = useLocation();
-  const { matchingId } = (location.state as { matchingId?: number }) || {};
-  const confirmedMatchingId: number = matchingId as number;
+  const { matchingId } = location.state as { matchingId?: number };
 
   const { handleGoBack, handleNavigateState } = useHandleNavigate();
 
   const { data } = useGetSocialworkerContract(Number(contractId));
+  // const matchingId = data?.matchingId;
   const { mutate: updateContract } = usePostSocialworkerContract();
 
-  const [isChanged, setIsChanged] = useState(false);
-
-  const [selectDay, setSelectDay] = useState<string[]>([]);
-  const [startTime, setStartTime] = useState('00:00');
-  const [endTime, setEndTime] = useState('00:00');
-  const [careTypes, setCareTypes] = useState<string[]>([]);
-  const [selectedPayType, setSelectedPayType] = useState<
-    'HOUR' | 'DAY' | 'MONTH' | 'YEAR'
-  >('HOUR');
-  const [workSalaryAmount, setWorkSalaryAmount] = useState('');
-
-  useEffect(() => {
-    if (data) {
-      setSelectDay(data.workDays);
-      setStartTime(data.workStartTime);
-      setEndTime(data.workEndTime);
-      const extractedCareTypes = data.careInfoList.map(
-        (careInfo) => careInfo.careType,
-      );
-      setCareTypes(extractedCareTypes);
-      setWorkSalaryAmount(data.workSalaryAmount.toString());
-    }
-  }, [data]);
-
-  const handleSelectDay = (id: string) => {
-    setSelectDay((prev) =>
-      prev.includes(id) ? prev.filter((day) => day !== id) : [...prev, id],
-    );
-    setIsChanged(true);
-  };
-
-  const handleCareTypeChange = (careType: string) => {
-    setCareTypes((prev) =>
-      prev.includes(careType)
-        ? prev.filter((type) => type !== careType)
-        : [...prev, careType],
-    );
-    setIsChanged(true);
-  };
+  const {
+    selectDay,
+    startTime,
+    setStartTime,
+    endTime,
+    setEndTime,
+    selectedPayType,
+    setSelectedPayType,
+    workSalaryAmount,
+    setWorkSalaryAmount,
+    careTypes,
+    handleCareTypeChange,
+    handleSelectDay,
+    isChanged,
+    setIsChanged,
+  } = useContractForm(data);
 
   const handleEditBtnClick = async () => {
-    if (!confirmedMatchingId || !Number.isFinite(confirmedMatchingId)) {
+    if (!matchingId || !Number.isFinite(matchingId)) {
       console.error('유효하지 않은 matchingId');
       return;
     }
     const contractData: SocialworkerContractEditRequest = {
-      matchingId: confirmedMatchingId,
-      workDays: apiDayFormat(selectDay),
+      matchingId: matchingId,
+      workDays: formatDaysToEN(selectDay),
       workStartTime: startTime,
       workEndTime: endTime,
       workSalaryUnitType: selectedPayType,
@@ -82,10 +59,10 @@ const SocialworkerEditContractPage = () => {
       workStartDate: '',
       careTypes: careTypes,
     };
-    console.log(contractData);
+    // console.log(contractData);
     updateContract(contractData, {
       onSuccess: () => {
-        handleNavigateState(`/socialworker/chat/${confirmedMatchingId}`, {
+        handleNavigateState(`/socialworker/chat/${matchingId}`, {
           state: { finalConfirm: true },
         });
       },

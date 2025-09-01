@@ -17,7 +17,7 @@ const LandingPage = () => {
 
   const { handleNavigate } = useHandleNavigate();
   const handleToCommunity = () => {
-    handleNavigate('/community/splash');
+    handleNavigate('/community');
   };
 
   const [isScrolled, setIsScrolled] = useState(false);

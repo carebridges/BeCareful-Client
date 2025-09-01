@@ -1,4 +1,4 @@
-import { MAX_RECENT_SEARCHES } from '@/constants/communitySearch';
+import { MAX_RECENT_SEARCHES } from '@/constants/community/communitySearch';
 import { useCallback, useEffect, useState } from 'react';
 
 /* CommunitySearchPage */

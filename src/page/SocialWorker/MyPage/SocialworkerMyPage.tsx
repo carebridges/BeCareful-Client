@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
-import { ReactComponent as LogoutIcon } from '@/assets/icons/caregiver/my/Logout.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import ProfileCard from '@/components/shared/ProfileCard';
@@ -11,71 +8,44 @@ import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { Gender_Mapping } from '@/constants/caregiverMapping';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
-import { Association_Rank_Mapping } from '@/constants/associationRank';
+import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
+import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useDeleteUserInfo } from '@/hooks/useDeleteUserInfo';
 import {
   useDeleteSocialworker,
   useGetSocialWorkerMy,
   useSocialworkerLogout,
 } from '@/api/socialworker';
+import {
+  ExpelButton,
+  LogoutButton,
+} from '@/components/common/Button/LogoutButton';
 
 const SocialworkerMyPage = () => {
-  const userInfo = useRecoilValue(currentUserInfo);
-  const isNone = userInfo.associationRank === 'NONE';
-  const isMember = userInfo.associationRank === 'MEMBER';
-
   const { handleNavigate } = useHandleNavigate();
 
   const { data } = useGetSocialWorkerMy();
+  const isNone = data?.socialWorkerInfo.associationRank === 'NONE';
+  const isMember = data?.socialWorkerInfo.associationRank === 'MEMBER';
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
 
-  const handleModal = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>,
-    before?: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    if (before) {
-      before(false);
-    }
-    setter((prev) => !prev);
-  };
-
   const { mutate: logout } = useSocialworkerLogout();
   const { mutate: leave } = useDeleteSocialworker();
-  const setUserInfo = useSetRecoilState(currentUserInfo);
+  const deleteUserInfo = useDeleteUserInfo();
 
   const handleLogout = () => {
     logout(undefined, {
-      onSuccess: () => {
-        localStorage.clear();
-        setUserInfo({
-          realName: '',
-          nickName: '',
-          institutionRank: '',
-          associationRank: '',
-        });
-        handleModal(setIsLogoutModalOpen);
-        handleNavigate('/');
-      },
+      onSuccess: deleteUserInfo,
     });
   };
 
   const handleWithdraw = () => {
     leave(undefined, {
-      onSuccess: () => {
-        localStorage.clear();
-        setUserInfo({
-          realName: '',
-          nickName: '',
-          institutionRank: '',
-          associationRank: '',
-        });
-        handleModal(setIsWithdrawModalOpen);
-        handleNavigate('/');
-      },
+      onSuccess: deleteUserInfo,
     });
   };
 
@@ -91,13 +61,13 @@ const SocialworkerMyPage = () => {
           // point={1500}
           phoneNumber={data?.socialWorkerInfo.phoneNumber ?? ''}
           age={data?.socialWorkerInfo.age ?? 0}
-          gender={Gender_Mapping[data?.socialWorkerInfo.gender ?? 'FEMALE']}
+          gender={GENDER_EN_TO_KR[data?.socialWorkerInfo.gender ?? 'FEMALE']}
         />
 
         <BelongCard
           title={data?.institutionInfo.institutionName ?? ''}
           rank={
-            Institution_Rank_Mapping[
+            INSTITUTION_RANK_EN_TO_KR[
               data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
             ]
           }
@@ -107,7 +77,7 @@ const SocialworkerMyPage = () => {
           <BelongCard
             title={data?.associationName ?? ''}
             rank={
-              Association_Rank_Mapping[
+              ASSOCIATION_RANK_EN_TO_KR[
                 data?.socialWorkerInfo.associationRank ?? 'MEMBER'
               ]
             }
@@ -154,12 +124,12 @@ const SocialworkerMyPage = () => {
             <AssociationCard
               association={data?.associationName ?? ''}
               type={
-                Association_Rank_Mapping[
+                ASSOCIATION_RANK_EN_TO_KR[
                   data?.socialWorkerInfo.associationRank ?? 'MEMBER'
                 ]
               }
               rank={
-                Institution_Rank_Mapping[
+                INSTITUTION_RANK_EN_TO_KR[
                   data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
                 ]
               }
@@ -181,45 +151,36 @@ const SocialworkerMyPage = () => {
 
       <SectionWrapper>
         <label className="section-title">계정</label>
-        <Logout isRed={true} onClick={() => handleModal(setIsLogoutModalOpen)}>
-          <LogoutIcon />
-          로그아웃
-        </Logout>
-        <Logout
-          isRed={false}
-          onClick={() => handleModal(setIsWithdrawModalOpen)}
-        >
-          <LogoutIcon />
-          탈퇴하기
-        </Logout>
+        <LogoutButton onClick={() => setIsLogoutModalOpen(true)} />
+        <ExpelButton onClick={() => setIsWithdrawModalOpen(true)} />
       </SectionWrapper>
 
       <Modal
         isOpen={isLogoutModalOpen}
-        onClose={() => handleModal(setIsLogoutModalOpen)}
+        onClose={() => setIsLogoutModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsLogoutModalOpen)}
+          onClose={() => setIsLogoutModalOpen(false)}
           title="로그아웃 하시겠습니까?"
           detail="현재 계정에서 로그아웃됩니다. 계속하시겠습니까?"
           left="취소"
           right="로그아웃"
-          handleLeftBtnClick={() => handleModal(setIsLogoutModalOpen)}
+          handleLeftBtnClick={() => setIsLogoutModalOpen(false)}
           handleRightBtnClick={handleLogout}
         />
       </Modal>
 
       <Modal
         isOpen={isWithdrawModalOpen}
-        onClose={() => handleModal(setIsWithdrawModalOpen)}
+        onClose={() => setIsWithdrawModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsWithdrawModalOpen)}
+          onClose={() => setIsWithdrawModalOpen(false)}
           title="정말 탈퇴 하시겠습니까?"
           detail={'돌봄다리 통합 서비스에서 탈퇴됩니다.\n계속하시겠습니까?'}
           left="취소"
           right="탈퇴하기"
-          handleLeftBtnClick={() => handleModal(setIsWithdrawModalOpen)}
+          handleLeftBtnClick={() => setIsWithdrawModalOpen(false)}
           handleRightBtnClick={handleWithdraw}
         />
       </Modal>
@@ -263,24 +224,6 @@ const SectionWrapper = styled.div`
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
-`;
-
-const Logout = styled.div<{ isRed: boolean }>`
-  height: 18px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray50};
-  background: ${({ theme }) => theme.colors.white};
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-
-  color: ${({ theme, isRed }) =>
-    isRed ? theme.colors.mainOrange : theme.colors.gray500};
-  font-size: ${({ theme }) => theme.typography.fontSize.body3};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const Border = styled.div`

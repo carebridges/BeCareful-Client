@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
-import { Salary_Type_Mapping } from '@/constants/caregiverMapping';
+import { SALARY_EN_TO_KR } from '@/constants/common/salary';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Recruitment } from '@/types/Caregiver/common';
-import { caretypeFormat, dayFormat } from '@/utils/caregiver';
+import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 
 type ColorKey = keyof typeof colors;
 interface CaregiverWorkCardProps {
@@ -28,14 +28,14 @@ const CaregiverWorkCard = ({
   const applyInfo = [
     {
       title: '케어항목',
-      detail: caretypeFormat(
+      detail: formatCaretype(
         recruitment.recruitmentInfo.careTypes.map((itme) => itme.careType),
         2,
       ),
     },
     {
       title: '근무요일',
-      detail: dayFormat(recruitment.recruitmentInfo.workDays),
+      detail: formatDaysToKR(recruitment.recruitmentInfo.workDays),
     },
     {
       title: '근무시간',
@@ -77,7 +77,7 @@ const CaregiverWorkCard = ({
 
       <Salary>
         <label className="type">
-          {Salary_Type_Mapping[recruitment.recruitmentInfo.workSalaryUnitType]}
+          {SALARY_EN_TO_KR[recruitment.recruitmentInfo.workSalaryUnitType]}
         </label>
         <label className="amount">
           {recruitment.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR')}

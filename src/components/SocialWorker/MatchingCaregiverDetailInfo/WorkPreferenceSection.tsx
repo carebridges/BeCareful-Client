@@ -3,7 +3,10 @@ import {
   DetailContentContainer,
   Title,
 } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/MatchingCaregiverDetailInfo.styles';
-import { DAY_EN_TO_KO, TIME_EN_TO_KO } from '@/constants/day.socialWorker';
+import {
+  DAY_EN_TO_KO,
+  TIME_EN_TO_KO,
+} from '@/constants/socialworker/day.socialWorker';
 
 interface WorkLocation {
   siDo: string;

@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as Dots } from '@/assets/icons/community/Dots.svg';
 import { ReactComponent as Share } from '@/assets/icons/community/Share.svg';
 import { ReactComponent as Send } from '@/assets/icons/community/ReplySend.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
@@ -15,37 +13,31 @@ import BottomSheet from '@/components/Community/common/BottomSheet';
 import { Button } from '@/components/common/Button/Button';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import {
-  API_Board_Type_Param,
-  Board_Type_Param_KOR,
-} from '@/constants/communityBoard';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
-import { useComments, useDeletePost, usePostDetail } from '@/api/community';
+import { BOARD_PARAM_TO_KR } from '@/constants/community/communityBoard';
+import { useComments } from '@/api/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useLinkCopy } from '@/hooks/Community/PostPage/useLinkCopy';
 import { useCommentSend } from '@/hooks/Community/PostPage/useCommentSend';
-import { isRecentDate } from '@/hooks/Community/isRecentDate';
 import { useFileHandling } from '@/hooks/Community/PostPage/useFileHandling';
 import { useKakaoShare } from '@/hooks/Community/PostPage/useKakaoShare';
 import { usePostActions } from '@/hooks/Community/PostPage/usePostActions';
-import { formatDateTime } from '@/utils/formatTime';
+import { usePostData } from '@/hooks/Community/PostPage/usePostData';
+import TitleSection from '@/components/Community/post/TitleSection';
+import CommentsSection from '@/components/Community/post/CommentsSection';
 
 const CommunityPostPage = () => {
-  const { handleGoBack, handleNavigate } = useHandleNavigate();
+  const { handleGoBack } = useHandleNavigate();
 
-  const { boardType: boardType, postId: postIdParam } = useParams<{
-    boardType: string;
-    postId: string;
-  }>();
-  const postId = postIdParam ? parseInt(postIdParam, 10) : 0;
-
-  const apiBoardType = API_Board_Type_Param[boardType ?? 'association'];
-
-  // 게시글 상세 조회
-  const { data: post, error: postDetailError } = usePostDetail(
-    apiBoardType,
+  const {
+    boardType,
     postId,
-  );
+    apiBoardType,
+    post,
+    postDetailError,
+    handleEditPost,
+    handleDeletePost,
+  } = usePostData();
+
   // 댓글 조회
   const { data: comments, error: commentsError } = useComments(
     apiBoardType,
@@ -67,13 +59,6 @@ const CommunityPostPage = () => {
     }
   }, [postId, markAsRead, currentPostIsRead]);
 
-  const handleEditPost = () => {
-    if (post && post.postId) {
-      handleNavigate(`/community/edit/${boardType}/${post.postId}`);
-    }
-  };
-  const { mutate: handleDeletetPost } = useDeletePost(apiBoardType, postId);
-
   // 게시글 수정, 삭제하기
   const {
     isActionSheetOpen,
@@ -85,10 +70,7 @@ const CommunityPostPage = () => {
     handleActionSheetConfirm,
   } = usePostActions({
     onEditSuccess: handleEditPost,
-    onDelete: () => {
-      handleDeletetPost();
-      handleNavigate('/community');
-    },
+    onDelete: handleDeletePost,
     post: post,
   });
 
@@ -114,60 +96,20 @@ const CommunityPostPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={
-          <NavCenter>
-            {Board_Type_Param_KOR[boardType ?? 'association']}
-          </NavCenter>
+          <NavCenter>{BOARD_PARAM_TO_KR[boardType ?? 'association']}</NavCenter>
         }
         color="white"
       />
 
-      <TitleWrapper>
-        <Title>
-          {post?.isImportant && <Tag>필독</Tag>}
-          <label>{post?.title}</label>
-        </Title>
-
-        <Writer>
-          <div className="writer-info">
-            <img src={post?.author.institutionImageUrl} />
-            <div className="writer-wrapper">
-              <div className="wrapper">
-                <label className="writer">{post?.author.authorName}</label>
-                <label className="writer">·</label>
-                <label className="writer">
-                  {post?.author &&
-                    Institution_Rank_Mapping[
-                      post?.author.authorInstitutionRank
-                    ]}
-                </label>
-              </div>
-              <div className="wrapper">
-                {post?.postedDate && (
-                  <>
-                    <label className="date">
-                      {formatDateTime(post.postedDate)}
-                    </label>
-                    {isRecentDate(post.postedDate, 3) && (
-                      <label className="new">N</label>
-                    )}
-                  </>
-                )}
-                <label className="date">수정됨</label>
-                <label className="date">조회 101</label>
-              </div>
-            </div>
-          </div>
-          {post?.isMyPost && <Dots onClick={openActionSheet} />}
-        </Writer>
-      </TitleWrapper>
+      <TitleSection post={post} onClick={openActionSheet} />
 
       {post?.fileUList && post.fileUList.length > 0 && (
         <Files>
-          {post.fileUList.map((fileUrl, index) => {
+          {post.fileUList.map((fileUrl) => {
             const fileName = fileUrl.fileName;
             return (
               <label
-                key={`file-${index}`}
+                key={fileUrl.id}
                 onClick={() => handleFileDownload(fileUrl.mediaUrl)}
               >
                 {fileName}
@@ -190,59 +132,22 @@ const CommunityPostPage = () => {
           {post?.imageList &&
             post?.imageList.map((image, index) => (
               <img
-                key={`image-${index}`}
+                key={image.id}
                 src={image.mediaUrl}
                 alt={`게시글 이미지 ${index + 1}`}
               />
             ))}
           {post?.videoList &&
-            post?.videoList.map((video, index) => (
-              <video key={`video-${index}`} src={video.mediaUrl} controls />
+            post?.videoList.map((video) => (
+              <video key={video.id} src={video.mediaUrl} controls />
             ))}
         </MediaWrapper>
       </ContentWrapper>
 
-      <Border />
-
       <SectionBorder />
 
       <ReplyWrapper>
-        <div className="replys">
-          <label
-            className="content"
-            style={{ display: 'block', padding: '14px 0px' }}
-          >
-            댓글 <span>{comments?.length}</span>
-          </label>
-          {comments?.map((comment) => (
-            // <React.Fragment key={comment.commentId}>
-            <React.Fragment key={comment.author.authorId}>
-              <div className="reply">
-                <img src={comment.author.institutionImageUrl} />
-                <div className="labels">
-                  <div className="writer-wrapper">
-                    <label className="writer">
-                      {comment.author.authorName}
-                    </label>
-                    <label className="writer">·</label>
-                    <label className="writer">
-                      {
-                        Institution_Rank_Mapping[
-                          comment.author.authorInstitutionRank
-                        ]
-                      }
-                    </label>
-                  </div>
-                  <label className="content">{comment.content}</label>
-                  <label className="date">
-                    {formatDateTime(comment.createdAt)}
-                  </label>
-                </div>
-              </div>
-              <Border />
-            </React.Fragment>
-          ))}
-        </div>
+        <CommentsSection comments={comments} />
 
         <SectionBorder />
 
@@ -328,15 +233,12 @@ const CommunityPostPage = () => {
         </DeleteButtons>
       </BottomSheet>
 
-      <Modal
-        isOpen={isLinkModalOpen}
-        onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
-      >
+      <Modal isOpen={isLinkModalOpen} onClose={() => setIsLinkModalOpen(false)}>
         <ModalLimit
           title="링크가 복사되었어요."
           detail={'게시글 링크가 복사되었어요.\n링크를 붙여넣기할 수 있어요.'}
-          onClose={() => setIsLinkModalOpen(!isLinkModalOpen)}
-          handleBtnClick={() => setIsLinkModalOpen(!isLinkModalOpen)}
+          onClose={() => setIsLinkModalOpen(false)}
+          handleBtnClick={() => setIsLinkModalOpen(false)}
         />
       </Modal>
     </Container>
@@ -359,101 +261,6 @@ const NavCenter = styled.div`
   color: ${({ theme }) => theme.colors.black};
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-`;
-
-const TitleWrapper = styled.div`
-  padding-top: 16px;
-  display: flex;
-  flex-direction: column;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
-`;
-
-const Title = styled.div`
-  display: flex;
-  gap: 8px;
-
-  label {
-    color: ${({ theme }) => theme.colors.black};
-    font-size: ${({ theme }) => theme.typography.fontSize.title3};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  }
-`;
-
-const Tag = styled.span`
-  display: flex;
-  width: 60px;
-  height: 20px;
-  padding: 4px 8px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
-  background: ${({ theme }) => theme.colors.subBlue};
-
-  color: ${({ theme }) => theme.colors.mainBlue};
-  font-size: ${({ theme }) => theme.typography.fontSize.title5};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-`;
-
-const Writer = styled.div`
-  padding: 20px 0;
-  display: flex;
-  justify-content: space-between;
-
-  .writer-info {
-    display: flex;
-    gap: 8px;
-  }
-
-  img {
-    width: 47px;
-    height: 47px;
-    border-radius: 50%;
-    border: 1px solid ${({ theme }) => theme.colors.gray100};
-    object-fit: cover;
-  }
-
-  svg {
-    width: 22px;
-    height: 22px;
-    cursor: pointer;
-  }
-
-  .writer-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .wrapper {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-  }
-
-  .writer {
-    color: ${({ theme }) => theme.colors.black};
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .date {
-    color: ${({ theme }) => theme.colors.gray600};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .new {
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: ${({ theme }) => theme.colors.mainOrange};
-    color: ${({ theme }) => theme.colors.subOrange};
-    font-size: 9.1px;
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  }
 `;
 
 const Files = styled.div`
@@ -544,58 +351,6 @@ const ReplyWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  .replys {
-    margin-bottom: 105px;
-  }
-
-  label {
-    color: ${({ theme }) => theme.colors.black};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  span {
-    color: ${({ theme }) => theme.colors.mainBlue};
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .content {
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-  }
-
-  .reply {
-    padding: 9px 0;
-    display: flex;
-    gap: 8px;
-  }
-
-  img {
-    border-radius: 50%;
-    border: 1px solid ${({ theme }) => theme.colors.gray100};
-    width: 32px;
-    height: 32px;
-    object-fit: cover;
-  }
-
-  .labels {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .writer-wrapper {
-    display: flex;
-    gap: 4px;
-  }
-
-  .writer {
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  }
-
-  .date {
-    font-size: ${({ theme }) => theme.typography.fontSize.body3};
-  }
-
   svg {
     cursor: pointer;
   }
@@ -633,11 +388,6 @@ const Reply = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray300};
   }
-`;
-
-const Border = styled.div`
-  height: 1px;
-  background: ${({ theme }) => theme.colors.gray50};
 `;
 
 const SectionBorder = styled.div`

@@ -2,25 +2,20 @@ import styled from 'styled-components';
 import { ReactComponent as Caregiver } from '@/assets/icons/socialworker/home/Caregiver.svg';
 import { ReactComponent as Applicant } from '@/assets/icons/socialworker/home/Applicant.svg';
 import { ReactComponent as ApplyRate } from '@/assets/icons/socialworker/home/ApplyRate.svg';
+import { ApplicationStatistics } from '@/types/Socialworker/home';
 
 interface ApplySectionProps {
-  averageAppliedCaregiver: number;
-  appliedCaregiverCount: number;
-  averageApplyingRate: number;
+  data: ApplicationStatistics | undefined;
 }
 
-const ApplySection = ({
-  averageAppliedCaregiver,
-  appliedCaregiverCount,
-  averageApplyingRate,
-}: ApplySectionProps) => {
+const ApplySection = ({ data }: ApplySectionProps) => {
   return (
     <Apply>
       <div className="apply">
         <div className="left">
           <label className="apply-title">현재 지원한 요양보호사</label>
           <label className="number">
-            {averageAppliedCaregiver}
+            {data?.averageAppliedCaregiver}
             <span className="unit">명</span>
           </label>
         </div>
@@ -36,7 +31,7 @@ const ApplySection = ({
               지원자
             </label>
             <label className="number">
-              {appliedCaregiverCount}
+              {data?.appliedCaregiverCount}
               <span className="unit">명</span>
             </label>
           </div>
@@ -51,7 +46,7 @@ const ApplySection = ({
               지원률
             </label>
             <label className="number">
-              {averageApplyingRate}
+              {data?.averageApplyingRate}
               <span className="unit">%</span>
             </label>
           </div>

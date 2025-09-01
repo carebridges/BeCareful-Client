@@ -1,5 +1,5 @@
-import { ASSOCIATION_RANKS } from '@/constants/associationRank';
-import { CommunityAccessStatusValue } from '@/constants/communityAssociation';
+import { ASSOCIATION_RANKS } from '@/constants/common/associationRank';
+import { CommunityAccessStatusValue } from '@/constants/community/communityAssociation';
 
 export interface AssociationWholeList {
   associationId: number;

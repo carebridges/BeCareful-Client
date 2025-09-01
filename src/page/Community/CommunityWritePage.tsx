@@ -16,10 +16,10 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import {
-  API_Board_Type_Param,
-  Board_Type_Param_KOR,
+  BOARD_PARAM_TO_EN,
+  BOARD_PARAM_TO_KR,
   COMMUNITY_BOARDS_LIST,
-} from '@/constants/communityBoard';
+} from '@/constants/community/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
@@ -39,10 +39,10 @@ const CommunityWritePage = () => {
   const postId = postIdParam ? parseInt(postIdParam, 10) : 0;
   const isEditMode = !!postId;
   const boardType = isEditMode
-    ? Board_Type_Param_KOR[boardTypeParam || '']
-    : Board_Type_Param_KOR[searchParams.get('boardType') || ''];
+    ? BOARD_PARAM_TO_KR[boardTypeParam || '']
+    : BOARD_PARAM_TO_KR[searchParams.get('boardType') || ''];
   const { data: initialData } = usePostDetail(
-    API_Board_Type_Param[boardTypeParam || ''],
+    BOARD_PARAM_TO_EN[boardTypeParam || ''],
     postId,
   );
 
@@ -162,7 +162,7 @@ const CommunityWritePage = () => {
       <NavBar
         left={
           <Close
-            onClick={() => setIsCloseModalOpen(!isCloseModalOpen)}
+            onClick={() => setIsCloseModalOpen(true)}
             style={{ cursor: 'pointer' }}
           />
         }
@@ -178,7 +178,7 @@ const CommunityWritePage = () => {
             </button> */}
             <button
               className="post"
-              onClick={() => setIsPostModalOpen(!isPostModalOpen)}
+              onClick={() => setIsPostModalOpen(true)}
               disabled={!isActive}
             >
               <Post className="post-svg" />
@@ -272,7 +272,7 @@ const CommunityWritePage = () => {
             multiple // 여러 파일 선택 가능하도록 설정
             accept=".pdf, .doc, .docx, .hwp" // 특정 파일 형식만 허용
           />
-          <LinkIcon onClick={() => setIsUrlSheetOpen(!isUrlSheetOpen)} />
+          <LinkIcon onClick={() => setIsUrlSheetOpen(true)} />
         </div>
       </Bottom>
 
@@ -285,40 +285,34 @@ const CommunityWritePage = () => {
         />
       </Modal>
 
-      <Modal
-        isOpen={isSaveModalOpen}
-        onClose={() => setIsSaveModalOpen(!isSaveModalOpen)}
-      >
+      <Modal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)}>
         <ModalButtons
           title="게시물이 임시저장 되었습니다."
           detail="작성 중인 내용은 안전하게 저장되었습니다."
-          onClose={() => setIsSaveModalOpen(!isSaveModalOpen)}
+          onClose={() => setIsSaveModalOpen(false)}
           left="뒤로"
           right="계속 작성하기"
-          handleLeftBtnClick={() => setIsSaveModalOpen(!isSaveModalOpen)}
-          handleRightBtnClick={() => setIsSaveModalOpen(!isSaveModalOpen)}
+          handleLeftBtnClick={() => setIsSaveModalOpen(false)}
+          handleRightBtnClick={() => setIsSaveModalOpen(false)}
         />
       </Modal>
 
       <Modal
         isOpen={isCloseModalOpen}
-        onClose={() => setIsCloseModalOpen(!isCloseModalOpen)}
+        onClose={() => setIsCloseModalOpen(false)}
       >
         <ModalButtons
           title="페이지에서 나가시겠습니까?"
           detail="지금까지 작성한 내용이 모두 사라집니다."
-          onClose={() => setIsCloseModalOpen(!isCloseModalOpen)}
+          onClose={() => setIsCloseModalOpen(false)}
           left="계속 작성하기"
           right="나가기"
-          handleLeftBtnClick={() => setIsCloseModalOpen(!isCloseModalOpen)}
+          handleLeftBtnClick={() => setIsCloseModalOpen(false)}
           handleRightBtnClick={() => handleNavigate('/community')}
         />
       </Modal>
 
-      <Modal
-        isOpen={isPostModalOpen}
-        onClose={() => setIsPostModalOpen(!isPostModalOpen)}
-      >
+      <Modal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)}>
         <ModalButtons
           title={
             isEditMode
@@ -330,17 +324,17 @@ const CommunityWritePage = () => {
               ? ''
               : '게시물이 등록되면 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.'
           }
-          onClose={() => setIsPostModalOpen(!isPostModalOpen)}
+          onClose={() => setIsPostModalOpen(false)}
           left="취소"
           right={isEditMode ? '수정하기' : '등록하기'}
-          handleLeftBtnClick={() => setIsPostModalOpen(!isPostModalOpen)}
+          handleLeftBtnClick={() => setIsPostModalOpen(false)}
           handleRightBtnClick={handlePostBtnClick}
         />
       </Modal>
 
       <BottomSheet
         isOpen={isUrlSheetOpen}
-        setIsOpen={() => setIsUrlSheetOpen(!isUrlSheetOpen)}
+        setIsOpen={setIsUrlSheetOpen}
         title="URL을 입력해 주세요."
         titleStar={true}
       >
@@ -354,7 +348,7 @@ const CommunityWritePage = () => {
             width="100%"
             height="52px"
             variant="subBlue"
-            onClick={() => setIsUrlSheetOpen(!isUrlSheetOpen)}
+            onClick={() => setIsUrlSheetOpen(false)}
           >
             취소
           </Button>
@@ -362,7 +356,7 @@ const CommunityWritePage = () => {
             width="100%"
             height="52px"
             variant="mainBlue"
-            onClick={() => setIsUrlSheetOpen(!isUrlSheetOpen)}
+            onClick={() => setIsUrlSheetOpen(false)}
           >
             확인
           </Button>

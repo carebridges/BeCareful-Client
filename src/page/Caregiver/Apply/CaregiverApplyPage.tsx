@@ -5,7 +5,7 @@ import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useApplicationListQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { useApplicationListQuery } from '@/api/caregiver';
 
 const CaregiverApplyPage = () => {
   const { handleNavigate } = useHandleNavigate();

@@ -1,26 +1,21 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
+import { MatchingStatistics } from '@/types/Socialworker/home';
 
 type ColorKey = keyof typeof colors;
 
 interface MatchingSectionProps {
-  matchingProcessingCount: number;
-  recentlyMatchedCount: number;
-  totalMatchingCompletedCount: number;
+  data: MatchingStatistics | undefined;
 }
 
-const MatchingSection = ({
-  matchingProcessingCount,
-  recentlyMatchedCount,
-  totalMatchingCompletedCount,
-}: MatchingSectionProps) => {
+const MatchingSection = ({ data }: MatchingSectionProps) => {
   return (
     <Matching>
       <div className="matching">
         <Circle color="mainGreen" />
         <label className="status">진행중</label>
         <label className="number">
-          {matchingProcessingCount}
+          {data?.matchingProcessingCount}
           <span className="unit">건</span>
         </label>
       </div>
@@ -29,7 +24,7 @@ const MatchingSection = ({
         <Circle color="mainOrange" />
         <label className="status">최근 완료</label>
         <label className="number">
-          {recentlyMatchedCount}
+          {data?.recentlyMatchedCount}
           <span className="unit">건</span>
         </label>
       </div>
@@ -38,7 +33,7 @@ const MatchingSection = ({
         <Circle color="mainBlue" />
         <label className="status">전체 매칭</label>
         <label className="number">
-          {totalMatchingCompletedCount}
+          {data?.totalMatchingCompletedCount}
           <span className="unit">건</span>
         </label>
       </div>

@@ -3,6 +3,7 @@ import { AuthorInfo } from '@/types/Community/common';
 /* 댓글 */
 // 댓글 항목
 export interface Comment {
+  commentId: number;
   content: string;
   createdAt: string;
   author: AuthorInfo;

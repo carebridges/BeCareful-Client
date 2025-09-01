@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
-import { Board_Type_Param } from '@/constants/communityBoard';
+import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
+import { BOARD_EN_TO_PARAM } from '@/constants/community/communityBoard';
 import { PostListItem } from '@/types/Community/post';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
@@ -13,7 +13,7 @@ interface PostOverviewProps {
 }
 
 const PostOverview = ({ post }: PostOverviewProps) => {
-  const { handleNavigateState } = useHandleNavigate();
+  const { handleNavigate } = useHandleNavigate();
 
   const { readStatuses } = usePostReadStatus();
   const isRead = readStatuses[post.postId] || false;
@@ -21,8 +21,8 @@ const PostOverview = ({ post }: PostOverviewProps) => {
   return (
     <Container
       onClick={() => {
-        handleNavigateState(
-          `/community/${Board_Type_Param[post.boardType]}/${post.postId}`,
+        handleNavigate(
+          `/community/${BOARD_EN_TO_PARAM[post.boardType]}/${post.postId}`,
         );
       }}
     >
@@ -32,7 +32,7 @@ const PostOverview = ({ post }: PostOverviewProps) => {
           <label>{post.author.authorName}</label>
           <label>·</label>
           <label>
-            {Institution_Rank_Mapping[post.author.authorInstitutionRank]}
+            {INSTITUTION_RANK_EN_TO_KR[post.author.authorInstitutionRank]}
           </label>
         </Writer>
         <Title isRead={isRead}>

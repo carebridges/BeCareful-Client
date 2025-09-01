@@ -14,9 +14,9 @@ import { CommunityJoinRequestModal } from '@/components/Community/JoinCommunity/
 import { CommunityJoinPendingModal } from '@/components/Home/CommunityJoinPendingModal';
 import { CommunityJoinApprovedModal } from '@/components/Home/CommunityJoinApprovedModal';
 import {
-  Board_Type_Param_ENG,
-  COMMUNITY_BOARDS,
-} from '@/constants/communityBoard';
+  BOARD_KR_TO_PARAM,
+  COMMUNITY_BOARDS_TAB,
+} from '@/constants/community/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 import { useMyAssociation } from '@/api/community';
@@ -92,7 +92,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
       </Association>
 
       <CommunityTabs>
-        {COMMUNITY_BOARDS.map((tab) => (
+        {COMMUNITY_BOARDS_TAB.map((tab) => (
           <Tab
             key={tab}
             active={activeTab === tab}
@@ -111,7 +111,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
 
       <Button
         onClick={() => {
-          const board = Board_Type_Param_ENG[activeTab];
+          const board = BOARD_KR_TO_PARAM[activeTab];
           handleNavigate(
             board ? `/community/write?boardType=${board}` : '/community/write',
           );

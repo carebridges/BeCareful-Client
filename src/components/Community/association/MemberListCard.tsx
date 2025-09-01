@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { Association_Rank_Mapping } from '@/constants/associationRank';
-import { Institution_Rank_Mapping } from '@/constants/institutionRank';
+import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
+import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Member } from '@/types/Community/association';
 
@@ -18,7 +18,10 @@ const MemberListCard = ({ member }: MemberListCardProps) => {
   const memberInfo = [
     { title: '전화번호', detail: member.phoneNumber },
     { title: '기관명', detail: member.institutionName },
-    { title: '직급', detail: Institution_Rank_Mapping[member.institutionRank] },
+    {
+      title: '직급',
+      detail: INSTITUTION_RANK_EN_TO_KR[member.institutionRank],
+    },
   ];
 
   return (
@@ -31,7 +34,7 @@ const MemberListCard = ({ member }: MemberListCardProps) => {
         <div className="top">
           <label className="name">{member.name}</label>
           <label className="rank">
-            {Association_Rank_Mapping[member.associationRank]}
+            {ASSOCIATION_RANK_EN_TO_KR[member.associationRank]}
           </label>
         </div>
         <InfoDisplay items={memberInfo} gapRow="12px" gapColumn="5px" />

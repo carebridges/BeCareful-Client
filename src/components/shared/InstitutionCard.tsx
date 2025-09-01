@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { caretypeFormat } from '@/utils/caregiver';
+import { formatCaretype } from '@/utils/caregiverFormatter';
 
 interface InstitutionCardProps {
   date: string;
@@ -29,7 +29,7 @@ const InstitutionCard = ({
         </>
       ),
     },
-    { title: '시설유형', detail: caretypeFormat(types, 2) },
+    { title: '시설유형', detail: formatCaretype(types, 2) },
     { title: '연락처', detail: phoneNumber },
   ];
 

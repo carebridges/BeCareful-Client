@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
-import { ReactComponent as WithdrawIcon } from '@/assets/icons/caregiver/my/Logout.svg';
 import { Button } from '@/components/common/Button/Button';
+import { ExpelButton } from '@/components/common/Button/LogoutButton';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InputBox from '@/components/common/InputBox/InputBox';
 import Modal from '@/components/common/Modal/Modal';
@@ -37,20 +37,12 @@ const SocialworkerEditAssociationPage = () => {
 
   const { mutate: leaveAssociation } = usePutAssociationLeave();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const handleModal = (
-    setter: React.Dispatch<React.SetStateAction<boolean>>,
-    before?: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => {
-    if (before) {
-      before(false);
-    }
-    setter((prev) => !prev);
-  };
+
   const handleWithdraw = () => {
     console.log('협회탈퇴');
     leaveAssociation(undefined, {
       onSuccess: () => {
-        handleModal(setIsWithdrawModalOpen);
+        setIsWithdrawModalOpen(false);
         handleGoBack();
       },
     });
@@ -115,10 +107,7 @@ const SocialworkerEditAssociationPage = () => {
 
       <WithdrawWrapper>
         <label className="title">탈퇴하기</label>
-        <Withdraw onClick={() => handleModal(setIsWithdrawModalOpen)}>
-          <WithdrawIcon />
-          탈퇴하기
-        </Withdraw>
+        <ExpelButton onClick={() => setIsWithdrawModalOpen(true)} />
       </WithdrawWrapper>
 
       <Bottom>
@@ -134,15 +123,15 @@ const SocialworkerEditAssociationPage = () => {
 
       <Modal
         isOpen={isWithdrawModalOpen}
-        onClose={() => handleModal(setIsWithdrawModalOpen)}
+        onClose={() => setIsWithdrawModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => handleModal(setIsWithdrawModalOpen)}
+          onClose={() => setIsWithdrawModalOpen(false)}
           title="정말 탈퇴 하시겠습니까?"
           detail={`${data?.associationName} 커뮤니티에서 탈퇴됩니다.\n계속하시겠습니까?`}
           left="취소"
           right="탈퇴하기"
-          handleLeftBtnClick={() => handleModal(setIsWithdrawModalOpen)}
+          handleLeftBtnClick={() => setIsWithdrawModalOpen(false)}
           handleRightBtnClick={handleWithdraw}
         />
       </Modal>
@@ -214,22 +203,6 @@ const WithdrawWrapper = styled.div`
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
-`;
-
-const Withdraw = styled.div`
-  height: 18px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray50};
-  background: ${({ theme }) => theme.colors.white};
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
-
-  color: ${({ theme }) => theme.colors.gray500};
-  font-size: ${({ theme }) => theme.typography.fontSize.body3};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const Border = styled.div`

@@ -1,28 +1,26 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
 import { ReactComponent as CloseButton } from '@/assets/icons/caregiver/my/CloseButton.svg';
-import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDropdown';
 import { Button } from '@/components/common/Button/Button';
 import { CheckBoxSelect } from '@/components/common/CheckBox/CheckBoxSelect';
+import { NavBar } from '@/components/common/NavBar/NavBar';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { Area } from '@/data/Area';
-import {
-  API_Salary_Type_Mapping,
-  Day_Mapping,
-  Salary_Type_Mapping,
-  Time_Mapping,
-} from '@/constants/caregiverMapping';
-import { WorkLocation } from '@/types/Caregiver/common';
+import WorkLocationModal from '@/components/Caregiver/Apply/WorkLocationModal';
+import { caretypes } from '@/constants/common/caretypes';
+import { days } from '@/constants/common/day';
+import { times } from '@/constants/common/time';
+import { SALARY_KR_TO_EN, salaryTypes } from '@/constants/common/salary';
 import { WorkApplicationRequest } from '@/types/Caregiver/work';
-import { apiDayFormat, apiTimeFormat } from '@/utils/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useApplicationQuery } from '@/hooks/Caregiver/caregiverQuery';
+import { useLocationSelection } from '@/hooks/Caregiver/apply/useLocationSelection';
+import { useApplicationForm } from '@/hooks/Caregiver/apply/useApplicationForm';
 import { usePutApplicationMutation } from '@/hooks/Caregiver/mutation/usePutApplicationMutation';
+import { formatDaysToEN, formatTimeToEN } from '@/utils/caregiverFormatter';
+import { useApplicationQuery } from '@/api/caregiver';
 
 const CaregiverApplicationPage = () => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
@@ -32,131 +30,39 @@ const CaregiverApplicationPage = () => {
     console.log('getApplication 에러: ', error);
   }
 
-  // 희망 급여 관련 상태
-  const payDropContents = ['시급', '월급', '연봉'];
-  const [payType, setPayType] = useState('시급');
-  const [pay, setPay] = useState('');
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    const format = input.replace(/[^0-9]/g, '');
-    const amount = Number(format);
+  // 신청서 데이터
+  const {
+    payType,
+    setPayType,
+    pay,
+    selectTime,
+    selectDay,
+    selectCaretype,
+    handleAmountChange,
+    handleSelectTime,
+    handleSelectDay,
+    handleSelectCaretype,
+  } = useApplicationForm(data);
 
-    if (!isNaN(amount) && format !== '') {
-      setPay(amount.toLocaleString('ko-KR'));
-    } else {
-      setPay('');
-    }
-  };
-
-  // 근무 요일
-  const [selectDay, setSelectDay] = useState<string[]>([]);
-  const handleSelectDay = (id: string) => {
-    setSelectDay((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((day) => day !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-  const days = ['월', '화', '수', '목', '금', '토', '일'];
-
-  // 근무 시간
-  const [selectTime, setSelectTime] = useState<string[]>([]);
-  const handleSelectTime = (id: string) => {
-    setSelectTime((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((time) => time !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-  const times = ['오전', '오후', '저녁'];
-
-  // 근무 유형
-  const [selectCaretype, setSelectCaretype] = useState<string[]>([]);
-  const handleSelectCaretype = (id: string) => {
-    setSelectCaretype((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((care) => care !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-  };
-  const careTypes = [
-    '식사보조',
-    '이동보조',
-    '배변보조',
-    '일상생활',
-    '질병보조',
-    '',
-  ];
-
-  // 지역 설정 모달
-  const [isAreaModalOpen, setIsAreaModalOpen] = useState(false);
-  const openAreaModal = () => {
-    setIsAreaModalOpen(true);
-  };
-  const closeAreaModal = () => {
-    setIsAreaModalOpen(false);
-  };
+  // 근무 지역
+  const {
+    isAreaModalOpen,
+    setIsAreaModalOpen,
+    closeAreaModal,
+    selectedArea,
+    selectedCity,
+    selectedGu,
+    selectedDong,
+    handleCitySelect,
+    handleGuSelect,
+    handleDongSelect,
+    handleSelectBtn,
+    removeSelectedArea,
+  } = useLocationSelection(data);
 
   // 완료 모달
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  // 근무 지역
-  const [selectedArea, setSelectedArea] = useState<WorkLocation[]>([]);
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedGu, setSelectedGu] = useState('');
-  const [selectedDong, setSelectedDong] = useState('');
-  const handleCitySelect = (city: string) => {
-    setSelectedCity(city);
-    setSelectedGu('');
-    setSelectedDong('');
-  };
-  const handleGuSelect = (gu: string) => {
-    setSelectedGu(gu);
-    setSelectedDong('');
-  };
-  const handleDongSelect = (dong: string) => {
-    setSelectedDong(dong);
-  };
-  const handleSelectBtn = () => {
-    if (selectedArea.length < 5) {
-      setSelectedArea((prev) => [
-        ...prev,
-        {
-          siDo: selectedCity,
-          siGuGun: selectedGu,
-          dongEupMyeon: selectedDong,
-        },
-      ]);
-    }
-    setIsAreaModalOpen(false);
-    resetSelections();
-  };
-  const resetSelections = () => {
-    setSelectedCity('');
-    setSelectedGu('');
-    setSelectedDong('');
-  };
-  const removeSelectedArea = (index: number) => {
-    setSelectedArea((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  useEffect(() => {
-    if (data) {
-      setPayType(Salary_Type_Mapping[data.workSalaryUnitType]);
-      setPay(data.workSalaryAmount.toLocaleString('ko-KR'));
-      setSelectDay(data.workDays.map((day) => Day_Mapping[day]));
-      setSelectTime(data.workTimes.map((time) => Time_Mapping[time]));
-      setSelectCaretype(data.careTypes);
-      setSelectedArea(data.workLocations);
-    }
-  }, [data]);
 
   const { mutate: updateApplication } = usePutApplicationMutation({
     onSuccessCallback: (dataExists) => {
@@ -170,10 +76,10 @@ const CaregiverApplicationPage = () => {
 
   const handleBtnClick = () => {
     const applicationData: WorkApplicationRequest = {
-      workSalaryUnitType: API_Salary_Type_Mapping[payType],
+      workSalaryUnitType: SALARY_KR_TO_EN[payType],
       workSalaryAmount: Number(pay.replaceAll(',', '')),
-      workTimes: apiTimeFormat(selectTime),
-      workDays: apiDayFormat(selectDay),
+      workTimes: formatTimeToEN(selectTime),
+      workDays: formatDaysToEN(selectDay),
       workLocations: selectedArea,
       careTypes: selectCaretype,
     };
@@ -204,7 +110,7 @@ const CaregiverApplicationPage = () => {
             height="52px"
             width="88px"
             variant="subBlue"
-            onClick={openAreaModal}
+            onClick={() => setIsAreaModalOpen(true)}
           >
             지역선택
           </Button>
@@ -268,8 +174,8 @@ const CaregiverApplicationPage = () => {
         </label>
         <PayWrapper>
           <ApplicationDropdown
-            title="시급"
-            contents={payDropContents}
+            title={payType || '시급'}
+            contents={salaryTypes}
             selectedContents={[payType]}
             setSelectedContents={(values) => setPayType(values[0] || '')}
           />
@@ -291,7 +197,7 @@ const CaregiverApplicationPage = () => {
         </label>
         <label className="guide">중복선택 가능</label>
         <SelectWrapper gap="">
-          {careTypes.slice(0, 3).map((careType) => (
+          {caretypes.slice(0, 3).map((careType) => (
             <CheckBoxSelect
               key={careType}
               id={careType}
@@ -304,7 +210,7 @@ const CaregiverApplicationPage = () => {
           ))}
         </SelectWrapper>
         <SelectWrapper gap="">
-          {careTypes
+          {caretypes
             .slice(3)
             .map((careType, index) =>
               index === 2 ? (
@@ -337,81 +243,17 @@ const CaregiverApplicationPage = () => {
         </Button>
       </Bottom>
 
-      <Modal isOpen={isAreaModalOpen} onClose={closeAreaModal}>
-        <AreaModal>
-          <AreaModalTitle>
-            <label className="title">지역설정</label>
-            <ModalClose
-              onClick={() => {
-                setIsAreaModalOpen(!isAreaModalOpen);
-              }}
-            />
-          </AreaModalTitle>
-
-          <AreaWrapper>
-            <div className="area">
-              <label className="category">시/도</label>
-              <AreaItems>
-                {Area.city.map((city) => (
-                  <AreaItem
-                    key={city.name}
-                    onClick={() => handleCitySelect(city.name)}
-                    color={selectedCity === city.name}
-                  >
-                    {city.name}
-                  </AreaItem>
-                ))}
-              </AreaItems>
-            </div>
-            {selectedCity && (
-              <div className="area">
-                <label className="category">시/군/구</label>
-                <AreaItems
-                  style={{
-                    borderLeft: '1px solid #d9d9d9',
-                    borderRight: '1px solid #d9d9d9',
-                  }}
-                >
-                  {Area.city
-                    .find((city) => city.name === selectedCity)
-                    ?.gu?.map((gu) => (
-                      <AreaItem
-                        key={gu.name}
-                        onClick={() => handleGuSelect(gu.name)}
-                        color={selectedGu === gu.name}
-                      >
-                        {gu.name}
-                      </AreaItem>
-                    )) || <p>구가 없습니다.</p>}
-                </AreaItems>
-              </div>
-            )}
-            {selectedGu && (
-              <div className="area">
-                <label className="category">동/면/읍</label>
-                <AreaItems>
-                  {Area.city
-                    .find((city) => city.name === selectedCity)
-                    ?.gu.find((gu) => gu.name === selectedGu)
-                    ?.dong.map((dong) => (
-                      <AreaItem
-                        key={dong}
-                        onClick={() => handleDongSelect(dong)}
-                        color={selectedDong === dong}
-                      >
-                        {dong}
-                      </AreaItem>
-                    )) || <p>동이 없습니다.</p>}
-                </AreaItems>
-              </div>
-            )}
-          </AreaWrapper>
-
-          <Button height="52px" variant="mainBlue" onClick={handleSelectBtn}>
-            선택하기
-          </Button>
-        </AreaModal>
-      </Modal>
+      <WorkLocationModal
+        isOpen={isAreaModalOpen}
+        onClose={closeAreaModal}
+        selectedCity={selectedCity}
+        selectedGu={selectedGu}
+        selectedDong={selectedDong}
+        handleCitySelect={handleCitySelect}
+        handleGuSelect={handleGuSelect}
+        handleDongSelect={handleDongSelect}
+        handleSelectBtn={handleSelectBtn}
+      />
 
       <Modal
         isOpen={isRegisterModalOpen}
@@ -419,7 +261,7 @@ const CaregiverApplicationPage = () => {
       >
         <ModalButtons
           onClose={() => {
-            setIsRegisterModalOpen(!isRegisterModalOpen);
+            setIsRegisterModalOpen(false);
           }}
           title={'일자리 신청서 작성이\n완료되었습니다!'}
           detail="등록 보상 포인트 100P가 지급되었습니다."
@@ -433,14 +275,15 @@ const CaregiverApplicationPage = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <ModalLimit
           onClose={() => {
-            setIsEditModalOpen(!isEditModalOpen);
+            setIsEditModalOpen(false);
           }}
           title="신청서 수정이 완료되었어요!"
           detail={
             '입력하신 조건으로 수정되었습니다.\n새로운 조건에 맞는 공고가 표시됩니다.'
           }
           handleBtnClick={() => {
-            setIsEditModalOpen(!isEditModalOpen);
+            setIsEditModalOpen(false);
+            handleNavigate('/caregiver/work');
           }}
         />
       </Modal>
@@ -590,77 +433,4 @@ const SelectedArea = styled.button`
   color: ${({ theme }) => theme.colors.gray900};
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
-`;
-
-const AreaModal = styled.div`
-  //   width: 316px;
-  width: 272px;
-  height: 328px;
-  padding: 28px 20px 20px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border-radius: 12px;
-  background: ${({ theme }) => theme.colors.white};
-`;
-
-const AreaModalTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .title {
-    font-size: ${({ theme }) => theme.typography.fontSize.title3};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  }
-`;
-
-const AreaWrapper = styled.div`
-  height: 216px;
-  display: flex;
-  gap: 1px;
-
-  .area {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .category {
-    width: 76px;
-    height: 20px;
-    padding: 8px;
-    background: ${({ theme }) => theme.colors.gray50};
-
-    color: ${({ theme }) => theme.colors.gray700};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-    text-align: center;
-  }
-`;
-
-const AreaItems = styled.button`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-`;
-
-const AreaItem = styled.div<{ color: boolean }>`
-  width: 100%;
-  height: 20px;
-  padding: 8px 16px;
-
-  color: ${({ theme, color }) =>
-    color ? theme.colors.mainBlue : theme.colors.gray500};
-  font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  font-weight: ${({ theme, color }) =>
-    color
-      ? theme.typography.fontWeight.bold
-      : theme.typography.fontWeight.medium};
-  text-align: start;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.mainBlue};
-  }
 `;
