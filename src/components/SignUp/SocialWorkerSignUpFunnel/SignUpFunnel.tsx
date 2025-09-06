@@ -6,7 +6,7 @@ import { Step5AcceptTerms } from '@/components/SignUp/SocialWorkerSignUpFunnel/S
 import { Step6SignUpComplete } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step6SignUpComplete';
 import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 
-import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
+import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { styled } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -39,7 +39,7 @@ export const SignUpFunnel = () => {
   return (
     <>
       <IconContainer>
-        <IconArrowLeft onClick={handleClickBack} />
+        <IconClose onClick={handleClickBack} />
       </IconContainer>
       {!isInstitutionFunnel && !isLastStep && <ProgressBar percent={percent} />}
       <AnimatePresence mode="wait">

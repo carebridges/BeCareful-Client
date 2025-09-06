@@ -1,6 +1,6 @@
 import { useAllInstitutions } from '@/hooks/SignUp/useAllInstitutions';
 import { Institution } from '@/types/SocialSignUp';
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
 import { styled } from 'styled-components';
 
@@ -28,34 +28,65 @@ export const InstitutionRegisterNameInput = ({
     onInstitutionSelect(inst.institutionName, inst.institutionId, inst.address);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <Wrapper ref={containerRef}>
       <SearchContainer>
         <StyledInput
           placeholder="기관명 검색"
           value={term}
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            if (term.trim().length > 0) setOpen(true);
+          }}
           onChange={(e) => {
             const v = e.target.value;
             setTerm(v);
-            setOpen(true);
             onChangeText?.(v);
+            setOpen(v.trim().length > 0);
           }}
         />
-        <IconWrapper>
+        <IconWrapper
+          role="button"
+          tabIndex={0}
+          onClick={() => {
+            if (term.trim().length === 0) return;
+            setOpen((prev) => !prev);
+          }}
+        >
           <SearchIcon />
         </IconWrapper>
       </SearchContainer>
 
       {open && filtered.length > 0 && (
-        <Dropdown>
+        <Dropdown role="listbox">
           {filtered.map((inst) => (
             <DropdownItem
-              key={inst.institutionId}
+              key={inst.institutionId ?? inst.institutionName}
               onClick={() => handleSelect(inst)}
+              role="option"
             >
               <Name>{inst.institutionName}</Name>
-              <Address>{inst.address}</Address>
+              <Address>
+                {inst.address ?? ''}
+                {inst.institutionId != null
+                  ? ` (${inst.institutionId})`
+                  : ' (기관 코드 없음)'}
+              </Address>
             </DropdownItem>
           ))}
         </Dropdown>

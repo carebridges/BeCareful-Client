@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
-
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
 import { InstitutionRegisterNameInput } from '@/components/SignUp/InstitutionFunnel/Step1InstitutionName/InstitutionRegisterNameInput';
 import { InstitutionCodeInput } from '@/components/SignUp/InstitutionFunnel/Step1InstitutionName/InstitutionCodeInput';
@@ -21,9 +20,15 @@ export const Step1InstitutionName = ({
   institutionFormData,
   setInstitutionFormData,
 }: StepProps) => {
+  const [isCodeAutoFilled, setIsCodeAutoFilled] = useState(
+    Boolean(institutionFormData.institutionCode),
+  );
+  const [isInstitutionCodeDuplicate, setIsInstitutionCodeDuplicate] =
+    useState(false);
+
   const handleInstitutionSelect = (
     name: string,
-    _id?: number,
+    id?: number,
     address?: string,
   ) => {
     setInstitutionFormData((prev) => ({
@@ -31,18 +36,23 @@ export const Step1InstitutionName = ({
       institutionName: name,
       streetAddress: address || '',
       detailAddress: '',
+      institutionCode: id ? String(id) : '',
     }));
+    setIsCodeAutoFilled(Boolean(id));
   };
 
   const handleInstitutionNameChange = (name: string) => {
-    setInstitutionFormData((prev) => ({ ...prev, institutionName: name }));
+    setInstitutionFormData((prev) => ({
+      ...prev,
+      institutionName: name,
+      institutionCode: '',
+    }));
+    setIsCodeAutoFilled(false);
   };
+
   const handleInstitutionCodeChange = (code: string) => {
     setInstitutionFormData((prev) => ({ ...prev, institutionCode: code }));
   };
-
-  const [isInstitutionCodeDuplicate, setIsInstitutionCodeDuplicate] =
-    useState(false);
 
   const isInstitutionNameValid = institutionFormData.institutionName.length > 0;
   const isInstitutionCodeValid =
@@ -55,30 +65,39 @@ export const Step1InstitutionName = ({
     <StepWrapper>
       <HeaderSection>
         <Title>
-          소속된 기관을 등록하세요
-          <span className="highlight"> *</span>
+          소속된 기관을 등록하세요<span className="highlight"> *</span>
         </Title>
         <SubText>소속된 기관의 정확한 명칭을 검색해 주세요.</SubText>
       </HeaderSection>
+
       <SearchContainer>
         <InstitutionRegisterNameInput
           onInstitutionSelect={handleInstitutionSelect}
           onChangeText={handleInstitutionNameChange}
         />
       </SearchContainer>
-      <Header2Section>
-        <Title>
-          소속된 기관 코드를 입력하세요.
-          <span className="highlight"> *</span>
-        </Title>
-        <SubText>소속된 기관의 코드를 등록해 주세요.</SubText>
-      </Header2Section>
-      <SearchContainer>
-        <InstitutionCodeInput
-          onInstitutionCodeChange={handleInstitutionCodeChange}
-          onDuplicateCheck={setIsInstitutionCodeDuplicate}
-        />
-      </SearchContainer>
+
+      {!isCodeAutoFilled && (
+        <>
+          <Header2Section>
+            <Title>
+              소속된 기관 코드를 입력하세요.
+              <span className="highlight"> *</span>
+            </Title>
+            <SubText>
+              드롭다운에 없다면 직접 기관명과 코드를 입력하세요.
+            </SubText>
+          </Header2Section>
+
+          <SearchContainer>
+            <InstitutionCodeInput
+              onInstitutionCodeChange={handleInstitutionCodeChange}
+              onDuplicateCheck={setIsInstitutionCodeDuplicate}
+            />
+          </SearchContainer>
+        </>
+      )}
+
       <ButtonContainer>
         <Button onClick={onCancel} height={'52px'} variant="blue2">
           이전

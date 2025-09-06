@@ -31,9 +31,9 @@ export const InstitutionFunnel = ({
   onDone,
   onCancel,
 }: InstitutionFunnelProps) => {
+  const { detail } = getRandomAddress();
   const [institutionFormData, setInstitutionFormData] =
     useState<InstitutionFormData>(() => {
-      const { detail } = getRandomAddress();
       return {
         institutionName: '',
         institutionCode: '',
@@ -41,7 +41,7 @@ export const InstitutionFunnel = ({
         facilityTypeList: [],
         phoneNumber: '',
         streetAddress: '',
-        detailAddress: detail,
+        detailAddress: '',
         profileImageUrl: null,
       };
     });
@@ -49,7 +49,22 @@ export const InstitutionFunnel = ({
   const { setIsInstitutionFunnel } = useSignUpContext();
   const isLastStep = currentStep === 5;
 
-  const goToNext = () => setCurrentStep((prev) => prev + 1);
+  const goToNext = () =>
+    setCurrentStep((prev) => {
+      const next = prev + 1;
+
+      if (next === 5) {
+        setInstitutionFormData((data) => ({
+          ...data,
+          streetAddress: data.streetAddress?.trim()
+            ? data.streetAddress
+            : detail,
+        }));
+      }
+
+      return next;
+    });
+
   const goToPrev = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   useEffect(() => {

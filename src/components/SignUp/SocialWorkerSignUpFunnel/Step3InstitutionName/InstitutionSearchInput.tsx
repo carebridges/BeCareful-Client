@@ -7,7 +7,7 @@ import { Institution } from '@/types/SocialSignUp';
 export const InstitutionSearchInput = ({
   onInstitutionSelect,
 }: {
-  onInstitutionSelect: (name: string, id?: number) => void;
+  onInstitutionSelect: (name: string, id?: number, address?: string) => void;
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -18,10 +18,22 @@ export const InstitutionSearchInput = ({
     enabled: searchTerm.trim().length > 0,
   });
 
+  const getFullAddress = (inst: Institution) => {
+    const parts = [inst.institutionStreetAddress, inst.institutionDetailAddress]
+      .map((s) => (s ?? '').trim())
+      .filter(Boolean);
+    return parts.join(' ');
+  };
+
   const handleSelect = (inst: Institution) => {
     setSearchTerm(inst.institutionName);
     setShowDropdown(false);
-    onInstitutionSelect(inst.institutionName, inst.institutionId);
+    const fullAddress = getFullAddress(inst);
+    onInstitutionSelect(
+      inst.institutionName,
+      inst.institutionId,
+      fullAddress || undefined,
+    );
   };
 
   useEffect(() => {
@@ -63,8 +75,15 @@ export const InstitutionSearchInput = ({
             <DropdownItem
               key={inst.institutionId}
               onClick={() => handleSelect(inst)}
+              role="option"
             >
-              {inst.institutionName}
+              <Name>{inst.institutionName}</Name>
+              <Address>
+                {getFullAddress(inst)}
+                {inst.institutionId != null
+                  ? ` (${inst.institutionId})`
+                  : ' (기관 코드 없음)'}
+              </Address>
             </DropdownItem>
           ))}
         </Dropdown>
@@ -140,12 +159,13 @@ const Dropdown = styled.ul`
 `;
 
 const DropdownItem = styled.li`
-  padding: 12px 16px;
+  padding: 8px 16px;
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.gray900};
-
+  display: flex;
+  flex-direction: column;
   &:hover {
     background: ${({ theme }) => theme.colors.subBlue};
   }
@@ -155,5 +175,16 @@ const NoResultWrapper = styled.div`
   margin-top: 8px;
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  color: ${({ theme }) => theme.colors.gray500};
+`;
+
+const Name = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+`;
+
+const Address = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.gray500};
 `;

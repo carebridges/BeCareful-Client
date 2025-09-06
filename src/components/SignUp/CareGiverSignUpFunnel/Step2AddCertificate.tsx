@@ -7,7 +7,8 @@ import { useCertificateManager } from '@/hooks/SignUp/useCertificateManager';
 import { CertificateCardList } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateCardList';
 
 export const Step2AddCertificate = () => {
-  const { goToNext, formData, setFormData } = useCaregiverSignUpContext();
+  const { goToNext, formData, setFormData, goToPrev } =
+    useCaregiverSignUpContext();
 
   const {
     selectedKeys,
@@ -63,6 +64,9 @@ export const Step2AddCertificate = () => {
       )}
 
       <ButtonContainer>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
+          이전
+        </Button>
         <Button
           onClick={goToNext}
           disabled={!isNextEnabled}

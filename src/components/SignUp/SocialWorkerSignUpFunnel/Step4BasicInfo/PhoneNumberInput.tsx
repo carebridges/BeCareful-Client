@@ -1,4 +1,5 @@
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
+import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
 import styled from 'styled-components';
 
 interface PhoneNumberInputProps {
@@ -10,6 +11,15 @@ export const PhoneNumberInput = ({
   value,
   onChange,
 }: PhoneNumberInputProps) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    const newEvent = {
+      ...e,
+      target: { ...e.target, value: formatted },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    onChange(newEvent);
+  };
   return (
     <InputWrapper>
       <Label>
@@ -22,7 +32,9 @@ export const PhoneNumberInput = ({
         placeholder="휴대전화번호"
         guide=""
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
+        maxLength={13}
+        inputMode="tel"
       />
     </InputWrapper>
   );

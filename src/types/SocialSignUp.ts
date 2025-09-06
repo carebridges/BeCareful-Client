@@ -4,6 +4,12 @@ export type Gender = 'MALE' | 'FEMALE' | '';
 
 export type Rank = 'MANAGER' | 'SOCIALWORKER' | ''; //TODO
 
+export type InstitutionRank =
+  | 'CENTER_DIRECTOR'
+  | 'REPRESENTATIVE'
+  | 'SOCIAL_WORKER'
+  | 'none';
+
 export interface SocialSignUpFormData {
   name: string;
   birthDate: string;
@@ -35,4 +41,17 @@ export interface Institution {
   institutionName: string;
   institutionStreetAddress: string;
   institutionDetailAddress: string;
+}
+
+export interface SignUpPayload {
+  nursingInstitutionId: number;
+  realName: string;
+  nickName: string;
+  birthYymmdd: string;
+  genderCode: number;
+  phoneNumber: string;
+  institutionRank: InstitutionRank;
+  isAgreedToTerms: boolean;
+  isAgreedToCollectPersonalInfo: boolean;
+  isAgreedToReceiveMarketingInfo: boolean;
 }

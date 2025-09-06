@@ -1,23 +1,6 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { Institution } from '@/types/SocialSignUp';
+import { Institution, SignUpPayload } from '@/types/SocialSignUp';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
-
-export interface SignUpPayload {
-  nursingInstitutionId: number;
-  realName: string;
-  nickName: string;
-  birthYymmdd: string;
-  genderCode: number;
-  phoneNumber: string;
-  institutionRank:
-    | 'CENTER_DIRECTOR'
-    | 'REPRESENTATIVE'
-    | 'SOCIAL_WORKER'
-    | 'none';
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
-}
 
 export const signUpMember = async (payload: SignUpPayload) => {
   const { data } = await axiosInstance.post('/socialworker/signup', payload);
