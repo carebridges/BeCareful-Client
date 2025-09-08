@@ -14,6 +14,7 @@ export interface AgreementValues {
 export interface SocialWorkerInfo {
   name: string;
   nickName: string;
+  profileImageUrl: string;
   phoneNumber: string;
   age: number;
   gender: 'FEMALE' | 'MALE';

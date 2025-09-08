@@ -13,9 +13,8 @@ export const usePutCareerMutation = (options?: UsePutCareerOptions) => {
     mutationFn: (careerData: CareerRequest) => putCareer(careerData),
     onSuccess: () => {
       console.log('경력서 등록/수정하기 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverCareer'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['caregiverCareer'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverMypageInfo'] });
       options?.onSuccessCallback?.();
     },
     onError: (error) => {

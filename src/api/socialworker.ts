@@ -55,14 +55,11 @@ export const usePutSocialworkerMy = () => {
       const response = await axiosInstance.put('/socialworker/me', myData);
       return response;
     },
-    onSuccess: (response) => {
-      console.log(
-        'usePutSocialworkerMy - 사회복지사 마이페이지 수정 성공:',
-        response.data,
-      );
-      queryClient.invalidateQueries({
-        queryKey: ['socialworkerMy'],
-      });
+    onSuccess: () => {
+      console.log('usePutSocialworkerMy - 사회복지사 마이페이지 수정 성공');
+      queryClient.invalidateQueries({ queryKey: ['socialworkerMy'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerMyEdit'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerHome'] });
     },
     onError: (error) => {
       console.error(
@@ -89,6 +86,8 @@ export const usePutInstitutionInfo = () => {
       console.log('usePutInstitutionInfo - 요양기관 수정 성공:', response.data);
       queryClient.invalidateQueries({ queryKey: ['institutionInfo'] });
       queryClient.invalidateQueries({ queryKey: ['socialworkerHome'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerMy'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerMyEdit'] });
     },
     onError: (error) => {
       console.error('usePutInstitutionInfo - 요양기관 수정 실패:', error);
@@ -105,11 +104,8 @@ export const useSocialworkerLogout = () => {
       const response = await axiosInstance.put('/socialworker/logout');
       return response;
     },
-    onSuccess: (response) => {
-      console.log(
-        'useSocialworkerLogout - 사회복지사 로그아웃 성공:',
-        response,
-      );
+    onSuccess: () => {
+      console.log('useSocialworkerLogout - 사회복지사 로그아웃 성공');
       queryClient.clear();
     },
     onError: (error) => {
@@ -127,8 +123,8 @@ export const useDeleteSocialworker = () => {
       const response = await axiosInstance.delete('/socialworker/leave');
       return response;
     },
-    onSuccess: (response) => {
-      console.log('useDeleteSocialworker - 사회복지사 탈퇴 성공:', response);
+    onSuccess: () => {
+      console.log('useDeleteSocialworker - 사회복지사 탈퇴 성공');
       queryClient.clear();
     },
     onError: (error) => {
@@ -183,16 +179,23 @@ export const usePostSocialworkerContract = () => {
         '/chat/social-worker/contract/edit',
         contractData,
       );
-      return response;
-    },
-    onSuccess: (response) => {
-      console.log(
-        'usePostSocialworkerContract - 사회복지사 계약 수정 성공:',
-        response.data,
+      const locationHeader = response.headers['location'];
+      const newContractId = parseInt(
+        locationHeader.split('/').pop() || '0',
+        10,
       );
+      return { response, contractId: newContractId };
+    },
+    onSuccess: (data, contractData) => {
+      const { contractId } = data;
+      console.log('usePostSocialworkerContract - 사회복지사 계약 수정 성공');
       queryClient.invalidateQueries({
-        queryKey: ['socialworkerContract'],
+        queryKey: ['socialworkerContract', contractId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['socialworkerChat', contractData.matchingId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
     },
     onError: (error) => {
       console.error(

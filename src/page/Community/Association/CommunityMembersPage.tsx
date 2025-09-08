@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
+// import { useRecoilValue } from 'recoil';
+// import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import MemberListCard from '@/components/Community/association/MemberListCard';
@@ -12,12 +12,13 @@ import {
   useMembers,
   useMembersOverview,
 } from '@/api/communityAssociation';
+import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const CommunityMembersPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
-  const userInfo = useRecoilValue(currentUserInfo);
-  const isChairman = userInfo.associationRank === 'CHAIRMAN';
+  // const userInfo = useRecoilValue(currentUserInfo);
+  // const isChairman = userInfo.associationRank === 'CHAIRMAN';
 
   const [activeTab, setActiveTab] = useState('회원');
   const handleTabChange = (tabName: string) => {
@@ -28,6 +29,9 @@ const CommunityMembersPage = () => {
   const { data: tabData } = useMembersOverview();
   const { data: members } = useMembers();
   const { data: requests } = useJoinRequest();
+
+  const { data } = useGetSocialWorkerMy();
+  const isChairman = data?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const tabs = isChairman
     ? [

@@ -22,8 +22,6 @@ export const useModals = () => {
     setModalContent({ title: '', detail: '' });
   };
 
-  // 임시저장 모달
-  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   // 나가기 모달
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
   // 등록 모달
@@ -37,11 +35,9 @@ export const useModals = () => {
   return {
     modalContent,
     isLimitModalOpen,
-    isSaveModalOpen,
     isCloseModalOpen,
     isPostModalOpen,
     isLinkModalOpen,
-    setIsSaveModalOpen,
     setIsCloseModalOpen,
     setIsPostModalOpen,
     setIsLinkModalOpen,

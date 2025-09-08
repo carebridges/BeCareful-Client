@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
-import { ReactComponent as Point } from '@/assets/icons/Point.svg';
+// import { ReactComponent as Point } from '@/assets/icons/Point.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -20,7 +20,6 @@ import { useGetSocialWorkerHome } from '@/api/socialworker';
 
 const SocialworkerHomePage = () => {
   const [isNew, setIsNew] = useState(false);
-  const chatNew = true;
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
 
   const { handleNavigate } = useHandleNavigate();
@@ -34,7 +33,7 @@ const SocialworkerHomePage = () => {
           <ModalButtons
             onClose={() => setIsNew(false)}
             title="회원가입을 축하드립니다!"
-            detail="가입 보상 포인트 5,000P가 지급되었습니다."
+            detail="지금 바로 ‘매칭하기’를 눌러 구인해보세요!"
             left="내 포인트 확인"
             right="홈으로"
             handleLeftBtnClick={() => handleNavigate('/socialworker/point')}
@@ -47,7 +46,7 @@ const SocialworkerHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/socialworker/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {data?.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"
@@ -55,20 +54,11 @@ const SocialworkerHomePage = () => {
 
       <Top>
         <div className="caregiver">
-          <img src="" />
+          <img src={data?.socialWorkerInfo.profileImageUrl} />
           <label className="title">{data?.socialWorkerInfo.name}</label>
           <RankCard
             rank={data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'}
           />
-        </div>
-        <div
-          className="pointWrapper"
-          onClick={() => handleNavigate('/socialworker/point')}
-        >
-          <Point />
-          {/* <label className="point">{data.point}</label> */}
-          <label className="point">1,500P</label>
-          <ChevronRight />
         </div>
       </Top>
 

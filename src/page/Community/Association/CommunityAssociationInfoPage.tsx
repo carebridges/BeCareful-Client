@@ -71,7 +71,7 @@ const CommunityAssociationInfoPage = () => {
                 handleNavigate(`/community/${associationId}/edit/chairman`)
               }
             >
-              회장 정보 수정하기
+              회장 권한 위임하기
             </Button>
           )}
         </InfoWrapper>

@@ -21,6 +21,7 @@ export interface AssociationInfoRequest {
 /* 회장 정보 수정 */
 export interface AssociationChairmanRequest {
   newChairmanId: number;
+  newChairmanName: string;
   nextRankOfCurrentChairman: AssociationRank;
 }
 

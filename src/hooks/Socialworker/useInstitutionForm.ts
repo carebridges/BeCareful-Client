@@ -5,8 +5,9 @@ export const useInstitutionForm = (
   data: InstitutionInfo | undefined,
   setIsChanged: Dispatch<SetStateAction<boolean>>,
 ) => {
+  const [institutionId, setInstitutionId] = useState(0);
   const [institutionName, setInstitutionName] = useState('');
-  const [institutionCode, setInstitutionCode] = useState('0');
+  const [institutionCode, setInstitutionCode] = useState('');
   const [year, setYear] = useState(0);
   const [types, setTypes] = useState<string[]>([]);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -23,9 +24,6 @@ export const useInstitutionForm = (
 
   const handleChange = (fieldName: string, value: string) => {
     switch (fieldName) {
-      case 'institutionName':
-        setInstitutionName(value);
-        break;
       case 'institutionCode':
         setInstitutionCode(value);
         break;
@@ -53,11 +51,14 @@ export const useInstitutionForm = (
   };
 
   return {
+    institutionId,
     institutionName,
     institutionCode,
     year,
     types,
     phoneNumber,
+    setInstitutionId,
+    setInstitutionName,
     handleChange,
     handleTypesChange,
   };

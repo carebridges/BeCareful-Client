@@ -27,10 +27,10 @@ export const CheckBox = ({
         checked={checked}
         onChange={() => onChange(!checked)}
       />
-      <LabelWrapper>
+      <LabelWrapper htmlFor={id}>
         <CheckIcon aria-hidden="true" $borderRadius={borderRadius} />
         {select === '' ? (
-          <Label htmlFor={id}>{label}</Label>
+          <Label>{label}</Label>
         ) : (
           <>
             <SelectLabel htmlFor={id} $select={select}>
@@ -57,7 +57,7 @@ const CheckHidden = styled.input`
   display: none;
 `;
 
-const LabelWrapper = styled.div`
+const LabelWrapper = styled.label`
   position: relative;
   display: flex;
   gap: 8px;
@@ -73,6 +73,7 @@ const CheckIcon = styled.span<{ $borderRadius: string }>`
   left: 0;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 
   &::before {
     content: '';

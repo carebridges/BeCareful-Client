@@ -5,6 +5,7 @@ import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
+import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
@@ -27,6 +28,8 @@ const SocialworkerEditInstitutionPage = () => {
     year,
     types,
     phoneNumber,
+    setInstitutionId,
+    setInstitutionName,
     handleChange,
     handleTypesChange,
   } = useInstitutionForm(data?.institutionInfo, setIsChanged);
@@ -88,10 +91,13 @@ const SocialworkerEditInstitutionPage = () => {
         <label className="detail">
           소속된 기관의 정확한 명칭을 검색해 주세요.
         </label>
-        <Input
-          placeholder="소속된 기관명"
-          value={institutionName}
-          onChange={(e) => handleChange('institutionName', e.target.value)}
+        <InstitutionSearchInput
+          onInstitutionSelect={(name, id) => {
+            setInstitutionName(name);
+            if (id) setInstitutionId(id);
+            setIsChanged(true);
+          }}
+          institution={institutionName}
         />
       </CardContainer>
 

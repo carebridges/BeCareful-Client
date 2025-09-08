@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
@@ -18,13 +18,10 @@ import { formatDaysToEN } from '@/utils/caregiverFormatter';
 
 const SocialworkerEditContractPage = () => {
   const { contractId } = useParams<{ contractId: string }>();
-  const location = useLocation();
-  const { matchingId } = location.state as { matchingId?: number };
-
   const { handleGoBack, handleNavigateState } = useHandleNavigate();
 
   const { data } = useGetSocialworkerContract(Number(contractId));
-  // const matchingId = data?.matchingId;
+  const matchingId = data?.matchingId;
   const { mutate: updateContract } = usePostSocialworkerContract();
 
   const {
@@ -124,11 +121,15 @@ const SocialworkerEditContractPage = () => {
 export default SocialworkerEditContractPage;
 
 const Container = styled.div`
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0px 16px 112px 16px;
 `;
 
 const NavLeft = styled(ArrowLeft)`
-  margin-left: 20px;
   cursor: pointer;
 `;
 

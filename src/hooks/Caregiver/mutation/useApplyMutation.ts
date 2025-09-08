@@ -19,6 +19,11 @@ export const usePostApplyMutation = (
       queryClient.invalidateQueries({
         queryKey: ['caregiverRecruitmentDetail', recruitmentId],
       });
+      queryClient.invalidateQueries({ queryKey: ['caregiverWorkList'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverApplicationList'] });
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverCompletedMatchingList'],
+      });
       options?.onSuccessCallback?.();
     },
     onError: (error) => {
@@ -40,6 +45,8 @@ export const usePostRejectMutation = (
       queryClient.invalidateQueries({
         queryKey: ['caregiverRecruitmentDetail', recruitmentId],
       });
+      queryClient.invalidateQueries({ queryKey: ['caregiverWorkList'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverApplicationList'] });
       options?.onSuccessCallback?.();
     },
     onError: (error) => {
@@ -62,6 +69,8 @@ export const usePostMediateMutation = (
       queryClient.invalidateQueries({
         queryKey: ['caregiverRecruitmentDetail', recruitmentId],
       });
+      queryClient.invalidateQueries({ queryKey: ['caregiverWorkList'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverApplicationList'] });
       options?.onSuccessCallback?.();
     },
     onError: (error) => {

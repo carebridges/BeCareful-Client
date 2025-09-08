@@ -50,8 +50,10 @@ export const usePostings = (initialData?: PostDetailResponse) => {
     }
   }, [content]);
 
+  const [isUrlChanged, setIsUrlChanged] = useState(false);
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOriginalUrl(e.target.value);
+    setIsUrlChanged(true);
   };
 
   return {
@@ -68,5 +70,7 @@ export const usePostings = (initialData?: PostDetailResponse) => {
     handleTitleChange,
     handleContentChange,
     handleUrlChange,
+    isUrlChanged,
+    setIsUrlChanged,
   };
 };

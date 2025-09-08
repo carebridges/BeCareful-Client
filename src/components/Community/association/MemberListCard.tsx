@@ -8,9 +8,10 @@ import { Member } from '@/types/Community/association';
 
 interface MemberListCardProps {
   member: Member;
+  onClick?: () => void;
 }
 
-const MemberListCard = ({ member }: MemberListCardProps) => {
+const MemberListCard = ({ member, onClick }: MemberListCardProps) => {
   const { associationId } = useParams<{ associationId: string }>();
 
   const { handleNavigate } = useHandleNavigate();
@@ -26,8 +27,13 @@ const MemberListCard = ({ member }: MemberListCardProps) => {
 
   return (
     <CardContainer
-      onClick={() =>
-        handleNavigate(`/community/${associationId}/members/${member.memberId}`)
+      onClick={
+        onClick
+          ? onClick
+          : () =>
+              handleNavigate(
+                `/community/${associationId}/members/${member.memberId}`,
+              )
       }
     >
       <Left>

@@ -24,9 +24,7 @@ export const useWorkApplicationToggleMutation = (
     },
     onSuccess: (_, isActive) => {
       console.log('일자리 매칭 상태 변경 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['applicationToggle'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['caregiverApplication'] });
       options?.onSuccessCallback?.(!isActive);
     },
     onError: (error) => {

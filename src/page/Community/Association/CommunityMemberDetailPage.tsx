@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
@@ -12,6 +10,7 @@ import { LogoutButton } from '@/components/common/Button/LogoutButton';
 import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
+import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ProfileCard from '@/components/shared/ProfileCard';
 import { GENDER_EN_TO_KR } from '@/constants/common/gender';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
@@ -21,18 +20,21 @@ import {
   ASSOCIATION_MEMBER_TYPES,
 } from '@/constants/common/associationRank';
 import { MemberRankRequest } from '@/types/Community/association';
+import { ServerErrorResponse } from '@/types/Common/ServerError';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { AxiosError } from 'axios';
 import {
   useMemberExpel,
   useMembersDetail,
   usePutMembersRank,
 } from '@/api/communityAssociation';
+import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const CommunityMemberDetailPage = () => {
   const { memberId } = useParams<{ memberId: string }>();
 
-  const userInfo = useRecoilValue(currentUserInfo);
-  const isChairman = userInfo.associationRank === 'CHAIRMAN';
+  const { data: myData } = useGetSocialWorkerMy();
+  const isChairman = myData?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const { data } = useMembersDetail(Number(memberId));
 
@@ -42,7 +44,8 @@ const CommunityMemberDetailPage = () => {
   const [memberType, setMemberType] = useState(
     ASSOCIATION_RANK_EN_TO_KR[data?.associationRank ?? 'MEMBER'],
   );
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isChanged, setIsChanged] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -52,7 +55,7 @@ const CommunityMemberDetailPage = () => {
 
   const handleMemberTypeChange = (type: string) => {
     setMemberType(type);
-    setIsDisabled(false);
+    setIsChanged(true);
   };
 
   const { mutate: updateRank } = usePutMembersRank();
@@ -65,7 +68,20 @@ const CommunityMemberDetailPage = () => {
     updateRank(memberInfo, {
       onSuccess: () => {
         setIsTypeModalOpen(false);
-        setIsDisabled(true);
+        setIsChanged(false);
+      },
+      onError: (error: AxiosError<ServerErrorResponse>) => {
+        setIsTypeModalOpen(false);
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          const apiMessage = error.response.data.message;
+          if (apiMessage === '최소 한 명의 임원진이 유지되어야 합니다.') {
+            setIsErrorModalOpen(true);
+          }
+        }
       },
     });
   };
@@ -160,14 +176,26 @@ const CommunityMemberDetailPage = () => {
             </Button>
             <Button
               height="52px"
-              variant={isDisabled ? 'disabled' : 'mainBlue'}
-              disabled={isDisabled}
+              variant={isChanged ? 'mainBlue' : 'disabled'}
+              disabled={!isChanged}
               onClick={handleMemberModalBtn}
             >
               변경하기
             </Button>
           </ModalButtonWrapper>
         </ModalWrapper>
+      </Modal>
+
+      <Modal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      >
+        <ModalLimit
+          title="임원진이 1명만 남아 있습니다."
+          detail={'공석을 방지하려면\n새로운 임원진을 먼저 추가해 주세요.'}
+          onClose={() => setIsErrorModalOpen(false)}
+          handleBtnClick={() => setIsErrorModalOpen(false)}
+        />
       </Modal>
     </Container>
   );

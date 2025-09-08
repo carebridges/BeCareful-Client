@@ -36,9 +36,11 @@ interface CareInfoList {
 }
 
 export interface SocialworkerContractResponse {
+  matchingId: number;
   workDays: WorkDay[];
   workStartTime: string;
   workEndTime: string;
+  workSalaryUnitType: WorkSalaryUnitType;
   workSalaryAmount: number;
   workStartDate: string;
   careInfoList: CareInfoList[];

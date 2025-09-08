@@ -27,6 +27,8 @@ const SocialworkerMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const { data } = useGetSocialWorkerMy();
+  const isSocialworker =
+    data?.socialWorkerInfo.institutionRank === 'SOCIAL_WORKER';
   const isNone = data?.socialWorkerInfo.associationRank === 'NONE';
   const isMember = data?.socialWorkerInfo.associationRank === 'MEMBER';
 
@@ -104,7 +106,7 @@ const SocialworkerMyPage = () => {
           types={data?.institutionInfo.facilityTypes ?? []}
           phoneNumber={data?.institutionInfo.institutionPhoneNumber ?? ''}
         />
-        {!isNone && !isMember && (
+        {!isSocialworker && (
           <Button
             height="52px"
             variant="subBlue"

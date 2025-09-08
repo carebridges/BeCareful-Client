@@ -17,13 +17,19 @@ export interface SocialworkerMyResponse {
   associationName: string;
 }
 
+interface EditInstitutionInfo {
+  institutionId: number;
+  name: string;
+  address: string;
+}
+
 export interface SocialworkerMyEditResponse {
   name: string;
   nickName: string;
-  birthYymmdd: number;
+  birthYymmdd: string;
   genderCode: number;
   phoneNumber: string;
-  institutionName: string;
+  institutionInfo: EditInstitutionInfo;
   institutionRank: InstitutionRank;
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;

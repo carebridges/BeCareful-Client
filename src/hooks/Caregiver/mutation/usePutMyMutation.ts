@@ -13,9 +13,8 @@ export const usePutMyMutation = (options?: UsePutMyOptions) => {
     mutationFn: (myData: CaregiverMyRequest) => putCaregiverMy(myData),
     onSuccess: () => {
       console.log('프로필 수정하기 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverMy'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['caregiverMypageInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverHomeInfo'] });
       options?.onSuccessCallback?.();
     },
     onError: (error) => {

@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
+import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { styled } from 'styled-components';
 import { useSearchInstitution } from '@/api/signupFunnel';
 import { Institution } from '@/types/SocialSignUp';
 
 export const InstitutionSearchInput = ({
   onInstitutionSelect,
+  institution,
 }: {
   onInstitutionSelect: (name: string, id?: number, address?: string) => void;
+  institution?: string;
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(institution ? institution : '');
   const [showDropdown, setShowDropdown] = useState(false);
   const [searched, setSearched] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -52,6 +55,12 @@ export const InstitutionSearchInput = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (institution !== searchTerm) {
+      setSearchTerm(institution || '');
+    }
+  }, [institution]);
+
   return (
     <Wrapper ref={wrapperRef}>
       <SearchContainer>
@@ -64,8 +73,9 @@ export const InstitutionSearchInput = ({
             setSearched(false);
           }}
         />
-        <IconWrapper onClick={() => setSearched(true)}>
-          <SearchIcon />
+        <IconWrapper>
+          <Close onClick={() => setSearchTerm('')} />
+          <SearchIcon onClick={() => setSearched(true)} />
         </IconWrapper>
       </SearchContainer>
 
@@ -140,6 +150,11 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+`;
+
+const Close = styled(CloseIcon)`
+  cursor: pointer;
 `;
 
 const Dropdown = styled.ul`

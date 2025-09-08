@@ -83,7 +83,7 @@ const StepWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  overflow-y: auto;
+  // overflow-y: auto;
   padding-bottom: 112px;
 `;
 

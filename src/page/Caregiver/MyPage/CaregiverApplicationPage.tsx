@@ -264,7 +264,7 @@ const CaregiverApplicationPage = () => {
             setIsRegisterModalOpen(false);
           }}
           title={'일자리 신청서 작성이\n완료되었습니다!'}
-          detail="등록 보상 포인트 100P가 지급되었습니다."
+          detail="구인 연락을 기다려주세요!"
           left="닫기"
           right="내 신청서 보기"
           handleLeftBtnClick={() => setIsRegisterModalOpen(false)}
