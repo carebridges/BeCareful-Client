@@ -20,3 +20,9 @@ export const INSTITUTION_RANK_EN_TO_RANK: {
   REPRESENTATIVE: 'REPRESENTATIVE',
   SOCIAL_WORKER: 'SOCIAL_WORKER',
 };
+
+export const INSTITUTION_RANK_LIST = [
+  { value: 'CENTER_DIRECTOR', text: '센터장 입니다.' },
+  { value: 'REPRESENTATIVE', text: '대표 입니다.' },
+  { value: 'SOCIAL_WORKER', text: '사회복지사 입니다.' },
+];

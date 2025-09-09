@@ -8,6 +8,8 @@ interface SecretInputBoxProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   masked?: boolean;
+  maxLength?: number;
+  inputMode?: React.HTMLAttributes<unknown>['inputMode'];
 }
 
 export const SecretInputBox = ({
@@ -18,6 +20,8 @@ export const SecretInputBox = ({
   value = '',
   onChange,
   masked = true,
+  maxLength,
+  inputMode,
 }: SecretInputBoxProps) => {
   return (
     <InputWrapper width={width}>
@@ -28,6 +32,8 @@ export const SecretInputBox = ({
           state={state}
           value={value}
           onChange={onChange}
+          maxLength={maxLength}
+          inputMode={inputMode}
         />
       </InputContainer>
       {guide && (

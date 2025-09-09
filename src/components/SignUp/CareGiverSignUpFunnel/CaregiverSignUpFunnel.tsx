@@ -7,7 +7,7 @@ import { Step6UploadPhoto } from '@/components/SignUp/CareGiverSignUpFunnel/Step
 import { Step7SignUpComplete } from '@/components/SignUp/CareGiverSignUpFunnel/Step7SignUpComplete';
 import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
 
-import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
+import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { styled } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,7 +43,7 @@ export const CareGiverSignUpFunnel = () => {
   return (
     <>
       <IconContainer>
-        <IconArrowLeft onClick={handleClickBack} />
+        <IconClose onClick={handleClickBack} />
       </IconContainer>
       {!isLastStep && <ProgressBar percent={percent} />}
       <AnimatePresence mode="wait">

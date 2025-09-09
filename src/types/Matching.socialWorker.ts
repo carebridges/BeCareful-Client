@@ -154,3 +154,18 @@ export interface ElderMatchingStatus {
   matchingCount: number;
   applyCount: number;
 }
+
+type CareerDetail = {
+  workInstitution: string;
+  workYear: string;
+};
+
+type CareerInfo = {
+  careerType: string | null | undefined;
+  introduce?: string | null;
+  careerDetails?: CareerDetail[] | null;
+};
+
+export interface CareerSectionProps {
+  careerInfo?: CareerInfo | null;
+}

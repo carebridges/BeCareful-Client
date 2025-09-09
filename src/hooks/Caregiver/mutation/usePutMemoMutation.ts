@@ -16,8 +16,9 @@ export const usePutMemoMutation = (
     mutationFn: (note: MemoEditRequest) => putMemo(workId, note),
     onSuccess: () => {
       console.log('나의 일자리: 메모 수정 성공');
+      queryClient.invalidateQueries({ queryKey: ['note', workId] });
       queryClient.invalidateQueries({
-        queryKey: ['note', workId],
+        queryKey: ['caregiverCompletedMatchingList'],
       });
       options?.onSuccessCallback?.();
     },

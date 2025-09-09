@@ -7,10 +7,10 @@ import { formatDateTime } from '@/utils/formatTime';
 
 interface TitleSectionProps {
   post: PostDetailResponse | undefined;
-  onClick: () => void;
+  onOpenPostActionSheet: () => void;
 }
 
-const TitleSection = ({ post, onClick }: TitleSectionProps) => {
+const TitleSection = ({ post, onOpenPostActionSheet }: TitleSectionProps) => {
   return (
     <TitleWrapper>
       <Title>
@@ -51,7 +51,7 @@ const TitleSection = ({ post, onClick }: TitleSectionProps) => {
             </div>
           </div>
         </div>
-        {post?.isMyPost && <Dots onClick={onClick} />}
+        {post?.isMyPost && <Dots onClick={onOpenPostActionSheet} />}
       </Writer>
     </TitleWrapper>
   );

@@ -155,6 +155,8 @@ const DropdownMenu = styled.div`
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 10px;
   display: flex;
+
+  z-index: 1;
 `;
 
 const ScrollContainer = styled.div`

@@ -125,6 +125,12 @@ const CaregiverEditProfilePage = () => {
             height="52px"
             variant="subBlue"
             onClick={() => setIsModalOpen(true)}
+            style={{
+              display: 'flex',
+              gap: '10px',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
           >
             <Plus />
             자격증 추가하기

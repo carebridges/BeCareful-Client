@@ -43,7 +43,7 @@ export const useCaregiverHomeInfoQuery = () => {
 // 확정된 일자리의 리스트 반환 - 나의 일자리
 export const useMyWorkListQuery = () => {
   return useQuery<CaregiverCompletedMatchingResponse, Error>({
-    queryKey: ['caregiverCompletedMatching'],
+    queryKey: ['caregiverCompletedMatchingList'],
     queryFn: async () => {
       const response = await axiosInstance.get(
         '/caregiver/my/completed-matching-list',
@@ -272,20 +272,32 @@ export const usePostCaregiverContract = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (contractId: number) => {
+    mutationFn: async (variables: {
+      contractId: number;
+      matchingId: number;
+      recruitmentId: number;
+    }) => {
       const response = await axiosInstance.post(
-        `/chat/caregiver/contract/${contractId}/confirm`,
+        `/chat/caregiver/contract/${variables.contractId}/confirm`,
       );
       return response;
     },
-    onSuccess: (response) => {
-      console.log(
-        'usePostCaregiverContract - 요양보호사 매칭 성공:',
-        response.data,
-      );
+    onSuccess: (_, variables) => {
+      const { matchingId, recruitmentId } = variables;
+      console.log('usePostCaregiverContract - 요양보호사 매칭 성공:');
       queryClient.invalidateQueries({
-        queryKey: ['caregiverContract'],
+        queryKey: ['caregiverCompletedMatchingList'],
       });
+      queryClient.invalidateQueries({ queryKey: ['caregiverWorkList'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverApplicationList'] });
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverApplicationDetail', recruitmentId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverChat', matchingId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverHomeInfo'] });
     },
     onError: (error) => {
       console.error('usePostCaregiverContract - 요양보호사 매칭 실패:', error);

@@ -11,6 +11,8 @@ import { useReject } from '@/hooks/Caregiver/work/useReject';
 import { useMediate } from '@/hooks/Caregiver/work/useMediate';
 import { handleModal } from '@/utils/handleModal';
 import { useRecruitmentDetailQuery } from '@/api/caregiver';
+import { useRecoilValue } from 'recoil';
+import { currentUserInfo } from '@/recoil/currentUserInfo';
 
 const CaregiverWorkDetailPage = () => {
   const { recruitmentId: recruitmentIdParam } = useParams<{
@@ -19,6 +21,7 @@ const CaregiverWorkDetailPage = () => {
   const recruitmentId = Number(recruitmentIdParam);
 
   const { handleNavigate } = useHandleNavigate();
+  const userInfo = useRecoilValue(currentUserInfo);
 
   // 매칭 공고 상세 조회
   const { data, error } = useRecruitmentDetailQuery(Number(recruitmentId));
@@ -76,9 +79,7 @@ const CaregiverWorkDetailPage = () => {
         <ModalButtons
           onClose={() => setIsApplyModalOpen(false)}
           title={'일자리 지원이\n성공적으로 완료되었어요!'}
-          detail={
-            '지원해주셔서 감사합니다.\n검토 후 합격시 채팅으로 메시지를 보내드립니다.'
-          }
+          detail="구인 연락을 기다려주세요!"
           left="다른 일자리 보기"
           right="지원 내역 보기"
           handleLeftBtnClick={() => handleNavigate('/caregiver/work')}
@@ -114,8 +115,7 @@ const CaregiverWorkDetailPage = () => {
         <ModalLimit
           onClose={() => setIsDeleteModalOpen(false)}
           title="일자리가 목록에서 삭제되었어요"
-          // detail={`${name}님께 맞는 다른 일자리를 찾아볼게요!`}
-          detail="이선혜님께 맞는 다른 일자리를 찾아볼게요!"
+          detail={`${userInfo.realName ?? '회원'}님께 맞는 다른 일자리를 찾아볼게요!`}
           button="다른 일자리 보러가기"
           handleBtnClick={() => handleNavigate('/caregiver/work')}
         />
@@ -189,10 +189,8 @@ const CaregiverWorkDetailPage = () => {
       >
         <ModalButtons
           onClose={() => setIsCompleteMediateModalOpen(false)}
-          title={'근무조건을\n조율하여 지원했어요!'}
-          detail={
-            '입력하신 조건으로 지원이 완료되었습니다.\n검토 후 합격시 채팅으로 메시지를 보내드립니다.'
-          }
+          title={'입력하신 조건으로\n일자리 지원이 완료되었어요!'}
+          detail="구인 연락을 기다려주세요!"
           left="다른 일자리 보기"
           right="지원 내역 보기"
           handleLeftBtnClick={() => handleNavigate('/caregiver/work')}

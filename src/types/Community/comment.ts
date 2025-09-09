@@ -7,6 +7,7 @@ export interface Comment {
   content: string;
   createdAt: string;
   author: AuthorInfo;
+  isMyComment: boolean;
 }
 
 // 댓글 내용 조회 (댓글 목록)

@@ -17,7 +17,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
       <ProfileCard
         profileImgURL={data?.profileImageUrl ?? ''}
         name={data?.name ?? ''}
-        point={1500}
+        // point={1500}
         phoneNumber={data?.phoneNumber ?? ''}
         age={data?.age ?? 0}
         gender={GENDER_EN_TO_KR[data?.gender ?? 'FEMALE']}

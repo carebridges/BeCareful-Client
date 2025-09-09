@@ -51,6 +51,13 @@ export interface WorkApplication {
   workLocations: WorkLocation[];
 }
 
+export interface InstitutionInfo {
+  institutionId: number;
+  institutionCode: string;
+  name: string;
+  address: string;
+}
+
 // 매칭 공고
 export interface RecruitmentInfo {
   recruitmentId: number;
@@ -63,7 +70,7 @@ export interface RecruitmentInfo {
   workSalaryAmount: number;
   description: string;
   isRecruiting: boolean;
-  institutionName: string;
+  institutionInfo: InstitutionInfo;
 }
 
 // 매칭 공고 리스트

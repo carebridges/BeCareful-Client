@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useAssociationInfo } from '@/api/communityAssociation';
+import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const CommunityAssociationInfoPage = () => {
   const { associationId } = useParams<{ associationId: string }>();
@@ -15,8 +14,8 @@ const CommunityAssociationInfoPage = () => {
 
   const { data } = useAssociationInfo();
 
-  const userInfo = useRecoilValue(currentUserInfo);
-  const isChairman = userInfo.associationRank === 'CHAIRMAN';
+  const { data: myData } = useGetSocialWorkerMy();
+  const isChairman = myData?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const associationInfo = [
     { title: '설립일', detail: data?.associationEstablishedYear },
@@ -71,7 +70,7 @@ const CommunityAssociationInfoPage = () => {
                 handleNavigate(`/community/${associationId}/edit/chairman`)
               }
             >
-              회장 정보 수정하기
+              회장 권한 위임하기
             </Button>
           )}
         </InfoWrapper>

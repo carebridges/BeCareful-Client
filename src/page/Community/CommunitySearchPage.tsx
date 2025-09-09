@@ -1,8 +1,9 @@
 import styled from 'styled-components';
+import React from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as NoRecentSearch } from '@/assets/icons/community/Search.svg';
 import { ReactComponent as SearchIcon } from '@/assets/icons/Search.svg';
-import { ReactComponent as CloseIcon } from '@/assets/icons/community/CloseCircle.svg';
+import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import PostOverview from '@/components/Community/common/PostOverview';
 import { COMMUNITY_BOARDS_TAB } from '@/constants/community/communityBoard';
@@ -106,11 +107,11 @@ const CommunitySearchPage = () => {
             </BoardFilterWrapper>
             <label>{searchResults.length}건</label>
             <PostWrapper>
-              {searchResults.map((post) => (
-                <>
+              {searchResults.map((post, index) => (
+                <React.Fragment key={post.postId}>
                   <PostOverview key={post.postId} post={post} />
-                  <Border />
-                </>
+                  {index < searchResults.length - 1 && <Border />}
+                </React.Fragment>
               ))}
             </PostWrapper>
           </>

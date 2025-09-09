@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { ReactComponent as Close } from '@/assets/icons/Close.svg';
-// import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
+import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
 import { ReactComponent as Post } from '@/assets/icons/community/Post.svg';
 import { ReactComponent as ChevronDown } from '@/assets/icons/community/ChevronDown.svg';
 import { ReactComponent as Photo } from '@/assets/icons/community/Photo.svg';
@@ -25,7 +25,7 @@ import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection
 import { useModals } from '@/hooks/Community/WritePage/useModals';
 import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
-// import { useSave } from '@/hooks/Community/WritePage/useSave';
+import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
 import { PostRequest } from '@/types/Community/post';
 import { usePostDetail } from '@/api/community';
@@ -46,7 +46,7 @@ const CommunityWritePage = () => {
     postId,
   );
 
-  const { handleNavigate } = useHandleNavigate();
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   // 게시판 관련
   const {
@@ -64,10 +64,8 @@ const CommunityWritePage = () => {
   const {
     modalContent,
     isLimitModalOpen,
-    isSaveModalOpen,
     isCloseModalOpen,
     isPostModalOpen,
-    setIsSaveModalOpen,
     setIsCloseModalOpen,
     setIsPostModalOpen,
     handleCloseLimitModal,
@@ -82,14 +80,16 @@ const CommunityWritePage = () => {
     content,
     contentRef,
     originalUrl,
-    // setIsImportant,
-    // setTitle,
-    // setContent,
-    // setOriginalUrl,
+    setIsImportant,
+    setTitle,
+    setContent,
+    setOriginalUrl,
     handleToggleChange,
     handleTitleChange,
     handleContentChange,
     handleUrlChange,
+    isUrlChanged,
+    setIsUrlChanged,
   } = usePostings(initialData);
 
   // 미디어 파일 업로드
@@ -99,9 +99,9 @@ const CommunityWritePage = () => {
     attachedFiles,
     photoRef,
     fileRef,
-    // setPhotos,
-    // setVideos,
-    // setAttachedFiles,
+    setPhotos,
+    setVideos,
+    setAttachedFiles,
     handlePhotoClick,
     handleFileClick,
     handleMediaChange,
@@ -109,22 +109,30 @@ const CommunityWritePage = () => {
   } = useMedia(initialData);
 
   // 임시 저장
-  // const { handleSaveDraft } = useSave({
-  //   board,
-  //   postData: { title, content, isImportant, originalUrl },
-  //   mediaData: { photos, videos, attachedFiles },
-  //   setPostData: ({ title, content, isImportant, originalUrl }) => {
-  //     setTitle(title);
-  //     setContent(content);
-  //     setIsImportant(isImportant);
-  //     setOriginalUrl(originalUrl);
-  //   },
-  //   setMediaData: ({ photos, videos, attachedFiles }) => {
-  //     setPhotos(photos);
-  //     setVideos(videos);
-  //     setAttachedFiles(attachedFiles);
-  //   },
-  // });
+  const {
+    isSaveModalOpen,
+    setIsSaveModalOpen,
+    isDraftModalOpen,
+    setIsDraftModalOpen,
+    saveDraft,
+    continueWriting,
+    newWriting,
+  } = useSave({
+    board,
+    postData: { title, content, isImportant, originalUrl },
+    mediaData: { photos, videos, attachedFiles },
+    setPostData: ({ title, content, isImportant, originalUrl }) => {
+      setTitle(title);
+      setContent(content);
+      setIsImportant(isImportant);
+      setOriginalUrl(originalUrl);
+    },
+    setMediaData: ({ photos, videos, attachedFiles }) => {
+      setPhotos(photos);
+      setVideos(videos);
+      setAttachedFiles(attachedFiles);
+    },
+  });
 
   // 내용이 다 채워져 있어야 작성 버튼 클릭 가능
   const isActive =
@@ -168,14 +176,10 @@ const CommunityWritePage = () => {
         }
         right={
           <NavRight isActive={isActive}>
-            {/* <button
-              className="store"
-              onClick={handleSaveDraft}
-              disabled={!isActive}
-            >
+            <button className="store" onClick={saveDraft} disabled={!isActive}>
               <Store className="store-svg" />
               임시저장
-            </button> */}
+            </button>
             <button
               className="post"
               onClick={() => setIsPostModalOpen(true)}
@@ -272,7 +276,9 @@ const CommunityWritePage = () => {
             multiple // 여러 파일 선택 가능하도록 설정
             accept=".pdf, .doc, .docx, .hwp" // 특정 파일 형식만 허용
           />
-          <LinkIcon onClick={() => setIsUrlSheetOpen(true)} />
+          {board === '공단 공지' && (
+            <LinkIcon onClick={() => setIsUrlSheetOpen(true)} />
+          )}
         </div>
       </Bottom>
 
@@ -292,8 +298,23 @@ const CommunityWritePage = () => {
           onClose={() => setIsSaveModalOpen(false)}
           left="뒤로"
           right="계속 작성하기"
-          handleLeftBtnClick={() => setIsSaveModalOpen(false)}
+          handleLeftBtnClick={handleGoBack}
           handleRightBtnClick={() => setIsSaveModalOpen(false)}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isDraftModalOpen}
+        onClose={() => setIsDraftModalOpen(false)}
+      >
+        <ModalButtons
+          title="이어서 쓰시겠습니까?"
+          detail="기존에 작성했던 내용을 이어서 쓸 수 있습니다."
+          onClose={() => setIsDraftModalOpen(false)}
+          left="이어쓰기"
+          right="새로쓰기"
+          handleLeftBtnClick={continueWriting}
+          handleRightBtnClick={newWriting}
         />
       </Modal>
 
@@ -314,16 +335,8 @@ const CommunityWritePage = () => {
 
       <Modal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)}>
         <ModalButtons
-          title={
-            isEditMode
-              ? '수정한 내용을 등록하시겠습니까?'
-              : '작성한 내용을 등록하시겠습니까?'
-          }
-          detail={
-            isEditMode
-              ? ''
-              : '게시물이 등록되면 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.'
-          }
+          title={`${isEditMode ? '수정' : '작성'}한 내용을 등록하시겠습니까?`}
+          detail={`${isEditMode ? '수정된 게시글은' : '게시물이 등록되면'} 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.`}
           onClose={() => setIsPostModalOpen(false)}
           left="취소"
           right={isEditMode ? '수정하기' : '등록하기'}
@@ -353,10 +366,13 @@ const CommunityWritePage = () => {
             취소
           </Button>
           <Button
-            width="100%"
-            height="52px"
-            variant="mainBlue"
-            onClick={() => setIsUrlSheetOpen(false)}
+            height="56px"
+            variant={isUrlChanged ? 'mainBlue' : 'disabled'}
+            disabled={!isUrlChanged}
+            onClick={() => {
+              setIsUrlSheetOpen(false);
+              setIsUrlChanged(false);
+            }}
           >
             확인
           </Button>

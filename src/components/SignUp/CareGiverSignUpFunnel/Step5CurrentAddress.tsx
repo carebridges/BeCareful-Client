@@ -1,36 +1,29 @@
 import { Button } from '@/components/common/Button/Button';
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
 import { SearchInput } from '@/components/SignUp/CareGiverSignUpFunnel/common/SearchInput';
+import { PostcodeModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step5CurrentAddress/PostcodeEmbed';
 import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
-import { usePostcodeLoader } from '@/hooks/SignUp/usePostcodeLoader';
 import { PostcodeData } from '@/types/daum-postcode';
+import { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
 
 export const Step5CurrentAddress = () => {
-  const { goToNext, formData, setFormData } = useCaregiverSignUpContext();
-  const isPostcodeReady = usePostcodeLoader();
+  const { goToNext, formData, setFormData, goToPrev } =
+    useCaregiverSignUpContext();
+  const [open, setOpen] = useState(false);
 
-  const openPostcode = () => {
-    if (!isPostcodeReady || !window.daum?.Postcode) {
-      console.error('다음 API 로드 실패');
-      return;
-    }
-
-    new window.daum.Postcode({
-      oncomplete: (data: PostcodeData) => {
-        setFormData((prev) => ({
-          ...prev,
-          streetAddress: data.roadAddress,
-        }));
-      },
-    }).open();
-  };
+  const handleComplete = useCallback(
+    (data: PostcodeData) => {
+      setFormData((prev) => ({
+        ...prev,
+        streetAddress: data.roadAddress,
+      }));
+    },
+    [setFormData],
+  );
 
   const handleDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      detailAddress: e.target.value,
-    }));
+    setFormData((prev) => ({ ...prev, detailAddress: e.target.value }));
   };
 
   const isNextEnabled =
@@ -50,7 +43,7 @@ export const Step5CurrentAddress = () => {
       <CardContainer>
         <SearchInput
           placeholder="도로명, 지번, 건물명 검색"
-          onClick={openPostcode}
+          onClick={() => setOpen(true)}
           value={formData.streetAddress}
           readOnly
         />
@@ -70,6 +63,9 @@ export const Step5CurrentAddress = () => {
       )}
 
       <ButtonContainer>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
+          이전
+        </Button>
         <Button
           onClick={goToNext}
           disabled={!isNextEnabled}
@@ -79,10 +75,15 @@ export const Step5CurrentAddress = () => {
           다음 단계로 이동
         </Button>
       </ButtonContainer>
+
+      <PostcodeModal
+        open={open}
+        onClose={() => setOpen(false)}
+        onComplete={handleComplete}
+      />
     </StepWrapper>
   );
 };
-
 const StepWrapper = styled.div`
   display: flex;
   flex-direction: column;

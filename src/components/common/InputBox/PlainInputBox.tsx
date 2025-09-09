@@ -9,6 +9,8 @@ interface PlainInputBoxProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   suffix?: React.ReactNode;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
+  maxLength?: number;
 }
 
 export const PlainInputBox = ({
@@ -20,6 +22,8 @@ export const PlainInputBox = ({
   onChange,
   onKeyDown,
   suffix,
+  inputMode,
+  maxLength,
 }: PlainInputBoxProps) => {
   return (
     <InputWrapper width={width}>
@@ -30,6 +34,8 @@ export const PlainInputBox = ({
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        inputMode={inputMode}
+        maxLength={maxLength}
       ></InputDefault>
       {guide === '' ? (
         <></>

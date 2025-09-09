@@ -18,8 +18,6 @@ interface CaregiverWorkDetailProps {
 const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
-  const chatNew = false;
-
   const workInfo = [
     {
       title: '장기요양등급',
@@ -84,11 +82,11 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   const institutionInfo = [
     {
       title: '기관명',
-      detail: work.institutionInfo.institutionName,
+      detail: work.institutionInfo.name,
     },
     {
       title: '주소',
-      detail: work.institutionInfo.institutionOpenYear,
+      detail: work.institutionInfo.address,
     },
   ];
 
@@ -98,7 +96,7 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
         left={<NavLeft onClick={handleGoBack} />}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {work.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="white"
@@ -108,7 +106,7 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
         <div className="top">
           <ApplyDate>
             <label className="institution">
-              {work.recruitmentInfo.institutionName}
+              {work.recruitmentInfo.institutionInfo.name}
             </label>
             {date && (
               <label className="date">{date.replace(/-/g, '.')} 신청</label>

@@ -8,9 +8,10 @@ export interface PostcodeData {
 
 declare global {
   interface Window {
-    daum: {
+    daum?: {
       Postcode: new (options: { oncomplete: (data: PostcodeData) => void }) => {
         open: () => void;
+        embed: (el: HTMLElement, opts?: { autoClose?: boolean }) => void;
       };
     };
   }

@@ -1,10 +1,25 @@
-import { PostDetailResponse } from '@/types/Community/post';
 import { useCallback, useEffect, useState } from 'react';
+import { PostDetailResponse } from '@/types/Community/post';
 
-export const useKakaoShare = () => {
+/**
+ * 게시글 상세 페이지의 공유, 링크 복사, 파일 처리 관련 로직과 UI 상태를 관리하는 커스텀 훅.
+ */
+export const useCommunityPostInteractions = () => {
+  // 파일 다운로드
+  const handleFileDownload = (fileUrl: string) => {
+    window.open(fileUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  // 원본 URL로 이동
+  const handleOriginalLinkClick = (originalUrl?: string) => {
+    if (originalUrl) {
+      window.open(originalUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  // 카카오톡 공유하기
   // bottomsheet - 공유 버튼
   const [isShareSheetOpen, setIsShareSheetOpen] = useState(false);
-
   const [isKakaoReady, setIsKakaoReady] = useState(false);
 
   // SDK 로드 함수
@@ -61,9 +76,27 @@ export const useKakaoShare = () => {
     [isKakaoReady],
   );
 
+  // 현재 게시글 링크 복사
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const handleCopy = async () => {
+    try {
+      const currentUrl = window.location.href;
+      await navigator.clipboard.writeText(currentUrl);
+      setIsLinkModalOpen(true);
+      //   setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error('링크 복사 실패:', err);
+    }
+  };
+
   return {
+    handleFileDownload,
+    handleOriginalLinkClick,
     isShareSheetOpen,
     setIsShareSheetOpen,
     handleKakaoShare,
+    isLinkModalOpen,
+    setIsLinkModalOpen,
+    handleCopy,
   };
 };

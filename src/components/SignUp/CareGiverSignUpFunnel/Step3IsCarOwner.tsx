@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { styled } from 'styled-components';
 
 export const Step3IsCarOwner = () => {
-  const { goToNext, setFormData } = useCaregiverSignUpContext();
+  const { goToNext, setFormData, goToPrev } = useCaregiverSignUpContext();
+
   const [selectedCard, setSelectedCard] = useState<'yes' | 'no' | null>(null);
   const handleCardSelect = (cardType: 'yes' | 'no') => {
     setSelectedCard(cardType);
@@ -34,6 +35,9 @@ export const Step3IsCarOwner = () => {
         />
       </CardContainer>
       <ButtonContainer>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
+          이전
+        </Button>
         <Button
           onClick={goToNext}
           disabled={!selectedCard}

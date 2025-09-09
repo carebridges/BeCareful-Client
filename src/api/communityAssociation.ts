@@ -1,4 +1,6 @@
+import { AxiosError } from 'axios';
 import { axiosInstance } from '@/api/axiosInstance';
+import { ServerErrorResponse } from '@/types/Common/ServerError';
 import {
   AssociationChairmanRequest,
   AssociationInfoRequest,
@@ -71,14 +73,10 @@ export const usePutAssociationInfo = () => {
       );
       return response;
     },
-    onSuccess: (response) => {
-      console.log(
-        'usePutAssociationInfo - 협회 정보 수정 성공:',
-        response.data,
-      );
-      queryClient.invalidateQueries({
-        queryKey: ['associationInfo'],
-      });
+    onSuccess: () => {
+      console.log('usePutAssociationInfo - 협회 정보 수정 성공');
+      queryClient.invalidateQueries({ queryKey: ['associationInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerHome'] });
     },
     onError: (error) => {
       console.error('usePutAssociationInfo - 협회 정보 수정 실패:', error);
@@ -98,11 +96,15 @@ export const useChangeChairman = () => {
       );
       return response;
     },
-    onSuccess: (response) => {
+    onSuccess: (response, chairman) => {
       console.log('useChangeChairman - 협회장 위임 성공:', response.data);
+      queryClient.invalidateQueries({ queryKey: ['associationInfo'] });
+      queryClient.invalidateQueries({ queryKey: ['members'] });
+      queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
       queryClient.invalidateQueries({
-        queryKey: ['associationInfo'],
+        queryKey: ['memberDetail', chairman.newChairmanId],
       });
+      // queryClient.invalidateQueries({ queryKey: ['memberDetail', chairman.oldChairmanMemberId] });
     },
     onError: (error) => {
       console.error('useChangeChairman - 협회장 위임 실패:', error);
@@ -135,7 +137,7 @@ export const useMembers = () => {
 // 협회 회원 상세 정보 조회
 export const useMembersDetail = (memberId: number) => {
   return useQuery<MemberDetailResponse, Error>({
-    queryKey: ['memberDetail'],
+    queryKey: ['memberDetail', memberId],
     queryFn: async () => {
       const response = await axiosInstance.get(
         `/association/members/${memberId}`,
@@ -157,15 +159,15 @@ export const usePutMembersRank = () => {
       );
       return response;
     },
-    onSuccess: (response) => {
+    onSuccess: (response, memberInfo) => {
       console.log('usePutMembersRank - 회원 등급 변경 성공:', response.data);
       queryClient.invalidateQueries({
-        queryKey: ['memberRank'],
+        queryKey: ['memberDetail', memberInfo.memberId],
       });
-      queryClient.invalidateQueries({ queryKey: ['memberDetail'] });
       queryClient.invalidateQueries({ queryKey: ['members'] });
+      queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
     },
-    onError: (error) => {
+    onError: (error: AxiosError<ServerErrorResponse>) => {
       console.error('usePutMembersRank - 회원 등급 변경 실패:', error);
     },
   });
@@ -193,11 +195,11 @@ export const useJoinRequestAccept = (id: number) => {
       );
       return response;
     },
-    onSuccess: (response) => {
-      console.log('useJoinRequestAccept - 가입 요청 승인 성공:', response.data);
-      queryClient.invalidateQueries({
-        queryKey: ['requestAccept', id],
-      });
+    onSuccess: () => {
+      console.log('useJoinRequestAccept - 가입 요청 승인 성공');
+      queryClient.invalidateQueries({ queryKey: ['joinRequest'] });
+      queryClient.invalidateQueries({ queryKey: ['members'] });
+      queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
     },
     onError: (error) => {
       console.error('useJoinRequestAccept - 가입 요청 승인 실패:', error);
@@ -216,11 +218,10 @@ export const useJoinRequestReject = (id: number) => {
       );
       return response;
     },
-    onSuccess: (response) => {
-      console.log('useJoinRequestReject - 가입 요청 거절 성공:', response.data);
-      queryClient.invalidateQueries({
-        queryKey: ['requestReject', id],
-      });
+    onSuccess: () => {
+      console.log('useJoinRequestReject - 가입 요청 거절 성공');
+      queryClient.invalidateQueries({ queryKey: ['joinRequest'] });
+      queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
     },
     onError: (error) => {
       console.error('useJoinRequestReject - 가입 요청 거절 실패:', error);
@@ -239,17 +240,11 @@ export const useMemberExpel = (memberId: number) => {
       );
       return response;
     },
-    onSuccess: (response) => {
-      console.log('useMemberExpel - 회원 강제 탈퇴 성공:', response.data);
-      queryClient.invalidateQueries({
-        queryKey: ['memberDetail', memberId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['membersOverview'],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['members'],
-      });
+    onSuccess: () => {
+      console.log('useMemberExpel - 회원 강제 탈퇴 성공');
+      queryClient.invalidateQueries({ queryKey: ['memberDetail', memberId] });
+      queryClient.invalidateQueries({ queryKey: ['members'] });
+      queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
     },
     onError: (error) => {
       console.error('useMemberExpel - 회원 강제 탈퇴 실패:', error);
@@ -273,6 +268,8 @@ export const usePutAssociationLeave = () => {
       queryClient.invalidateQueries({ queryKey: ['communityAccess'] });
       queryClient.invalidateQueries({ queryKey: ['membersOverview'] });
       queryClient.invalidateQueries({ queryKey: ['members'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerMy'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerMyEdit'] });
     },
     onError: (error) => {
       console.error('usePutAssociationLeave - 협회 탈퇴하기 실패:', error);

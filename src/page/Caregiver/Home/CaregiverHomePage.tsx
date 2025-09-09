@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
-import { ReactComponent as Point } from '@/assets/icons/Point.svg';
-import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
+// import { ReactComponent as Point } from '@/assets/icons/Point.svg';
+// import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Person } from '@/assets/icons/caregiver/home/Person.svg';
 import { ReactComponent as ArrowRight } from '@/assets/icons/ArrowRight.svg';
 import { ReactComponent as ArrowRightCircle } from '@/assets/icons/caregiver/home/ArrowRightCircle.svg';
@@ -17,8 +17,6 @@ import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const chatNew = true;
-
   const { data, error } = useCaregiverHomeInfoQuery();
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);
@@ -30,7 +28,7 @@ const CaregiverHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {data?.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"
@@ -50,15 +48,6 @@ const CaregiverHomePage = () => {
               오늘의 일정이에요!
             </label>
           )}
-          <div
-            className="pointWrapper"
-            onClick={() => handleNavigate('/caregiver/point')}
-          >
-            <Point />
-            {/* <label className="point">{data.point}</label> */}
-            <label className="point">1,500P</label>
-            <ChevronRight />
-          </div>
         </div>
         <Person style={{ position: 'absolute', right: '0', top: '51px' }} />
       </BannerWrapper>

@@ -20,25 +20,21 @@ export const CheckBox = ({
   guide,
 }: CheckBoxProps) => {
   return (
-    <CheckWrapper>
+    <CheckWrapper onClick={(e) => e.stopPropagation()}>
       <Check
         type="checkbox"
         id={id}
         checked={checked}
         onChange={() => onChange(!checked)}
       />
-      <LabelWrapper>
+      <LabelWrapper htmlFor={id}>
         <CheckIcon aria-hidden="true" $borderRadius={borderRadius} />
         {select === '' ? (
-          <Label htmlFor={id}>{label}</Label>
+          <Label>{label}</Label>
         ) : (
           <>
-            <SelectLabel htmlFor={id} $select={select}>
-              {select}
-            </SelectLabel>
-            <GuideLabel $select={select} htmlFor={id}>
-              {guide}
-            </GuideLabel>
+            <SelectLabel $select={select}>{select}</SelectLabel>
+            <GuideLabel $select={select}>{guide}</GuideLabel>
           </>
         )}
       </LabelWrapper>
@@ -57,11 +53,12 @@ const CheckHidden = styled.input`
   display: none;
 `;
 
-const LabelWrapper = styled.div`
+const LabelWrapper = styled.label`
   position: relative;
   display: flex;
   gap: 8px;
   padding-left: 28px;
+  cursor: pointer;
 `;
 
 const CheckIcon = styled.span<{ $borderRadius: string }>`
@@ -73,6 +70,7 @@ const CheckIcon = styled.span<{ $borderRadius: string }>`
   left: 0;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 
   &::before {
     content: '';
@@ -88,7 +86,7 @@ const CheckIcon = styled.span<{ $borderRadius: string }>`
   }
 `;
 
-const Label = styled.label`
+const Label = styled.span`
   position: relative;
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
@@ -96,7 +94,7 @@ const Label = styled.label`
   color: ${({ theme }) => theme.colors.gray900};
 `;
 
-const SelectLabel = styled.label<{ $select: string }>`
+const SelectLabel = styled.span<{ $select: string }>`
   position: relative;
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
@@ -105,7 +103,7 @@ const SelectLabel = styled.label<{ $select: string }>`
     $select === '선택' ? theme.colors.gray300 : theme.colors.gray900};
 `;
 
-const GuideLabel = styled.label<{ $select: string }>`
+const GuideLabel = styled.span<{ $select: string }>`
   position: relative;
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.body2};

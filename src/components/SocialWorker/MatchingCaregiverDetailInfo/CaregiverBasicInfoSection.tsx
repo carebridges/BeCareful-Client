@@ -3,7 +3,9 @@ import {
   DetailContentContainer,
   Title,
 } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/MatchingCaregiverDetailInfo.styles';
+import { ShowPhoneNumberModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ShowPhoneNumberModal';
 import { Gender } from '@/types/SocialSignUp';
+import { useState } from 'react';
 
 interface CaregiverDetailInfo {
   certificateNames: string[];
@@ -13,6 +15,7 @@ interface CaregiverDetailInfo {
 
 interface CaregiverInfo {
   gender: Gender;
+  phoneNumber: string;
   caregiverDetailInfo: CaregiverDetailInfo;
 }
 
@@ -23,6 +26,8 @@ interface CaregiverBasicInfoSectionProps {
 export const CaregiverBasicInfoSection = ({
   data,
 }: CaregiverBasicInfoSectionProps) => {
+  const [openPhoneModal, setOpenPhoneModal] = useState(false);
+
   return (
     <>
       <Title>요양보호사 정보</Title>
@@ -33,7 +38,13 @@ export const CaregiverBasicInfoSection = ({
         </DetailContent>
         <DetailContent>
           <span className="highlight">연락처</span>
-          <span>포인트 100P 사용 시 열람 제공</span>
+          <span
+            className="point"
+            onClick={() => setOpenPhoneModal(true)}
+            style={{ cursor: 'pointer' }}
+          >
+            클릭 시 연락처 열람 가능 {`>`}
+          </span>
         </DetailContent>
         <DetailContent>
           <span className="highlight">자격증</span>
@@ -52,6 +63,13 @@ export const CaregiverBasicInfoSection = ({
           </span>
         </DetailContent>
       </DetailContentContainer>
+
+      {openPhoneModal && (
+        <ShowPhoneNumberModal
+          phoneNumber={data.phoneNumber}
+          onClose={() => setOpenPhoneModal(false)}
+        />
+      )}
     </>
   );
 };

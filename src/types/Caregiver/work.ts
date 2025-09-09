@@ -8,11 +8,15 @@ import {
   Recruitment,
   RecruitmentInfo,
   MatchingResultStatus,
+  InstitutionInfo,
 } from '@/types/Caregiver/common';
 
 /* 요양보호사 일자리 화면 */
 // 일자리 신청 정보 조회 응답
-export type WorkApplicationResponse = WorkApplication;
+export type WorkApplicationResponse = {
+  hasNewChat: boolean;
+  workApplicationDto: WorkApplication;
+};
 
 // 일자리 신청 정보 등록/수정 요청
 export type WorkApplicationRequest = {
@@ -27,24 +31,15 @@ export type WorkApplicationRequest = {
 // 매칭 공고 리스트 조회 응답
 export type MatchingListResponse = Recruitment[];
 
-interface InstitutionInfo {
-  institutionName: string;
-  institutionImageUrl: string;
-  institutionLastUpdate: string;
-  institutionOpenYear: number;
-  facilityTypes: string[];
-  institutionPhoneNumber: string;
-}
-
 // 매칭 공고 상세 조회 응답
 export interface MatchingRecruitmentResponse {
   recruitmentInfo: RecruitmentInfo;
   elderlyInfo: ElderlyInfo;
   institutionInfo: InstitutionInfo;
+  matchingResultStatus: MatchingResultStatus;
   isHotRecruitment: boolean;
   isHourlySalaryTop: boolean;
-  // TODO : 백엔드 타입 확인
-  matchingResultStatus: MatchingResultStatus;
+  hasNewChat: boolean;
 }
 
 export type MediationType = 'TIME' | 'DAY' | 'PAY';

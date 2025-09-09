@@ -1,11 +1,14 @@
 import { DAY_EN_TO_KR, DAY_KR_TO_EN } from '@/constants/common/day';
 import { MEDIATION_KR_TO_EN } from '@/constants/common/mediation';
 import { TIME_EN_TO_KR, TIME_KR_TO_EN } from '@/constants/common/time';
-import { WorkLocation } from '@/types/Caregiver/common';
+import { CareType, WorkLocation } from '@/types/Caregiver/common';
 
 /* 요양보호사 관련 format 함수들 */
 // caretype
-export const formatCaretype = (caretypes: string[], length: number) => {
+export const formatCaretype = (
+  caretypes: string[] | CareType[],
+  length: number,
+) => {
   if (caretypes.length <= length) {
     return caretypes.join(', ');
   } else {

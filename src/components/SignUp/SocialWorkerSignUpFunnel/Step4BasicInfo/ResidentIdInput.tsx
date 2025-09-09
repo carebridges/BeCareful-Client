@@ -31,6 +31,8 @@ export const ResidentIdInput = ({
           guide=""
           value={birthDate}
           onChange={onBirthDateChange}
+          maxLength={6}
+          inputMode="numeric"
         />
         -
         <SecretInputBox
@@ -41,6 +43,8 @@ export const ResidentIdInput = ({
           value={genderInput}
           masked={true}
           onChange={onGenderChange}
+          maxLength={1}
+          inputMode="numeric"
         />
         <CircleWrapper>
           {Array.from({ length: 6 }).map((_, index) => (

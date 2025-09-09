@@ -1,55 +1,54 @@
 import styled from 'styled-components';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as Share } from '@/assets/icons/community/Share.svg';
-import { ReactComponent as Send } from '@/assets/icons/community/ReplySend.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
-import { ReactComponent as Link } from '@/assets/icons/community/LinkPost.svg';
 import { ReactComponent as Copy } from '@/assets/icons/community/LinkCopy.svg';
+import { ReactComponent as Link } from '@/assets/icons/community/LinkPost.svg';
+import { ReactComponent as Share } from '@/assets/icons/community/Share.svg';
 import { ReactComponent as Kakao } from '@/assets/icons/community/KakaoLogo.svg';
-import { NavBar } from '@/components/common/NavBar/NavBar';
-import BottomSheet from '@/components/Community/common/BottomSheet';
 import { Button } from '@/components/common/Button/Button';
+import { NavBar } from '@/components/common/NavBar/NavBar';
+import ContentSection from '@/components/Community/post/ContentSection';
+import CommentsSection from '@/components/Community/post/CommentsSection';
+import TitleSection from '@/components/Community/post/TitleSection';
+import BottomSheet from '@/components/Community/common/BottomSheet';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { BOARD_PARAM_TO_KR } from '@/constants/community/communityBoard';
-import { useComments } from '@/api/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useLinkCopy } from '@/hooks/Community/PostPage/useLinkCopy';
-import { useCommentSend } from '@/hooks/Community/PostPage/useCommentSend';
-import { useFileHandling } from '@/hooks/Community/PostPage/useFileHandling';
-import { useKakaoShare } from '@/hooks/Community/PostPage/useKakaoShare';
-import { usePostActions } from '@/hooks/Community/PostPage/usePostActions';
-import { usePostData } from '@/hooks/Community/PostPage/usePostData';
-import TitleSection from '@/components/Community/post/TitleSection';
-import CommentsSection from '@/components/Community/post/CommentsSection';
+import { useCommunityPost } from '@/hooks/Community/PostPage/useCommunityPost';
+import { useCommunityPostInteractions } from '@/hooks/Community/PostPage/useCommunityPostInteractions';
 
 const CommunityPostPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
+  // 게시글
   const {
     boardType,
-    postId,
     apiBoardType,
+    postId,
     post,
-    postDetailError,
-    handleEditPost,
-    handleDeletePost,
-  } = usePostData();
+    isPostActionSheetOpen,
+    setIsPostActionSheetOpen,
+    selectedPostAction,
+    setSelectedPostAction,
+    handlePostActionSheetConfirm,
+  } = useCommunityPost();
 
-  // 댓글 조회
-  const { data: comments, error: commentsError } = useComments(
-    apiBoardType,
-    postId,
-  );
-  // 댓글 등록
-  const { reply, handleReplyChange, handleReplySend } = useCommentSend(
-    apiBoardType,
-    postId,
-  );
+  // 게시글 액션
+  const {
+    handleFileDownload,
+    handleOriginalLinkClick,
+    isShareSheetOpen,
+    setIsShareSheetOpen,
+    handleKakaoShare,
+    isLinkModalOpen,
+    setIsLinkModalOpen,
+    handleCopy,
+  } = useCommunityPostInteractions();
 
-  // 읽음 상태 context 관리
+  // 게시글 읽음 상태 context 관리
   const { readStatuses, markAsRead } = usePostReadStatus();
   // 현재 게시글의 읽음 상태
   const currentPostIsRead = readStatuses[postId] || false;
@@ -58,38 +57,6 @@ const CommunityPostPage = () => {
       markAsRead(postId);
     }
   }, [postId, markAsRead, currentPostIsRead]);
-
-  // 게시글 수정, 삭제하기
-  const {
-    isActionSheetOpen,
-    setIsActionSheetOpen,
-    openActionSheet,
-    closeActionSheet,
-    selectedAction,
-    setSelectedAction,
-    handleActionSheetConfirm,
-  } = usePostActions({
-    onEditSuccess: handleEditPost,
-    onDelete: handleDeletePost,
-    post: post,
-  });
-
-  // 파일 다운로드, 원본 url 링크 이동
-  const { handleFileDownload, handleOriginalLinkClick } = useFileHandling();
-
-  // 카카오톡 공유하기
-  const { isShareSheetOpen, setIsShareSheetOpen, handleKakaoShare } =
-    useKakaoShare();
-
-  // 현재 게시글 링크 복사
-  const { isLinkModalOpen, setIsLinkModalOpen, handleCopy } = useLinkCopy();
-
-  if (postDetailError) {
-    console.log('getPostDetail 에러 발생: ', postDetailError);
-  }
-  if (commentsError) {
-    console.log('getComment 에러 발생: ', commentsError);
-  }
 
   return (
     <Container>
@@ -101,79 +68,23 @@ const CommunityPostPage = () => {
         color="white"
       />
 
-      <TitleSection post={post} onClick={openActionSheet} />
+      <TitleSection
+        post={post}
+        onOpenPostActionSheet={() => setIsPostActionSheetOpen(true)}
+      />
 
-      {post?.fileUList && post.fileUList.length > 0 && (
-        <Files>
-          {post.fileUList.map((fileUrl) => {
-            const fileName = fileUrl.fileName;
-            return (
-              <label
-                key={fileUrl.id}
-                onClick={() => handleFileDownload(fileUrl.mediaUrl)}
-              >
-                {fileName}
-              </label>
-            );
-          })}
-        </Files>
-      )}
-
-      <ContentWrapper>
-        <label>
-          {post?.content.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-              <label>{line}</label>
-              {index < post?.content.split('\n').length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </label>
-        <MediaWrapper>
-          {post?.imageList &&
-            post?.imageList.map((image, index) => (
-              <img
-                key={image.id}
-                src={image.mediaUrl}
-                alt={`게시글 이미지 ${index + 1}`}
-              />
-            ))}
-          {post?.videoList &&
-            post?.videoList.map((video) => (
-              <video key={video.id} src={video.mediaUrl} controls />
-            ))}
-        </MediaWrapper>
-      </ContentWrapper>
+      <ContentSection post={post} onFileDownload={handleFileDownload} />
 
       <SectionBorder />
 
-      <ReplyWrapper>
-        <CommentsSection comments={comments} />
+      <CommentsSection apiBoardType={apiBoardType} postId={postId} />
 
-        <SectionBorder />
-
-        {boardType === 'service' ? (
-          <IsMyPost>
-            <Link onClick={() => handleOriginalLinkClick(post?.originalUrl)} />
-            <Share onClick={() => setIsShareSheetOpen(true)} />
-          </IsMyPost>
-        ) : (
-          <Share
-            style={{ padding: '10px 0px' }}
-            onClick={() => setIsShareSheetOpen(true)}
-          />
+      <IconsWrapper>
+        {boardType === 'service' && post?.originalUrl && (
+          <Link onClick={() => handleOriginalLinkClick(post.originalUrl)} />
         )}
-
-        <SectionBorder />
-
-        <div className="my-reply">
-          <Reply
-            placeholder="댓글을 입력하세요"
-            value={reply}
-            onChange={handleReplyChange}
-          />
-          <Send style={{ padding: '4px' }} onClick={handleReplySend} />
-        </div>
-      </ReplyWrapper>
+        <Share onClick={() => setIsShareSheetOpen(true)} />
+      </IconsWrapper>
 
       <BottomSheet
         isOpen={isShareSheetOpen}
@@ -194,21 +105,21 @@ const CommunityPostPage = () => {
       </BottomSheet>
 
       <BottomSheet
-        isOpen={isActionSheetOpen}
-        setIsOpen={setIsActionSheetOpen}
+        isOpen={isPostActionSheetOpen}
+        setIsOpen={setIsPostActionSheetOpen}
         title="게시물을 수정 또는 삭제하시겠습니까?"
         titleStar={false}
       >
         <CheckButton
-          active={selectedAction === '수정하기'}
-          onClick={() => setSelectedAction('수정하기')}
+          active={selectedPostAction === '수정하기'}
+          onClick={() => setSelectedPostAction('수정하기')}
         >
           <Check />
           수정하기
         </CheckButton>
         <CheckButton
-          active={selectedAction === '삭제하기'}
-          onClick={() => setSelectedAction('삭제하기')}
+          active={selectedPostAction === '삭제하기'}
+          onClick={() => setSelectedPostAction('삭제하기')}
         >
           <Check />
           삭제하기
@@ -218,7 +129,7 @@ const CommunityPostPage = () => {
             width="100%"
             height="52px"
             variant="subBlue"
-            onClick={closeActionSheet}
+            onClick={() => setIsPostActionSheetOpen(false)}
           >
             취소
           </Button>
@@ -226,7 +137,7 @@ const CommunityPostPage = () => {
             width="100%"
             height="52px"
             variant="mainBlue"
-            onClick={handleActionSheetConfirm}
+            onClick={handlePostActionSheetConfirm}
           >
             확인
           </Button>
@@ -249,6 +160,7 @@ export default CommunityPostPage;
 
 const Container = styled.div`
   padding: 0px 20px;
+  margin-bottom: 108px;
 `;
 
 const NavLeft = styled(ArrowLeft)`
@@ -263,53 +175,45 @@ const NavCenter = styled.div`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
-const Files = styled.div`
-  padding-top: 20px;
-  padding-bottom: 14px;
+const IconsWrapper = styled.div`
+  padding: 10px 20px;
   display: flex;
-  flex-direction: column;
+  gap: 18px;
+  background: ${({ theme }) => theme.colors.white};
+  border-top: 1px solid ${({ theme }) => theme.colors.gray50};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
-  overflow-x: hidden;
 
-  label {
-    color: ${({ theme }) => theme.colors.mainBlue};
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-    cursor: pointer;
-  }
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 64px;
 `;
 
-const ContentWrapper = styled.div`
-  margin-top: 14px;
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  gap: 300px;
+const SectionBorder = styled.div`
+  height: 1px;
+  background: ${({ theme }) => theme.colors.gray50};
+  margin: 0px -20px;
+`;
 
-  label {
-    color: ${({ theme }) => theme.colors.black};
+const Buttons = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  gap: 30px;
+
+  button {
+    height: 82px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
     font-size: ${({ theme }) => theme.typography.fontSize.body1};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
-`;
 
-const MediaWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-  overflow-x: scroll;
-  flex-wrap: nowrap;
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  img,
-  video {
-    width: 320px;
-    height: 320px;
-    object-fit: contain;
+  svg {
+    width: 50px;
+    height: 50px;
   }
 `;
 
@@ -344,78 +248,6 @@ const CheckButton = styled.div<{ active: boolean }>`
     path {
       fill: ${({ theme }) => theme.colors.mainBlue};
     }
-  }
-`;
-
-const ReplyWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  svg {
-    cursor: pointer;
-  }
-
-  .my-reply {
-    height: 44px;
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 0;
-  }
-`;
-
-const IsMyPost = styled.div`
-  display: flex;
-  gap: 18px;
-  padding: 10px 0;
-`;
-
-const Reply = styled.input`
-  outline: none;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray100};
-  color: ${({ theme }) => theme.colors.gray800};
-  font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 26px;
-  padding: 9px 16px;
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.gray300};
-  }
-`;
-
-const SectionBorder = styled.div`
-  height: 1px;
-  background: ${({ theme }) => theme.colors.gray50};
-  margin: 0px -20px;
-`;
-
-const Buttons = styled.div`
-  margin-bottom: 20px;
-  display: flex;
-  gap: 30px;
-
-  button {
-    height: 82px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: space-between;
-    align-items: center;
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body1};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  svg {
-    width: 50px;
-    height: 50px;
   }
 `;
 

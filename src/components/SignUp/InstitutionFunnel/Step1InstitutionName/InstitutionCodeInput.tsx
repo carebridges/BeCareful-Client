@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
+
 import { useNavigate } from 'react-router-dom';
 import { useInstitutionCodeInput } from '@/hooks/SignUp/useInstitutionCodeInput';
 
@@ -30,15 +30,16 @@ export const InstitutionCodeInput = ({
 
   return (
     <Wrapper>
-      <SearchContainer>
+      <SearchContainer
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+      >
+        {/* 디자인 수정대면 고칠 예정*/}
         <StyledInput
           placeholder="기관 코드 입력"
           value={input}
           onChange={onInputChange}
         />
-        <IconWrapper onClick={handleSearch} role="button" tabIndex={0}>
-          <SearchIcon />
-        </IconWrapper>
       </SearchContainer>
 
       {searchedCode && !isLoading && isDuplicate === true && (
@@ -99,12 +100,6 @@ const StyledInput = styled.input`
     font-size: ${({ theme }) => theme.typography.fontSize.body1};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
-`;
-
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const ValidationMessage = styled.p<{ state: 'default' | 'error' }>`

@@ -7,25 +7,8 @@ const SplashPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAutoLogin = () => {
-      const isAutoLogin = localStorage.getItem('isAutoLogin');
-      const accessToken =
-        localStorage.getItem('accessToken') ||
-        sessionStorage.getItem('accessToken');
-
-      if (isAutoLogin === 'true' && accessToken) {
-        if (localStorage.getItem('role') === 'caregiver') {
-          navigate('/caregiver');
-        } else {
-          navigate('/socialworker');
-        }
-      } else {
-        navigate('/onboarding');
-      }
-    };
-
     const timer = setTimeout(() => {
-      checkAutoLogin();
+      navigate('/onboarding');
     }, 2000);
 
     return () => clearTimeout(timer);

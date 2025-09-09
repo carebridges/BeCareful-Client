@@ -19,7 +19,7 @@ import {
 } from '@/constants/community/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
-import { useMyAssociation } from '@/api/community';
+import { useGetCommunityHome } from '@/api/community';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
@@ -30,15 +30,13 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     associationName: string;
   };
 
-  const chatNew = false;
-
   const [activeTab, setActiveTab] = useState('전체');
   const handleTabChange = (tabName: string) => {
     setActiveTab(tabName);
     window.scrollTo(0, 0);
   };
 
-  const { data } = useMyAssociation(!previewMode);
+  const { data } = useGetCommunityHome(!previewMode);
   const {
     isPendingModalOpen,
     isApprovedModalOpen,
@@ -53,11 +51,15 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
 
   return (
     <Container>
-      <Top $backgroundImageUrl={data?.associationProfileImageUrl || ''}>
+      <Top
+        $backgroundImageUrl={
+          data?.associationInfo?.associationProfileImageUrl || ''
+        }
+      >
         <div className="right">
           <Search onClick={() => handleNavigate('/community/search')} />
           <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {data?.hasNewChat ? <ChatNew /> : <Chat />}
           </ChatWrapper>
         </div>
       </Top>
@@ -66,21 +68,27 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         <div
           className="chevronWrapper"
           onClick={() =>
-            handleNavigate(`/community/${data?.associationId}/info`)
+            handleNavigate(
+              `/community/${data?.associationInfo?.associationId}/info`,
+            )
           }
         >
-          <label className="title">{data?.associationName}</label>
+          <label className="title">
+            {data?.associationInfo?.associationName}
+          </label>
           <Chevron />
         </div>
         <div className="bottom">
           <div
             className="chevronWrapper"
             onClick={() =>
-              handleNavigate(`/community/${data?.associationId}/members`)
+              handleNavigate(
+                `/community/${data?.associationInfo?.associationId}/members`,
+              )
             }
           >
             <label className="member">
-              멤버 {data?.associationMemberCount}
+              멤버 {data?.associationInfo?.associationMemberCount}
             </label>
             <Chevron />
           </div>

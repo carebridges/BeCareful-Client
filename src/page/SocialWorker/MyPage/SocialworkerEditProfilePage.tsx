@@ -1,122 +1,63 @@
 import styled from 'styled-components';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { NavBar } from '@/components/common/NavBar/NavBar';
-import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
-import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
 import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
-import { AgreementValues } from '@/types/Socialworker/common';
 import { Button } from '@/components/common/Button/Button';
-import { INSTITUTION_RANK_EN_TO_RANK } from '@/constants/common/institutionRank';
+import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
+import { NavBar } from '@/components/common/NavBar/NavBar';
+import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
+import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
+import {
+  INSTITUTION_RANK_EN_TO_RANK,
+  INSTITUTION_RANK_LIST,
+} from '@/constants/common/institutionRank';
 import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-// import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
+import { useSocialworkerBasicForm } from '@/hooks/Socialworker/useSocialworkerBasicForm';
+import { useAgreementStateForm } from '@/hooks/Socialworker/useAgreementStateForm';
 import {
   useGetSocialWorkerMyEdit,
   usePutSocialworkerMy,
 } from '@/api/socialworker';
-import { getGenderCode } from '@/utils/getGenderCode';
-// import { searchInstitution } from '@/api/signupFunnel';
 
 const SocialworkerEditProfilePage = () => {
   const { handleGoBack } = useHandleNavigate();
-
-  const [name, setName] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [birth, setBirth] = useState('');
-  const [genderCode, setGenderCode] = useState(0);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  // const [institution, setInstitution] = useState('');
-  const [rank, setRank] = useState('');
-  const [agreementStates, setAgreementStates] = useState({
-    isAgreedToTerms: true,
-    isAgreedToCollectPersonalInfo: true,
-    isAgreedToReceiveMarketingInfo: false,
-  });
   const [isChanged, setIsChanged] = useState(false);
-  // const [nicknameChanged, setNicknameChanged] = useState(false);
-
   const { data } = useGetSocialWorkerMyEdit();
 
-  useEffect(() => {
-    if (data) {
-      setName(data.name);
-      setNickname(data.nickName);
-      setBirth(String(data.birthYymmdd)); // TODO: 백엔드와 타입 맞추기
-      setGenderCode(data.genderCode);
-      setPhoneNumber(data.phoneNumber);
-      // setInstitution(data.institutionName);
-      setRank(data.institutionRank);
-      setAgreementStates({
-        isAgreedToTerms: data.isAgreedToTerms,
-        isAgreedToCollectPersonalInfo: data.isAgreedToCollectPersonalInfo,
-        isAgreedToReceiveMarketingInfo: data.isAgreedToReceiveMarketingInfo,
-      });
-    }
-  }, [data]);
+  const {
+    name,
+    nickname,
+    birth,
+    genderCode,
+    phoneNumber,
+    institutionId,
+    institutionName,
+    rank,
+    setInstitutionId,
+    setInstitutionName,
+    nicknameValidation,
+    isDuplicateCheckButtonEnabled,
+    handleChange,
+    handleCheckDuplicate,
+    handleBirthAndGenderChange,
+  } = useSocialworkerBasicForm(data, setIsChanged);
 
-  const handleChange = (fieldName: string, value: string) => {
-    switch (fieldName) {
-      case 'name':
-        setName(value);
-        setIsChanged(true);
-        break;
-      case 'nickname':
-        // resetMessage();
-        setNickname(value);
-        // setNicknameChanged(true);
-        // if (state === 'success') {
-        //   setIsChanged(true);
-        // }
-        break;
-      case 'phoneNumber':
-        setPhoneNumber(value);
-        setIsChanged(true);
-        break;
-      // case 'institution':
-      //   setInstitution(value);
-      //   setIsChanged(true);
-      //   break;
-      case 'rank':
-        setRank(value);
-        setIsChanged(true);
-        break;
-      default:
-        break;
-    }
-  };
-
-  // const { message, state, checkNickname, resetMessage } =
-  //   useNicknameValidation();
-  // const handleCheckDuplicate = () => {
-  //   checkNickname(nickname);
-  // };
-
-  const handleBirthAndGenderChange = (birth: string, genderCode: string) => {
-    setBirth(birth);
-    setGenderCode(getGenderCode(genderCode));
-  };
-
-  const handleAgreementChange = useCallback(
-    (updatedAgreements: AgreementValues) => {
-      setAgreementStates(updatedAgreements);
-    },
-    [],
+  const { agreementStates, handleAgreementChange } = useAgreementStateForm(
+    data,
+    setIsChanged,
   );
 
   const { mutate: updateSocialMy } = usePutSocialworkerMy();
 
   const handleEditBtnClick = async () => {
-    // const insitutionList = await searchInstitution(institution);
-
     const myData: SocialworkerMyRequest = {
       realName: name,
       nickName: nickname,
       birthYymmdd: birth,
       genderCode: genderCode,
       phoneNumber: phoneNumber,
-      // TODO: 기관 검색해서 id 받아오기
-      nursingInstitutionId: 4,
+      nursingInstitutionId: institutionId,
       institutionRank: INSTITUTION_RANK_EN_TO_RANK[rank],
       isAgreedToTerms: agreementStates.isAgreedToTerms,
       isAgreedToCollectPersonalInfo:
@@ -165,20 +106,22 @@ const SocialworkerEditProfilePage = () => {
               value={nickname}
               onChange={(e) => handleChange('nickname', e.target.value)}
             />
-            {/* <Button
+            <Button
               height="52px"
-              variant={nicknameChanged ? 'mainBlue' : 'disabled'}
-              disabled={!nicknameChanged}
+              variant={isDuplicateCheckButtonEnabled ? 'mainBlue' : 'disabled'}
+              disabled={!isDuplicateCheckButtonEnabled}
               style={{ width: '20%' }}
               onClick={handleCheckDuplicate}
             >
               중복확인
-            </Button> */}
+            </Button>
           </NicknameInput>
         </CardContainer>
-        {/* {message && (
-          <ValidationMessage state={state}>{message}</ValidationMessage>
-        )} */}
+        {nicknameValidation.message && (
+          <ValidationMessage state={nicknameValidation.state}>
+            {nicknameValidation.message}
+          </ValidationMessage>
+        )}
 
         <ResidentIdInput
           birthDate={birth}
@@ -206,36 +149,32 @@ const SocialworkerEditProfilePage = () => {
 
       <Border />
 
-      {/* <CardContainer>
+      <CardContainer>
         <label className="title">
           소속된 기관명 <span className="star">*</span>
         </label>
-        <Input
-          placeholder="소속된 기관명"
-          value={institution}
-          onChange={(e) => handleChange('institution', e.target.value)}
+        <InstitutionSearchInput
+          onInstitutionSelect={(name, id) => {
+            setInstitutionName(name);
+            if (id) setInstitutionId(id);
+            setIsChanged(true);
+          }}
+          institution={institutionName}
         />
-      </CardContainer> */}
+      </CardContainer>
 
       <CardContainer>
         <label className="title">
           직급 <span className="star">*</span>
         </label>
-        <CheckCard
-          pressed={rank === 'CENTER_DIRECTOR'}
-          text="센터장 입니다."
-          onClick={() => handleChange('rank', 'CENTER_DIRECTOR')}
-        />
-        <CheckCard
-          pressed={rank === 'REPRESENTATIVE'}
-          text="대표 입니다."
-          onClick={() => handleChange('rank', 'REPRESENTATIVE')}
-        />
-        <CheckCard
-          pressed={rank === 'SOCIAL_WORKER'}
-          text="사회복지사 입니다."
-          onClick={() => handleChange('rank', 'SOCIAL_WORKER')}
-        />
+        {INSTITUTION_RANK_LIST.map((option) => (
+          <CheckCard
+            key={option.value}
+            pressed={rank === option.value}
+            text={option.text}
+            onClick={() => handleChange('rank', option.value)}
+          />
+        ))}
       </CardContainer>
 
       <AgreeSection
@@ -342,19 +281,19 @@ const NicknameInput = styled.div`
   align-items: center;
 `;
 
-// const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`
-//   display: flex;
-//   justify-content: flex-start;
-//   box-sizing: border-box;
-//   width: 100%;
-//   padding: 0 20px;
+const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 20px;
 
-//   font-size: ${({ theme }) => theme.typography.fontSize.body3};
-//   font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
-//   margin-top: 8px;
-//   color: ${({ theme, state }) =>
-//     state === 'error' ? theme.colors.mainOrange : theme.colors.mainBlue};
-// `;
+  font-size: ${({ theme }) => theme.typography.fontSize.body3};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
+  margin-top: 8px;
+  color: ${({ theme, state }) =>
+    state === 'error' ? theme.colors.mainOrange : theme.colors.mainBlue};
+`;
 
 const Border = styled.div`
   width: 100vw;

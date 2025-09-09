@@ -16,7 +16,6 @@ const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const userInfo = useRecoilValue(currentUserInfo);
-  const chatNew = false;
 
   // 상단 부분(신청서 조회)
   const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =
@@ -32,7 +31,7 @@ const CaregiverWorkPage = () => {
         left={<NavLeft>일자리</NavLeft>}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {applicationData?.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color=""
@@ -41,11 +40,14 @@ const CaregiverWorkPage = () => {
       <Application>
         <Top>
           <div className="left">
-            {applicationData ? (
+            {applicationData?.workApplicationDto ? (
               <div className="dateWrapper">
                 <label className="date">최근 수정일 </label>
                 <span>
-                  {applicationData.lastModifiedDate.replaceAll('-', '.')}
+                  {applicationData.workApplicationDto.lastModifiedDate.replaceAll(
+                    '-',
+                    '.',
+                  )}
                 </span>
               </div>
             ) : (
@@ -68,7 +70,7 @@ const CaregiverWorkPage = () => {
         <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
 
         <Button onClick={() => handleNavigate('/caregiver/my/application')}>
-          {applicationData ? '내 신청서 수정하기' : '내 신청서 등록하기'}
+          내 신청서 {applicationData?.workApplicationDto ? '수정' : '등록'}하기
         </Button>
       </Application>
 

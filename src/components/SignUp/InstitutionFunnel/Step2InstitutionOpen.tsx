@@ -55,6 +55,8 @@ export const Step2InstitutionOpen = ({
               : String(institutionFormData.openYear)
           }
           onChange={handleInstitutionOpenDateChange}
+          inputMode="numeric"
+          maxLength={4}
         />
       </SearchContainer>
 

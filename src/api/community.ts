@@ -1,4 +1,4 @@
-import { MyAssociationResponse } from '@/types/Community/community';
+import { CommunityHomeResponse } from '@/types/Community/community';
 import { axiosInstance } from './axiosInstance';
 import { MediaItem, PageableRequest } from '@/types/Community/common';
 import {
@@ -13,11 +13,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 /* CommunityPage */
 // 커뮤니티 탭 협회 정보 조회
-export const useMyAssociation = (enabled: boolean) => {
-  return useQuery<MyAssociationResponse, Error>({
-    queryKey: ['associationInfo'],
+export const useGetCommunityHome = (enabled: boolean) => {
+  return useQuery<CommunityHomeResponse, Error>({
+    queryKey: ['associationHome'],
     queryFn: async () => {
-      const response = await axiosInstance.get('/community/my/association');
+      const response = await axiosInstance.get('/community/home');
       return response.data;
     },
     enabled: enabled,
@@ -73,12 +73,7 @@ export const usePostPostingMutation = (boardType: string) => {
     },
     onSuccess: (response) => {
       console.log('usePostPostingMutation - 게시글 작성 성공:', response.data);
-      queryClient.invalidateQueries({
-        queryKey: ['postingList', boardType],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['boardPostingList', boardType],
-      });
+      queryClient.invalidateQueries({ queryKey: ['postingList', boardType] });
       queryClient.invalidateQueries({ queryKey: ['importantPostingList'] });
     },
     onError: (error) => {
@@ -105,13 +100,36 @@ export const usePutPostingMutation = (boardType: string, postId: number) => {
         queryKey: ['postDetail', boardType, postId],
       });
       queryClient.invalidateQueries({ queryKey: ['postingList', boardType] });
-      queryClient.invalidateQueries({
-        queryKey: ['boardPostingList', boardType],
-      });
       queryClient.invalidateQueries({ queryKey: ['importantPostingList'] });
     },
     onError: (error) => {
       console.error('usePutPostingMutation - 게시글 수정 실패:', error);
+    },
+  });
+};
+
+// 게시글 삭제
+export const useDeletePost = (boardType: string, postId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.delete(
+        `/community/board/${boardType}/post/${postId}`,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('useDeletePost - 게시글 삭제 성공:', response.data);
+      queryClient.invalidateQueries({
+        queryKey: ['postDetail', boardType, postId],
+      });
+      queryClient.invalidateQueries({ queryKey: ['postingList', boardType] });
+      queryClient.invalidateQueries({ queryKey: ['importantPostingList'] });
+      queryClient.removeQueries({ queryKey: ['comments', boardType, postId] });
+    },
+    onError: (error) => {
+      console.error('useDeletePost - 게시글 삭제 실패:', error);
     },
   });
 };
@@ -200,6 +218,9 @@ export const usePostCommentMutation = (boardType: string, postId: number) => {
       queryClient.invalidateQueries({
         queryKey: ['comments', boardType, postId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ['postDetail', boardType, postId],
+      });
     },
     onError: (error) => {
       console.error('usePostCommentMutation - 댓글 작성 실패:', error);
@@ -207,31 +228,61 @@ export const usePostCommentMutation = (boardType: string, postId: number) => {
   });
 };
 
-// 게시글 삭제
-export const useDeletePost = (boardType: string, postId: number) => {
+// 댓글 수정
+export const usePutCommentMutation = (boardType: string, postId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      const response = await axiosInstance.delete(
-        `/community/board/${boardType}/post/${postId}`,
+    mutationFn: async ({
+      commentId,
+      comment,
+    }: {
+      commentId: number;
+      comment: CommentRequest;
+    }) => {
+      const response = await axiosInstance.put(
+        `/community/board/${boardType}/post/${postId}/comment/${commentId}`,
+        comment,
       );
       return response;
     },
     onSuccess: (response) => {
-      console.log('useDeletePost - 게시글 삭제 성공:', response.data);
+      console.log('usePutCommentMutation - 댓글 수정 성공:', response.data);
       queryClient.invalidateQueries({
-        queryKey: ['posts', boardType],
+        queryKey: ['comments', boardType, postId],
       });
       queryClient.invalidateQueries({
         queryKey: ['postDetail', boardType, postId],
       });
+    },
+    onError: (error) => {
+      console.error('usePutCommentMutation - 댓글 수정 실패:', error);
+    },
+  });
+};
+
+// 댓글 삭제
+export const useDeleteComment = (boardType: string, postId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (commentId: number) => {
+      const response = await axiosInstance.delete(
+        `/community/board/${boardType}/post/${postId}/comment/${commentId}`,
+      );
+      return response;
+    },
+    onSuccess: (response) => {
+      console.log('useDeleteComment - 댓글 삭제 성공:', response.data);
       queryClient.invalidateQueries({
-        queryKey: ['importantPostingList'],
+        queryKey: ['comments', boardType, postId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['postDetail', boardType, postId],
       });
     },
     onError: (error) => {
-      console.error('useDeletePost - 게시글 삭제 실패:', error);
+      console.error('useDeleteComment - 댓글 삭제 실패:', error);
     },
   });
 };

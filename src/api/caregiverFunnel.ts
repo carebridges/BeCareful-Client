@@ -1,5 +1,8 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { CaregiverSignUpFormData } from '@/types/CareGiverSignUp';
+import {
+  buildCaregiverSignUpPayload,
+  CaregiverSignUpFormData,
+} from '@/types/CareGiverSignUp';
 import { useMutation } from '@tanstack/react-query';
 
 export const useUploadCareGiverProfileImage = () =>
@@ -19,7 +22,8 @@ export const useUploadCareGiverProfileImage = () =>
 export const useRegisterCaregiver = () =>
   useMutation({
     mutationFn: async (formData: CaregiverSignUpFormData) => {
-      const { data } = await axiosInstance.post('/caregiver/signup', formData);
+      const payload = buildCaregiverSignUpPayload(formData);
+      const { data } = await axiosInstance.post('/caregiver/signup', payload);
       return data.institutionId as number;
     },
   });

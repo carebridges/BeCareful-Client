@@ -21,6 +21,8 @@ const CaregiverChatPage = () => {
 
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
+  const { data } = useGetCaregiverChat(Number(matchingId));
+
   // 매칭 공고 지원
   const { mutate: confirmApply } = usePostCaregiverContract();
 
@@ -36,17 +38,22 @@ const CaregiverChatPage = () => {
       console.error('유효한 계약 ID가 없습니다.');
       return;
     }
-    confirmApply(lastContractId, {
-      onSuccess: () => {
-        setFinalConfirm(true);
-        handleModal(setIsCompleteModalOpen, setIsConfirmModalOpen);
+    confirmApply(
+      {
+        contractId: lastContractId,
+        matchingId: data.matchingId,
+        recruitmentId: data.recruitmentId,
       },
-    });
+      {
+        onSuccess: () => {
+          setFinalConfirm(true);
+          handleModal(setIsCompleteModalOpen, setIsConfirmModalOpen);
+        },
+      },
+    );
   };
   // 최종 확정 팝업
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
-
-  const { data } = useGetCaregiverChat(Number(matchingId));
 
   const groupedContracts = groupByDate(data?.contractList ?? []);
   const sortedDates = Object.keys(groupedContracts).sort((a, b) =>
@@ -165,7 +172,7 @@ const CaregiverChatPage = () => {
         <ModalButtons
           onClose={() => setIsCompleteModalOpen(false)}
           title={'일자리 지원이\n최종 확정되었습니다!'}
-          detail={'지원 보상 포인트 1,000P가 지급되었습니다.'}
+          detail="구인 연락을 기다려주세요!"
           left="일정 보러가기"
           right="채팅 보기"
           handleLeftBtnClick={() =>

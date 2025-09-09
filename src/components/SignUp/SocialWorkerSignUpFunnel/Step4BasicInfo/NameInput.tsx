@@ -20,6 +20,7 @@ export const NameInput = ({ value, onChange }: NameInputProps) => {
         guide=""
         value={value}
         onChange={onChange}
+        maxLength={10}
       />
     </InputWrapper>
   );

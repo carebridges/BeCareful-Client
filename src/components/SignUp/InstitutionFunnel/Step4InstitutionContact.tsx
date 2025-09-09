@@ -50,6 +50,8 @@ export const Step4InstitutionContact = ({
           guide=""
           value={institutionFormData.phoneNumber}
           onChange={handleInstitutionPhoneChange}
+          inputMode="tel"
+          maxLength={13}
         />
       </SearchContainer>
 

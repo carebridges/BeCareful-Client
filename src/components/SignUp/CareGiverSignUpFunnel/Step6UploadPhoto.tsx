@@ -9,8 +9,8 @@ import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
 import { styled } from 'styled-components';
 
 export const Step6UploadPhoto = () => {
-  const { goToNext, formData, setFormData } = useCaregiverSignUpContext();
-
+  const { goToNext, formData, setFormData, goToPrev } =
+    useCaregiverSignUpContext();
   const { mutate: uploadImage } = useUploadCareGiverProfileImage();
   const { mutate: registerCaregiver, isPending } = useRegisterCaregiver();
 
@@ -57,6 +57,9 @@ export const Step6UploadPhoto = () => {
         />
       </ProfileContainer>
       <ButtonContainer>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
+          이전
+        </Button>
         <Button
           onClick={handleSubmit}
           height="52px"

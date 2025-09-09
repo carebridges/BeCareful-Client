@@ -14,9 +14,14 @@ import {
   MARKETING_TERMS,
   PRIVACY_TERMS,
 } from '@/constants/termText';
+import { useNavigate } from 'react-router-dom';
 
 export const Step1BasicInfo = () => {
   const { goToNext } = useCaregiverSignUpContext();
+  const navigate = useNavigate();
+  const goToPrev = () => {
+    navigate(-1);
+  };
   const {
     formData,
     setFormData,
@@ -139,6 +144,9 @@ export const Step1BasicInfo = () => {
       </AgreeWrapper>
 
       <ButtonContainer>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
+          이전
+        </Button>
         <Button
           onClick={goToNext}
           height="52px"

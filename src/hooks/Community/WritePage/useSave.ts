@@ -1,6 +1,5 @@
+import { useEffect, useState } from 'react';
 import { MediaItem } from '@/types/Community/common';
-import { useModals } from './useModals';
-import { useEffect } from 'react';
 import { getDraftStorageKey } from '@/utils/getDraftStorageKey';
 
 interface PostData {
@@ -35,10 +34,13 @@ export const useSave = ({
   setPostData,
   setMediaData,
 }: UseSaveProps) => {
-  const { setIsSaveModalOpen } = useModals();
+  // 임시저장 모달
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  // 이어쓰기 모달
+  const [isDraftModalOpen, setIsDraftModalOpen] = useState(false);
 
   // localStorage에 임시 저장
-  const handleSaveDraft = () => {
+  const saveDraft = () => {
     const draftData = {
       ...postData,
       ...mediaData,
@@ -54,30 +56,76 @@ export const useSave = ({
   };
 
   // 임시 저장 데이터 불러오기
-  useEffect(() => {
+  const loadDraft = () => {
     const storageKey = getDraftStorageKey(board);
-    const savedDraft = localStorage.getItem(storageKey);
 
-    if (savedDraft) {
-      try {
-        const draftData = JSON.parse(savedDraft);
-        setPostData({
-          title: draftData.title || '',
-          content: draftData.content || '',
-          isImportant: draftData.isImportant || false,
-          originalUrl: draftData.originalUrl || '',
-        });
-        setMediaData({
-          photos: draftData.photos || [],
-          videos: draftData.videos || [],
-          attachedFiles: draftData.attachedFiles || [],
-        });
-      } catch (e) {
-        console.error('임시 저장 데이터 파싱 오류:', e);
-        // localStorage.removeItem(storageKey);
+    try {
+      const savedDraft = localStorage.getItem(storageKey);
+      if (savedDraft) {
+        return JSON.parse(savedDraft);
       }
+    } catch (e) {
+      console.error('임시 저장 데이터 파싱 오류:', e);
     }
+    return null;
+  };
+
+  // 임시 저장 데이터 삭제
+  const clearDraft = () => {
+    const storageKey = getDraftStorageKey(board);
+    localStorage.removeItem(storageKey);
+  };
+
+  useEffect(() => {
+    const draft = loadDraft();
+    const hasDraft =
+      !!draft &&
+      (Boolean(draft.title?.trim()) ||
+        Boolean(draft.content?.trim()) ||
+        (draft.photos?.length ?? 0) > 0 ||
+        (draft.videos?.length ?? 0) > 0 ||
+        (draft.attachedFiles?.length ?? 0) > 0);
+    if (hasDraft) setIsDraftModalOpen(true);
+    else clearDraft();
   }, [board]);
 
-  return { handleSaveDraft };
+  const continueWriting = () => {
+    const draft = loadDraft();
+    if (draft) {
+      setPostData({
+        title: draft.title || '',
+        content: draft.content || '',
+        isImportant: draft.isImportant || false,
+        originalUrl: draft.originalUrl || '',
+      });
+      setMediaData({
+        photos: draft.photos || [],
+        videos: draft.videos || [],
+        attachedFiles: draft.attachedFiles || [],
+      });
+    }
+    setIsDraftModalOpen(false);
+  };
+
+  const newWriting = () => {
+    clearDraft();
+    setPostData({
+      title: '',
+      content: '',
+      isImportant: true,
+      originalUrl: '',
+    });
+    setMediaData({ photos: [], videos: [], attachedFiles: [] });
+    setIsDraftModalOpen(false);
+  };
+
+  return {
+    isSaveModalOpen,
+    setIsSaveModalOpen,
+    isDraftModalOpen,
+    setIsDraftModalOpen,
+    saveDraft,
+    continueWriting,
+    newWriting,
+  };
 };

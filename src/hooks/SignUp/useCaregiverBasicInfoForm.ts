@@ -1,10 +1,5 @@
 import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
-
-const getGenderCode = (char: string): number => {
-  if (char === '1' || char === '3') return 1;
-  if (char === '2' || char === '4') return 2;
-  return 0;
-}; //TODO 삭제 예정
+import { getGenderCode } from '@/utils/getGenderCode';
 
 export const useCaregiverBasicInfoForm = () => {
   const { formData, setFormData } = useCaregiverSignUpContext();

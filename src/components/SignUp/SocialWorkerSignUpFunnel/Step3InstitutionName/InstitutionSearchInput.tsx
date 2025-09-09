@@ -1,27 +1,41 @@
 import { useEffect, useRef, useState } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
+import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { styled } from 'styled-components';
 import { useSearchInstitution } from '@/api/signupFunnel';
-import { Institution } from '@/types/SocialSignUp';
+import { SearchInstitution } from '@/types/SocialSignUp';
+import { FindNewInstitutionModal } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/FindNewInstitutionModal';
+
+type Props = {
+  onInstitutionSelect: (name: string, id?: number, address?: string) => void;
+  onRequestRegister?: () => void;
+  institution?: string;
+};
 
 export const InstitutionSearchInput = ({
   onInstitutionSelect,
-}: {
-  onInstitutionSelect: (name: string, id?: number) => void;
-}) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  onRequestRegister,
+  institution,
+}: Props) => {
+  const [searchTerm, setSearchTerm] = useState(institution ? institution : '');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [searched, setSearched] = useState(false);
+  const [openNoResult, setOpenNoResult] = useState(false);
+
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { data: institutions = [] } = useSearchInstitution(searchTerm.trim(), {
     enabled: searchTerm.trim().length > 0,
   });
 
-  const handleSelect = (inst: Institution) => {
-    setSearchTerm(inst.institutionName);
+  const handleSelect = (inst: SearchInstitution) => {
+    setSearchTerm(inst.name);
     setShowDropdown(false);
-    onInstitutionSelect(inst.institutionName, inst.institutionId);
+    onInstitutionSelect(
+      inst.name,
+      inst.institutionId,
+      inst.address || undefined,
+    );
   };
 
   useEffect(() => {
@@ -33,47 +47,69 @@ export const InstitutionSearchInput = ({
         setShowDropdown(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (institution !== searchTerm) {
+      setSearchTerm(institution || '');
+    }
+  }, [institution]);
 
   return (
     <Wrapper ref={wrapperRef}>
       <SearchContainer>
         <StyledInput
+          ref={inputRef}
           placeholder="기관명 검색"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setShowDropdown(true);
-            setSearched(false);
           }}
         />
-        <IconWrapper onClick={() => setSearched(true)}>
+
+        <IconWrapper onClick={() => setOpenNoResult(true)}>
           <SearchIcon />
+          <Close onClick={() => setSearchTerm('')} />
         </IconWrapper>
       </SearchContainer>
 
       {showDropdown && institutions.length > 0 && (
-        <Dropdown>
-          {institutions.map((inst: Institution) => (
+        <Dropdown role="listbox">
+          {institutions.map((inst) => (
             <DropdownItem
               key={inst.institutionId}
               onClick={() => handleSelect(inst)}
+              role="option"
             >
-              {inst.institutionName}
+              <Name>{inst.name}</Name>
+              <Address>
+                {inst.address}
+                {inst.institutionCode
+                  ? ` (${inst.institutionCode})`
+                  : ' (기관 코드 없음)'}
+              </Address>
             </DropdownItem>
           ))}
         </Dropdown>
       )}
-      {searched &&
-        searchTerm.trim().length > 0 &&
-        institutions.length === 0 && (
-          <NoResultWrapper>검색 결과가 없습니다.</NoResultWrapper>
-        )}
+
+      {openNoResult && (
+        <FindNewInstitutionModal
+          width="320px"
+          onClose={() => setOpenNoResult(false)}
+          onCancel={() => {
+            setOpenNoResult(false);
+            inputRef.current?.focus();
+          }}
+          onApply={() => {
+            setOpenNoResult(false);
+            onRequestRegister?.();
+          }}
+        />
+      )}
     </Wrapper>
   );
 };
@@ -121,6 +157,11 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+`;
+
+const Close = styled(CloseIcon)`
+  cursor: pointer;
 `;
 
 const Dropdown = styled.ul`
@@ -140,20 +181,25 @@ const Dropdown = styled.ul`
 `;
 
 const DropdownItem = styled.li`
-  padding: 12px 16px;
+  padding: 8px 16px;
   cursor: pointer;
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.gray900};
-
+  display: flex;
+  flex-direction: column;
   &:hover {
     background: ${({ theme }) => theme.colors.subBlue};
   }
 `;
 
-const NoResultWrapper = styled.div`
-  margin-top: 8px;
+const Name = styled.span`
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+`;
+
+const Address = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.gray500};
 `;

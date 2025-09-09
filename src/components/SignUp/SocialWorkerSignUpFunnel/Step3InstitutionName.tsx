@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import { useInstitutionSearch } from '@/hooks/SignUp/useInstitutionSearch';
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 
 export const Step3InstitutionName = () => {
   const {
@@ -17,8 +16,6 @@ export const Step3InstitutionName = () => {
     handleRegisterCancel,
     handleNext,
   } = useInstitutionSearch();
-
-  const { formData } = useSignUpContext();
 
   if (isRegisteringInstitution) {
     return (
@@ -35,7 +32,7 @@ export const Step3InstitutionName = () => {
         <Title>
           소속된 기관명을 입력하세요<span className="highlight"> *</span>
         </Title>
-        <SubText>소속된 기관의 정확한 명칭을 검색해 주세요.</SubText>
+        <SubText>소속된 기관을 아래 목록에서 선택해주세요</SubText>
       </HeaderSection>
 
       <SearchContainer>
@@ -44,21 +41,9 @@ export const Step3InstitutionName = () => {
             setInstitutionName(name);
             if (id) setInstitutionId(id);
           }}
+          onRequestRegister={handleClickRegisterInstitution}
         />
       </SearchContainer>
-
-      {formData.institutionRank !== 'SOCIAL_WORKER' && (
-        <SearchContainer>
-          <AskText>
-            <span className="highlight">* 소속된 기관이 검색되지 않나요?</span>
-            <br />
-            <span className="bold" onClick={handleClickRegisterInstitution}>
-              이곳
-            </span>
-            을 클릭해 기관을 등록해 보세요.
-          </AskText>
-        </SearchContainer>
-      )}
 
       <ButtonContainer>
         <Button onClick={handleRegisterCancel} height="52px" variant="blue2">
@@ -83,7 +68,7 @@ const StepWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  overflow-y: auto;
+  //overflow-y: auto;
   padding-bottom: 112px;
 `;
 
@@ -133,21 +118,4 @@ const SearchContainer = styled.div`
   padding: 20px 20px 0px 20px;
   box-sizing: border-box;
   flex-direction: column;
-`;
-
-const AskText = styled.p`
-  font-size: ${({ theme }) => theme.typography.fontSize.body2};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  color: ${({ theme }) => theme.colors.gray500};
-
-  .highlight {
-    color: ${({ theme }) => theme.colors.mainBlue};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  }
-  .bold {
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-    color: ${({ theme }) => theme.colors.gray600};
-    text-decoration: underline;
-    cursor: pointer;
-  }
 `;
