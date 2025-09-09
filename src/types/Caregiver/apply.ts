@@ -5,7 +5,7 @@ import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 interface MatchingRecruitment {
   recruitmentInfo: Recruitment;
   // TODO : 백엔드 타입 확인
-  matchingApplicationStatus: '검토중' | '합격' | '거절';
+  matchingApplicationStatus: '지원검토중' | '합격' | '지원거절';
 }
 
 // 지원 현황 조회 응답

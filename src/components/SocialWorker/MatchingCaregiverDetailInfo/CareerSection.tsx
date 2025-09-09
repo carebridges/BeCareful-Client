@@ -3,30 +3,30 @@ import {
   DetailContentContainer,
   Title,
 } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/MatchingCaregiverDetailInfo.styles';
-
-interface CareerSectionProps {
-  careerInfo: {
-    careerType: string;
-    introduce: string;
-    careerDetails: {
-      workInstitution: string;
-      workYear: string;
-    }[];
-  };
-}
+import { CareerSectionProps } from '@/types/Matching.socialWorker';
 
 export const CareerSection = ({ careerInfo }: CareerSectionProps) => {
-  if (!careerInfo.careerType) return null;
+  if (!careerInfo) return null;
 
-  if (careerInfo.careerType === '신입') {
+  const type = careerInfo.careerType ?? '';
+  const introduce = careerInfo.introduce ?? '';
+  const details = Array.isArray(careerInfo.careerDetails)
+    ? careerInfo.careerDetails
+    : [];
+
+  if (!type) return null;
+
+  if (type === '신입') {
     return (
       <>
         <Title>신입</Title>
         <DetailContentContainer>
-          <DetailContent>
-            <span className="highlight">자기소개</span>
-            <span>{careerInfo.introduce}</span>
-          </DetailContent>
+          {introduce && (
+            <DetailContent>
+              <span className="highlight">자기소개</span>
+              <span>{introduce}</span>
+            </DetailContent>
+          )}
         </DetailContentContainer>
       </>
     );
@@ -34,8 +34,8 @@ export const CareerSection = ({ careerInfo }: CareerSectionProps) => {
 
   return (
     <>
-      <Title>경력 {careerInfo.careerDetails.length}년</Title>
-      {careerInfo.careerDetails.map((career, index) => (
+      <Title>경력 {details.length}년</Title>
+      {details.map((career, index) => (
         <DetailContentContainer key={index}>
           <DetailContent>
             <span className="highlight">근무처</span>

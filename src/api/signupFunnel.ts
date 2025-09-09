@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { Institution, SignUpPayload } from '@/types/SocialSignUp';
+import { SearchInstitution, SignUpPayload } from '@/types/SocialSignUp';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 export const signUpMember = async (payload: SignUpPayload) => {
@@ -11,27 +11,30 @@ export const useSignUpMember = () => {
   return useMutation({ mutationFn: signUpMember });
 };
 
-export const searchInstitution = async (name: string) => {
-  const { data } = await axiosInstance.get('/nursingInstitution/search', {
-    params: { nursingInstitutionName: name },
-  });
-  return data.nursingInstitutionSimpleInfoList;
+export const searchInstitution = async (
+  name: string,
+): Promise<SearchInstitution[]> => {
+  const { data } = await axiosInstance.get<SearchInstitution[]>(
+    '/nursingInstitution/search',
+    { params: { nursingInstitutionName: name } },
+  );
+  return data ?? [];
 };
 
 export const useSearchInstitution = (
   name: string,
   options?: Omit<
-    UseQueryOptions<Institution[], unknown>,
+    UseQueryOptions<SearchInstitution[], unknown>,
     'queryKey' | 'queryFn'
   >,
 ) => {
-  return useQuery<Institution[], unknown>({
+  return useQuery<SearchInstitution[], unknown>({
     queryKey: ['searchInstitution', name],
     queryFn: () => searchInstitution(name),
     enabled: !!name,
     ...options,
   });
-}; //TODO
+};
 
 export const checkNicknameDuplicate = async (nickname: string) => {
   const { data } = await axiosInstance.get('/socialworker/check-nickname', {

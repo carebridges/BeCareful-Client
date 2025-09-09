@@ -19,20 +19,23 @@ import {
 
 const CaregiverMyPage = () => {
   const { data } = useCaregiverMyPageInfoQuery();
-
   const [isToggleChecked, setIsToggleChecked] = useState(false);
+  const isActive = data?.workApplicationInfo?.isActive;
+
   useEffect(() => {
-    if (data?.workApplicationInfo.isActive !== undefined) {
-      setIsToggleChecked(data.workApplicationInfo.isActive);
+    if (typeof isActive === 'boolean') {
+      setIsToggleChecked(isActive);
     }
-  }, [data?.workApplicationInfo.isActive]);
+  }, [isActive]);
+
   const { mutate: toggleWorkApplication } = useWorkApplicationToggleMutation({
     onSuccessCallback: (newIsActive) => {
       setIsToggleChecked(newIsActive);
     },
   });
+
   const handleToggleChange = () => {
-    toggleWorkApplication(isToggleChecked);
+    toggleWorkApplication(!isToggleChecked);
   };
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);

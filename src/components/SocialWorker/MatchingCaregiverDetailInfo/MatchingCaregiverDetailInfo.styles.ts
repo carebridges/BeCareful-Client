@@ -25,4 +25,7 @@ export const DetailContent = styled.div`
     color: ${({ theme }) => theme.colors.gray500};
     min-width: 72px;
   }
+  .point {
+    color: ${({ theme }) => theme.colors.mainBlue};
+  }
 `;

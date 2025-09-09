@@ -36,13 +36,19 @@ export interface NursingInstitutionRegisterRequest {
 
 export type FacilityType = (typeof FACILITY_TYPES)[number];
 
+export interface SearchInstitution {
+  institutionId: number;
+  institutionCode?: string;
+  name: string;
+  address?: string;
+}
+
 export interface Institution {
   institutionId: number;
   institutionName: string;
   institutionStreetAddress: string;
   institutionDetailAddress: string;
 }
-
 export interface SignUpPayload {
   nursingInstitutionId: number;
   realName: string;

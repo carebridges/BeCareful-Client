@@ -12,7 +12,7 @@ const CaregiverApplyPage = () => {
 
   const chatNew = false;
 
-  const [activeTab, setActiveTab] = useState('검토중');
+  const [activeTab, setActiveTab] = useState('지원검토중');
   const handleTabChange = (tabName: string) => {
     setActiveTab(tabName);
     window.scrollTo(0, 0);
@@ -37,7 +37,7 @@ const CaregiverApplyPage = () => {
 
       <TabWrapper>
         <Tabs>
-          {['검토중', '합격', '거절'].map((tab) => (
+          {['지원검토중', '합격', '지원거절'].map((tab) => (
             <Tab
               key={tab}
               className={activeTab === tab ? 'active' : ''}
@@ -57,14 +57,14 @@ const CaregiverApplyPage = () => {
             key={application.recruitmentInfo.recruitmentInfo.recruitmentId}
             recruitment={application.recruitmentInfo}
             stateColor={
-              application.matchingApplicationStatus === '검토중'
+              application.matchingApplicationStatus === '지원검토중'
                 ? 'mainBlue'
                 : application.matchingApplicationStatus === '합격'
                   ? 'mainGreen'
                   : 'gray500'
             }
             bgColor={
-              application.matchingApplicationStatus === '검토중'
+              application.matchingApplicationStatus === '지원검토중'
                 ? 'subBlue'
                 : application.matchingApplicationStatus === '합격'
                   ? 'subGreen'
