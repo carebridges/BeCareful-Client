@@ -207,7 +207,6 @@ const Buttons = styled.div`
     gap: 10px;
     justify-content: space-between;
     align-items: center;
-    color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.body1};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }

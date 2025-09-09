@@ -271,7 +271,7 @@ const Comment = styled.input`
 const Dots = styled(DotIcon)`
   cursor: pointer;
 `;
-
+    
 const Border = styled.div`
   height: 1px;
   background: ${({ theme }) => theme.colors.gray50};

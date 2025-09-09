@@ -11,7 +11,6 @@ import { useApplicationQuery } from '@/api/caregiver';
 export const useApplicationData = () => {
   // 신청서 조회
   const { data: applicationData } = useApplicationQuery();
-
   const [isToggleChecked, setIsToggleChecked] = useState(false);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export const useApplicationData = () => {
       {
         title: '케어항목',
         detail: applicationData?.workApplicationDto
-          ? formatCaretype(applicationData.workApplicationDto.careTypes, 2)
           : '-',
       },
       {
