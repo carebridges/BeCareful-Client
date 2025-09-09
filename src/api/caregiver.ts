@@ -156,6 +156,23 @@ export const useCaregiverLogout = () => {
 };
 
 // 회원탈퇴
+export const useDeleteCaregiver = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.delete('/caregiver/leave');
+      return response;
+    },
+    onSuccess: () => {
+      console.log('useDeleteCaregiver - 요양보호사 탈퇴 성공');
+      queryClient.clear();
+    },
+    onError: (error) => {
+      console.error('useDeleteCaregiver - 요양보호사 탈퇴 실패:', error);
+    },
+  });
+};
 
 /* 일자리 */
 // 매칭 공고 리스트 조회
