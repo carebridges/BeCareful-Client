@@ -15,6 +15,7 @@ import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/mutation/use
 import {
   useCaregiverLogout,
   useCaregiverMyPageInfoQuery,
+  useDeleteCaregiver,
 } from '@/api/caregiver';
 
 const CaregiverMyPage = () => {
@@ -42,7 +43,7 @@ const CaregiverMyPage = () => {
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
 
   const { mutate: logout } = useCaregiverLogout();
-  // const { mutate: leave } = useDeleteSocialworker();
+  const { mutate: leave } = useDeleteCaregiver();
   const deleteUserInfo = useDeleteUserInfo();
 
   const handleLogout = () => {
@@ -52,9 +53,9 @@ const CaregiverMyPage = () => {
   };
 
   const handleWithdraw = () => {
-    // leave(undefined, {
-    // onSuccess: deleteUserInfo,
-    // });
+    leave(undefined, {
+      onSuccess: deleteUserInfo,
+    });
   };
 
   return (
