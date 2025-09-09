@@ -27,7 +27,7 @@ export const useCaregiverBasicInfoForm = () => {
   const isFormValid =
     formData.realName.trim().length > 0 &&
     formData.birthYymmdd.trim().length === 6 &&
-    (formData.genderCode === 1 || formData.genderCode === 2) &&
+    formData.genderCode > 0 &&
     formData.phoneNumber.trim().length > 0;
 
   return {
