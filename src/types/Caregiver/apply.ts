@@ -9,7 +9,10 @@ interface MatchingRecruitment {
 }
 
 // 지원 현황 조회 응답
-export type MatchingMyRecruitmentResponse = MatchingRecruitment[];
+export type MatchingMyRecruitmentResponse = {
+  recruitments: MatchingRecruitment[];
+  hasNewChat: boolean;
+};
 
 // 지원 현황 상세 조회 응답
 export interface MatchingMyRecruitmentDetailResponse {

@@ -17,8 +17,6 @@ import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const chatNew = true;
-
   const { data, error } = useCaregiverHomeInfoQuery();
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);
@@ -30,7 +28,7 @@ const CaregiverHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {data?.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"

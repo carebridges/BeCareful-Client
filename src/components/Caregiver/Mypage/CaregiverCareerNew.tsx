@@ -41,7 +41,6 @@ const CaregiverCareerNew = ({
           <MemoCount>{textCount}/200</MemoCount>
         </StrengthWrapper>
       </InputWrapper>
-      <Border />
     </Container>
   );
 };
@@ -109,13 +108,4 @@ const MemoCount = styled.label`
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   right: 16px;
   bottom: 16px;
-`;
-
-const Border = styled.div`
-  width: 100vw;
-  height: 1px;
-  background: ${({ theme }) => theme.colors.gray50};
-  margin-left: -20px;
-  position: absolute;
-  bottom: 92px;
 `;

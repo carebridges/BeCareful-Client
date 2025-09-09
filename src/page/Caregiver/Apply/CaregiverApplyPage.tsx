@@ -4,21 +4,25 @@ import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
+import {
+  APPLY_TABS,
+  MATCHING_STATUS_KR_TO_EN,
+} from '@/constants/caregiver/matchingStatus';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationListQuery } from '@/api/caregiver';
 
 const CaregiverApplyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const chatNew = false;
-
-  const [activeTab, setActiveTab] = useState('지원검토중');
+  const [activeTab, setActiveTab] = useState('검토중');
   const handleTabChange = (tabName: string) => {
     setActiveTab(tabName);
     window.scrollTo(0, 0);
   };
 
-  const { data, error } = useApplicationListQuery(activeTab);
+  const { data, error } = useApplicationListQuery(
+    MATCHING_STATUS_KR_TO_EN[activeTab],
+  );
   if (error) {
     console.log('getApplicationList 에러: ', error);
   }
@@ -29,7 +33,7 @@ const CaregiverApplyPage = () => {
         left={<NavLeft>지원현황</NavLeft>}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {chatNew ? <ChatNew /> : <Chat />}
+            {data?.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color=""
@@ -37,7 +41,7 @@ const CaregiverApplyPage = () => {
 
       <TabWrapper>
         <Tabs>
-          {['지원검토중', '합격', '지원거절'].map((tab) => (
+          {APPLY_TABS.map((tab) => (
             <Tab
               key={tab}
               className={activeTab === tab ? 'active' : ''}
@@ -52,7 +56,7 @@ const CaregiverApplyPage = () => {
       </TabWrapper>
 
       <ApplicationsWrapper>
-        {data?.map((application) => (
+        {data?.recruitments.map((application) => (
           <CaregiverWorkCard
             key={application.recruitmentInfo.recruitmentInfo.recruitmentId}
             recruitment={application.recruitmentInfo}

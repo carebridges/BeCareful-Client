@@ -28,10 +28,7 @@ const CaregiverWorkCard = ({
   const applyInfo = [
     {
       title: '케어항목',
-      detail: formatCaretype(
-        recruitment.recruitmentInfo.careTypes.map((itme) => itme.careType),
-        2,
-      ),
+      detail: formatCaretype(recruitment.recruitmentInfo.careTypes, 2),
     },
     {
       title: '근무요일',
@@ -52,7 +49,7 @@ const CaregiverWorkCard = ({
 
       <Title>
         <label className="institution">
-          {recruitment.recruitmentInfo.institutionName}
+          {recruitment.recruitmentInfo.institutionInfo.name}
         </label>
         <label className="title">{recruitment.recruitmentInfo.title}</label>
       </Title>

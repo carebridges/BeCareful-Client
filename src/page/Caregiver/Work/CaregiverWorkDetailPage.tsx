@@ -115,7 +115,7 @@ const CaregiverWorkDetailPage = () => {
         <ModalLimit
           onClose={() => setIsDeleteModalOpen(false)}
           title="일자리가 목록에서 삭제되었어요"
-          detail={`${userInfo.realName}님께 맞는 다른 일자리를 찾아볼게요!`}
+          detail={`${userInfo.realName ?? '회원'}님께 맞는 다른 일자리를 찾아볼게요!`}
           button="다른 일자리 보러가기"
           handleBtnClick={() => handleNavigate('/caregiver/work')}
         />

@@ -14,6 +14,7 @@ export interface WorkSchedule {
 // 요양 보호사 홈 화면 데이터 조회 응답
 export interface CaregiverHomeResponse {
   name: string;
+  hasNewChat: boolean;
   applicationCount: number;
   recruitmentCount: number;
   workScheduleList: WorkSchedule[];

@@ -42,7 +42,7 @@ const CaregiverApplicationPage = () => {
     handleSelectTime,
     handleSelectDay,
     handleSelectCaretype,
-  } = useApplicationForm(data);
+  } = useApplicationForm(data?.workApplicationDto);
 
   // 근무 지역
   const {
@@ -58,7 +58,7 @@ const CaregiverApplicationPage = () => {
     handleDongSelect,
     handleSelectBtn,
     removeSelectedArea,
-  } = useLocationSelection(data);
+  } = useLocationSelection(data?.workApplicationDto);
 
   // 완료 모달
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -92,9 +92,7 @@ const CaregiverApplicationPage = () => {
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
-        center={
-          <NavCenter>{data ? '신청서 수정하기' : '신청서 등록하기'}</NavCenter>
-        }
+        center={<NavCenter>일자리 신청서 {data ? '수정' : '등록'}</NavCenter>}
         color="white"
       />
 
