@@ -36,6 +36,7 @@ export const useApplicationData = () => {
       {
         title: '케어항목',
         detail: applicationData?.workApplicationDto
+          ? formatCaretype(applicationData.workApplicationDto.careTypes, 2)
           : '-',
       },
       {
