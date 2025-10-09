@@ -35,6 +35,7 @@ export interface MatchingElderlyList {
 
 export interface SocialworkerHomeResponse {
   socialWorkerInfo: SocialWorkerInfo;
+  hasNewChat: boolean;
   institutionInfo: InstitutionInfo;
   recruitmentStatistics: RecruitmentStatistics;
   matchingProcessingElderlys: MatchingElderlyList[];
