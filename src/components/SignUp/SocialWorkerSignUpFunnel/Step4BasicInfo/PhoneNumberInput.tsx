@@ -1,25 +1,27 @@
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
-import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
+import { useCallback } from 'react';
 import styled from 'styled-components';
 
 interface PhoneNumberInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  locked?: boolean;
 }
 
 export const PhoneNumberInput = ({
   value,
   onChange,
+  locked = true,
 }: PhoneNumberInputProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    const newEvent = {
-      ...e,
-      target: { ...e.target, value: formatted },
-    } as React.ChangeEvent<HTMLInputElement>;
+  const blockEvent = useCallback(
+    (e: React.SyntheticEvent) => {
+      if (!locked) return;
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    [locked],
+  );
 
-    onChange(newEvent);
-  };
   return (
     <InputWrapper>
       <Label>
@@ -32,9 +34,10 @@ export const PhoneNumberInput = ({
         placeholder="휴대전화번호"
         guide=""
         value={value}
-        onChange={handleChange}
+        onChange={locked ? undefined : onChange}
         maxLength={13}
         inputMode="tel"
+        onKeyDown={locked ? blockEvent : undefined}
       />
     </InputWrapper>
   );
