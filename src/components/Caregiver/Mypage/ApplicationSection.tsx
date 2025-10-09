@@ -106,6 +106,7 @@ export default ApplicationSection;
 
 const SectionWrapper = styled.div`
   padding: 20px 0px;
+  display: flex;
   flex-direction: column;
   gap: 12px;
 
@@ -118,6 +119,7 @@ const SectionWrapper = styled.div`
 
 const Application = styled.div`
   padding: 20px;
+  display: flex;
   flex-direction: column;
   gap: 12px;
   border-radius: 12px;
@@ -125,11 +127,8 @@ const Application = styled.div`
   background: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
 
-  div {
-    flex-direction: column;
-  }
-
   .dateWrapper {
+    display: flex;
     flex-direction: row;
     gap: 6px;
   }
@@ -147,15 +146,21 @@ const Application = styled.div`
   }
 
   .top {
-    flex-direction: row;
+    display: flex;
+    align-items: flex-start;
     justify-content: space-between;
   }
 
   .left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     justify-content: space-between;
   }
 
   .right {
+    display: flex;
+    flex-direction: column;
     gap: 4px;
     align-items: center;
   }

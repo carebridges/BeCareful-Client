@@ -41,7 +41,7 @@ const ProfileCard = ({
           <PointWrapper onClick={() => handleNavigate('/socialworker/point')}>
             <Point />
             <label className="point">{point.toLocaleString('ko-KR')}P</label>
-            <Chevron />
+            <ChevronRight />
           </PointWrapper>
         )}
 
@@ -109,13 +109,6 @@ const PointWrapper = styled.div`
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     cursor: pointer;
-  }
-`;
-
-const Chevron = styled(ChevronRight)`
-  path {
-    fill: ${({ theme }) => theme.colors.black};
-    stroke: ${({ theme }) => theme.colors.black};
   }
 `;
 

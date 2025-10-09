@@ -251,11 +251,7 @@ const Association = styled.div`
 `;
 
 const Chevron = styled(ChevronRight)`
-  path {
-    fill: ${({ theme }) => theme.colors.gray800};
-    stroke: ${({ theme }) => theme.colors.gray800};
-  }
-
+  color: ${({ theme }) => theme.colors.gray800};
   cursor: pointer;
 `;
 

@@ -46,6 +46,7 @@ export default CareerSection;
 
 const SectionWrapper = styled.div`
   padding: 20px 0px;
+  display: flex;
   flex-direction: column;
   gap: 12px;
 
@@ -58,6 +59,7 @@ const SectionWrapper = styled.div`
 
 const Career = styled.div`
   padding: 20px;
+  display: flex;
   flex-direction: column;
   gap: 6px;
   border-radius: 12px;
@@ -66,6 +68,7 @@ const Career = styled.div`
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
 
   .dateWrapper {
+    display: flex;
     gap: 6px;
   }
 
@@ -84,6 +87,7 @@ const Career = styled.div`
 
 const NoContent = styled.div`
   margin-bottom: 8px;
+  display: flex;
   flex-direction: column;
   gap: 6px;
   align-items: center;

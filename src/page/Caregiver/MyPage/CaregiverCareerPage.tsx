@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
+import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverCareerExperience from '@/components/Caregiver/Mypage/CaregiverCareerExperience';
 import CaregiverCareerNew from '@/components/Caregiver/Mypage/CaregiverCareerNew';
-import { NavBar } from '@/components/common/NavBar/NavBar';
 import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { usePutCareerMutation } from '@/hooks/Caregiver/mutation/usePutCareerMutation';
@@ -13,32 +13,47 @@ import { useCareerQuery } from '@/api/caregiver';
 const CaregiverCareerPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
-  const { data, error } = useCareerQuery();
-  if (error) {
-    console.log('getCareer 에러: ', error);
-  }
+  const { data } = useCareerQuery();
+
+  const [isChanged, setIsChanged] = useState(false);
 
   const [title, setTitle] = useState('');
   const [introduce, setIntroduce] = useState('');
   const [experiences, setExperiences] = useState<CareerDetail[]>([]);
   const [activeTab, setActiveTab] = useState('신입');
 
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title ?? '');
+      setIntroduce(data.introduce ?? '');
+      setExperiences(
+        data.careerDetails.length > 0
+          ? data.careerDetails
+          : [{ workInstitution: '', workYear: '1년 미만' }],
+      );
+      setActiveTab(data.careerType ?? '신입');
+    }
+  }, [data]);
+
+  useEffect(() => {
+    let newIsChanged = false;
+    if (activeTab === '신입') {
+      newIsChanged = title !== '' && introduce !== '';
+    } else {
+      newIsChanged =
+        title !== '' &&
+        experiences.length > 0 &&
+        experiences[0].workInstitution !== '';
+    }
+    setIsChanged(newIsChanged);
+  }, [title, introduce, experiences, activeTab]);
+
   const handleTabChange = (tabName: string) => {
     setActiveTab(tabName);
     window.scrollTo(0, 0);
   };
 
-  useEffect(() => {
-    if (data) {
-      setTitle(data.title);
-      setIntroduce(data.introduce);
-      setExperiences(data.careerDetails);
-      setActiveTab(data.careerType);
-    }
-  }, [data]);
-
   const { mutate: updateCareer } = usePutCareerMutation();
-
   const handleBtnClick = () => {
     const careerData: CareerRequest = {
       title: title,
@@ -48,7 +63,7 @@ const CaregiverCareerPage = () => {
     };
 
     console.log(careerData);
-    updateCareer(careerData);
+    updateCareer(careerData, { onSuccess: handleGoBack });
   };
 
   return (
@@ -91,18 +106,23 @@ const CaregiverCareerPage = () => {
       {activeTab == '신입' ? (
         <CaregiverCareerNew
           introduce={introduce}
-          handleIntroduceChange={setIntroduce}
+          handleIntroduceChange={(e) => setIntroduce(e.target.value)}
         />
       ) : (
         <CaregiverCareerExperience
-          careerDetails={experiences}
+          experiences={experiences}
           handleExperienceChange={setExperiences}
         />
       )}
 
       <Bottom>
-        <Button height="52px" variant="mainBlue" onClick={handleBtnClick}>
-          {data ? '경력서 수정하기' : '경력서 등록하기'}
+        <Button
+          height="52px"
+          variant={isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!isChanged}
+          onClick={handleBtnClick}
+        >
+          {data?.title ? '경력서 수정하기' : '경력서 등록하기'}
         </Button>
       </Bottom>
     </Container>

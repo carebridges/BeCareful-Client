@@ -1,30 +1,15 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface CareerNewProps {
-  introduce?: string;
-  handleIntroduceChange: (introduce: string) => void;
+  introduce: string;
+  handleIntroduceChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const CaregiverCareerNew = ({
   introduce,
   handleIntroduceChange,
 }: CareerNewProps) => {
-  const [textCount, setTextCount] = useState(0);
-  const [memoContent, setMemoContent] = useState('');
-
-  useEffect(() => {
-    if (introduce) {
-      setMemoContent(introduce);
-      setTextCount(introduce.length);
-    }
-  }, [introduce]);
-
-  const handleMemoChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setTextCount(e.target.value.length);
-    setMemoContent(e.target.value);
-    handleIntroduceChange(e.target.value);
-  };
+  const textCount = introduce.length;
 
   return (
     <Container>
@@ -34,9 +19,9 @@ const CaregiverCareerNew = ({
           <Strength
             id="memo"
             placeholder="나의 강점을 자유롭게 설명해주세요."
-            value={memoContent}
+            value={introduce}
             maxLength={200}
-            onChange={handleMemoChange}
+            onChange={handleIntroduceChange}
           />
           <MemoCount>{textCount}/200</MemoCount>
         </StrengthWrapper>

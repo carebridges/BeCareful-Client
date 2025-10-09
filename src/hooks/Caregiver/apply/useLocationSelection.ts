@@ -36,7 +36,8 @@ export const useLocationSelection = (data: WorkApplication | undefined) => {
         {
           siDo: selectedCity,
           siGuGun: selectedGu,
-          dongEupMyeon: selectedDong,
+          eupMyeonDong: selectedDong,
+          fullAddress: selectedCity + ' ' + selectedGu + ' ' + selectedDong,
         },
       ]);
     }

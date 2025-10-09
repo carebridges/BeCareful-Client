@@ -5,7 +5,7 @@ import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { SALARY_EN_TO_KR } from '@/constants/common/salary';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 import { formatDaysToKR } from '@/utils/caregiverFormatter';
@@ -40,7 +40,7 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   const elderlyInfo = [
     {
       title: '나이/성별',
-      detail: `${work.elderlyInfo.age}세 ${GENDER_EN_TO_KR[work.elderlyInfo.gender]}`,
+      detail: `${work.elderlyInfo.age}세 ${GENDER_EN_TO_KR_2[work.elderlyInfo.gender]}`,
     },
     {
       title: '주소',

@@ -12,7 +12,7 @@ import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ProfileCard from '@/components/shared/ProfileCard';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import {
   ASSOCIATION_RANK_KR_TO_EN,
@@ -106,7 +106,7 @@ const CommunityMemberDetailPage = () => {
         nickname={data.nickName}
         phoneNumber={data.phoneNumber}
         age={data.age}
-        gender={GENDER_EN_TO_KR[data.gender]}
+        gender={GENDER_EN_TO_KR_2[data.gender]}
       />
 
       <SectionWrapper>

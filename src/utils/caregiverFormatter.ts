@@ -41,9 +41,9 @@ export const formatLocation = (
   length: number,
 ) => {
   const locations = workLocations.map((location) =>
-    location.dongEupMyeon === '전체'
-      ? `${location.siGuGun} ${location.dongEupMyeon}`
-      : `${location.dongEupMyeon}`,
+    location.eupMyeonDong === '전체'
+      ? `${location.siGuGun} ${location.eupMyeonDong}`
+      : `${location.eupMyeonDong}`,
   );
 
   if (workLocations.length <= length) {

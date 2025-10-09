@@ -6,6 +6,7 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import {
   APPLY_TABS,
+  MATCHING_STATUS,
   MATCHING_STATUS_KR_TO_EN,
 } from '@/constants/caregiver/matchingStatus';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -56,28 +57,20 @@ const CaregiverApplyPage = () => {
       </TabWrapper>
 
       <ApplicationsWrapper>
-        {data?.recruitments.map((application) => (
-          <CaregiverWorkCard
-            key={application.recruitmentInfo.recruitmentInfo.recruitmentId}
-            recruitment={application.recruitmentInfo}
-            stateColor={
-              application.matchingApplicationStatus === '지원검토중'
-                ? 'mainBlue'
-                : application.matchingApplicationStatus === '합격'
-                  ? 'mainGreen'
-                  : 'gray500'
-            }
-            bgColor={
-              application.matchingApplicationStatus === '지원검토중'
-                ? 'subBlue'
-                : application.matchingApplicationStatus === '합격'
-                  ? 'subGreen'
-                  : 'gray50'
-            }
-            stateLabel={application.matchingApplicationStatus}
-            navigatePath="apply"
-          />
-        ))}
+        {data?.recruitments?.map((application) => {
+          const status = MATCHING_STATUS[application.matchingStatus];
+
+          return (
+            <CaregiverWorkCard
+              key={application.recruitmentInfo.recruitmentInfo.recruitmentId}
+              recruitment={application.recruitmentInfo}
+              stateColor={status.stateColor}
+              bgColor={status.bgColor}
+              stateLabel={status.stateLabel}
+              navigatePath="apply"
+            />
+          );
+        })}
       </ApplicationsWrapper>
     </Container>
   );
