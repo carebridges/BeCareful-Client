@@ -39,5 +39,4 @@ export interface SocialworkerHomeResponse {
   institutionInfo: InstitutionInfo;
   recruitmentStatistics: RecruitmentStatistics;
   matchingProcessingElderlys: MatchingElderlyList[];
-  hasNewChat: boolean;
 }
