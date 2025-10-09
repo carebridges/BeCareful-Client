@@ -4,8 +4,8 @@ import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 /* 요양보호사 지원 현황 화면 */
 interface MatchingRecruitment {
   recruitmentInfo: Recruitment;
-  // TODO : 백엔드 타입 확인
-  matchingApplicationStatus: '지원검토중' | '합격' | '지원거절';
+  // matchingStatus: '지원검토중' | '합격' | '지원거절';
+  matchingStatus: string;
 }
 
 // 지원 현황 조회 응답

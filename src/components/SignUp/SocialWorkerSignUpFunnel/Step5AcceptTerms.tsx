@@ -2,13 +2,16 @@ import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';
 import {
   CENTER_TERMS,
   MARKETING_TERMS,
   PRIVACY_TERMS,
 } from '@/constants/termText';
+import { useSocialWorkerSignupSubmit } from '@/hooks/SignUp/useSocialWorkerSignupSubmit';
+import { SignUpPayload } from '@/types/SocialSignUp';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 
 type AgreeField =
   | 'isAgreedToTerms'
@@ -17,31 +20,41 @@ type AgreeField =
 
 export const Step5AcceptTerms = () => {
   const { goToNext, goToPrev, formData, setFormData } = useSignUpContext();
+  const { submit, isPending, isError } = useSocialWorkerSignupSubmit();
 
-  const handleCheckboxChange = (field: AgreeField) => (checked: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: checked,
-    }));
-  };
-
-  const setAllAgreed = (value: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      isAgreedToTerms: value,
-      isAgreedToCollectPersonalInfo: value,
-      isAgreedToReceiveMarketingInfo: value,
-    }));
-  };
+  const agreeState = useMemo(
+    () => ({
+      isAgreedToTerms: formData.isAgreedToTerms,
+      isAgreedToCollectPersonalInfo: formData.isAgreedToCollectPersonalInfo,
+      isAgreedToReceiveMarketingInfo: formData.isAgreedToReceiveMarketingInfo,
+    }),
+    [formData],
+  );
 
   const requiredAgreed =
-    formData.isAgreedToTerms && formData.isAgreedToCollectPersonalInfo;
+    agreeState.isAgreedToTerms && agreeState.isAgreedToCollectPersonalInfo;
 
-  const isAllAgreed = requiredAgreed && formData.isAgreedToReceiveMarketingInfo;
+  const isAllAgreed =
+    requiredAgreed && agreeState.isAgreedToReceiveMarketingInfo;
 
-  const handleAgreeAll = () => {
-    setAllAgreed(!isAllAgreed);
-  };
+  const handleCheckboxChange = useCallback(
+    (field: AgreeField) => (checked: boolean) => {
+      setFormData((prev) => ({
+        ...prev,
+        [field]: checked,
+      }));
+    },
+    [setFormData],
+  );
+
+  const handleAgreeAll = useCallback(() => {
+    setFormData((prev) => ({
+      ...prev,
+      isAgreedToTerms: !isAllAgreed,
+      isAgreedToCollectPersonalInfo: !isAllAgreed,
+      isAgreedToReceiveMarketingInfo: !isAllAgreed,
+    }));
+  }, [isAllAgreed, setFormData]);
 
   const [expandedState, setExpandedState] = useState({
     terms: false,
@@ -49,6 +62,11 @@ export const Step5AcceptTerms = () => {
     marketing: false,
   });
   const isAnyExpanded = Object.values(expandedState).some(Boolean);
+
+  const handleNext = useCallback(() => {
+    if (!requiredAgreed || isPending) return;
+    submit(formData as SignUpPayload, { onSuccess: () => goToNext() });
+  }, [requiredAgreed, isPending, formData, submit, goToNext]);
 
   return (
     <StepWrapper $isAnyExpanded={isAnyExpanded}>
@@ -102,17 +120,19 @@ export const Step5AcceptTerms = () => {
         </AgreeCheckContainer>
       </AgreeWrapper>
 
+      {isError && <ErrorIndicator />}
+
       <ButtonContainer>
-        <Button onClick={goToPrev} height="52px">
+        <Button onClick={goToPrev} height="52px" disabled={isPending}>
           이전
         </Button>
         <Button
-          onClick={goToNext}
+          onClick={handleNext}
           height="52px"
           variant={requiredAgreed ? 'blue' : 'gray'}
-          disabled={!requiredAgreed}
+          disabled={!requiredAgreed || isPending}
         >
-          다음
+          {isPending ? '처리 중...' : '다음'}
         </Button>
       </ButtonContainer>
     </StepWrapper>

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import ProfileCard from '@/components/shared/ProfileCard';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { CaregiverInfo } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
@@ -20,7 +20,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
         // point={1500}
         phoneNumber={data?.phoneNumber ?? ''}
         age={data?.age ?? 0}
-        gender={GENDER_EN_TO_KR[data?.gender ?? 'FEMALE']}
+        gender={GENDER_EN_TO_KR_2[data?.gender ?? 'FEMALE']}
       />
 
       <Bottom>
@@ -68,6 +68,7 @@ export default ProfileSection;
 
 const ProfileWrapper = styled.div`
   padding: 12px 0px;
+  display: flex;
   flex-direction: column;
   gap: 8px;
   justify-content: center;
@@ -75,6 +76,7 @@ const ProfileWrapper = styled.div`
 
 const Bottom = styled.div`
   padding: 20px 0px;
+  display: flex;
   flex-direction: column;
   gap: 20px;
 

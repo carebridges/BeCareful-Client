@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { WorkSchedule } from '@/types/Caregiver/home';
 import { formatCaretype } from '@/utils/caregiverFormatter';
 
@@ -34,7 +34,7 @@ const CaregiverHomeWorkCard = ({
             <label className="person">{workSchedule.seniorAge}세</label>
             <Border />
             <label className="person">
-              {GENDER_EN_TO_KR[workSchedule.seniorGender]}
+              {GENDER_EN_TO_KR_2[workSchedule.seniorGender]}
             </label>
           </div>
         </div>

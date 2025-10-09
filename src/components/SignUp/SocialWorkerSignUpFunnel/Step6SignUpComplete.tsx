@@ -1,52 +1,14 @@
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { ReactComponent as SignUpComplete } from '@/assets/icons/signup/SignUpComplete.svg';
-import { useEffect } from 'react';
-import { useSignUpMember } from '@/api/signupFunnel';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
 
 export const Step6SignUpComplete = () => {
-  const { formData } = useSignUpContext();
-  const { mutate } = useSignUpMember();
   const navigate = useNavigate();
-  const setCurrentUserInfo = useSetRecoilState(currentUserInfo);
 
-  useEffect(() => {
-    if (formData.nursingInstitutionId != null) {
-      mutate(
-        {
-          nursingInstitutionId: formData.nursingInstitutionId,
-          realName: formData.realName,
-          nickName: formData.nickName,
-          birthYymmdd: formData.birthYymmdd,
-          genderCode: formData.genderCode,
-          phoneNumber: formData.phoneNumber,
-          institutionRank: formData.institutionRank,
-          isAgreedToTerms: formData.isAgreedToTerms,
-          isAgreedToCollectPersonalInfo: formData.isAgreedToCollectPersonalInfo,
-          isAgreedToReceiveMarketingInfo:
-            formData.isAgreedToReceiveMarketingInfo,
-        },
-        {
-          onSuccess: () => {
-            setCurrentUserInfo({
-              realName: formData.realName,
-              nickName: formData.nickName,
-              institutionRank: formData.institutionRank,
-              associationRank: 'none',
-            });
-            navigate('/community/create');
-          },
-          onError: (error) => {
-            console.error('회원가입 실패:', error); // TODO
-          },
-        },
-      );
-    }
-  }, [formData, mutate, navigate]);
+  const handleStart = () => {
+    navigate('/community/create');
+  };
 
   return (
     <StepWrapper>
@@ -63,7 +25,7 @@ export const Step6SignUpComplete = () => {
       </SignUpCompleteContainer>
 
       <ButtonContainer>
-        <Button height="52px" variant="blue" disabled>
+        <Button height="52px" variant="blue" onClick={handleStart}>
           돌봄다리 시작하기
         </Button>
       </ButtonContainer>

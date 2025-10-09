@@ -1,92 +1,143 @@
 import styled from 'styled-components';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
 import { MatchingElderlyList } from '@/types/Socialworker/home';
+import { Button } from '@/components/common/Button/Button';
 
 interface ElderSectionProps {
   data: MatchingElderlyList[] | undefined;
 }
 
 const ElderSection = ({ data }: ElderSectionProps) => {
+  if (!data || data.length === 0) {
+    return (
+      <Elder>
+        <div className="none">
+          <label className="title">매칭 진행 중인 어르신이 없습니다.</label>
+          <label className="detail">
+            현재 진행 중인 내역이 없습니다. 매칭을 기다려주세요.
+          </label>
+        </div>
+      </Elder>
+    );
+  }
+
   return (
-    <Edler>
-      {data?.map((elderly, index) => (
+    <Elder>
+      {data?.slice(0, 3).map((elderly, index) => (
         <div className="elder" key={index}>
-          <img
-            src={elderly.elderlyProfileImageUrl}
-            alt={`${elderly.elderlyName} 어르신 프로필`}
-          />
-          <div className="elder-info">
-            <label className="name">{elderly.elderlyName}</label>
-            <div className="bottom">
-              <label className="extra">{elderly.elderlyAge}세</label>
-              <div className="border" />
-              <label className="extra">
-                {GENDER_EN_TO_KR[elderly.elderlyGender]}
+          <InfoWrapper>
+            <img
+              src={elderly.elderlyDetail.elderlyProfileImageUrl}
+              alt={`${elderly.elderlyDetail.elderlyName} 어르신 프로필`}
+            />
+            <div className="right">
+              <label className="name">
+                {elderly.elderlyDetail.elderlyName}
               </label>
+              <div className="bottom">
+                <label className="info">
+                  만 {elderly.elderlyDetail.elderlyAge}세
+                </label>
+                <label className="info">·</label>
+                <label className="info">
+                  {GENDER_EN_TO_KR_1[elderly.elderlyDetail.elderlyGender]}
+                </label>
+                <label className="info">·</label>
+                <label className="info">
+                  공고 {elderly.recruitmentCount}개
+                </label>
+              </div>
             </div>
-          </div>
+          </InfoWrapper>
+          <Button
+            width="50px"
+            height="32px"
+            variant="subBlue"
+            // onClick={() => handleNavigate()}
+          >
+            관리
+          </Button>
         </div>
       ))}
-    </Edler>
+    </Elder>
   );
 };
 
 export default ElderSection;
 
-const Edler = styled.div`
+const Elder = styled.div`
+  padding: 24px 20px;
   display: flex;
-  gap: 8px;
-  overflow-x: scroll;
-  flex-wrap: nowrap;
-
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  flex-direction: column;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.white};
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.03);
 
   .elder {
-    padding: 16px;
-    width: 88px;
-    flex: 0 0 auto;
-    flex-direction: column;
+    display: flex;
     align-items: center;
-    gap: 10px;
-    border-radius: 12px;
-    background: ${({ theme }) => theme.colors.white};
-    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.03);
+    justify-content: space-between;
+
+    padding-bottom: 12px;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
+
+    &:last-child {
+      padding-bottom: 0px;
+      border-bottom: none;
+    }
   }
 
+  .none {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .title {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .detail {
+    color: ${({ theme }) => theme.colors.gray600};
+    font-size: ${({ theme }) => theme.typography.fontSize.body4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+`;
+
+const InfoWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
   img {
-    width: 56px;
-    height: 56px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     object-fit: cover;
   }
 
-  .elder-info {
+  .right {
+    display: flex;
     flex-direction: column;
-    gap: 4px;
-    align-items: center;
+    gap: 5px;
   }
 
   .name {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.body1};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 
   .bottom {
+    display: flex;
     gap: 4px;
-    align-items: center;
   }
 
-  .extra {
-    color: ${({ theme }) => theme.colors.gray500};
-  }
-
-  .border {
-    width: 1px;
-    height: 12px;
-    background: ${({ theme }) => theme.colors.subBlue};
+  .info {
+    color: ${({ theme }) => theme.colors.gray600};
+    font-size: ${({ theme }) => theme.typography.fontSize.body4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
   }
 `;

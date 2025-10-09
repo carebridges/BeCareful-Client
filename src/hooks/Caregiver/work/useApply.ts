@@ -10,11 +10,7 @@ export const useApply = (recruitmentId: number) => {
   };
 
   // 매칭 공고 지원
-  const { mutate: applyMutation } = usePostApplyMutation(recruitmentId, {
-    onSuccessCallback: () => {
-      setIsApplyModalOpen(false); // 모달 닫기
-    },
-  });
+  const { mutate: applyMutation } = usePostApplyMutation(recruitmentId);
 
   return {
     isApplyModalOpen,

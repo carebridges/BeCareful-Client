@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { ChatElderlyInfo, Contract } from '@/types/Common/chat';
 
 interface ChatCardProps {
@@ -34,7 +34,7 @@ const ChatCard = ({
           {
             title: '성함/연령',
             detail: elder
-              ? `${elder?.elderlyName} ${elder?.elderlyAge}세 ${GENDER_EN_TO_KR[elder?.elderlyGender]}`
+              ? `${elder?.elderlyName} ${elder?.elderlyAge}세 ${GENDER_EN_TO_KR_2[elder?.elderlyGender]}`
               : '정보 없음',
           },
         ]

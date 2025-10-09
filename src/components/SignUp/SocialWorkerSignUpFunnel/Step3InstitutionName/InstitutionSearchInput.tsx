@@ -5,6 +5,8 @@ import { styled } from 'styled-components';
 import { useSearchInstitution } from '@/api/signupFunnel';
 import { SearchInstitution } from '@/types/SocialSignUp';
 import { FindNewInstitutionModal } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/FindNewInstitutionModal';
+import { theme } from '@/style/theme';
+import { ReactComponent as ArrowRight } from '@/assets/icons/ArrowRight.svg';
 
 type Props = {
   onInstitutionSelect: (name: string, id?: number, address?: string) => void;
@@ -70,13 +72,13 @@ export const InstitutionSearchInput = ({
           }}
         />
 
-        <IconWrapper onClick={() => setOpenNoResult(true)}>
-          <SearchIcon />
+        <IconWrapper>
           <Close onClick={() => setSearchTerm('')} />
+          <SearchIcon />
         </IconWrapper>
       </SearchContainer>
 
-      {showDropdown && institutions.length > 0 && (
+      {showDropdown && (
         <Dropdown role="listbox">
           {institutions.map((inst) => (
             <DropdownItem
@@ -93,6 +95,22 @@ export const InstitutionSearchInput = ({
               </Address>
             </DropdownItem>
           ))}
+
+          <DropdownItem
+            key="no-result"
+            onClick={() => setOpenNoResult(true)}
+            role="option"
+          >
+            <NoResultContainer>
+              <NoResultTexts>
+                <Name style={{ color: theme.colors.mainBlue }}>
+                  소속 기관이 목록에 없으신가요?
+                </Name>
+                <Address>소속 기관 직접 등록하러 가기</Address>
+              </NoResultTexts>
+              <ArrowIcon />
+            </NoResultContainer>
+          </DropdownItem>
         </Dropdown>
       )}
 
@@ -202,4 +220,23 @@ const Address = styled.span`
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.gray500};
+`;
+
+const NoResultContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+const NoResultTexts = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ArrowIcon = styled(ArrowRight)`
+  & path {
+    stroke: ${({ theme }) => theme.colors.mainBlue} !important;
+  }
+  flex-shrink: 0;
 `;

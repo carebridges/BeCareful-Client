@@ -23,7 +23,8 @@ export type MatchingResultStatus = '높음' | '보통' | '낮음';
 export interface WorkLocation {
   siDo: string;
   siGuGun: string;
-  dongEupMyeon: string;
+  eupMyeonDong: string;
+  fullAddress: string;
 }
 
 // 케어타입

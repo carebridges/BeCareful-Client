@@ -100,8 +100,7 @@ const SocialworkerEditProfilePage = () => {
           </label>
           <NicknameInput>
             <Input
-              // style={{ width: '80%' }}
-              style={{ width: '100%' }}
+              style={{ width: '75%' }}
               placeholder="닉네임"
               value={nickname}
               onChange={(e) => handleChange('nickname', e.target.value)}
@@ -110,7 +109,7 @@ const SocialworkerEditProfilePage = () => {
               height="52px"
               variant={isDuplicateCheckButtonEnabled ? 'mainBlue' : 'disabled'}
               disabled={!isDuplicateCheckButtonEnabled}
-              style={{ width: '20%' }}
+              style={{ width: '25%' }}
               onClick={handleCheckDuplicate}
             >
               중복확인

@@ -78,6 +78,7 @@ export const ApplicationDropdown = ({
 
 const SmallDropdowns = styled.div`
   width: 22.5%;
+  min-width: 60px;
   display: flex;
   flex-direction: column;
   position: relative;

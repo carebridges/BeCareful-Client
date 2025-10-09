@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import { ReactComponent as Add } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Delete } from '@/assets/icons/ButtonMinus.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -7,41 +6,34 @@ import { CareerDropdown } from '@/components/Caregiver/Mypage/CareerDropdown';
 import { CareerDetail } from '@/types/Caregiver/mypage';
 
 interface CareerExpProps {
-  careerDetails?: CareerDetail[];
+  experiences: CareerDetail[];
   handleExperienceChange: (experiences: CareerDetail[]) => void;
 }
 
 const CaregiverCareerExperience = ({
-  careerDetails,
+  experiences,
   handleExperienceChange,
 }: CareerExpProps) => {
-  const [experiences, setExperiences] = useState<CareerDetail[]>([
-    { workInstitution: '', workYear: '1년' },
-  ]);
-
   const addExperience = () => {
-    updateExperiences([
+    handleExperienceChange([
       ...experiences,
       { workInstitution: '', workYear: '1년' },
     ]);
   };
 
-  const deleteExperience = () => {
+  const deleteExperience = (indexToDelete: number) => {
     if (experiences.length > 1) {
-      updateExperiences(experiences.slice(0, -1));
+      handleExperienceChange(
+        experiences.filter((_, index) => index !== indexToDelete),
+      );
     }
-  };
-
-  const updateExperiences = (newExperiences: CareerDetail[]) => {
-    setExperiences(newExperiences);
-    handleExperienceChange(newExperiences);
   };
 
   const handleChange = (index: number, key: string, value: string) => {
     const updatedExperiences = experiences.map((experience, i) =>
       i === index ? { ...experience, [key]: value } : experience,
     );
-    updateExperiences(updatedExperiences);
+    handleExperienceChange(updatedExperiences);
   };
 
   const handleSelectWorkYear = (index: number, year: string) => {
@@ -60,12 +52,6 @@ const CaregiverCareerExperience = ({
     '9년',
     '10년 이상',
   ];
-
-  useEffect(() => {
-    if (careerDetails) {
-      setExperiences(careerDetails);
-    }
-  }, [careerDetails]);
 
   return (
     <Container>
@@ -102,7 +88,7 @@ const CaregiverCareerExperience = ({
             <Button
               height="52px"
               variant="disabled"
-              onClick={deleteExperience}
+              onClick={() => deleteExperience(index)}
               style={{
                 display: 'flex',
                 gap: '8px',

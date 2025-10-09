@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { usePutMemoMutation } from '@/hooks/Caregiver/mutation/usePutMemoMutation';
@@ -46,7 +46,7 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
               <label className="extra">{workInfo.elderlyInfo.age}세</label>
               <Border />
               <label className="extra">
-                {GENDER_EN_TO_KR[workInfo.elderlyInfo.gender]}
+                {GENDER_EN_TO_KR_2[workInfo.elderlyInfo.gender]}
               </label>
             </div>
           </div>

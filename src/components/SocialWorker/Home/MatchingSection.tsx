@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
-import { MatchingStatistics } from '@/types/Socialworker/home';
+import { RecruitmentStatistics } from '@/types/Socialworker/home';
 
 type ColorKey = keyof typeof colors;
 
 interface MatchingSectionProps {
-  data: MatchingStatistics | undefined;
+  data: RecruitmentStatistics | undefined;
 }
 
 const MatchingSection = ({ data }: MatchingSectionProps) => {
@@ -15,7 +15,7 @@ const MatchingSection = ({ data }: MatchingSectionProps) => {
         <Circle color="mainGreen" />
         <label className="status">진행중</label>
         <label className="number">
-          {data?.matchingProcessingCount}
+          {data?.recruitmentProcessingCount}
           <span className="unit">건</span>
         </label>
       </div>
@@ -24,7 +24,7 @@ const MatchingSection = ({ data }: MatchingSectionProps) => {
         <Circle color="mainOrange" />
         <label className="status">최근 완료</label>
         <label className="number">
-          {data?.recentlyMatchedCount}
+          {data?.recentlyCompletedCount}
           <span className="unit">건</span>
         </label>
       </div>
@@ -33,7 +33,7 @@ const MatchingSection = ({ data }: MatchingSectionProps) => {
         <Circle color="mainBlue" />
         <label className="status">전체 매칭</label>
         <label className="number">
-          {data?.totalMatchingCompletedCount}
+          {data?.totalRecruitmentCompletedCount}
           <span className="unit">건</span>
         </label>
       </div>
@@ -44,11 +44,13 @@ const MatchingSection = ({ data }: MatchingSectionProps) => {
 export default MatchingSection;
 
 const Matching = styled.div`
+  display: flex;
   gap: 8px;
 
   .matching {
     width: 100%;
     padding: 20px 16px 16px 16px;
+    display: flex;
     flex-direction: column;
     gap: 8px;
     border-radius: 12px;
@@ -58,6 +60,21 @@ const Matching = styled.div`
 
   .status {
     margin-bottom: 2px;
+    color: ${({ theme }) => theme.colors.gray600};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .number {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title1};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
+
+  .unit {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
 `;
 

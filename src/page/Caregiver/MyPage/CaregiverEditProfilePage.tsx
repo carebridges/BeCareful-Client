@@ -209,7 +209,6 @@ const Border = styled.div`
 `;
 
 const ProfileImgWrapper = styled.div`
-  margin-top: -16px;
   display: flex;
   justify-content: center;
 

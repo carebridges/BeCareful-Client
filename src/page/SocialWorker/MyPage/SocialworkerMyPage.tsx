@@ -8,7 +8,7 @@ import AssociationCard from '@/components/shared/AssociationCard';
 import InstitutionCard from '@/components/shared/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { GENDER_EN_TO_KR } from '@/constants/common/gender';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -63,7 +63,7 @@ const SocialworkerMyPage = () => {
           // point={1500}
           phoneNumber={data?.socialWorkerInfo.phoneNumber ?? ''}
           age={data?.socialWorkerInfo.age ?? 0}
-          gender={GENDER_EN_TO_KR[data?.socialWorkerInfo.gender ?? 'FEMALE']}
+          gender={GENDER_EN_TO_KR_2[data?.socialWorkerInfo.gender ?? 'FEMALE']}
         />
 
         <BelongCard

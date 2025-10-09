@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as CloseButton } from '@/assets/icons/caregiver/my/CloseButton.svg';
 import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDropdown';
@@ -60,6 +60,19 @@ const CaregiverApplicationPage = () => {
     removeSelectedArea,
   } = useLocationSelection(data?.workApplicationDto);
 
+  const [isChanged, setIsChanged] = useState(false);
+  useEffect(() => {
+    const isFormValid =
+      payType !== '' &&
+      pay !== '' &&
+      selectTime.length > 0 &&
+      selectDay.length > 0 &&
+      selectCaretype.length > 0 &&
+      selectedArea.length > 0;
+
+    setIsChanged(isFormValid);
+  }, [pay, payType, selectTime, selectDay, selectCaretype, selectedArea]);
+
   // 완료 모달
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -92,7 +105,11 @@ const CaregiverApplicationPage = () => {
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
-        center={<NavCenter>일자리 신청서 {data ? '수정' : '등록'}</NavCenter>}
+        center={
+          <NavCenter>
+            일자리 신청서 {data?.workApplicationDto ? '수정' : '등록'}
+          </NavCenter>
+        }
         color="white"
       />
 
@@ -118,7 +135,7 @@ const CaregiverApplicationPage = () => {
           <SelectedAreasWrapper>
             {selectedArea.map((area, index) => (
               <SelectedArea key={index}>
-                {area.siGuGun} {area.dongEupMyeon}
+                {area.siGuGun} {area.eupMyeonDong}
                 <CloseButton onClick={() => removeSelectedArea(index)} />
               </SelectedArea>
             ))}
@@ -236,8 +253,13 @@ const CaregiverApplicationPage = () => {
       </SectionWrapper>
 
       <Bottom>
-        <Button height="52px" variant="mainBlue" onClick={handleBtnClick}>
-          {data ? '신청서 수정하기' : '신청서 등록하기'}
+        <Button
+          height="56px"
+          variant={isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!isChanged}
+          onClick={handleBtnClick}
+        >
+          {data?.workApplicationDto ? '신청서 수정하기' : '신청서 등록하기'}
         </Button>
       </Bottom>
 
