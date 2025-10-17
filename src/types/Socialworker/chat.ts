@@ -1,9 +1,6 @@
 import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
-import {
-  ChatResponse,
-  CaregiverInfo,
-  ChatElderlyInfo,
-} from '@/types/Common/chat';
+import { ChatResponse, CaregiverInfo } from '@/types/Common/chat';
+import { ElderlyDetail } from '@/types/Socialworker/common';
 
 export interface SocialworkerContractEditRequest {
   matchingId: number;
@@ -22,7 +19,7 @@ export interface SocialworkerChatList {
   caregiverInfo: CaregiverInfo;
   recentChat: string;
   time: string;
-  elderlyInfo: ChatElderlyInfo;
+  elderlyInfo: ElderlyDetail;
 }
 
 export type SocialworkerChatListResponse = SocialworkerChatList[];

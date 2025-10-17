@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ReactComponent as Send } from '@/assets/icons/community/ReplySend.svg';
+import { ReactComponent as ReplySend } from '@/assets/icons/community/ReplySend.svg';
+import { ReactComponent as ReplySendDefault } from '@/assets/icons/community/ReplySendDefault.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
+import { ReactComponent as Association } from '@/assets/icons/community/AssociationDefault.svg';
 import { ReactComponent as DotIcon } from '@/assets/icons/community/Dots.svg';
+import { ReactComponent as Delete } from '@/assets/icons/CloseCircle.svg';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import { Button } from '@/components/common/Button/Button';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
@@ -19,15 +22,12 @@ const CommentsSection = ({ apiBoardType, postId }: CommentsSectionProps) => {
     comments,
 
     comment,
+    setComment,
     handleCommentChange,
     handleCommentSend,
 
-    selectedCommentId,
     setSelectedCommentId,
     isEditingComment,
-    editingCommentContent,
-    setEditingCommentContent,
-    editComment,
 
     selectedCommentAction,
     setSelectedCommentAction,
@@ -46,74 +46,69 @@ const CommentsSection = ({ apiBoardType, postId }: CommentsSectionProps) => {
           댓글 <span>{comments?.length}</span>
         </label>
 
-        {comments?.map((comment) => (
-          <React.Fragment key={comment.commentId}>
-            <div className="reply">
-              <div className="left">
-                <img src={comment.author.institutionImageUrl} />
-                <div className="labels">
-                  <div className="writer-wrapper">
-                    <label className="writer">
-                      {comment.author.authorName}
-                    </label>
-                    <label className="writer">·</label>
-                    <label className="writer">
-                      {
-                        INSTITUTION_RANK_EN_TO_KR[
-                          comment.author.authorInstitutionRank
-                        ]
-                      }
+        {comments && comments.length > 0 ? (
+          comments.map((comment, index) => (
+            <React.Fragment key={comment.commentId}>
+              <div className="reply">
+                <div className="left">
+                  <img src={comment.author.institutionImageUrl} />
+                  <div className="labels">
+                    <div className="writer-wrapper">
+                      <label className="writer">
+                        {comment.author.authorName}
+                      </label>
+                      <label className="writer">·</label>
+                      <label className="writer">
+                        {
+                          INSTITUTION_RANK_EN_TO_KR[
+                            comment.author.authorInstitutionRank
+                          ]
+                        }
+                      </label>
+                    </div>
+
+                    <label className="content">{comment.content}</label>
+
+                    <label className="date">
+                      {formatDateTime(comment.createdAt)}
                     </label>
                   </div>
-
-                  {isEditingComment &&
-                  comment.commentId === selectedCommentId ? (
-                    <div className="edit-comment">
-                      <Comment
-                        value={editingCommentContent}
-                        onChange={(e) =>
-                          setEditingCommentContent(e.target.value)
-                        }
-                      />
-                      <Button
-                        width="100%"
-                        height="46px"
-                        variant="subBlue"
-                        onClick={editComment}
-                      >
-                        수정하기
-                      </Button>
-                    </div>
-                  ) : (
-                    <label className="content">{comment.content}</label>
-                  )}
-
-                  <label className="date">
-                    {formatDateTime(comment.createdAt)}
-                  </label>
                 </div>
+                {comment.isMyComment && (
+                  <Dots
+                    onClick={() => {
+                      setSelectedCommentId(comment.commentId);
+                      setIsCommentActionSheetOpen(true);
+                    }}
+                  />
+                )}
               </div>
-              {comment.isMyComment && !isEditingComment && (
-                <Dots
-                  onClick={() => {
-                    setSelectedCommentId(comment.commentId);
-                    setIsCommentActionSheetOpen(true);
-                  }}
-                />
-              )}
-            </div>
-            <Border />
-          </React.Fragment>
-        ))}
+              {index < comments.length - 1 && <Border />}
+            </React.Fragment>
+          ))
+        ) : (
+          <NoComments>
+            <Association />첫 댓글을 남겨주세요.
+          </NoComments>
+        )}
       </Comments>
 
       <CommentWrapper>
-        <Comment
-          placeholder="댓글을 입력하세요"
-          value={comment}
-          onChange={handleCommentChange}
-        />
-        <Send style={{ padding: '4px' }} onClick={handleCommentSend} />
+        <div className="comment">
+          <Comment
+            placeholder={`댓글을 ${isEditingComment ? '수정' : '입력'}하세요`}
+            value={comment}
+            onChange={handleCommentChange}
+          />
+          {comment.length > 0 && (
+            <Delete className="delete" onClick={() => setComment('')} />
+          )}
+        </div>
+        {comment.length > 0 ? (
+          <Send onClick={handleCommentSend} />
+        ) : (
+          <SendDefault onClick={handleCommentSend} />
+        )}
       </CommentWrapper>
 
       <BottomSheet
@@ -162,7 +157,7 @@ const CommentsSection = ({ apiBoardType, postId }: CommentsSectionProps) => {
 export default CommentsSection;
 
 const Comments = styled.div`
-  margin-bottom: 105px;
+  padding-bottom: 105px;
 
   label {
     color: ${({ theme }) => theme.colors.black};
@@ -244,9 +239,28 @@ const CommentWrapper = styled.div`
   right: 0;
   bottom: 0;
 
-  svg {
-    cursor: pointer;
+  .comment {
+    width: 100%;
+    display: flex;
+    position: relative;
   }
+
+  .delete {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+`;
+
+const SendDefault = styled(ReplySendDefault)`
+  cursor: pointer;
+  padding: 4px;
+`;
+
+const Send = styled(ReplySend)`
+  cursor: pointer;
+  padding: 4px;
 `;
 
 const Comment = styled.input`
@@ -257,11 +271,11 @@ const Comment = styled.input`
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 
-  display: flex;
-  align-items: center;
+  padding: 9px 16px;
   width: 100%;
   height: 26px;
-  padding: 9px 16px;
+  display: flex;
+  align-items: center;
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.gray300};
@@ -270,11 +284,23 @@ const Comment = styled.input`
 
 const Dots = styled(DotIcon)`
   cursor: pointer;
+  margin-right: 8px;
 `;
-    
+
 const Border = styled.div`
   height: 1px;
   background: ${({ theme }) => theme.colors.gray50};
+`;
+
+const NoComments = styled.div`
+  padding: 10px 0px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  color: ${({ theme }) => theme.colors.gray600};
+  font-size: ${({ theme }) => theme.typography.fontSize.body1};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const CheckButton = styled.div<{ active: boolean }>`
@@ -315,5 +341,5 @@ const DeleteButtons = styled.div`
   display: flex;
   gap: 8px;
   justify-content: space-between;
-  padding-top: 85px;
+  padding-top: 66px;
 `;

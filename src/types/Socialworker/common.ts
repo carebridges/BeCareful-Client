@@ -21,3 +21,13 @@ export interface SocialWorkerInfo {
   institutionRank: InstitutionRank;
   associationRank: AssociationRank;
 }
+
+export interface ElderlyDetail {
+  elderlyId: number;
+  elderlyName: string;
+  elderlyAge: number;
+  elderlyGender: 'FEMALE' | 'MALE';
+  elderlyLocation: string;
+  elderlyCareLevel: string;
+  elderlyProfileImageUrl: string;
+}

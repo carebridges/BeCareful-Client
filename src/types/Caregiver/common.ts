@@ -1,4 +1,5 @@
-/* 공통 타입 정의 - 백엔드 enum 기준 */
+import { InstitutionInfo } from '@/types/Common/institutionInfo';
+
 // 근무 요일
 export type WorkDay =
   | 'MONDAY'
@@ -50,13 +51,6 @@ export interface WorkApplication {
   workSalaryUnitType: WorkSalaryUnitType;
   lastModifiedDate: string;
   workLocations: WorkLocation[];
-}
-
-export interface InstitutionInfo {
-  institutionId: number;
-  institutionCode: string;
-  name: string;
-  address: string;
 }
 
 // 매칭 공고

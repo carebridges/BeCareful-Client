@@ -3,7 +3,7 @@ import { SearchInstitution, SignUpPayload } from '@/types/SocialSignUp';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 
 export const signUpMember = async (payload: SignUpPayload) => {
-  const { data } = await axiosInstance.post('/socialworker/signup', payload);
+  const { data } = await axiosInstance.post('/social-worker/signup', payload);
   return data;
 };
 
@@ -37,7 +37,7 @@ export const useSearchInstitution = (
 };
 
 export const checkNicknameDuplicate = async (nickname: string) => {
-  const { data } = await axiosInstance.get('/socialworker/check-nickname', {
+  const { data } = await axiosInstance.get('/social-worker/check-nickname', {
     params: { nickname },
   });
   return data;

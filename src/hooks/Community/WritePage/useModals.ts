@@ -32,6 +32,10 @@ export const useModals = () => {
   // 링크 첨부 bottom sheet
   const [isUrlSheetOpen, setIsUrlSheetOpen] = useState(false);
 
+  // 등록하기 버튼 클릭 시 에러 모달
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorModalMessage, setErrorModalMessage] = useState('');
+
   return {
     modalContent,
     isLimitModalOpen,
@@ -45,5 +49,9 @@ export const useModals = () => {
     handleCloseLimitModal,
     isUrlSheetOpen,
     setIsUrlSheetOpen,
+    isErrorModalOpen,
+    setIsErrorModalOpen,
+    errorModalMessage,
+    setErrorModalMessage,
   };
 };

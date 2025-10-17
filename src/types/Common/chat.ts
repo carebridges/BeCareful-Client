@@ -1,3 +1,6 @@
+import { ElderlyDetail } from '@/types/Socialworker/common';
+import { InstitutionInfo } from '@/types/Common/institutionInfo';
+
 export interface Contract {
   contractId: number;
   careTypes: string[];
@@ -9,18 +12,6 @@ export interface Contract {
   createdDate: string;
 }
 
-export interface ChatElderlyInfo {
-  elderlyName: string;
-  elderlyAge: number;
-  elderlyGender: 'FEMALE' | 'MALE';
-  elderlyProfileImageUrl: string;
-}
-
-export interface ChatInstitutionInfo {
-  name: string;
-  address: string;
-}
-
 export interface CaregiverInfo {
   caregiverId: number;
   name: string;
@@ -30,8 +21,8 @@ export interface CaregiverInfo {
 export interface ChatResponse {
   matchingId: number;
   recruitmentId: number;
-  elderlyInfo: ChatElderlyInfo;
-  institutionInfo: ChatInstitutionInfo;
+  elderlyInfo: ElderlyDetail;
+  institutionInfo: InstitutionInfo;
   caregiverInfo: CaregiverInfo;
   contractList: Contract[];
 }

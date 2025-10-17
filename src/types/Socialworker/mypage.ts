@@ -1,7 +1,8 @@
 import { SocialWorkerInfo } from '@/types/Socialworker/common';
 import { InstitutionRank } from '@/types/Community/common';
+import { InstitutionInfo } from '@/types/Common/institutionInfo';
 
-export interface InstitutionInfo {
+export interface SocialMyInstitutionInfo {
   institutionCode: string;
   institutionName: string;
   institutionImageUrl: string;
@@ -11,25 +12,24 @@ export interface InstitutionInfo {
   institutionPhoneNumber: string;
 }
 
-export interface SocialworkerMyResponse {
-  socialWorkerInfo: SocialWorkerInfo;
-  institutionInfo: InstitutionInfo;
+export interface AssociationInfo {
+  associationId: number;
   associationName: string;
 }
 
-interface EditInstitutionInfo {
-  institutionId: number;
-  name: string;
-  address: string;
+export interface SocialworkerMyResponse {
+  socialWorkerInfo: SocialWorkerInfo;
+  institutionInfo: SocialMyInstitutionInfo;
+  associationInfo: AssociationInfo;
 }
 
 export interface SocialworkerMyEditResponse {
   name: string;
   nickName: string;
-  birthYymmdd: string;
+  birthday: string;
   genderCode: number;
   phoneNumber: string;
-  institutionInfo: EditInstitutionInfo;
+  institutionInfo: InstitutionInfo;
   institutionRank: InstitutionRank;
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;

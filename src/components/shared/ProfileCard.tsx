@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-import { ReactComponent as Point } from '@/assets/icons/Point.svg';
-import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ProfileCardProps {
   profileImgURL: string;
@@ -18,13 +15,10 @@ const ProfileCard = ({
   profileImgURL,
   name,
   nickname,
-  point,
   phoneNumber,
   age,
   gender,
 }: ProfileCardProps) => {
-  const { handleNavigate } = useHandleNavigate();
-
   return (
     <CardContainter>
       <img src={profileImgURL} alt={'프로필 이미지'} />
@@ -32,18 +26,8 @@ const ProfileCard = ({
       <div className="right">
         <NameWrapper>
           <label className="name">{name}</label>
-          {point && <label className="nickname">{nickname}</label>}
+          <label className="nickname">{nickname}</label>
         </NameWrapper>
-
-        {!point && <label className="nickname">{nickname}</label>}
-
-        {point && (
-          <PointWrapper onClick={() => handleNavigate('/socialworker/point')}>
-            <Point />
-            <label className="point">{point.toLocaleString('ko-KR')}P</label>
-            <ChevronRight />
-          </PointWrapper>
-        )}
 
         <InfoWrapper>
           <label className="info">{phoneNumber}</label>
@@ -65,10 +49,6 @@ const CardContainter = styled.div`
   gap: 12px;
   align-items: center;
 
-  div {
-    display: flex;
-  }
-
   img {
     width: 86px;
     height: 86px;
@@ -78,6 +58,7 @@ const CardContainter = styled.div`
   }
 
   .right {
+    display: flex;
     flex-direction: column;
     gap: 6px;
   }
@@ -90,6 +71,7 @@ const CardContainter = styled.div`
 `;
 
 const NameWrapper = styled.div`
+  display: flex;
   gap: 8px;
 
   .name {
@@ -99,21 +81,8 @@ const NameWrapper = styled.div`
   }
 `;
 
-const PointWrapper = styled.div`
-  gap: 8px;
-  align-items: center;
-  cursor: pointer;
-
-  .point {
-    color: ${({ theme }) => theme.colors.black};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-    cursor: pointer;
-  }
-`;
-
 const InfoWrapper = styled.div`
-  margin-top: 4px;
+  display: flex;
   gap: 4px;
 
   .info {
