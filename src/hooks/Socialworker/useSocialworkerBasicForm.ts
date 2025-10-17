@@ -21,7 +21,7 @@ export const useSocialworkerBasicForm = (
     if (data) {
       setName(data.name);
       setNickname(data.nickName);
-      setBirth(data.birthYymmdd);
+      setBirth(data.birthday);
       setGenderCode(data.genderCode);
       setPhoneNumber(data.phoneNumber);
       setInstitutionId(data.institutionInfo.institutionId);

@@ -159,6 +159,18 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     );
   };
 
+  const handleRemovePhoto = (idToRemove: string) => {
+    setPhotos((prev) => prev.filter((photo) => photo.id !== idToRemove));
+  };
+
+  const handleRemoveVideo = (idToRemove: string) => {
+    setVideos((prev) => prev.filter((video) => video.id !== idToRemove));
+  };
+
+  const handleRemoveAttachedFile = (idToRemove: string) => {
+    setAttachedFiles((prev) => prev.filter((file) => file.id !== idToRemove));
+  };
+
   return {
     photos,
     videos,
@@ -172,5 +184,8 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     handleFileClick,
     handleMediaChange,
     handleFileChange,
+    handleRemovePhoto,
+    handleRemoveVideo,
+    handleRemoveAttachedFile,
   };
 };

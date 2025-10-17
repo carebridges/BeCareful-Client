@@ -77,7 +77,7 @@ const SocialworkerMyPage = () => {
 
         {!isNone && (
           <BelongCard
-            title={data?.associationName ?? ''}
+            title={data?.associationInfo.associationName ?? ''}
             rank={
               ASSOCIATION_RANK_EN_TO_KR[
                 data?.socialWorkerInfo.associationRank ?? 'MEMBER'
@@ -124,7 +124,7 @@ const SocialworkerMyPage = () => {
           <SectionWrapper>
             <label className="section-title">협회 정보</label>
             <AssociationCard
-              association={data?.associationName ?? ''}
+              association={data?.associationInfo.associationName ?? ''}
               type={
                 ASSOCIATION_RANK_EN_TO_KR[
                   data?.socialWorkerInfo.associationRank ?? 'MEMBER'

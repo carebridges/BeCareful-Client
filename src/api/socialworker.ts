@@ -20,7 +20,7 @@ export const useGetSocialWorkerHome = () =>
   useQuery<SocialworkerHomeResponse>({
     queryKey: ['socialworkerHome'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get('/socialworker/home');
+      const { data } = await axiosInstance.get('/social-worker/home');
       return data;
     },
   });
@@ -31,7 +31,7 @@ export const useGetSocialWorkerMy = () =>
   useQuery<SocialworkerMyResponse>({
     queryKey: ['socialworkerMy'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get('/socialworker/me');
+      const { data } = await axiosInstance.get('/social-worker/my');
       return data;
     },
   });
@@ -41,7 +41,7 @@ export const useGetSocialWorkerMyEdit = () =>
   useQuery<SocialworkerMyEditResponse>({
     queryKey: ['socialworkerMyEdit'],
     queryFn: async () => {
-      const { data } = await axiosInstance.get('/socialworker/me/edit');
+      const { data } = await axiosInstance.get('/social-worker/my/profile');
       return data;
     },
   });
@@ -52,7 +52,10 @@ export const usePutSocialworkerMy = () => {
 
   return useMutation({
     mutationFn: async (myData: SocialworkerMyRequest) => {
-      const response = await axiosInstance.put('/socialworker/me', myData);
+      const response = await axiosInstance.put(
+        '/social-worker/my/profile',
+        myData,
+      );
       return response;
     },
     onSuccess: () => {
@@ -101,7 +104,7 @@ export const useSocialworkerLogout = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const response = await axiosInstance.put('/socialworker/logout');
+      const response = await axiosInstance.put('/social-worker/logout');
       return response;
     },
     onSuccess: () => {
@@ -120,7 +123,7 @@ export const useDeleteSocialworker = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const response = await axiosInstance.delete('/socialworker/leave');
+      const response = await axiosInstance.delete('/social-worker/leave');
       return response;
     },
     onSuccess: () => {

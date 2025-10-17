@@ -5,10 +5,11 @@ import { ReactComponent as Close } from '@/assets/icons/Close.svg';
 import { ReactComponent as Store } from '@/assets/icons/community/Store.svg';
 import { ReactComponent as Post } from '@/assets/icons/community/Post.svg';
 import { ReactComponent as ChevronDown } from '@/assets/icons/community/ChevronDown.svg';
-import { ReactComponent as Photo } from '@/assets/icons/community/Photo.svg';
-import { ReactComponent as File } from '@/assets/icons/community/File.svg';
+import { ReactComponent as PhotoIcon } from '@/assets/icons/community/Photo.svg';
+import { ReactComponent as FileIcon } from '@/assets/icons/community/File.svg';
 import { ReactComponent as LinkIcon } from '@/assets/icons/community/LinkIcon.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
+import { ReactComponent as Delete } from '@/assets/icons/CloseCircle.svg';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
@@ -71,6 +72,10 @@ const CommunityWritePage = () => {
     handleCloseLimitModal,
     isUrlSheetOpen,
     setIsUrlSheetOpen,
+    isErrorModalOpen,
+    setIsErrorModalOpen,
+    errorModalMessage,
+    setErrorModalMessage,
   } = useModals();
 
   // 게시글 내용
@@ -106,6 +111,9 @@ const CommunityWritePage = () => {
     handleFileClick,
     handleMediaChange,
     handleFileChange,
+    handleRemovePhoto,
+    handleRemoveVideo,
+    handleRemoveAttachedFile,
   } = useMedia(initialData);
 
   // 임시 저장
@@ -139,6 +147,27 @@ const CommunityWritePage = () => {
     title.length > 0 &&
     content.length > 0 &&
     (isEditMode || board !== '게시판 선택');
+  const handlePostBtnClick = () => {
+    if (title.length === 0) {
+      setErrorModalMessage('제목을 입력해주세요.');
+      setIsErrorModalOpen(true);
+      return;
+    }
+
+    if (content.length === 0) {
+      setErrorModalMessage('내용을 입력해주세요.');
+      setIsErrorModalOpen(true);
+      return;
+    }
+
+    if (!isEditMode && board === '게시판 선택') {
+      setErrorModalMessage('게시판을 선택해주세요.');
+      setIsErrorModalOpen(true);
+      return;
+    }
+
+    setIsPostModalOpen(true);
+  };
 
   // 게시글 전송(post), 수정(put)
   const { handleSubmit } = usePostingSubmit(
@@ -147,7 +176,7 @@ const CommunityWritePage = () => {
     isEditMode,
     postId,
   );
-  const handlePostBtnClick = async () => {
+  const handlePostModalBtnClick = async () => {
     const postData: PostRequest = {
       title,
       content,
@@ -180,11 +209,7 @@ const CommunityWritePage = () => {
               <Store className="store-svg" />
               임시저장
             </button>
-            <button
-              className="post"
-              onClick={() => setIsPostModalOpen(true)}
-              disabled={!isActive}
-            >
+            <button className="post" onClick={handlePostBtnClick}>
               <Post className="post-svg" />
               {isEditMode ? '수정' : '등록'}
             </button>
@@ -197,6 +222,170 @@ const CommunityWritePage = () => {
         <label>{board}</label>
         <ChevronDown />
       </BoardSelect>
+
+      <MustSelect>
+        <label>필독 여부</label>
+        <ToggleContainer onClick={() => handleToggleChange()}>
+          <ToggleLabel checked={isImportant}></ToggleLabel>
+        </ToggleContainer>
+      </MustSelect>
+
+      <Title
+        placeholder="제목을 입력해주세요"
+        value={title}
+        onChange={handleTitleChange}
+      />
+
+      <ContentWrapper>
+        {attachedFiles.map((file) => (
+          <MediaBox key={file.id}>
+            <div className="file">
+              <FileIcon />
+              {file.fileName}
+            </div>
+            <DeleteIcon onClick={() => handleRemoveAttachedFile(file.id)} />
+          </MediaBox>
+        ))}
+
+        {originalUrl && (
+          <MediaBox>
+            {originalUrl}
+            <DeleteIcon onClick={() => setOriginalUrl('')} />
+          </MediaBox>
+        )}
+
+        <Content
+          ref={contentRef}
+          placeholder="내용을 입력해주세요"
+          value={content}
+          onChange={handleContentChange}
+        />
+
+        <Photos>
+          {photos.map((photo) => (
+            <div className="photo" key={photo.id}>
+              <img src={photo.mediaUrl} />
+              <DeletePhoto onClick={() => handleRemovePhoto(photo.id)} />
+            </div>
+          ))}
+          {videos.map((video) => (
+            <div className="photo" key={video.id}>
+              <video src={video.mediaUrl} controls />
+              <DeletePhoto onClick={() => handleRemoveVideo(video.id)} />
+            </div>
+          ))}
+        </Photos>
+      </ContentWrapper>
+
+      <Bottom>
+        <Border />
+        <div>
+          <PhotoIcon onClick={handlePhotoClick} />
+          <input
+            type="file"
+            ref={photoRef}
+            style={{ display: 'none' }}
+            accept="image/*, video/*"
+            onChange={handleMediaChange}
+            multiple // 여러 파일 선택 가능하도록 설정
+          />
+          <FileIcon onClick={handleFileClick} />
+          <input
+            type="file"
+            ref={fileRef}
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+            multiple // 여러 파일 선택 가능하도록 설정
+            accept=".pdf, .doc, .docx, .hwp" // 특정 파일 형식만 허용
+          />
+          {board === '공단 공지' && (
+            <LinkIcon onClick={() => setIsUrlSheetOpen(true)} />
+          )}
+        </div>
+      </Bottom>
+
+      {/* 게시물 첨부 파일들 크기 제한 안내 모달 */}
+      <Modal isOpen={isLimitModalOpen} onClose={handleCloseLimitModal}>
+        <ModalLimit
+          title={modalContent.title}
+          detail={modalContent.detail}
+          onClose={handleCloseLimitModal}
+          handleBtnClick={handleCloseLimitModal}
+        />
+      </Modal>
+
+      {/* 임시저장 모달 */}
+      <Modal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)}>
+        <ModalButtons
+          title="게시물이 임시저장 되었습니다."
+          detail="작성 중인 내용은 안전하게 저장되었습니다."
+          onClose={() => setIsSaveModalOpen(false)}
+          left="뒤로"
+          right="계속 작성하기"
+          handleLeftBtnClick={handleGoBack}
+          handleRightBtnClick={() => setIsSaveModalOpen(false)}
+        />
+      </Modal>
+
+      {/* 이어쓰기 모달 */}
+      <Modal
+        isOpen={isDraftModalOpen}
+        onClose={() => setIsDraftModalOpen(false)}
+      >
+        <ModalButtons
+          title="이어서 쓰시겠습니까?"
+          detail="기존에 작성했던 내용을 이어서 쓸 수 있습니다."
+          onClose={() => setIsDraftModalOpen(false)}
+          left="이어쓰기"
+          right="새로쓰기"
+          handleLeftBtnClick={continueWriting}
+          handleRightBtnClick={newWriting}
+        />
+      </Modal>
+
+      {/* 나가기 모달 */}
+      <Modal
+        isOpen={isCloseModalOpen}
+        onClose={() => setIsCloseModalOpen(false)}
+      >
+        <ModalButtons
+          title="페이지에서 나가시겠습니까?"
+          detail="지금까지 작성한 내용이 모두 사라집니다."
+          onClose={() => setIsCloseModalOpen(false)}
+          left="계속 작성하기"
+          right="나가기"
+          handleLeftBtnClick={() => setIsCloseModalOpen(false)}
+          handleRightBtnClick={() => handleNavigate('/community')}
+        />
+      </Modal>
+
+      {/* 등록 확인 모달 */}
+      <Modal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)}>
+        <ModalButtons
+          title={`${isEditMode ? '수정' : '작성'}한 내용을 등록하시겠습니까?`}
+          detail={`${isEditMode ? '수정된 게시글은' : '게시물이 등록되면'} 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.`}
+          onClose={() => setIsPostModalOpen(false)}
+          left="취소"
+          right={isEditMode ? '수정하기' : '등록하기'}
+          handleLeftBtnClick={() => setIsPostModalOpen(false)}
+          handleRightBtnClick={handlePostModalBtnClick}
+        />
+      </Modal>
+
+      {/* 등록 버튼 클릭 시 에러 모달 */}
+      <Modal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      >
+        <ModalLimit
+          onClose={() => setIsErrorModalOpen(false)}
+          title={'게시글을 등록할 수 없습니다.'}
+          detail={errorModalMessage}
+          handleBtnClick={() => setIsErrorModalOpen(false)}
+        />
+      </Modal>
+
+      {/* 게시판 유형 선택 bottom sheet */}
       <BottomSheet
         isOpen={isBoardSheetOpen}
         setIsOpen={setIsBoardSheetOpen}
@@ -235,116 +424,7 @@ const CommunityWritePage = () => {
         </Buttons>
       </BottomSheet>
 
-      <MustSelect>
-        <label>필독 여부</label>
-        <ToggleContainer onClick={() => handleToggleChange()}>
-          <ToggleLabel checked={isImportant}></ToggleLabel>
-        </ToggleContainer>
-      </MustSelect>
-
-      <Title
-        placeholder="제목을 입력해주세요"
-        value={title}
-        onChange={handleTitleChange}
-      />
-
-      <Content
-        ref={contentRef}
-        placeholder="내용을 입력해주세요"
-        value={content}
-        onChange={handleContentChange}
-      />
-
-      <Bottom>
-        <Border />
-        <div>
-          <Photo onClick={handlePhotoClick} />
-          <input
-            type="file"
-            ref={photoRef}
-            style={{ display: 'none' }}
-            accept="image/*, video/*"
-            onChange={handleMediaChange}
-            multiple // 여러 파일 선택 가능하도록 설정
-          />
-          <File onClick={handleFileClick} />
-          <input
-            type="file"
-            ref={fileRef}
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-            multiple // 여러 파일 선택 가능하도록 설정
-            accept=".pdf, .doc, .docx, .hwp" // 특정 파일 형식만 허용
-          />
-          {board === '공단 공지' && (
-            <LinkIcon onClick={() => setIsUrlSheetOpen(true)} />
-          )}
-        </div>
-      </Bottom>
-
-      <Modal isOpen={isLimitModalOpen} onClose={handleCloseLimitModal}>
-        <ModalLimit
-          title={modalContent.title}
-          detail={modalContent.detail}
-          onClose={handleCloseLimitModal}
-          handleBtnClick={handleCloseLimitModal}
-        />
-      </Modal>
-
-      <Modal isOpen={isSaveModalOpen} onClose={() => setIsSaveModalOpen(false)}>
-        <ModalButtons
-          title="게시물이 임시저장 되었습니다."
-          detail="작성 중인 내용은 안전하게 저장되었습니다."
-          onClose={() => setIsSaveModalOpen(false)}
-          left="뒤로"
-          right="계속 작성하기"
-          handleLeftBtnClick={handleGoBack}
-          handleRightBtnClick={() => setIsSaveModalOpen(false)}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={isDraftModalOpen}
-        onClose={() => setIsDraftModalOpen(false)}
-      >
-        <ModalButtons
-          title="이어서 쓰시겠습니까?"
-          detail="기존에 작성했던 내용을 이어서 쓸 수 있습니다."
-          onClose={() => setIsDraftModalOpen(false)}
-          left="이어쓰기"
-          right="새로쓰기"
-          handleLeftBtnClick={continueWriting}
-          handleRightBtnClick={newWriting}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={isCloseModalOpen}
-        onClose={() => setIsCloseModalOpen(false)}
-      >
-        <ModalButtons
-          title="페이지에서 나가시겠습니까?"
-          detail="지금까지 작성한 내용이 모두 사라집니다."
-          onClose={() => setIsCloseModalOpen(false)}
-          left="계속 작성하기"
-          right="나가기"
-          handleLeftBtnClick={() => setIsCloseModalOpen(false)}
-          handleRightBtnClick={() => handleNavigate('/community')}
-        />
-      </Modal>
-
-      <Modal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)}>
-        <ModalButtons
-          title={`${isEditMode ? '수정' : '작성'}한 내용을 등록하시겠습니까?`}
-          detail={`${isEditMode ? '수정된 게시글은' : '게시물이 등록되면'} 즉시 게시판에 반영됩니다.\n내용을 다시 한 번 확인해주세요.`}
-          onClose={() => setIsPostModalOpen(false)}
-          left="취소"
-          right={isEditMode ? '수정하기' : '등록하기'}
-          handleLeftBtnClick={() => setIsPostModalOpen(false)}
-          handleRightBtnClick={handlePostBtnClick}
-        />
-      </Modal>
-
+      {/* URL(원본 링크) 입력 bottom sheet */}
       <BottomSheet
         isOpen={isUrlSheetOpen}
         setIsOpen={setIsUrlSheetOpen}
@@ -541,8 +621,71 @@ const Title = styled.input`
   }
 `;
 
-const Content = styled.textarea`
+const ContentWrapper = styled.div`
+  margin-bottom: 56px;
   padding: 14px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+`;
+
+const MediaBox = styled.div`
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+
+  color: ${({ theme }) => theme.colors.mainBlue};
+  font-size: ${({ theme }) => theme.typography.fontSize.body1};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+
+  .file {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: ${({ theme }) => theme.colors.black};
+  }
+`;
+
+const DeleteIcon = styled(Delete)`
+  cursor: pointer;
+`;
+
+const Photos = styled.div`
+  display: flex;
+  gap: 8px;
+  overflow-x: scroll;
+  flex-wrap: nowrap;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo {
+    width: 320px;
+    height: 200px;
+    position: relative;
+  }
+
+  img {
+    width: 320px;
+    height: 200px;
+  }
+`;
+
+const DeletePhoto = styled(Delete)`
+  cursor: pointer;
+
+  position: absolute;
+  top: 5px;
+  right: 5px;
+`;
+
+const Content = styled.textarea`
   width: 100%;
   min-height: 200px;
   resize: none;

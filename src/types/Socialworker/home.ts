@@ -1,15 +1,8 @@
-import { SocialWorkerInfo } from '@/types/Socialworker/common';
+import { ElderlyDetail, SocialWorkerInfo } from '@/types/Socialworker/common';
+import { InstitutionInfo } from '@/types/Common/institutionInfo';
 
-export interface InstitutionDetail {
-  institutionId: 0;
-  institutionCode: string;
-  name: string;
-  profileImageUrl: string;
-  address: string;
-}
-
-export interface InstitutionInfo {
-  institutionDetail: InstitutionDetail;
+export interface SocialHomeInstitutionInfo {
+  institutionDetail: InstitutionInfo;
   elderlyCount: number;
   socialWorkerCount: number;
   socialWorkerList: SocialWorkerInfo[];
@@ -21,13 +14,6 @@ export interface RecruitmentStatistics {
   totalRecruitmentCompletedCount: number;
 }
 
-export interface ElderlyDetail {
-  elderlyName: string;
-  elderlyAge: number;
-  elderlyGender: 'FEMALE' | 'MALE';
-  elderlyProfileImageUrl: string;
-}
-
 export interface MatchingElderlyList {
   elderlyDetail: ElderlyDetail;
   recruitmentCount: number;
@@ -35,8 +21,8 @@ export interface MatchingElderlyList {
 
 export interface SocialworkerHomeResponse {
   socialWorkerInfo: SocialWorkerInfo;
-  hasNewChat: boolean;
-  institutionInfo: InstitutionInfo;
+  institutionInfo: SocialHomeInstitutionInfo;
   recruitmentStatistics: RecruitmentStatistics;
   matchingProcessingElderlys: MatchingElderlyList[];
+  hasNewChat: boolean;
 }

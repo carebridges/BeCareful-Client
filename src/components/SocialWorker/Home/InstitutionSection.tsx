@@ -7,10 +7,10 @@ import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg'
 import { Button } from '@/components/common/Button/Button';
 import RankCard from '@/components/SocialWorker/Home/RankCard';
 import Modal from '@/components/common/Modal/Modal';
-import { InstitutionInfo } from '@/types/Socialworker/home';
+import { SocialHomeInstitutionInfo } from '@/types/Socialworker/home';
 
 interface InstitutionSectionProps {
-  data: InstitutionInfo | undefined;
+  data: SocialHomeInstitutionInfo | undefined;
 }
 
 const InstitutionSection = ({ data }: InstitutionSectionProps) => {

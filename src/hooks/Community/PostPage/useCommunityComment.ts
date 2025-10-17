@@ -16,24 +16,10 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
-
   const { mutate: postCommentMutate } = usePostCommentMutation(
     apiBoardType,
     postId,
   );
-  const handleCommentSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!comment.trim()) {
-      // 댓글 내용이 비어있으면 전송 x
-      return;
-    }
-    const commentRequest: CommentRequest = { content: comment };
-    postCommentMutate(commentRequest, {
-      onSuccess: () => {
-        setComment('');
-      },
-    });
-  };
 
   // 댓글 action sheet
   const [isCommentActionSheetOpen, setIsCommentActionSheetOpen] =
@@ -45,9 +31,11 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
     null,
   );
 
-  // 댓글 수정하기
-  const [editingCommentContent, setEditingCommentContent] = useState('');
+  // 댓글 수정 모드 여부
   const [isEditingComment, setIsEditingComment] = useState(false);
+
+  // 댓글 수정하기
+  const { mutate: updateComment } = usePutCommentMutation(apiBoardType, postId);
   const handleEditComment = useCallback(() => {
     if (selectedCommentId === null || !comments) return;
 
@@ -55,31 +43,40 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
       (comment) => comment.commentId === selectedCommentId,
     );
     if (commentToEdit) {
-      setEditingCommentContent(commentToEdit.content);
+      setComment(commentToEdit.content);
       setIsEditingComment(true);
       setIsCommentActionSheetOpen(false);
     }
   }, [selectedCommentId, comments]);
 
-  const { mutate: updateComment } = usePutCommentMutation(apiBoardType, postId);
-  const editComment = useCallback(() => {
-    if (selectedCommentId === null || !editingCommentContent.trim()) {
+  // 댓글 전송 버튼 클릭
+  const handleCommentSend = (e?: React.FormEvent | React.MouseEvent) => {
+    e?.preventDefault();
+    if (!comment.trim()) {
+      // 댓글 내용이 비어있으면 전송 x
       return;
     }
-    const updatedCommentData: CommentRequest = {
-      content: editingCommentContent,
-    };
-    updateComment(
-      { commentId: selectedCommentId, comment: updatedCommentData },
-      {
-        onSuccess: () => {
-          setIsEditingComment(false);
-          setEditingCommentContent('');
-          setSelectedCommentId(null);
+    const commentRequest: CommentRequest = { content: comment };
+
+    if (isEditingComment && selectedCommentId !== null) {
+      updateComment(
+        { commentId: selectedCommentId, comment: commentRequest },
+        {
+          onSuccess: () => {
+            setComment('');
+            setIsEditingComment(false);
+            setSelectedCommentId(null);
+          },
         },
-      },
-    );
-  }, [selectedCommentId, editingCommentContent, updateComment]);
+      );
+    } else {
+      postCommentMutate(commentRequest, {
+        onSuccess: () => {
+          setComment('');
+        },
+      });
+    }
+  };
 
   // 댓글 삭제하기
   const { mutate: deleteComment } = useDeleteComment(apiBoardType, postId);
@@ -89,6 +86,7 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
       onSuccess: () => {
         setSelectedCommentId(null);
         setIsCommentActionSheetOpen(false);
+        setSelectedCommentAction('');
       },
     });
   }, [deleteComment, selectedCommentId]);
@@ -107,6 +105,7 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
     comments,
 
     comment,
+    setComment,
     handleCommentChange,
     handleCommentSend,
 
@@ -114,9 +113,6 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
     setSelectedCommentId,
     isEditingComment,
     setIsEditingComment,
-    editingCommentContent,
-    setEditingCommentContent,
-    editComment,
 
     selectedCommentAction,
     setSelectedCommentAction,
