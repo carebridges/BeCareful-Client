@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
 import { CommunitySearchInput } from '@/components/SignUp/CommunityFunnel/CommunitySearchInput';
-import { useRegisterAssociation } from '@/api/communityFunnel';
+import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
 
 interface StepProps {
   goToNext: () => void;
@@ -17,31 +17,35 @@ export const Step2CommunityName = ({
   communityFormData,
   setCommunityFormData,
 }: StepProps) => {
-  const { mutate: registerAssociation } = useRegisterAssociation();
-
   const handleCommunityNameChange = (name: string) => {
     setCommunityFormData((prev) => ({ ...prev, name }));
   };
 
-  const handleCommunityCodeChange = (codeStr: string) => {
-    const code = parseInt(codeStr, 10);
-    if (!isNaN(code)) {
-      setCommunityFormData((prev) => ({ ...prev, establishedYear: code }));
+  const handleCommunityOpenYearChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    const year = parseInt(value, 10);
+    setCommunityFormData((prev) => ({
+      ...prev,
+      establishedYear: isNaN(year) ? 0 : year,
+    }));
+  };
+
+  const handleNext = () => {
+    if (!isCommunityNameValid || !isEstablishedYearValid) {
+      if (!isEstablishedYearValid) {
+        alert('설립연도를 올바르게 입력해주세요.');
+      }
+      return;
     }
+    goToNext();
   };
 
   const isCommunityNameValid = communityFormData.name.length > 0;
-  const handleRegisterClick = () => {
-    if (!isCommunityNameValid) return;
-    registerAssociation(communityFormData, {
-      onSuccess: () => {
-        goToNext();
-      },
-      onError: () => {
-        alert('커뮤니티 생성에 실패했어요. 다시 시도해 주세요.');
-      },
-    });
-  };
+  const isEstablishedYearValid =
+    communityFormData.establishedYear >= 1800 &&
+    communityFormData.establishedYear <= new Date().getFullYear();
 
   return (
     <StepWrapper>
@@ -57,25 +61,38 @@ export const Step2CommunityName = ({
       </SearchContainer>
       <Header2Section>
         <Title>
-          협회 설립일을 입력하세요.
+          협회 설립연도를 입력하세요.
           <span className="highlight"> *</span>
         </Title>
-        <SubText>소속된 협회의 설립일을 입력해주세요.</SubText>
+        <SubText>소속된 협회의 설립연도를 입력해주세요.</SubText>
       </Header2Section>
       <SearchContainer>
-        <CommunitySearchInput onCommunitySelect={handleCommunityCodeChange} />
+        <PlainInputBox
+          width="100%"
+          state="default"
+          placeholder="협회 설립연도 입력"
+          guide=""
+          value={
+            communityFormData.establishedYear === 0
+              ? ''
+              : String(communityFormData.establishedYear)
+          }
+          onChange={handleCommunityOpenYearChange}
+          inputMode="numeric"
+          maxLength={4}
+        />
       </SearchContainer>
       <ButtonContainer>
         <Button onClick={onCancel} height={'52px'} variant="blue2">
           이전
         </Button>
         <Button
-          onClick={handleRegisterClick}
+          onClick={handleNext}
           height="52px"
           variant={isCommunityNameValid ? 'blue' : 'gray'}
           disabled={!isCommunityNameValid}
         >
-          커뮤니티 생성하기
+          확인
         </Button>
       </ButtonContainer>
     </StepWrapper>

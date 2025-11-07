@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { axiosInstance } from '@/api/axiosInstance';
-import { ServerErrorResponse } from '@/types/Common/ServerError';
+import { ServerErrorResponse } from '@/types/common/ServerError';
 import {
   AssociationChairmanRequest,
   AssociationInfoRequest,

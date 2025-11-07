@@ -1,31 +1,35 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { UseMutateFunction } from '@tanstack/react-query';
 
-type UploadMutationResponse = string;
-
-interface UseProfileImageUploadProps<V> {
+interface UseProfileImageUploadProps<V, R = string> {
   initialImgUrl?: string;
   setIsChanged: Dispatch<SetStateAction<boolean>>;
-  uploadMutate: UseMutateFunction<UploadMutationResponse, Error, V, unknown>;
+  uploadMutate: UseMutateFunction<R, Error, V, unknown>;
+  getUrl?: (res: R) => string;
   additionalUploadData?: { name?: string };
 }
 
-export const useProfileImageUpload = <V>({
+export const useProfileImageUpload = <V, R = string>({
   initialImgUrl,
   setIsChanged,
   uploadMutate,
+  getUrl,
   additionalUploadData,
-}: UseProfileImageUploadProps<V>) => {
+}: UseProfileImageUploadProps<V, R>) => {
   const [imgUrl, setImgUrl] = useState(initialImgUrl);
   useEffect(() => {
     setImgUrl(initialImgUrl);
   }, [initialImgUrl]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const pickUrl = (res: R) =>
+    getUrl ? getUrl(res) : (res as unknown as string);
 
   const handleImageUpload = (file: V) => {
     uploadMutate(file, {
-      onSuccess: (url) => {
-        setImgUrl(url);
+      onSuccess: (res) => {
+        setImgUrl(pickUrl(res));
         setIsChanged(true);
       },
       onError: (error) => {
@@ -38,16 +42,13 @@ export const useProfileImageUpload = <V>({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImgUrl(reader.result as string);
-      };
+      reader.onloadend = () => setImgUrl(reader.result as string);
       reader.readAsDataURL(file);
 
       const uploadFile = additionalUploadData?.name
-        ? ({ file: file, name: additionalUploadData.name } as V)
+        ? ({ file, name: additionalUploadData.name } as V)
         : (file as V);
 
       handleImageUpload(uploadFile);
@@ -57,14 +58,11 @@ export const useProfileImageUpload = <V>({
     }
   };
 
-  const handleCameraClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleCameraClick = () => fileInputRef.current?.click();
 
-  return {
-    imgUrl,
-    fileInputRef,
-    handleImageChange,
-    handleCameraClick,
-  };
+  return { imgUrl, fileInputRef, handleImageChange, handleCameraClick };
 };
+
+export type UploadResult = { tempKey: string; previewUrl: string };
+//배포해야하는데 여기서 자꾸 타입 에러가 나서 임시로 수정했어요
+//나중에 수정바람

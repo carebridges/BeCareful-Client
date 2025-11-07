@@ -1,5 +1,5 @@
 import { ElderlyDetail, SocialWorkerInfo } from '@/types/Socialworker/common';
-import { InstitutionInfo } from '@/types/Common/institutionInfo';
+import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 export interface SocialHomeInstitutionInfo {
   institutionDetail: InstitutionInfo;

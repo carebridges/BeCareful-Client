@@ -4,6 +4,7 @@ import { Button } from '@/components/common/Button/Button';
 import { ProfileImageUploader } from '@/components/SignUp/InstitutionFunnel/Step5UploadPhoto/ProfileImageUploader';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
 import { useUploadAssociationProfileImage } from '@/api/communityFunnel';
+import { useState } from 'react';
 
 interface StepProps {
   goToNext: () => void;
@@ -15,18 +16,19 @@ interface StepProps {
 export const Step1CommunityImage = ({
   goToNext,
   goToPrev,
-  communityFormData,
   setCommunityFormData,
 }: StepProps) => {
   const { mutate: uploadImage } = useUploadAssociationProfileImage();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const handleImageUpload = (file: File) => {
     uploadImage(file, {
-      onSuccess: (url) => {
+      onSuccess: ({ tempKey, previewUrl }) => {
         setCommunityFormData((prev) => ({
           ...prev,
-          profileImageUrl: url,
+          profileImageTempKey: tempKey,
         }));
+        setPreviewUrl(previewUrl);
       },
       onError: () => {
         alert('이미지 업로드에 실패했습니다.');
@@ -46,7 +48,7 @@ export const Step1CommunityImage = ({
 
       <ProfileContainer>
         <ProfileImageUploader
-          imageUrl={communityFormData.profileImageUrl}
+          imageUrl={previewUrl ?? undefined}
           onChange={handleImageUpload}
         />
       </ProfileContainer>

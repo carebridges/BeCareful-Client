@@ -3,40 +3,20 @@ import styled from 'styled-components';
 import { ReactComponent as ArrowRightCircle } from '@/assets/icons/caregiver/home/ArrowRightCircle.svg';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { useRecoilValue } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 
 export const HomeMainContent = () => {
   const navigate = useNavigate();
-  const userInfo = useRecoilValue(currentUserInfo);
-  const isChairman = userInfo.associationRank === 'CHAIRMAN';
 
-  const {
-    isLimitModalOpen,
-    isRejectedModalOpen,
-    associationName,
-    openLimitModal,
-    closeLimitModal,
-    closeRejectedModal,
-  } = useJoinStatusModal();
+  const { isRejectedModalOpen, associationName, closeRejectedModal } =
+    useJoinStatusModal();
 
   const handleCreateClick = () => {
-    if (isChairman) {
-      navigate('/community/signup');
-      window.scrollTo(0, 0);
-    } else {
-      openLimitModal();
-    }
+    navigate('/community/signup');
+    window.scrollTo(0, 0);
   };
 
   const handleJoinClick = () => {
-    navigate('/community/members/new');
-    openLimitModal();
-  };
-
-  const handleLimitConfirm = () => {
-    closeLimitModal();
     navigate('/community/members/new');
     window.scrollTo(0, 0);
   };
@@ -76,20 +56,10 @@ export const HomeMainContent = () => {
         </ApplyButton>
       </ButtonsWrapper>
 
-      <Modal isOpen={isLimitModalOpen} onClose={closeLimitModal}>
-        <ModalLimit
-          onClose={closeLimitModal}
-          title="커뮤니티 만들기 권한이 없습니다."
-          detail="협회 임원진/회원은 커뮤니티를 가입해주세요!"
-          button="커뮤니티 가입하기"
-          handleBtnClick={handleLimitConfirm}
-        />
-      </Modal>
-
       <Modal isOpen={isRejectedModalOpen} onClose={closeRejectedModal}>
         <ModalLimit
           onClose={closeRejectedModal}
-          title={`${associationName} 커뮤니티 가입이 반려되었습니다.`}
+          title={`${associationName ?? ''} 커뮤니티 가입이 반려되었습니다.`}
           detail="가입 조건에 부합하지 않아 반려되었습니다."
           button="확인"
           handleBtnClick={closeRejectedModal}
