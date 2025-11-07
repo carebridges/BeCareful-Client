@@ -60,7 +60,13 @@ export const useProfileImageUpload = <V, R = string>({
 
   const handleCameraClick = () => fileInputRef.current?.click();
 
-  return { imgUrl, fileInputRef, handleImageChange, handleCameraClick };
+  return {
+    imgUrl,
+    setImgUrl,
+    fileInputRef,
+    handleImageChange,
+    handleCameraClick,
+  };
 };
 
 export type UploadResult = { tempKey: string; previewUrl: string };

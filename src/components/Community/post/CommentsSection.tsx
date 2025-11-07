@@ -70,7 +70,10 @@ const CommentsSection = ({ apiBoardType, postId }: CommentsSectionProps) => {
                     <label className="content">{comment.content}</label>
 
                     <label className="date">
-                      {formatDateTime(comment.createdAt)}
+                      {formatDateTime(comment.updatedAt)}{' '}
+                      <span className="update">
+                        {comment.isUpdated && '(수정됨)'}
+                      </span>
                     </label>
                   </div>
                 </div>
@@ -221,6 +224,11 @@ const Comments = styled.div`
   }
 
   .date {
+    font-size: ${({ theme }) => theme.typography.fontSize.body3};
+  }
+
+  .update {
+    color: ${({ theme }) => theme.colors.gray600};
     font-size: ${({ theme }) => theme.typography.fontSize.body3};
   }
 `;

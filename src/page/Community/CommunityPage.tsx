@@ -49,13 +49,16 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     window.scrollTo(0, 0);
   }, []);
 
+  const associationImgUrl =
+    data?.associationInfo?.associationProfileImageUrl === 'default' ||
+    data?.associationInfo?.associationProfileImageUrl === null ||
+    data?.associationInfo?.associationProfileImageUrl === undefined
+      ? 'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_cover_default.jpg'
+      : data?.associationInfo?.associationProfileImageUrl;
+
   return (
     <Container>
-      <Top
-        $backgroundImageUrl={
-          data?.associationInfo?.associationProfileImageUrl || ''
-        }
-      >
+      <Top $backgroundImageUrl={associationImgUrl}>
         <div className="right">
           <Search onClick={() => handleNavigate('/community/search')} />
           <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
