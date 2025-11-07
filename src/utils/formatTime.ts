@@ -1,4 +1,4 @@
-import { Contract } from '@/types/Common/chat';
+import { Contract } from '@/types/common/chat';
 
 // "00:00:00" → "00:00" 함수임
 export const formatHHMM = (time: string): string => {

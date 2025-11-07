@@ -1,4 +1,4 @@
-import { ChatResponse } from '@/types/Common/chat';
+import { ChatResponse } from '@/types/common/chat';
 
 export interface CaregiverChatList {
   matchingId: number;

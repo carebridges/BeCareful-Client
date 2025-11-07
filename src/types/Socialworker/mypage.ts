@@ -1,6 +1,6 @@
 import { SocialWorkerInfo } from '@/types/Socialworker/common';
 import { InstitutionRank } from '@/types/Community/common';
-import { InstitutionInfo } from '@/types/Common/institutionInfo';
+import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 export interface SocialMyInstitutionInfo {
   institutionCode: string;

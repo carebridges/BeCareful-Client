@@ -1,5 +1,5 @@
 import { ElderlyDetail } from '@/types/Socialworker/common';
-import { InstitutionInfo } from '@/types/Common/institutionInfo';
+import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 export interface Contract {
   contractId: number;

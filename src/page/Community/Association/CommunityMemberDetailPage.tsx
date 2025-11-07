@@ -20,7 +20,7 @@ import {
   ASSOCIATION_MEMBER_TYPES,
 } from '@/constants/common/associationRank';
 import { MemberRankRequest } from '@/types/Community/association';
-import { ServerErrorResponse } from '@/types/Common/ServerError';
+import { ServerErrorResponse } from '@/types/common/ServerError';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { AxiosError } from 'axios';
 import {

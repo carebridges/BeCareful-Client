@@ -1,4 +1,4 @@
-import { InstitutionInfo } from '@/types/Common/institutionInfo';
+import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 // 근무 요일
 export type WorkDay =

@@ -3,7 +3,7 @@ import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
-import { Contract } from '@/types/Common/chat';
+import { Contract } from '@/types/common/chat';
 import { ElderlyDetail } from '@/types/Socialworker/common';
 
 interface ChatCardProps {
