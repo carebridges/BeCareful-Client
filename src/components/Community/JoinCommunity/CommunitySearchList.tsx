@@ -3,6 +3,7 @@ import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicato
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { AssociationListCard } from '@/components/Community/JoinCommunity/AssociationListCard';
 import { CommunityNotFound } from '@/components/Community/JoinCommunity/CommunityNotFound';
+import { AssociationWholeList } from '@/types/CommunityAssociation';
 import { styled } from 'styled-components';
 
 interface Props {
@@ -17,19 +18,26 @@ export const CommunitySearchList = ({ keyword }: Props) => {
   if (isLoading) return <LoadingIndicator />;
   if (isError || !data) return <ErrorIndicator />;
 
-  const associations = (data?.associationSimpleDtoList ?? []).map((item) => ({
+  const raw = data.associationResponseList ?? [];
+
+  const associations = raw.map((item: AssociationWholeList) => ({
     id: item.associationId,
     name: item.associationName,
-    establishedYear: `${item.associationEstablishedYear}년`,
+
+    establishedYear:
+      item.associationEstablishedYear && item.associationEstablishedYear > 0
+        ? `${item.associationEstablishedYear}년`
+        : '-',
     memberCount: item.associationMemberCount,
-    thumbnailUrl: item.associationProfileImageUrl,
+    thumbnailUrl: item.associationProfileImageUrl || undefined,
   }));
 
-  const filtered = associations.filter((a) => a.name.includes(trimmed));
+  const filtered = isSearching
+    ? associations.filter((a) => a.name.includes(trimmed))
+    : associations;
 
-  const targetList = isSearching ? filtered : associations;
   const title = isSearching
-    ? `${associations.length}건`
+    ? `${filtered.length}건`
     : `전체 ${associations.length}개`;
 
   if (isSearching && filtered.length === 0) {
@@ -41,7 +49,7 @@ export const CommunitySearchList = ({ keyword }: Props) => {
     );
   }
 
-  return <AssociationListCard title={title} associations={targetList} />;
+  return <AssociationListCard title={title} associations={filtered} />;
 };
 
 const ResultCountText = styled.div`

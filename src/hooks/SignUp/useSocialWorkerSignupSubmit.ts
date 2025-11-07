@@ -18,8 +18,6 @@ export const useSocialWorkerSignupSubmit = () => {
           setCurrentUserInfo({
             realName: payload.realName,
             nickName: payload.nickName,
-            institutionRank: payload.institutionRank,
-            associationRank: 'none',
           });
           opts?.onSuccess?.();
         },

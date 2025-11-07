@@ -11,9 +11,8 @@ export interface AssociationWholeList {
 
 export interface GetAssociationListResponse {
   count: number;
-  associationSimpleDtoList: AssociationWholeList[];
+  associationResponseList: AssociationWholeList[];
 }
-
 export interface JoinAssociationRequest {
   associationId: number;
   associationRank: AssociationRank;

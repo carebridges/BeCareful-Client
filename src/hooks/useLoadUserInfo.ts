@@ -17,8 +17,6 @@ export const useLoadUserInfo = () => {
         setUserInfo({
           realName: data.realName,
           nickName: data.nickName,
-          institutionRank: data.institutionRank,
-          associationRank: data.associationRank,
         });
       })
       .catch((err) => {

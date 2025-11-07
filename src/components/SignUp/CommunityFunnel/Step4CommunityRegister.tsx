@@ -8,7 +8,7 @@ interface StepProps {
   communityFormData: CommunityFormData;
   onComplete?: () => void;
 }
-export const Step3CommunityRegister = ({ communityFormData }: StepProps) => {
+export const Step4CommunityRegister = ({ communityFormData }: StepProps) => {
   const navigate = useNavigate();
 
   const handleComplete = () => {

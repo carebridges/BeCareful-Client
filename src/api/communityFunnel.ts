@@ -2,17 +2,35 @@ import { axiosInstance } from '@/api/axiosInstance';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
 import { useMutation } from '@tanstack/react-query';
 
-export const useUploadAssociationProfileImage = () =>
-  useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
+type Presigned = { tempKey: string; presignedUrl: string };
+type UploadResult = { tempKey: string; previewUrl: string };
 
-      const { data } = await axiosInstance.post(
-        '/association/upload-profile-img',
-        formData,
+export const useUploadAssociationProfileImage = () =>
+  useMutation<UploadResult, Error, File>({
+    mutationFn: async (file) => {
+      const ct =
+        file.type && file.type.trim() !== ''
+          ? file.type
+          : 'application/octet-stream';
+
+      const { data } = await axiosInstance.post<Presigned>(
+        '/association/profile-img/presigned-url',
+        null,
+        { params: { fileName: file.name, contentType: ct } },
       );
-      return data.imageUrl as string;
+
+      const res = await fetch(data.presignedUrl, {
+        method: 'PUT',
+        mode: 'cors',
+        headers: { 'Content-Type': ct },
+        body: file,
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`S3 PUT  실패 ${res.status}: ${body}`);
+      }
+
+      return { tempKey: data.tempKey, previewUrl: URL.createObjectURL(file) };
     },
   });
 

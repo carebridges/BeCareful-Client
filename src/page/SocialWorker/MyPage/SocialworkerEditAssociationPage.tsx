@@ -10,7 +10,10 @@ import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useAssociationChangeForm } from '@/hooks/Community/Association/useAssociationChangeForm';
-import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import {
+  UploadResult,
+  useProfileImageUpload,
+} from '@/hooks/useProfileImageUpload';
 import {
   useAssociationInfo,
   usePutAssociationInfo,
@@ -29,10 +32,11 @@ const SocialworkerEditAssociationPage = () => {
 
   const { mutate: uploadImage } = useUploadAssociationProfileImage();
   const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<File>({
+    useProfileImageUpload<File, UploadResult>({
       initialImgUrl: data?.associationProfileImageUrl,
       setIsChanged,
       uploadMutate: uploadImage,
+      getUrl: (res) => res.previewUrl,
     });
 
   const { mutate: leaveAssociation } = usePutAssociationLeave();

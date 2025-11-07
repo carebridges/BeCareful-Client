@@ -6,7 +6,10 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
 import InputBox from '@/components/common/InputBox/InputBox';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import {
+  UploadResult,
+  useProfileImageUpload,
+} from '@/hooks/useProfileImageUpload';
 import { useAssociationChangeForm } from '@/hooks/Community/Association/useAssociationChangeForm';
 import { AssociationInfoRequest } from '@/types/Community/association';
 import {
@@ -22,10 +25,11 @@ const CommunityEditAssociationPage = () => {
 
   const { mutate: uploadImage } = useUploadAssociationProfileImage();
   const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<File>({
+    useProfileImageUpload<File, UploadResult>({
       initialImgUrl: data?.associationProfileImageUrl,
       setIsChanged,
       uploadMutate: uploadImage,
+      getUrl: (res) => res.previewUrl,
     });
 
   const { name, year, handleNameChange, handleYearChange } =

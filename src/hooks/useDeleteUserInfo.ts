@@ -11,8 +11,6 @@ export const useDeleteUserInfo = () => {
     setUserInfo({
       realName: '',
       nickName: '',
-      institutionRank: '',
-      associationRank: '',
     });
     handleNavigate('/');
   };
