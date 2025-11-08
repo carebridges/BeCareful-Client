@@ -6,7 +6,9 @@ export interface Comment {
   commentId: number;
   content: string;
   createdAt: string;
+  updatedAt: string;
   author: AuthorInfo;
+  isUpdated: boolean;
   isMyComment: boolean;
 }
 

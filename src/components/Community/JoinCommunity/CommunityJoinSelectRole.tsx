@@ -58,7 +58,7 @@ export const CommunityJoinSelectRole = ({
             onClick={onSubmit}
             disabled={!selectedRank}
           >
-            가입 신청하기
+            확인
           </Button>
         </ButtonContainer>
       </Wrapper>
