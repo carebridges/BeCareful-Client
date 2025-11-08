@@ -20,10 +20,23 @@ import {
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 import { useGetCommunityHome } from '@/api/community';
+import { useCancelJoinAssociation } from '@/api/communityAssociation';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
+  const { mutate: cancelJoin } = useCancelJoinAssociation();
 
+  const handleCancelJoin = () => {
+    cancelJoin(undefined, {
+      onSuccess: async () => {
+        closePendingModal();
+        window.location.reload();
+      },
+      onError: () => {
+        alert('가입 취소 실패');
+      },
+    });
+  };
   const location = useLocation();
   const selectedAssociation = location.state as {
     associationId: number;
@@ -146,13 +159,8 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         <CommunityJoinPendingModal
           width="343px"
           associationName={associationName}
-          onCancelJoin={() => {
-            //TODO
-            closePendingModal();
-          }}
-          onClose={() => {
-            closePendingModal();
-          }}
+          onCancelJoin={handleCancelJoin}
+          onClose={closePendingModal}
         />
       )}
 
@@ -160,9 +168,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         <CommunityJoinApprovedModal
           width="343px"
           associationName={associationName}
-          onClose={() => {
-            closeApprovedModal();
-          }}
+          onClose={closeApprovedModal}
         />
       )}
     </Container>
