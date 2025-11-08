@@ -55,7 +55,7 @@ const SocialworkerEditAssociationPage = () => {
   const { mutate: updateAssociation } = usePutAssociationInfo();
   const handleEditBtnClick = async () => {
     const associationRequest: AssociationInfoRequest = {
-      associationImageUrl: imgUrl ?? data?.associationProfileImageUrl ?? null,
+      associationImageUrl: imgUrl ?? data?.associationProfileImageUrl ?? '',
       associationName: name,
       associationEstablishedYear: Number(year),
     };

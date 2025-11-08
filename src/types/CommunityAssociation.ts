@@ -16,9 +16,6 @@ export interface GetAssociationListResponse {
 export interface JoinAssociationRequest {
   associationId: number;
   associationRank: AssociationRank;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
 }
 
 export type AssociationRank = (typeof ASSOCIATION_RANKS)[number]['value'];
@@ -32,8 +29,3 @@ export interface CommunityAccessResponse {
     associationMemberCount: number;
   };
 }
-
-export type CommunityAgreeField =
-  | 'isAgreedToTerms'
-  | 'isAgreedToCollectPersonalInfo'
-  | 'isAgreedToReceiveMarketingInfo'; //임시 Todo

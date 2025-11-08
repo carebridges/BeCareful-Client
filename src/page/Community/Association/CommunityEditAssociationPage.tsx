@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
-import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
 import InputBox from '@/components/common/InputBox/InputBox';
@@ -18,7 +17,6 @@ import {
   usePutAssociationInfo,
 } from '@/api/communityAssociation';
 import { useUploadAssociationProfileImage } from '@/api/communityFunnel';
-import BottomSheet from '@/components/Community/common/BottomSheet';
 
 const CommunityEditAssociationPage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -26,33 +24,13 @@ const CommunityEditAssociationPage = () => {
   const { data } = useAssociationInfo();
 
   const { mutate: uploadImage } = useUploadAssociationProfileImage();
-  const {
-    imgUrl,
-    setImgUrl,
-    fileInputRef,
-    handleImageChange,
-    handleCameraClick,
-  } = useProfileImageUpload<File, UploadResult>({
-    initialImgUrl: data?.associationProfileImageUrl,
-    setIsChanged,
-    uploadMutate: uploadImage,
-    getUrl: (res) => res.previewUrl,
-  });
-
-  const [isImgActionSheetOpen, setIsImgActionSheetOpen] = useState(false);
-  const [selectedImgAction, setSelectedImgAction] = useState('');
-  const [isImgChanged, setIsImgChanged] = useState(false);
-  const handleCommentActionSheetConfirm = () => {
-    if (selectedImgAction == '기본') {
-      setImgUrl('default');
-      setIsChanged(true);
-    } else if (selectedImgAction == '앨범') {
-      handleCameraClick();
-    }
-    setIsImgActionSheetOpen(false);
-    setSelectedImgAction('');
-    setIsImgChanged(true);
-  };
+  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
+    useProfileImageUpload<File, UploadResult>({
+      initialImgUrl: data?.associationProfileImageUrl,
+      setIsChanged,
+      uploadMutate: uploadImage,
+      getUrl: (res) => res.previewUrl,
+    });
 
   const { name, year, handleNameChange, handleYearChange } =
     useAssociationChangeForm(data, setIsChanged);
@@ -60,11 +38,10 @@ const CommunityEditAssociationPage = () => {
   const { mutate: updateAssociation } = usePutAssociationInfo();
   const handleEditBtnClick = async () => {
     const associationRequest: AssociationInfoRequest = {
-      associationImageUrl: isImgChanged ? (imgUrl ?? 'default') : null,
+      associationImageUrl: imgUrl ?? data?.associationProfileImageUrl ?? '',
       associationName: name,
       associationEstablishedYear: Number(year),
     };
-    // console.log(associationRequest);
     updateAssociation(associationRequest, {
       onSuccess: () => {
         handleGoBack();
@@ -90,7 +67,7 @@ const CommunityEditAssociationPage = () => {
             ref={fileInputRef}
             onChange={handleImageChange}
           />
-          <Camera onClick={() => setIsImgActionSheetOpen(true)} />
+          <Camera onClick={handleCameraClick} />
         </div>
       </ProfileImgWrapper>
 
@@ -123,46 +100,6 @@ const CommunityEditAssociationPage = () => {
           협회 정보 수정하기
         </Button>
       </Bottom>
-
-      <BottomSheet
-        isOpen={isImgActionSheetOpen}
-        setIsOpen={setIsImgActionSheetOpen}
-        title="협회 대표 대문 사진을 설정해 주세요."
-        titleStar={false}
-      >
-        <CheckButton
-          active={selectedImgAction === '기본'}
-          onClick={() => setSelectedImgAction('기본')}
-        >
-          <Check />
-          기본 커버 선택
-        </CheckButton>
-        <CheckButton
-          active={selectedImgAction === '앨범'}
-          onClick={() => setSelectedImgAction('앨범')}
-        >
-          <Check />
-          앨범에서 사진 선택
-        </CheckButton>
-        <DeleteButtons>
-          <Button
-            width="100%"
-            height="52px"
-            variant="subBlue"
-            onClick={() => setIsImgActionSheetOpen(false)}
-          >
-            취소
-          </Button>
-          <Button
-            width="100%"
-            height="52px"
-            variant="mainBlue"
-            onClick={handleCommentActionSheetConfirm}
-          >
-            확인
-          </Button>
-        </DeleteButtons>
-      </BottomSheet>
     </Container>
   );
 };
@@ -231,45 +168,4 @@ const Bottom = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-`;
-
-const CheckButton = styled.div<{ active: boolean }>`
-  height: 32px;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 12px;
-  border: 1px solid
-    ${({ theme, active }) =>
-      active ? theme.colors.mainBlue : theme.colors.gray100};
-  background: ${({ theme, active }) =>
-    active ? theme.colors.subBlue : theme.colors.white};
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  color: ${({ theme, active }) =>
-    active ? theme.colors.mainBlue : theme.colors.gray900};
-  font-weight: ${({ theme, active }) =>
-    active
-      ? theme.typography.fontWeight.bold
-      : theme.typography.fontWeight.medium};
-
-  path {
-    fill: ${({ theme, active }) => (active ? theme.colors.mainBlue : '')};
-  }
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.subBlue};
-    border-color: ${({ theme }) => theme.colors.mainBlue};
-
-    path {
-      fill: ${({ theme }) => theme.colors.mainBlue};
-    }
-  }
-`;
-
-const DeleteButtons = styled.div`
-  display: flex;
-  gap: 8px;
-  justify-content: space-between;
-  padding-top: 66px;
 `;

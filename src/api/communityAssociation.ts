@@ -39,13 +39,6 @@ export const useJoinAssociation = () =>
     },
   });
 
-export const useCancelJoinAssociation = () =>
-  useMutation({
-    mutationFn: async () => {
-      await axiosInstance.delete('/association/join-requests');
-    },
-  });
-
 export const useCommunityAccess = (): UseQueryResult<CommunityAccessResponse> =>
   useQuery({
     queryKey: ['communityAccess'],

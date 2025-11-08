@@ -14,7 +14,6 @@ import CommunityEditAssociationPage from '@/page/Community/Association/Community
 import CommunityEditChairmanPage from '@/page/Community/Association/CommunityEditChairmanPage';
 import CommunityMembersPage from '@/page/Community/Association/CommunityMembersPage';
 import CommnunityMemberDetailPage from '@/page/Community/Association/CommunityMemberDetailPage';
-import { CommunityAcceptTermsPage } from '@/page/Community/CommunityAcceptTermsPage';
 
 const CommunityRoute = () => {
   return (
@@ -32,10 +31,6 @@ const CommunityRoute = () => {
             <Route
               path="join/:id/role"
               element={<CommunityJoinSelectRolePage />}
-            />
-            <Route
-              path="join/:id/accept-terms"
-              element={<CommunityAcceptTermsPage />}
             />
 
             <Route index element={<CommunityRouteGuard />} />
