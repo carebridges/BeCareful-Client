@@ -30,6 +30,7 @@ const SocialworkerEditInstitutionPage = () => {
     phoneNumber,
     setInstitutionId,
     setInstitutionName,
+    setInstitutionCode,
     handleChange,
     handleTypesChange,
   } = useInstitutionForm(data?.institutionInfo, setIsChanged);
@@ -92,9 +93,10 @@ const SocialworkerEditInstitutionPage = () => {
           소속된 기관의 정확한 명칭을 검색해 주세요.
         </label>
         <InstitutionSearchInput
-          onInstitutionSelect={(name, id) => {
+          onInstitutionSelect={(name, id, address, code) => {
             setInstitutionName(name);
             if (id) setInstitutionId(id);
+            if (code) setInstitutionCode(code);
             setIsChanged(true);
           }}
           institution={institutionName}

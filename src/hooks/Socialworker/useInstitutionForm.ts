@@ -24,9 +24,6 @@ export const useInstitutionForm = (
 
   const handleChange = (fieldName: string, value: string) => {
     switch (fieldName) {
-      case 'institutionCode':
-        setInstitutionCode(value);
-        break;
       case 'year':
         setYear(Number(value));
         break;
@@ -59,6 +56,7 @@ export const useInstitutionForm = (
     phoneNumber,
     setInstitutionId,
     setInstitutionName,
+    setInstitutionCode,
     handleChange,
     handleTypesChange,
   };
