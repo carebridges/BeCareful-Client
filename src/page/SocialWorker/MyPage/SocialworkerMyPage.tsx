@@ -60,7 +60,7 @@ const SocialworkerMyPage = () => {
           profileImgURL={data?.institutionInfo.institutionImageUrl ?? ''}
           name={data?.socialWorkerInfo.name ?? ''}
           nickname={data?.socialWorkerInfo.nickName ?? ''}
-          // point={1500}
+          chevronClick={() => handleNavigate('/socialworker/my/profile')}
           phoneNumber={data?.socialWorkerInfo.phoneNumber ?? ''}
           age={data?.socialWorkerInfo.age ?? 0}
           gender={GENDER_EN_TO_KR_2[data?.socialWorkerInfo.gender ?? 'FEMALE']}
@@ -85,14 +85,6 @@ const SocialworkerMyPage = () => {
             }
           />
         )}
-
-        <Button
-          height="52px"
-          variant="subBlue"
-          onClick={() => handleNavigate('/socialworker/my/profile')}
-        >
-          프로필 수정하기
-        </Button>
       </ProfileWrapper>
 
       <Border />
