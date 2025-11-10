@@ -7,11 +7,11 @@ import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Button } from '@/components/common/Button/Button';
 import { LogoutButton } from '@/components/common/Button/LogoutButton';
-import AssociationCard from '@/components/shared/AssociationCard';
-import InstitutionCard from '@/components/shared/InstitutionCard';
+import AssociationCard from '@/components/common/card/AssociationCard';
+import InstitutionCard from '@/components/common/card/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import ProfileCard from '@/components/shared/ProfileCard';
+import ProfileCard from '@/components/common/card/ProfileCard';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ProfileCard from '@/components/shared/ProfileCard';
+import ProfileCard from '@/components/common/card/ProfileCard';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { CaregiverInfo } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
