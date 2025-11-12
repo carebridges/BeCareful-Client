@@ -161,7 +161,7 @@ const CommunityWritePage = () => {
     }
 
     if (!isEditMode && board === '게시판 선택') {
-      setErrorModalMessage('게시판을 선택해주세요.');
+      setErrorModalMessage('게시판 선택 후 게시글 등록이 가능합니다');
       setIsErrorModalOpen(true);
       return;
     }
@@ -379,7 +379,7 @@ const CommunityWritePage = () => {
       >
         <ModalLimit
           onClose={() => setIsErrorModalOpen(false)}
-          title={'게시글을 등록할 수 없습니다.'}
+          title={'게시판을 선택해주세요.'}
           detail={errorModalMessage}
           handleBtnClick={() => setIsErrorModalOpen(false)}
         />
