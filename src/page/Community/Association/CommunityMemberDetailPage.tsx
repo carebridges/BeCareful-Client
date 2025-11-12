@@ -112,7 +112,6 @@ const CommunityMemberDetailPage = () => {
       <SectionWrapper>
         <label className="title">기관 정보</label>
         <InstitutionCard
-          date={data?.institutionLastUpdate}
           institution={data?.institutionName}
           year={data.institutionOpenYear}
           types={data.facilityTypes}
