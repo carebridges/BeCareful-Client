@@ -1,22 +1,29 @@
 import styled from 'styled-components';
+import { ReactComponent as Chevron } from '@/assets/icons/ChevronRightProfile.svg';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { formatCaretype } from '@/utils/caregiverFormatter';
+import { InstitutionRank } from '@/types/Community/common';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface InstitutionCardProps {
-  date: string;
   institution: string;
+  institutionRank?: InstitutionRank;
   year: number;
   types: string[];
   phoneNumber: string;
 }
 
 const InstitutionCard = ({
-  date,
   institution,
+  institutionRank,
   year,
   types,
   phoneNumber,
 }: InstitutionCardProps) => {
+  const { handleNavigate } = useHandleNavigate();
+
+  const isSocialworker = institutionRank === 'SOCIAL_WORKER';
+
   const currentYear = new Date().getFullYear();
   const years = currentYear - year;
 
@@ -35,12 +42,14 @@ const InstitutionCard = ({
 
   return (
     <CardContainer>
-      <DateWrapper>
-        <label className="fix">최근 수정일</label>
-        <label className="date">{date}</label>
-      </DateWrapper>
-
-      <label className="institution">{institution}</label>
+      <div className="top">
+        <label className="institution">{institution}</label>
+        {!isSocialworker && (
+          <Chevron
+            onClick={() => handleNavigate('/socialworker/my/institution')}
+          />
+        )}
+      </div>
       <InfoDisplay items={institutionInfo} />
     </CardContainer>
   );
@@ -58,6 +67,16 @@ const CardContainer = styled.div`
   background: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
 
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  svg {
+    cursor: pointer;
+  }
+
   .institution {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
@@ -66,20 +85,5 @@ const CardContainer = styled.div`
 
   span {
     color: ${({ theme }) => theme.colors.gray500};
-  }
-`;
-
-const DateWrapper = styled.div`
-  display: flex;
-  gap: 6px;
-
-  label {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body3};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-
-  .date {
-    color: ${({ theme }) => theme.colors.mainBlue};
   }
 `;
