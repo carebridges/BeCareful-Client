@@ -333,8 +333,8 @@ const CommunityWritePage = () => {
         onClose={() => setIsDraftModalOpen(false)}
       >
         <ModalButtons
-          title="이어서 쓰시겠습니까?"
-          detail="기존에 작성했던 내용을 이어서 쓸 수 있습니다."
+          title={'임시 저장된 글이 있습니다.\n계속 이어 쓰시겠습니까?'}
+          detail="새 글을 작성하면 임시 저장된 글이 사라져요."
           onClose={() => setIsDraftModalOpen(false)}
           left="이어쓰기"
           right="새로쓰기"
