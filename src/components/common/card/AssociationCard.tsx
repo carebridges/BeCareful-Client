@@ -6,19 +6,14 @@ interface AssociationCardProps {
   association: string;
   onClick?: () => void;
   type: string;
-  rank: string;
 }
 
 const AssociationCard = ({
   association,
   onClick,
   type,
-  rank,
 }: AssociationCardProps) => {
-  const associationInfo = [
-    { title: '회원유형', detail: type },
-    { title: '직급', detail: rank },
-  ];
+  const associationInfo = [{ title: '회원유형', detail: type }];
 
   return (
     <CardContainer>
