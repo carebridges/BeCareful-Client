@@ -41,7 +41,7 @@ const SearchContainer = styled.div`
   box-sizing: border-box;
 
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray300};
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
   background: ${({ theme }) => theme.colors.white};
 
   &:hover {
