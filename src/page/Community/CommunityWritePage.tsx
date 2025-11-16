@@ -28,7 +28,8 @@ import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
 import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
-import { PostRequest } from '@/types/Community/post';
+import { PostPostRequest, PostPutRequest } from '@/types/Community/post';
+import { MediaItem, MediaItemRequest } from '@/types/Community/common';
 import { usePostDetail } from '@/api/community';
 
 const CommunityWritePage = () => {
@@ -104,13 +105,17 @@ const CommunityWritePage = () => {
     attachedFiles,
     photoRef,
     fileRef,
+    deleteMediaIdList,
+
     setPhotos,
     setVideos,
     setAttachedFiles,
+
     handlePhotoClick,
     handleFileClick,
     handleMediaChange,
     handleFileChange,
+
     handleRemovePhoto,
     handleRemoveVideo,
     handleRemoveAttachedFile,
@@ -128,7 +133,11 @@ const CommunityWritePage = () => {
   } = useSave({
     board,
     postData: { title, content, isImportant, originalUrl },
-    mediaData: { photos, videos, attachedFiles },
+    mediaData: {
+      photos: photos.filter((item) => 'tempKey' in item),
+      videos: videos.filter((item) => 'tempKey' in item),
+      attachedFiles: attachedFiles.filter((item) => 'tempKey' in item),
+    },
     setPostData: ({ title, content, isImportant, originalUrl }) => {
       setTitle(title);
       setContent(content);
@@ -170,24 +179,39 @@ const CommunityWritePage = () => {
   };
 
   // 게시글 전송(post), 수정(put)
-  const { handleSubmit } = usePostingSubmit(
+  const { handlePostSubmit, handleEditSubmit } = usePostingSubmit(
     board,
     () => handleNavigate('/community'),
     isEditMode,
     postId,
   );
   const handlePostModalBtnClick = async () => {
-    const postData: PostRequest = {
-      title,
-      content,
-      isImportant,
-      originalUrl,
-      imageList: photos,
-      videoList: videos,
-      fileList: attachedFiles,
-    };
-    console.log(postData);
-    await handleSubmit(postData);
+    if (isEditMode) {
+      const postData: PostPutRequest = {
+        title,
+        content,
+        deleteMediaIdList,
+        isImportant,
+        originalUrl,
+        imageList: photos.filter((item) => 'tempKey' in item),
+        videoList: videos.filter((item) => 'tempKey' in item),
+        fileList: attachedFiles.filter((item) => 'tempKey' in item),
+      };
+      console.log(postData);
+      await handleEditSubmit(postData);
+    } else {
+      const postData: PostPostRequest = {
+        title,
+        content,
+        isImportant,
+        originalUrl,
+        imageList: photos.filter((item) => 'tempKey' in item),
+        videoList: videos.filter((item) => 'tempKey' in item),
+        fileList: attachedFiles.filter((item) => 'tempKey' in item),
+      };
+      console.log(postData);
+      await handlePostSubmit(postData);
+    }
   };
 
   useEffect(() => {
@@ -238,12 +262,20 @@ const CommunityWritePage = () => {
 
       <ContentWrapper>
         {attachedFiles.map((file) => (
-          <MediaBox key={file.id}>
+          <MediaBox
+            key={(file as MediaItem).id || (file as MediaItemRequest).tempKey}
+          >
             <div className="file">
               <FileIcon />
               {file.fileName}
             </div>
-            <DeleteIcon onClick={() => handleRemoveAttachedFile(file.id)} />
+            <DeleteIcon
+              onClick={() =>
+                handleRemoveAttachedFile(
+                  (file as MediaItem).id || (file as MediaItemRequest).tempKey,
+                )
+              }
+            />
           </MediaBox>
         ))}
 
@@ -263,15 +295,39 @@ const CommunityWritePage = () => {
 
         <Photos>
           {photos.map((photo) => (
-            <div className="photo" key={photo.id}>
-              <img src={photo.mediaUrl} />
-              <DeletePhoto onClick={() => handleRemovePhoto(photo.id)} />
+            <div
+              className="photo"
+              key={
+                (photo as MediaItem).id || (photo as MediaItemRequest).tempKey
+              }
+            >
+              <img src={(photo as MediaItem).mediaUrl || ''} />
+              <DeletePhoto
+                onClick={() =>
+                  handleRemovePhoto(
+                    (photo as MediaItem).id ||
+                      (photo as MediaItemRequest).tempKey,
+                  )
+                }
+              />
             </div>
           ))}
           {videos.map((video) => (
-            <div className="photo" key={video.id}>
-              <video src={video.mediaUrl} controls />
-              <DeletePhoto onClick={() => handleRemoveVideo(video.id)} />
+            <div
+              className="photo"
+              key={
+                (video as MediaItem).id || (video as MediaItemRequest).tempKey
+              }
+            >
+              <video src={(video as MediaItem).mediaUrl || ''} controls />
+              <DeletePhoto
+                onClick={() =>
+                  handleRemoveVideo(
+                    (video as MediaItem).id ||
+                      (video as MediaItemRequest).tempKey,
+                  )
+                }
+              />
             </div>
           ))}
         </Photos>
@@ -296,7 +352,7 @@ const CommunityWritePage = () => {
             style={{ display: 'none' }}
             onChange={handleFileChange}
             multiple // 여러 파일 선택 가능하도록 설정
-            accept=".pdf, .doc, .docx, .hwp" // 특정 파일 형식만 허용
+            accept=".pdf, .doc, .docx, .hwp, .xlsx" // 특정 파일 형식만 허용
           />
           {board === '공단 공지' && (
             <LinkIcon onClick={() => setIsUrlSheetOpen(true)} />

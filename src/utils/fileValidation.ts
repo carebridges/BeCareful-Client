@@ -11,10 +11,8 @@ import {
   MAX_VIDEO_SIZE_GB,
   MAX_VIDEOS_COUNT,
 } from '@/constants/community/mediaUploadLimit';
-import { MediaItem } from '@/types/Community/common';
 
 /* useMedia */
-
 export interface ValidationResult {
   isValid: boolean;
   title: string;
@@ -94,18 +92,4 @@ export const validateAttachedFile = (
     };
   }
   return { isValid: true, title: '', message: '' };
-};
-
-export const processUploadResults = (
-  results: PromiseSettledResult<MediaItem | null>[],
-): MediaItem[] => {
-  const successfulUploads: MediaItem[] = [];
-  results.forEach((result) => {
-    if (result.status === 'fulfilled' && result.value) {
-      successfulUploads.push(result.value);
-    } else if (result.status === 'rejected') {
-      console.error('파일 업로드 실패:', result.reason);
-    }
-  });
-  return successfulUploads;
 };

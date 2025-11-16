@@ -1,4 +1,4 @@
-import { AuthorInfo, MediaItem } from './common';
+import { AuthorInfo, MediaItem, MediaItemRequest } from './common';
 
 /* 게시글 */
 // 특정 게시글 상세 조회
@@ -17,15 +17,27 @@ export interface PostDetailResponse {
   originalUrl: string;
 }
 
-// 게시글 작성 및 수정(요청 구조 동일)
-export interface PostRequest {
+// 게시글 작성
+export interface PostPostRequest {
   title: string;
   content: string;
   isImportant: boolean;
   originalUrl: string;
-  imageList: MediaItem[];
-  videoList: MediaItem[];
-  fileList: MediaItem[];
+  imageList: MediaItemRequest[];
+  videoList: MediaItemRequest[];
+  fileList: MediaItemRequest[];
+}
+
+// 게시글 수정
+export interface PostPutRequest {
+  title: string;
+  content: string;
+  deleteMediaIdList: number[];
+  isImportant: boolean;
+  originalUrl: string;
+  imageList: MediaItemRequest[];
+  videoList: MediaItemRequest[];
+  fileList: MediaItemRequest[];
 }
 
 export type BoardList =
