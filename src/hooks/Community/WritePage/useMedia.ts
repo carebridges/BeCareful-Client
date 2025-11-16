@@ -1,14 +1,13 @@
-import { MediaItem } from '@/types/Community/common';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
-  processUploadResults,
   validateAttachedFile,
   validateImageFile,
   validateVideoFile,
   ValidationResult,
 } from '@/utils/fileValidation';
-import { usePostMediaMutation } from '@/hooks/Community/api/usePostMediaMutation';
-import { useModals } from './useModals';
+import { usePostMediaMutation } from '@/api/presignedUrl';
+import { useModals } from '@/hooks/Community/WritePage/useModals';
+import { MediaItem, MediaItemRequest } from '@/types/Community/common';
 import { PostDetailResponse } from '@/types/Community/post';
 
 /* CommunityWritePage */
@@ -21,25 +20,19 @@ export const useMedia = (initialData?: PostDetailResponse) => {
   const photoRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const [photos, setPhotos] = useState<MediaItem[]>(
-    initialData?.imageList || [],
-  );
-  const [videos, setVideos] = useState<MediaItem[]>(
-    initialData?.videoList || [],
-  );
-  const [attachedFiles, setAttachedFiles] = useState<MediaItem[]>(
-    initialData?.fileUList || [],
-  );
+  const [photos, setPhotos] = useState<(MediaItem | MediaItemRequest)[]>([]);
+  const [videos, setVideos] = useState<(MediaItem | MediaItemRequest)[]>([]);
+  const [attachedFiles, setAttachedFiles] = useState<
+    (MediaItem | MediaItemRequest)[]
+  >([]);
+
+  const [deleteMediaIdList, setDeleteMediaIdList] = useState<number[]>([]);
 
   useEffect(() => {
     if (initialData) {
       setPhotos(initialData.imageList || []);
       setVideos(initialData.videoList || []);
       setAttachedFiles(initialData.fileUList || []);
-    } else {
-      setPhotos([]);
-      setVideos([]);
-      setAttachedFiles([]);
     }
   }, [initialData]);
 
@@ -50,19 +43,39 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     fileRef.current?.click();
   };
 
+  const uploadToS3 = async (
+    file: File,
+    fileTypeParam: 'IMAGE' | 'VIDEO' | 'FILE',
+  ): Promise<MediaItemRequest & { mediaUrl: string }> => {
+    const uploaded = await postMediaMutate({
+      file,
+      fileTypeParam,
+    });
+
+    const mediaUrl = fileTypeParam === 'FILE' ? '' : URL.createObjectURL(file);
+
+    return {
+      ...uploaded,
+      mediaUrl,
+    };
+  };
+
   const contentUpload = async (
     files: File[],
     fileType: 'IMAGE' | 'VIDEO' | 'FILE',
-    currentItems: MediaItem[],
-    setter: React.Dispatch<React.SetStateAction<MediaItem[]>>,
+    currentItems: (MediaItem | MediaItemRequest)[],
+    setter: React.Dispatch<
+      React.SetStateAction<(MediaItem | MediaItemRequest)[]>
+    >,
     validationFn: (
       file: File,
       ...args: number[]
     ) => { isValid: boolean; title: string; message: string },
   ) => {
     const filesToUpload: File[] = []; // 업로드할 파일
-    let newFilesTotalSize = 0; // 선택된 새로운 파일들 총 사이즈
 
+    // 선택된 새로운 파일들 총 사이즈
+    let newFilesTotalSize = 0;
     // 이전 파일들 총 사이즈, files에서만 사용
     const currentTotalAttachedFilesSize = attachedFiles.reduce(
       (sum, item) => sum + item.fileSize,
@@ -78,13 +91,13 @@ export const useMedia = (initialData?: PostDetailResponse) => {
           file,
           currentItems.length,
           filesToUpload.length,
-        ) as ValidationResult;
+        );
       } else if (fileType === 'VIDEO') {
         validationResult = validationFn(
           file,
           currentItems.length,
           filesToUpload.length,
-        ) as ValidationResult;
+        );
       } else {
         validationResult = validationFn(
           file,
@@ -108,24 +121,22 @@ export const useMedia = (initialData?: PostDetailResponse) => {
 
     if (filesToUpload.length === 0) return;
 
-    // 유효성 검사를 통과한 사진/동영상 파일들에 대해 mutateAsync 호출 Promise 생성
-    const uploadPromises = filesToUpload.map((file) =>
-      postMediaMutate({ file, fileTypeParam: fileType }),
-    );
-
+    // 유효성 검사 통과한 파일들 presignedUrl 요청 + S3 업로드
     try {
-      const results = await Promise.allSettled(uploadPromises);
-      const successfulUploads = processUploadResults(results);
+      const results = await Promise.all(
+        filesToUpload.map((file) => uploadToS3(file, fileType)),
+      );
+
       // 성공적으로 업로드된 파일들만 상태에 추가
-      setter((prev) => [...prev, ...successfulUploads]);
+      setter((prev) => [...prev, ...results]);
     } catch (error) {
       console.error('파일 업로드 중 오류 발생:', error);
     }
   };
 
-  const handleMediaChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    event.target.value = ''; // 동일 파일 재선택 가능하도록
+  const handleMediaChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = ''; // 동일 파일 재선택 가능하도록
 
     const imageFiles = files.filter((f) => f.type.startsWith('image/'));
     const videoFiles = files.filter((f) => f.type.startsWith('video/'));
@@ -146,9 +157,9 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     );
   };
 
-  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    event.target.value = '';
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    e.target.value = '';
 
     await contentUpload(
       files,
@@ -159,16 +170,42 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     );
   };
 
-  const handleRemovePhoto = (idToRemove: string) => {
-    setPhotos((prev) => prev.filter((photo) => photo.id !== idToRemove));
+  const remove = (
+    key: number | string,
+    items: (MediaItem | MediaItemRequest)[],
+    setter: React.Dispatch<
+      React.SetStateAction<(MediaItem | MediaItemRequest)[]>
+    >,
+  ) => {
+    const itemToDelete = items.find(
+      (item) =>
+        (item as MediaItem).id === key ||
+        (item as MediaItemRequest).tempKey === key,
+    );
+
+    if (itemToDelete && 'id' in itemToDelete) {
+      setDeleteMediaIdList((prev) => [...prev, itemToDelete.id]);
+    }
+
+    setter((prev) =>
+      prev.filter(
+        (item) =>
+          (item as MediaItem).id !== key &&
+          (item as MediaItemRequest).tempKey !== key,
+      ),
+    );
   };
 
-  const handleRemoveVideo = (idToRemove: string) => {
-    setVideos((prev) => prev.filter((video) => video.id !== idToRemove));
+  const handleRemovePhoto = (key: number | string) => {
+    remove(key, photos, setPhotos);
   };
 
-  const handleRemoveAttachedFile = (idToRemove: string) => {
-    setAttachedFiles((prev) => prev.filter((file) => file.id !== idToRemove));
+  const handleRemoveVideo = (key: number | string) => {
+    remove(key, videos, setVideos);
+  };
+
+  const handleRemoveAttachedFile = (key: number | string) => {
+    remove(key, attachedFiles, setAttachedFiles);
   };
 
   return {
@@ -177,13 +214,17 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     attachedFiles,
     photoRef,
     fileRef,
+    deleteMediaIdList,
+
     setPhotos,
     setVideos,
     setAttachedFiles,
+
     handlePhotoClick,
     handleFileClick,
     handleMediaChange,
     handleFileChange,
+
     handleRemovePhoto,
     handleRemoveVideo,
     handleRemoveAttachedFile,
