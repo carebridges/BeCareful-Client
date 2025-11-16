@@ -1,3 +1,4 @@
+import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { TabContentMatching } from '@/components/Matching/TabContentMatching';
 import { MatchingCaregiver } from '@/types/Matching.socialWorker';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +14,10 @@ export const ApplyListTab = ({
   caregivers,
 }: ApplyListTabProps) => {
   const navigate = useNavigate();
+
+  if (caregivers.length === 0) {
+    return <EmptyStateIndicator message="지원한 요양보호사가 없습니다." />;
+  }
   return (
     <Container>
       {caregivers.map((caregiver, index) => (

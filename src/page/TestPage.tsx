@@ -12,6 +12,7 @@ import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/Agre
 import { CheckBox } from '../components/common/CheckBox/CheckBox';
 import { CareGiverCard } from '@/components/SignUp/common/CareGiverCard';
 import { InstitutionCard } from '@/components/SignUp/common/InstitutionCard';
+import { Pagination } from '@/components/common/Pagination/Pagination';
 
 export const TestPage = () => {
   const [selectedDropContents, setSelectedDropContents] = useState<string[]>(
@@ -38,10 +39,12 @@ export const TestPage = () => {
     setPressed(!pressed);
   };
 
+  const [page, setPage] = useState(1);
+
   return (
     <div>
       <h1>Test Page</h1>
-
+      <Pagination currentPage={page} totalPages={12} onPageChange={setPage} />
       <BooleanNoCard pressed={true} text="네, 소유하고 있습니다." />
       <BooleanNoCard pressed={false} text="네, 소유하고 있습니다." />
       <BooleanYesCard pressed={true} text="네, 소유하고 있습니다." />

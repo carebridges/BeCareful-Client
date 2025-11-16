@@ -20,6 +20,12 @@ export const TimeSelectSection = ({
         <span>근무시간</span>
         <span className="highlight">*</span>
       </div>
+      <SectionGuide>
+        선택한 모든 요일은 동일한 시간으로만 설정됩니다.
+        <br />
+        예) 월, 수 -&gt; 모든 오후 2-5시
+      </SectionGuide>
+
       <TimeBoxContainer>
         <TimeDropdown
           width="50%"
@@ -37,13 +43,19 @@ export const TimeSelectSection = ({
   );
 };
 
+const SectionGuide = styled.label`
+  color: ${({ theme }) => theme.colors.mainBlue};
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+`;
+
 const TitleContainer = styled.div`
   display: flex;
   padding: 40px 20px 0px 20px;
   align-items: flex-start;
   width: 100%;
   gap: 8px;
-
+  box-sizing: border-box;
   flex-direction: column;
 
   font-size: ${({ theme }) => theme.typography.fontSize.body2};

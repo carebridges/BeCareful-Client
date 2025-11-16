@@ -1,9 +1,8 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
+import { UploadResult } from '@/hooks/useProfileImageUpload';
+import { Presigned } from '@/types/common/image';
 import { useMutation } from '@tanstack/react-query';
-
-type Presigned = { tempKey: string; presignedUrl: string };
-type UploadResult = { tempKey: string; previewUrl: string };
 
 export const useUploadAssociationProfileImage = () =>
   useMutation<UploadResult, Error, File>({

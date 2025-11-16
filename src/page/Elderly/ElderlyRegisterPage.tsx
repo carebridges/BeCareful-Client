@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import styled from 'styled-components';
 
-import { AreaSelectData } from '@/types/Elderly';
 import { NameInputSection } from '@/components/SocialWorker/ElderyRegister/NameInputSection';
 import { BirthInputSection } from '@/components/SocialWorker/ElderyRegister/BirthInputSection';
 import { GenderSelectSection } from '@/components/SocialWorker/ElderyRegister/GenderSelectSection';
@@ -19,6 +18,7 @@ import { useUploadElderlyProfileImage } from '@/api/elderly';
 import { ProfileImageUploader } from '@/components/SocialWorker/common/ProfileImageUploader';
 import { PetSection } from '@/components/SocialWorker/ElderyRegister/PetSection';
 import { NavBar } from '@/components/common/NavBar/NavBar';
+import { AreaSelectData } from '@/types/common/matching';
 
 const ElderlyRegisterPage = () => {
   const navigate = useNavigate();
@@ -32,8 +32,9 @@ const ElderlyRegisterPage = () => {
     uploadImage(
       { file },
       {
-        onSuccess: (url) => {
-          form.setProfileImageUrl(url);
+        onSuccess: ({ tempKey, previewUrl }) => {
+          form.setProfileImageTempKey(tempKey);
+          form.setProfileImagePreviewUrl(previewUrl);
         },
         onError: () => {
           alert('이미지 업로드에 실패했습니다.');
@@ -57,7 +58,7 @@ const ElderlyRegisterPage = () => {
       <MainContent>
         <ProfileWrapper>
           <ProfileImageUploader
-            imageUrl={form.profileImageUrl}
+            imageUrl={form.profileImagePreviewUrl}
             onChange={(file) => handleImageUpload(file)}
           />
         </ProfileWrapper>
@@ -87,8 +88,8 @@ const ElderlyRegisterPage = () => {
           setSelectedDetails={form.setSelectedDetails}
         />
 
-        <InmateSection inmate={form.inmate} onChange={form.setInmate} />
-        <PetSection pet={form.pet} onChange={form.setPet} />
+        <InmateSection inmate={form.hasInmate} onChange={form.sethasInmate} />
+        <PetSection pet={form.hasPet} onChange={form.sethasPet} />
         <SubmitSection onSubmit={form.handleSubmit} isValid={form.isValid} />
       </MainContent>
     </Container>

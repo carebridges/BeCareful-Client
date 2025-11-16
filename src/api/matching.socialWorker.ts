@@ -1,11 +1,15 @@
 import { axiosInstance } from '@/api/axiosInstance';
+import { ElderDetailResponse } from '@/types/Elderly';
 import {
   ElderMatchingStatus,
-  MatchingCaregiver,
   MatchingElderData,
-  MatchingRecruitmentPayload,
-  RawCaregiver,
+  RawMatchingCaregiver,
+  MatchingCaregiver,
+  RecruitmentForm,
+  RawMatchingElderData,
 } from '@/types/Matching.socialWorker';
+
+import { RecruitmentDetailResponse } from '@/types/Socialworker/matching';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useHireCaregiver = () =>
@@ -44,39 +48,30 @@ export const useElderMatchingList = (status: string) => {
   });
 };
 
-export const useRegisterMatchingRecruitment = () =>
-  useMutation({
-    mutationFn: async (payload: MatchingRecruitmentPayload) => {
-      const { data } = await axiosInstance.post(
-        '/matching/social-worker/recruitment',
-        payload,
-      );
-      return data;
-    },
-  });
-
-export const getMatchingRecruitment = async (recruitmentId: string) => {
-  const { data } = await axiosInstance.get<MatchingElderData>(
-    `/matching/social-worker/recruitment/${recruitmentId}`,
+export const getMatchingRecruitment = async (
+  recruitmentId: string,
+): Promise<RawMatchingElderData> => {
+  const { data } = await axiosInstance.get(
+    `/matching/social-worker/recruitment/${recruitmentId}/matching-status`,
   );
   return data;
 };
 
-const flattenCaregiver = (raw: RawCaregiver): MatchingCaregiver => ({
+const flattenCaregiver = (raw: RawMatchingCaregiver): MatchingCaregiver => ({
   caregiverInfo: {
-    caregiverId: raw.caregiverInfo?.caregiverInfo?.caregiverId ?? 0,
-    name: raw.caregiverInfo?.caregiverInfo?.name ?? '',
-    profileImageUrl: raw.caregiverInfo?.caregiverInfo?.profileImageUrl ?? '',
-    applicationTitle: raw.caregiverInfo?.applicationTitle ?? '',
+    caregiverId: raw.caregiverInfo.caregiverInfo.caregiverId,
+    name: raw.caregiverInfo.caregiverInfo.name,
+    profileImageUrl: raw.caregiverInfo.caregiverInfo.profileImageUrl,
+    applicationTitle: raw.caregiverInfo.applicationTitle,
   },
   matchingResultStatus: raw.matchingResultStatus,
 });
 
 export const useMatchingRecruitment = (recruitmentId: string) =>
-  useQuery({
+  useQuery<MatchingElderData>({
     queryKey: ['matching-recruitment', recruitmentId],
     queryFn: async () => {
-      const data = await getMatchingRecruitment(recruitmentId);
+      const data = await getMatchingRecruitment(recruitmentId); // Raw 타입
 
       return {
         ...data,
@@ -105,4 +100,59 @@ export const useCaregiverDetail = (
     queryKey: ['caregiver-detail', recruitmentId, caregiverId],
     queryFn: () => getCaregiverDetail(recruitmentId, caregiverId),
     enabled: !!recruitmentId && !!caregiverId,
+  });
+
+export const useRegisterMatchingRecruitment = () =>
+  useMutation({
+    mutationFn: async (payload: RecruitmentForm) => {
+      const { data } = await axiosInstance.post(
+        '/matching/social-worker/recruitment',
+        payload,
+      );
+      return data;
+    },
+  });
+
+export const useElderDetail = (elderlyId: number | null) =>
+  useQuery<ElderDetailResponse>({
+    queryKey: ['elderlyDetail', elderlyId],
+    enabled: !!elderlyId,
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<ElderDetailResponse>(
+        `/elderly/${elderlyId}`,
+      );
+      return data;
+    },
+  });
+
+export const useRecruitmentDetail = (recruitmentId: number) =>
+  useQuery({
+    queryKey: ['recruitmentDetail', recruitmentId],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<RecruitmentDetailResponse>(
+        `/matching/social-worker/recruitment/${recruitmentId}`,
+      );
+      return data;
+    },
+    enabled: !!recruitmentId,
+  });
+
+export const useCloseRecruitment = (recruitmentId: number) =>
+  useMutation({
+    mutationFn: async () => {
+      const { data } = await axiosInstance.post(
+        `/matching/social-worker/recruitment/${recruitmentId}/close`,
+      );
+      return data;
+    },
+  });
+
+export const useDeleteRecruitment = (recruitmentId: number) =>
+  useMutation({
+    mutationFn: async () => {
+      const { data } = await axiosInstance.delete(
+        `/matching/social-worker/recruitment/${recruitmentId}`,
+      );
+      return data;
+    },
   });

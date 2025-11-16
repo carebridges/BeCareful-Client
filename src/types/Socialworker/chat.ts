@@ -1,4 +1,5 @@
 import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
+
 import { ChatResponse, CaregiverInfo } from '@/types/common/chat';
 import { ElderlyDetail } from '@/types/Socialworker/common';
 

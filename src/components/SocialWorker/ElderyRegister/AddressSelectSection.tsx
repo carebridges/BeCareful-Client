@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Button } from '@/components/common/Button/Button';
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
 
-import { AreaSelectData, AreaSocial } from '@/types/Elderly';
 import {
   AreaSelectWrapper,
   SectionWrapper,
@@ -10,6 +9,7 @@ import {
   TitleWrapper,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
 import { AreaSelectModal } from '@/components/SocialWorker/ElderyRegister/AreaSelectModal';
+import { AreaSelectData, AreaSocial } from '@/types/common/matching';
 
 interface AddressSelectSectionProps {
   areaData: AreaSelectData[];
