@@ -4,6 +4,7 @@ import {
   Title,
   TitleWrapper,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
+import { formatBirthDate } from '@/utils/formatDate';
 
 interface BirthInputSectionProps {
   birth: string;
@@ -11,6 +12,10 @@ interface BirthInputSectionProps {
 }
 
 export function BirthInputSection({ birth, onChange }: BirthInputSectionProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatBirthDate(e.target.value);
+    onChange(formatted);
+  };
   return (
     <SectionWrapper>
       <TitleWrapper>
@@ -24,7 +29,8 @@ export function BirthInputSection({ birth, onChange }: BirthInputSectionProps) {
         placeholder="예) 1978-05-08"
         guide=""
         value={birth}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
+        maxLength={10}
       />
     </SectionWrapper>
   );

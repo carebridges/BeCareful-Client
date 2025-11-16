@@ -2,8 +2,6 @@ import { styled } from 'styled-components';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { Button } from '@/components/common/Button/Button';
 
-import { useNavigate } from 'react-router-dom';
-
 interface RegisterMatchingElderModalProps {
   width: string;
   onClose: () => void;
@@ -15,9 +13,8 @@ export const RegisterMatchingElderModal = ({
   onClose,
   onCancel,
 }: RegisterMatchingElderModalProps) => {
-  const navigate = useNavigate();
   const handleCancel = () => {
-    navigate(-1);
+    onClose();
   };
 
   const handleApply = () => {

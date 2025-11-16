@@ -14,11 +14,14 @@ export const MemoSection = ({ value, onChange }: Props) => {
       <MemoFieldWrapper>
         <MemoField
           id="memo"
-          placeholder="참고할 사항을 입력하세요."
+          placeholder={
+            '참고할 사항을 입력하세요.\n\n예시) 초보자 가능, 여성 우대, 책임감 있고 긍정적인 보호사 모집'
+          }
           value={value}
           maxLength={200}
           onChange={onChange}
         />
+
         <MemoCount>{value.length}/200</MemoCount>
       </MemoFieldWrapper>
     </SectionWrapper>
@@ -31,6 +34,7 @@ const SectionWrapper = styled.div`
   flex-direction: column;
   padding: 40px 20px 0px 20px;
   gap: 8px;
+  box-sizing: border-box;
 `;
 
 const SectionTitleWrapper = styled.div`

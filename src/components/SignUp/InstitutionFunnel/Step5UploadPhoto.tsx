@@ -5,6 +5,7 @@ import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/Insti
 
 import { ProfileImageUploader } from '@/components/SignUp/InstitutionFunnel/Step5UploadPhoto/ProfileImageUploader';
 import { useUploadInstitutionProfileImage } from '@/api/institutionFunnel';
+import { useState } from 'react';
 
 interface StepProps {
   goToNext: () => void;
@@ -18,26 +19,26 @@ interface StepProps {
 export const Step5UploadPhoto = ({
   goToNext,
   goToPrev,
-  institutionFormData,
+
   setInstitutionFormData,
 }: StepProps) => {
   const { mutate: uploadImage } = useUploadInstitutionProfileImage();
 
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const handleImageUpload = (file: File) => {
-    uploadImage(
-      { file, name: institutionFormData.institutionName },
-      {
-        onSuccess: (url) => {
-          setInstitutionFormData((prev) => ({
-            ...prev,
-            profileImageUrl: url,
-          }));
-        },
-        onError: () => {
-          alert('이미지 업로드에 실패했습니다.');
-        },
+    uploadImage(file, {
+      onSuccess: ({ tempKey, previewUrl }) => {
+        setInstitutionFormData((prev) => ({
+          ...prev,
+          profileImageTempKey: tempKey,
+        }));
+
+        setPreviewUrl(previewUrl);
       },
-    );
+      onError: () => {
+        alert('이미지 업로드에 실패했습니다.');
+      },
+    });
   };
 
   return (
@@ -52,7 +53,7 @@ export const Step5UploadPhoto = ({
 
       <ProfileContainer>
         <ProfileImageUploader
-          imageUrl={institutionFormData.profileImageUrl}
+          imageUrl={previewUrl ?? undefined}
           onChange={handleImageUpload}
         />
       </ProfileContainer>

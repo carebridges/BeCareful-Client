@@ -14,12 +14,12 @@ export const CareTypeSection = ({ selectedCareTypes, onChange }: Props) => {
         <SectionTitle color="">케어항목</SectionTitle>
         <SectionTitle color="blue">*</SectionTitle>
       </SectionTitleWrapper>
-      <SectionGuide>중복선택 가능</SectionGuide>
-      {MATCHING_CARE_TYPE_OPTIONS.map(({ key, title, description }) => (
+      <SectionGuide>여러 개 선택 가능</SectionGuide>
+      {MATCHING_CARE_TYPE_OPTIONS.map(({ key, title, icon: Icon }) => (
         <MatchingCareCard
           key={key}
           title={title}
-          description={description}
+          Icon={Icon}
           initialChecked={selectedCareTypes.includes(key)}
           onChange={() => onChange(key)}
         />
@@ -34,6 +34,7 @@ const SectionWrapper = styled.div`
   flex-direction: column;
   padding: 40px 20px 0px 20px;
   gap: 8px;
+  box-sizing: border-box;
 `;
 
 const SectionTitleWrapper = styled.div`
