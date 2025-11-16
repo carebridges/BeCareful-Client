@@ -90,6 +90,46 @@ const CommunityEditAssociationPage = () => {
           협회 정보 수정하기
         </Button>
       </Bottom>
+
+      <BottomSheet
+        isOpen={isImgActionSheetOpen}
+        setIsOpen={setIsImgActionSheetOpen}
+        title="협회 대표 대문 사진을 설정해 주세요."
+        titleStar={false}
+      >
+        <CheckButton
+          active={selectedImgAction === '기본'}
+          onClick={() => setSelectedImgAction('기본')}
+        >
+          <Check />
+          기본 커버 선택
+        </CheckButton>
+        <CheckButton
+          active={selectedImgAction === '앨범'}
+          onClick={() => setSelectedImgAction('앨범')}
+        >
+          <Check />
+          앨범에서 사진 선택
+        </CheckButton>
+        <DeleteButtons>
+          <Button
+            width="100%"
+            height="52px"
+            variant="subBlue"
+            onClick={() => setIsImgActionSheetOpen(false)}
+          >
+            취소
+          </Button>
+          <Button
+            width="100%"
+            height="52px"
+            variant="mainBlue"
+            onClick={handleCommentActionSheetConfirm}
+          >
+            확인
+          </Button>
+        </DeleteButtons>
+      </BottomSheet>
     </Container>
   );
 };
@@ -127,4 +167,45 @@ const Bottom = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+`;
+
+const CheckButton = styled.div<{ active: boolean }>`
+  height: 32px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid
+    ${({ theme, active }) =>
+      active ? theme.colors.mainBlue : theme.colors.gray100};
+  background: ${({ theme, active }) =>
+    active ? theme.colors.subBlue : theme.colors.white};
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: ${({ theme, active }) =>
+    active ? theme.colors.mainBlue : theme.colors.gray900};
+  font-weight: ${({ theme, active }) =>
+    active
+      ? theme.typography.fontWeight.bold
+      : theme.typography.fontWeight.medium};
+
+  path {
+    fill: ${({ theme, active }) => (active ? theme.colors.mainBlue : '')};
+  }
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.subBlue};
+    border-color: ${({ theme }) => theme.colors.mainBlue};
+
+    path {
+      fill: ${({ theme }) => theme.colors.mainBlue};
+    }
+  }
+`;
+
+const DeleteButtons = styled.div`
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  padding-top: 66px;
 `;
