@@ -1,10 +1,18 @@
 import { styled } from 'styled-components';
 import { ReactComponent as ErrorIcon } from '@/assets/icons/Error.svg';
 import { Button } from '@/components/common/Button/Button';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 export const ErrorPage = () => {
-  const { handleGoBack } = useHandleNavigate();
+  const handleGoBackAndReload = () => {
+    window.history.back();
+
+    const onPopState = () => {
+      window.location.reload();
+      window.removeEventListener('popstate', onPopState);
+    };
+
+    window.addEventListener('popstate', onPopState);
+  };
 
   return (
     <PageLayout>
@@ -20,7 +28,11 @@ export const ErrorPage = () => {
       </Labels>
 
       <Bottom>
-        <Button variant="mainBlue" height="52px" onClick={handleGoBack}>
+        <Button
+          variant="mainBlue"
+          height="52px"
+          onClick={handleGoBackAndReload}
+        >
           이전 화면으로
         </Button>
       </Bottom>
