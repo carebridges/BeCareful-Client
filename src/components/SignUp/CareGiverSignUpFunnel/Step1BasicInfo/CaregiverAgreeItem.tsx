@@ -12,6 +12,7 @@ interface CaregiverAgreeItemProps {
   guide: string;
   content: React.ReactNode;
   onToggle: (expanded: boolean) => void;
+  disabled?: boolean;
 }
 
 export const CaregiverAgreeItem = ({
@@ -22,6 +23,7 @@ export const CaregiverAgreeItem = ({
   guide,
   content,
   onToggle,
+  disabled = false,
 }: CaregiverAgreeItemProps) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -42,6 +44,7 @@ export const CaregiverAgreeItem = ({
           select={select}
           guide={guide}
           borderRadius=""
+          disabled={disabled}
         />
         {expanded ? <ChevronUp /> : <ChevronDown />}
       </Top>
