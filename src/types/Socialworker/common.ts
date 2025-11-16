@@ -5,10 +5,21 @@ export type AgreeField =
   | 'isAgreedToCollectPersonalInfo'
   | 'isAgreedToReceiveMarketingInfo';
 
+export type CommunityAgreeField =
+  | 'agreedToTerms'
+  | 'agreedToCollectPersonalInfo'
+  | 'agreedToReceiveMarketingInfo';
+
 export interface AgreementValues {
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;
   isAgreedToReceiveMarketingInfo: boolean;
+}
+
+export interface CommunityAgreementValues {
+  agreedToTerms: boolean;
+  agreedToCollectPersonalInfo: boolean;
+  agreedToReceiveMarketingInfo: boolean;
 }
 
 export interface SocialWorkerInfo {

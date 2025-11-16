@@ -22,12 +22,22 @@ export interface AuthorInfo {
   institutionImageUrl: string;
 }
 
-// 미디어, 파일 항목 구조
+/* 미디어, 파일 항목 구조 */
+// 게시글 조회
 export interface MediaItem {
-  id: string;
+  id: number;
   fileName: string;
   mediaUrl: string;
   fileType: 'FILE' | 'IMAGE' | 'VIDEO';
   fileSize: number;
-  videoDuration: number;
+  videoDuration?: number;
+}
+
+// 글 작성 요청
+export interface MediaItemRequest {
+  fileName: string;
+  tempKey: string;
+  fileType: 'FILE' | 'IMAGE' | 'VIDEO';
+  fileSize: number;
+  videoDuration?: number;
 }

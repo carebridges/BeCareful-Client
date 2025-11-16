@@ -7,12 +7,11 @@ import { Button } from '@/components/common/Button/Button';
 import { CheckBoxSelect } from '@/components/common/CheckBox/CheckBoxSelect';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import Modal from '@/components/common/Modal/Modal';
-import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import WorkLocationModal from '@/components/Caregiver/Apply/WorkLocationModal';
 import { caretypes } from '@/constants/common/caretypes';
 import { days } from '@/constants/common/day';
-import { times } from '@/constants/common/time';
+import { TIMES_LONG, TIMES_LONG_TO_SHORT } from '@/constants/common/time';
 import { SALARY_KR_TO_EN, salaryTypes } from '@/constants/common/salary';
 import { WorkApplicationRequest } from '@/types/Caregiver/work';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -88,10 +87,12 @@ const CaregiverApplicationPage = () => {
   });
 
   const handleBtnClick = () => {
+    const convertedTime = selectTime.map((time) => TIMES_LONG_TO_SHORT[time]);
+
     const applicationData: WorkApplicationRequest = {
       workSalaryUnitType: SALARY_KR_TO_EN[payType],
       workSalaryAmount: Number(pay.replaceAll(',', '')),
-      workTimes: formatTimeToEN(selectTime),
+      workTimes: formatTimeToEN(convertedTime),
       workDays: formatDaysToEN(selectDay),
       workLocations: selectedArea,
       careTypes: selectCaretype,
@@ -107,7 +108,7 @@ const CaregiverApplicationPage = () => {
         left={<NavLeft onClick={handleGoBack} />}
         center={
           <NavCenter>
-            일자리 신청서 {data?.workApplicationDto ? '수정' : '등록'}
+            일자리 지원서 {data?.workApplicationDto ? '수정' : '등록'}
           </NavCenter>
         }
         color="white"
@@ -116,7 +117,7 @@ const CaregiverApplicationPage = () => {
       <SectionWrapper>
         <LocationWrapper>
           <div className="location">
-            <label>
+            <label className="title">
               희망 근무지역 <span>*</span>
             </label>
             <label className="guide">최대 5개까지 선택 가능</label>
@@ -144,7 +145,7 @@ const CaregiverApplicationPage = () => {
       </SectionWrapper>
 
       <SectionWrapper>
-        <label>
+        <label className="title">
           희망 근무요일 <span>*</span>
         </label>
         <label className="guide">중복선택 가능</label>
@@ -164,12 +165,12 @@ const CaregiverApplicationPage = () => {
       </SectionWrapper>
 
       <SectionWrapper>
-        <label>
+        <label className="title">
           희망 근무시간 <span>*</span>
         </label>
         <label className="guide">중복선택 가능</label>
-        <SelectWrapper gap="">
-          {times.map((time) => (
+        <TimeWrapper>
+          {TIMES_LONG.map((time) => (
             <CheckBoxSelect
               key={time}
               id={time}
@@ -180,11 +181,11 @@ const CaregiverApplicationPage = () => {
               height="48px"
             />
           ))}
-        </SelectWrapper>
+        </TimeWrapper>
       </SectionWrapper>
 
       <SectionWrapper>
-        <label>
+        <label className="title">
           희망 급여 <span>*</span>
         </label>
         <PayWrapper>
@@ -207,7 +208,7 @@ const CaregiverApplicationPage = () => {
       </SectionWrapper>
 
       <SectionWrapper>
-        <label>
+        <label className="title">
           근무 유형 <span>*</span>
         </label>
         <label className="guide">중복선택 가능</label>
@@ -259,7 +260,7 @@ const CaregiverApplicationPage = () => {
           disabled={!isChanged}
           onClick={handleBtnClick}
         >
-          {data?.workApplicationDto ? '신청서 수정하기' : '신청서 등록하기'}
+          지원서 {data?.workApplicationDto ? '수정' : '등록'}하기
         </Button>
       </Bottom>
 
@@ -279,28 +280,28 @@ const CaregiverApplicationPage = () => {
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
       >
-        <ModalButtons
-          onClose={() => {
+        <ModalLimit
+          onClose={() => setIsRegisterModalOpen(false)}
+          title={'일자리 지원서 작성이\n완료되었습니다!'}
+          detail={
+            '입력하신 조건에 맞는 공고가 표시됩니다.\n구인 연락을 기다려주세요!'
+          }
+          button="내 지원서 보기"
+          handleBtnClick={() => {
             setIsRegisterModalOpen(false);
+            handleNavigate('/caregiver/my');
           }}
-          title={'일자리 신청서 작성이\n완료되었습니다!'}
-          detail="구인 연락을 기다려주세요!"
-          left="닫기"
-          right="내 신청서 보기"
-          handleLeftBtnClick={() => setIsRegisterModalOpen(false)}
-          handleRightBtnClick={() => handleNavigate('/caregiver/my')}
         />
       </Modal>
 
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <ModalLimit
-          onClose={() => {
-            setIsEditModalOpen(false);
-          }}
-          title="신청서 수정이 완료되었어요!"
+          onClose={() => setIsEditModalOpen(false)}
+          title="지원서 수정이 완료되었어요!"
           detail={
             '입력하신 조건으로 수정되었습니다.\n새로운 조건에 맞는 공고가 표시됩니다.'
           }
+          button="내 지원서 보기"
           handleBtnClick={() => {
             setIsEditModalOpen(false);
             handleNavigate('/caregiver/work');
@@ -320,7 +321,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 40px;
 
-  label {
+  .title {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
@@ -374,6 +375,13 @@ const SelectWrapper = styled.div<{ gap: string }>`
   gap: ${({ gap }) => (gap ? gap : '8px')};
 `;
 
+const TimeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+`;
+
 const PayWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -422,6 +430,7 @@ const Pay = styled.input`
 
 const Bottom = styled.div`
   padding: 20px;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;

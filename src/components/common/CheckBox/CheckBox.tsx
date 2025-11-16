@@ -8,6 +8,7 @@ interface CheckBoxProps {
   label: string;
   select: string;
   guide: string;
+  disabled?: boolean;
 }
 
 export const CheckBox = ({
@@ -18,6 +19,7 @@ export const CheckBox = ({
   label,
   select,
   guide,
+  disabled = false,
 }: CheckBoxProps) => {
   return (
     <CheckWrapper onClick={(e) => e.stopPropagation()}>
@@ -25,7 +27,8 @@ export const CheckBox = ({
         type="checkbox"
         id={id}
         checked={checked}
-        onChange={() => onChange(!checked)}
+        disabled={disabled}
+        onChange={() => !disabled && onChange(!checked)}
       />
       <LabelWrapper htmlFor={id}>
         <CheckIcon aria-hidden="true" $borderRadius={borderRadius} />

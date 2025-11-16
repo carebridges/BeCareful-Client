@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
+import BirthInputBox from '@/components/common/InputBox/BirthInputBox';
+import InputBox from '@/components/common/InputBox/InputBox';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import {
   INSTITUTION_RANK_EN_TO_RANK,
@@ -40,7 +41,6 @@ const SocialworkerEditProfilePage = () => {
     isDuplicateCheckButtonEnabled,
     handleChange,
     handleCheckDuplicate,
-    handleBirthAndGenderChange,
   } = useSocialworkerBasicForm(data, setIsChanged);
 
   const { agreementStates, handleAgreementChange } = useAgreementStateForm(
@@ -84,14 +84,7 @@ const SocialworkerEditProfilePage = () => {
 
       <InfoWrapper>
         <CardContainer>
-          <label className="title">
-            이름 <span className="star">*</span>
-          </label>
-          <Input
-            placeholder="이름"
-            value={name}
-            onChange={(e) => handleChange('name', e.target.value)}
-          />
+          <InputBox title="이름" gray={true} value={name} />
         </CardContainer>
 
         <CardContainer>
@@ -122,27 +115,12 @@ const SocialworkerEditProfilePage = () => {
           </ValidationMessage>
         )}
 
-        <ResidentIdInput
-          birthDate={birth}
-          genderInput={genderCode > 0 ? genderCode.toString() : ''}
-          onBirthDateChange={(e) =>
-            handleBirthAndGenderChange(e.target.value, genderCode.toString())
-          }
-          onGenderChange={(e) =>
-            handleBirthAndGenderChange(birth, e.target.value)
-          }
-          isEditProfile={true}
-        />
+        <CardContainer>
+          <BirthInputBox birth={birth} gender={genderCode} />
+        </CardContainer>
 
         <CardContainer>
-          <label className="title">
-            휴대전화 번호 <span className="star">*</span>
-          </label>
-          <Input
-            placeholder="휴대전화 번호"
-            value={phoneNumber}
-            onChange={(e) => handleChange('phoneNumber', e.target.value)}
-          />
+          <InputBox title="휴대전화" gray={true} value={phoneNumber} />
         </CardContainer>
       </InfoWrapper>
 

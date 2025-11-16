@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MediaItem } from '@/types/Community/common';
+import { MediaItemRequest } from '@/types/Community/common';
 import { getDraftStorageKey } from '@/utils/getDraftStorageKey';
 
 interface PostData {
@@ -10,9 +10,9 @@ interface PostData {
 }
 
 interface MediaData {
-  photos: MediaItem[];
-  videos: MediaItem[];
-  attachedFiles: MediaItem[];
+  photos: MediaItemRequest[];
+  videos: MediaItemRequest[];
+  attachedFiles: MediaItemRequest[];
 }
 
 interface UseSaveProps {
@@ -20,11 +20,7 @@ interface UseSaveProps {
   postData: PostData;
   mediaData: MediaData;
   setPostData: (data: PostData) => void;
-  setMediaData: (data: {
-    photos: MediaItem[];
-    videos: MediaItem[];
-    attachedFiles: MediaItem[];
-  }) => void;
+  setMediaData: (data: MediaData) => void;
 }
 
 export const useSave = ({

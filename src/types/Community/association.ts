@@ -13,7 +13,7 @@ export interface AssociationInfoResponse {
 
 /* 협회 정보 수정 */
 export interface AssociationInfoRequest {
-  associationImageUrl: string | null;
+  profileImageTempKey: string | null;
   associationName: string;
   associationEstablishedYear: number;
 }

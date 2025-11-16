@@ -3,13 +3,15 @@ import styled from 'styled-components';
 interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   title: string;
   detail?: string;
-  placeholder: string;
+  gray?: boolean;
+  placeholder?: string;
   value?: string;
 }
 
 const InputBox = ({
   title,
   detail,
+  gray,
   placeholder,
   value,
   ...props
@@ -22,7 +24,11 @@ const InputBox = ({
         </label>
         {detail && <label className="detail">{detail}</label>}
       </div>
-      <Input placeholder={placeholder} value={value} {...props} />
+      {gray ? (
+        <InputNotFix>{value}</InputNotFix>
+      ) : (
+        <Input placeholder={placeholder} value={value} {...props} />
+      )}
     </Container>
   );
 };
@@ -79,4 +85,16 @@ const Input = styled.input`
     outline: none;
     caret-color: ${({ theme }) => theme.colors.mainBlue};
   }
+`;
+
+const InputNotFix = styled.div`
+  height: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  background: ${({ theme }) => theme.colors.gray50};
+
+  color: ${({ theme }) => theme.colors.gray900};
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;

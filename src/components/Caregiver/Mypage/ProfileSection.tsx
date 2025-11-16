@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { Button } from '@/components/common/Button/Button';
-import ProfileCard from '@/components/shared/ProfileCard';
+import ProfileCard from '@/components/common/card/ProfileCard';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { CaregiverInfo } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -17,7 +16,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
       <ProfileCard
         profileImgURL={data?.profileImageUrl ?? ''}
         name={data?.name ?? ''}
-        // point={1500}
+        chevronClick={() => handleNavigate('/caregiver/my/profile')}
         phoneNumber={data?.phoneNumber ?? ''}
         age={data?.age ?? 0}
         gender={GENDER_EN_TO_KR_2[data?.gender ?? 'FEMALE']}
@@ -52,14 +51,6 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
           </div>
         </div>
       </Bottom>
-
-      <Button
-        height="52px"
-        variant="subBlue"
-        onClick={() => handleNavigate('/caregiver/my/profile')}
-      >
-        프로필 수정하기
-      </Button>
     </ProfileWrapper>
   );
 };

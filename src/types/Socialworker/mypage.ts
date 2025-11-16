@@ -1,5 +1,5 @@
 import { SocialWorkerInfo } from '@/types/Socialworker/common';
-import { InstitutionRank } from '@/types/Community/common';
+import { AssociationRank, InstitutionRank } from '@/types/Community/common';
 import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 export interface SocialMyInstitutionInfo {
@@ -55,5 +55,27 @@ export interface NursingAssociationInfoRequest {
   openYear: number;
   facilityTypeList: string[];
   phoneNumber: string;
-  profileImageUrl: string;
+  profileImageTempKey: string | null;
+}
+
+export interface CommunityAgreement {
+  agreedToTerms: boolean;
+  agreedToCollectPersonalInfo: boolean;
+  agreedToReceiveMarketingInfo: boolean;
+}
+
+export interface SocialworkerAssociationResponse {
+  memberId: number;
+  name: string;
+  phoneNumber: string;
+  associationRank: AssociationRank;
+  institutionName: string;
+  institutionRank: InstitutionRank;
+  institutionImageUrl: string;
+  communityAgreement: CommunityAgreement;
+  associationInfo: AssociationInfo;
+}
+
+export interface SocialworkerAssociationRequest {
+  isAgreedToReceiveMarketingInfo: boolean;
 }

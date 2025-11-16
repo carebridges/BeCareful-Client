@@ -9,7 +9,12 @@ import { theme } from '@/style/theme';
 import { ReactComponent as ArrowRight } from '@/assets/icons/ArrowRight.svg';
 
 type Props = {
-  onInstitutionSelect: (name: string, id?: number, address?: string) => void;
+  onInstitutionSelect: (
+    name: string,
+    id?: number,
+    address?: string,
+    code?: string,
+  ) => void;
   onRequestRegister?: () => void;
   institution?: string;
 };
@@ -37,6 +42,7 @@ export const InstitutionSearchInput = ({
       inst.name,
       inst.institutionId,
       inst.address || undefined,
+      inst.institutionCode || undefined,
     );
   };
 

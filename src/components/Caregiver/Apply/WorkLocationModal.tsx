@@ -27,6 +27,8 @@ const WorkLocationModal = ({
   handleDongSelect,
   handleSelectBtn,
 }: WorkLocationModalProps) => {
+  const isValid = selectedCity && selectedGu && selectedDong;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <AreaModal>
@@ -94,7 +96,12 @@ const WorkLocationModal = ({
           )}
         </AreaWrapper>
 
-        <Button height="52px" variant="mainBlue" onClick={handleSelectBtn}>
+        <Button
+          height="52px"
+          variant={isValid ? 'mainBlue' : 'disabled'}
+          disabled={!isValid}
+          onClick={handleSelectBtn}
+        >
           선택하기
         </Button>
       </AreaModal>

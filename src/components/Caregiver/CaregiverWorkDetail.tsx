@@ -9,19 +9,19 @@ import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 import { formatDaysToKR } from '@/utils/caregiverFormatter';
+import { formatDateTime } from '@/utils/formatTime';
 
 interface CaregiverWorkDetailProps {
   work: MatchingRecruitmentResponse;
-  date?: string;
 }
 
-const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
+const CaregiverWorkDetail = ({ work }: CaregiverWorkDetailProps) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const workInfo = [
     {
       title: '장기요양등급',
-      detail: work.elderlyInfo.careLevel,
+      detail: work.recruitmentInfo.elderlyInfo.careLevel,
     },
     {
       title: '근무요일',
@@ -33,39 +33,39 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
     },
     {
       title: SALARY_EN_TO_KR[work.recruitmentInfo.workSalaryUnitType],
-      detail: work.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR'),
+      detail: `${work.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR')}원`,
     },
   ];
 
   const elderlyInfo = [
     {
       title: '나이/성별',
-      detail: `${work.elderlyInfo.age}세 ${GENDER_EN_TO_KR_2[work.elderlyInfo.gender]}`,
+      detail: `${work.recruitmentInfo.elderlyInfo.age}세 ${GENDER_EN_TO_KR_2[work.recruitmentInfo.elderlyInfo.gender]}`,
     },
     {
       title: '주소',
-      detail: work.elderlyInfo.address,
+      detail: work.recruitmentInfo.elderlyInfo.address,
     },
     {
       title: '건강상태',
-      detail: work.elderlyInfo.healthCondition,
+      detail: work.recruitmentInfo.elderlyInfo.healthCondition,
     },
     {
       title: '거주형태',
-      detail: work.elderlyInfo.hasInmate ? '동거중' : '독거중',
+      detail: work.recruitmentInfo.elderlyInfo.hasInmate ? '동거중' : '독거중',
     },
     {
       title: '애완동물',
-      detail: work.elderlyInfo.hasPet ? '있음' : '없음',
+      detail: work.recruitmentInfo.elderlyInfo.hasPet ? '있음' : '없음',
     },
   ];
 
-  const workContentInfo = [
+  const workCareInfo = [
     {
       title: '케어항목',
       detail: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {work.recruitmentInfo.careTypes.map((caretype) => (
+          {work.recruitmentInfo.elderlyInfo.detailCareTypes.map((caretype) => (
             <label key={caretype.careType} className="detail">
               {caretype.careType} - {caretype.detailCareTypes}
             </label>
@@ -73,6 +73,9 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
         </div>
       ),
     },
+  ];
+
+  const workExtraInfo = [
     {
       title: '기타',
       detail: work.recruitmentInfo.description,
@@ -82,16 +85,16 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
   const institutionInfo = [
     {
       title: '기관명',
-      detail: work.institutionInfo.name,
+      detail: work.recruitmentInfo.institutionInfo.name,
     },
     {
       title: '주소',
-      detail: work.institutionInfo.address,
+      detail: work.recruitmentInfo.institutionInfo.address,
     },
   ];
 
   return (
-    <Container style={{ marginBottom: date ? '' : '92px' }}>
+    <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         right={
@@ -108,9 +111,9 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
             <label className="institution">
               {work.recruitmentInfo.institutionInfo.name}
             </label>
-            {date && (
-              <label className="date">{date.replace(/-/g, '.')} 신청</label>
-            )}
+            <label className="date">
+              {formatDateTime(work.recruitmentInfo.createdAt, true)}
+            </label>
           </ApplyDate>
 
           <label className="work-title">{work.recruitmentInfo.title}</label>
@@ -130,56 +133,37 @@ const CaregiverWorkDetail = ({ work, date }: CaregiverWorkDetailProps) => {
           )}
         </div>
 
-        <InfoDisplay
-          width="72px"
-          gapColumn="8px"
-          gapRow="20px"
-          items={workInfo}
-        />
+        <InfoDisplay width="72px" gapRow="20px" items={workInfo} />
       </WorkInfoWrapper>
 
       <Border />
 
       <SectionWrapper>
         <label className="section-title">어르신 정보</label>
-
         <div className="info">
-          <img src={work.elderlyInfo.profileImageUrl} />
-          <label className="section-title">{work.elderlyInfo.name}</label>
+          <img src={work.recruitmentInfo.elderlyInfo.profileImageUrl} />
+          <label className="section-title">
+            {work.recruitmentInfo.elderlyInfo.name}
+          </label>
         </div>
-
-        <InfoDisplay
-          width="56px"
-          gapColumn="8px"
-          gapRow="24px"
-          items={elderlyInfo}
-        />
+        <InfoDisplay width="56px" gapRow="24px" items={elderlyInfo} />
       </SectionWrapper>
 
       <Border />
 
       <SectionWrapper>
         <label className="section-title">근무 내용</label>
-
-        <InfoDisplay
-          width="56px"
-          gapColumn="8px"
-          gapRow="24px"
-          items={workContentInfo}
-        />
+        <InfoDisplay width="56px" gapRow="24px" items={workCareInfo} />
+        {work.recruitmentInfo.description && (
+          <InfoDisplay width="56px" gapRow="24px" items={workExtraInfo} />
+        )}
       </SectionWrapper>
 
       <Border />
 
       <SectionWrapper>
         <label className="section-title">기관 정보</label>
-
-        <InfoDisplay
-          width="56px"
-          gapColumn="8px"
-          gapRow="24px"
-          items={institutionInfo}
-        />
+        <InfoDisplay width="56px" gapRow="24px" items={institutionInfo} />
       </SectionWrapper>
     </Container>
   );
@@ -189,6 +173,7 @@ export default CaregiverWorkDetail;
 
 const Container = styled.div`
   margin: auto 20px;
+  margin-bottom: 92px;
 
   div {
     display: flex;

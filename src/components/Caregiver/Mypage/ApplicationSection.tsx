@@ -57,16 +57,18 @@ const ApplicationSection = ({
 
   return (
     <SectionWrapper>
-      <label className="title-label">일자리 신청서</label>
+      <label className="title-label">일자리 지원서</label>
       {data ? (
-        <Application>
+        <Application
+          onClick={() => handleNavigate('/caregiver/my/application')}
+        >
           <div className="top">
             <div className="left">
               <div className="dateWrapper">
                 <label className="date">최근 수정일 </label>
                 <span>{data.lastModifiedDate.replaceAll('-', '.')}</span>
               </div>
-              <label className="title">일자리 신청서</label>
+              <label className="title">일자리 지원서</label>
             </div>
             <div className="right">
               <Toggle
@@ -74,7 +76,7 @@ const ApplicationSection = ({
                 onChange={handleToggleChange}
               />
               <ToggleLabel isBlue={isToggleChecked}>
-                {isToggleChecked ? '신청중' : '미신청'}
+                {isToggleChecked ? '지원중' : '미지원'}
               </ToggleLabel>
             </div>
           </div>
@@ -82,22 +84,24 @@ const ApplicationSection = ({
         </Application>
       ) : (
         <NoContent>
-          <ApplicationIcon />
-          <label className="title">아직 등록된 신청서가 없어요!</label>
-          <label className="detail">
-            일자리 신청서를 등록하고
-            <br />
-            나에게 딱 맞는 일자리 확인하세요!
-          </label>
+          <NoApplication>
+            <ApplicationIcon />
+            <label className="title">아직 등록된 신청서가 없어요!</label>
+            <label className="detail">
+              일자리 신청서를 등록하고
+              <br />
+              나에게 딱 맞는 일자리 확인하세요!
+            </label>
+          </NoApplication>
+          <Button
+            height="52px"
+            variant="subBlue"
+            onClick={() => handleNavigate('/caregiver/my/application')}
+          >
+            지원서 등록하기
+          </Button>
         </NoContent>
       )}
-      <Button
-        height="52px"
-        variant="subBlue"
-        onClick={() => handleNavigate('/caregiver/my/application')}
-      >
-        {data ? '신청서 수정하기' : '신청서 작성하기'}
-      </Button>
     </SectionWrapper>
   );
 };
@@ -174,7 +178,12 @@ const ToggleLabel = styled.label<{ isBlue: boolean | undefined }>`
 `;
 
 const NoContent = styled.div`
-  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const NoApplication = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;

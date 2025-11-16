@@ -9,13 +9,16 @@ import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { usePutCareerMutation } from '@/hooks/Caregiver/mutation/usePutCareerMutation';
 import { useCareerQuery } from '@/api/caregiver';
+import Modal from '@/components/common/Modal/Modal';
+import ModalLimit from '@/components/common/Modal/ModalLimit';
 
 const CaregiverCareerPage = () => {
-  const { handleGoBack } = useHandleNavigate();
+  const { handleNavigate, handleGoBack } = useHandleNavigate();
 
   const { data } = useCareerQuery();
 
   const [isChanged, setIsChanged] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [title, setTitle] = useState('');
   const [introduce, setIntroduce] = useState('');
@@ -63,7 +66,7 @@ const CaregiverCareerPage = () => {
     };
 
     console.log(careerData);
-    updateCareer(careerData, { onSuccess: handleGoBack });
+    updateCareer(careerData, { onSuccess: () => setIsModalOpen(true) });
   };
 
   return (
@@ -125,6 +128,16 @@ const CaregiverCareerPage = () => {
           {data?.title ? '경력서 수정하기' : '경력서 등록하기'}
         </Button>
       </Bottom>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <ModalLimit
+          title="경력서 작성이 완료되었습니다!"
+          detail={'지원자님의 경력에 딱 맞는\n더 많은 일자리를 추천해드립니다.'}
+          onClose={() => setIsModalOpen(false)}
+          handleBtnClick={() => handleNavigate('/caregiver/my')}
+          button="내 경력서 보기"
+        />
+      </Modal>
     </Container>
   );
 };

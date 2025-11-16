@@ -1,6 +1,9 @@
 import styled from 'styled-components';
+import { useMemo, useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Mywork } from '@/assets/icons/caregiver/MyWork.svg';
+import { ReactComponent as Close } from '@/assets/icons/CloseCircle.svg';
+import { ReactComponent as SearchIcon } from '@/assets/icons/Search.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverMyworkCard from '@/components/Caregiver/Home/CaregiverMyworkCard';
@@ -15,6 +18,19 @@ const CaregiverMyworkPage = () => {
     console.log('getMyWorkList 에러: ', error);
   }
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredWorks = useMemo(() => {
+    const originalWorks = data;
+
+    if (!searchTerm) return originalWorks;
+
+    return originalWorks?.filter((work) =>
+      work.elderlyInfo.name.includes(searchTerm),
+    );
+  }, [searchTerm, data]);
+
+  const workList = searchTerm ? filteredWorks : data;
+
   return (
     <Container isData={!!(data && data.length > 0)}>
       <NavBar
@@ -24,7 +40,18 @@ const CaregiverMyworkPage = () => {
       />
       {data && data.length > 0 ? (
         <CardWrapper>
-          {data?.map((workInfo) => (
+          <SearchBarWrapper>
+            <SearchBar
+              placeholder="검색할 이름을 입력해주세요."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <IconWrapper>
+              {searchTerm && <Close onClick={() => setSearchTerm('')} />}
+              <Search onClick={() => setSearchTerm(searchTerm)} />
+            </IconWrapper>
+          </SearchBarWrapper>
+          {workList?.map((workInfo) => (
             <CaregiverMyworkCard key={workInfo.id} workInfo={workInfo} />
           ))}
         </CardWrapper>
@@ -76,11 +103,61 @@ const NavCenter = styled.div`
 `;
 
 const CardWrapper = styled.div`
-  margin: 20px;
+  margin: 0px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 16px;
+`;
+
+const SearchBarWrapper = styled.div`
+  margin-bottom: 8px;
+  position: relative;
+
+  svg {
+    cursor: pointer;
+  }
+`;
+
+const SearchBar = styled.input`
+  box-sizing: border-box;
+  width: 100%;
+  height: 52px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  background: ${({ theme }) => theme.colors.white};
+
+  color: ${({ theme }) => theme.colors.gray900};
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray300};
+  }
+
+  &:hover,
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.colors.mainBlue};
+    outline: none;
+    caret-color: ${({ theme }) => theme.colors.mainBlue};
+  }
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  gap: 6px;
+
+  position: absolute;
+  top: 15px;
+  right: 16px;
+`;
+
+const Search = styled(SearchIcon)`
+  circle,
+  path {
+    stroke: ${({ theme }) => theme.colors.gray700};
+  }
 `;
 
 const NoWorkingCard = styled.div`

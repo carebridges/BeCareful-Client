@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import ProfileCard from '@/components/shared/ProfileCard';
+import ProfileCard from '@/components/common/card/ProfileCard';
 import BelongCard from '@/components/SocialWorker/MyPage/BelongCard';
-import AssociationCard from '@/components/shared/AssociationCard';
-import InstitutionCard from '@/components/shared/InstitutionCard';
+import AssociationCard from '@/components/common/card/AssociationCard';
+import InstitutionCard from '@/components/common/card/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
@@ -27,10 +26,7 @@ const SocialworkerMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const { data } = useGetSocialWorkerMy();
-  const isSocialworker =
-    data?.socialWorkerInfo.institutionRank === 'SOCIAL_WORKER';
   const isNone = data?.socialWorkerInfo.associationRank === 'NONE';
-  const isMember = data?.socialWorkerInfo.associationRank === 'MEMBER';
 
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
@@ -60,7 +56,7 @@ const SocialworkerMyPage = () => {
           profileImgURL={data?.institutionInfo.institutionImageUrl ?? ''}
           name={data?.socialWorkerInfo.name ?? ''}
           nickname={data?.socialWorkerInfo.nickName ?? ''}
-          // point={1500}
+          chevronClick={() => handleNavigate('/socialworker/my/profile')}
           phoneNumber={data?.socialWorkerInfo.phoneNumber ?? ''}
           age={data?.socialWorkerInfo.age ?? 0}
           gender={GENDER_EN_TO_KR_2[data?.socialWorkerInfo.gender ?? 'FEMALE']}
@@ -85,14 +81,6 @@ const SocialworkerMyPage = () => {
             }
           />
         )}
-
-        <Button
-          height="52px"
-          variant="subBlue"
-          onClick={() => handleNavigate('/socialworker/my/profile')}
-        >
-          프로필 수정하기
-        </Button>
       </ProfileWrapper>
 
       <Border />
@@ -100,21 +88,12 @@ const SocialworkerMyPage = () => {
       <SectionWrapper>
         <label className="section-title">기관 정보</label>
         <InstitutionCard
-          date={data?.institutionInfo.institutionLastUpdate ?? ''}
           institution={data?.institutionInfo.institutionName ?? ''}
+          institutionRank={data?.socialWorkerInfo.institutionRank}
           year={data?.institutionInfo.institutionOpenYear ?? 0}
           types={data?.institutionInfo.facilityTypes ?? []}
           phoneNumber={data?.institutionInfo.institutionPhoneNumber ?? ''}
         />
-        {!isSocialworker && (
-          <Button
-            height="52px"
-            variant="subBlue"
-            onClick={() => handleNavigate('/socialworker/my/institution')}
-          >
-            기관 정보 수정하기
-          </Button>
-        )}
       </SectionWrapper>
 
       {!isNone && (
@@ -125,26 +104,13 @@ const SocialworkerMyPage = () => {
             <label className="section-title">협회 정보</label>
             <AssociationCard
               association={data?.associationInfo.associationName ?? ''}
+              onClick={() => handleNavigate('/socialworker/my/association')}
               type={
                 ASSOCIATION_RANK_EN_TO_KR[
                   data?.socialWorkerInfo.associationRank ?? 'MEMBER'
                 ]
               }
-              rank={
-                INSTITUTION_RANK_EN_TO_KR[
-                  data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
-                ]
-              }
             />
-            {!isMember && (
-              <Button
-                height="52px"
-                variant="subBlue"
-                onClick={() => handleNavigate('/socialworker/my/association')}
-              >
-                협회 정보 변경하기
-              </Button>
-            )}
           </SectionWrapper>
         </>
       )}

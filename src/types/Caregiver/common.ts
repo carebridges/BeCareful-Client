@@ -19,13 +19,14 @@ export type WorkSalaryUnitType = 'HOUR' | 'DAY' | 'MONTH' | 'YEAR';
 // 매칭 결과
 export type MatchingResultStatus = '높음' | '보통' | '낮음';
 
+export type RecruitmentStatus = '모집중' | '모집완료' | '공고마감';
+
 /* 공통 인터페이스 정의 */
 // 근무 지역
 export interface WorkLocation {
   siDo: string;
   siGuGun: string;
   eupMyeonDong: string;
-  fullAddress: string;
 }
 
 // 케어타입
@@ -61,10 +62,26 @@ export interface RecruitmentInfo {
   workDays: WorkDay[];
   workStartTime: string;
   workEndTime: string;
+  workLocation: string;
+  workSalaryUnitType: WorkSalaryUnitType;
+  workSalaryAmount: number;
+  isRecruiting: boolean;
+  institutionInfo: InstitutionInfo;
+  createdTime: string;
+}
+
+export interface MyRecruitmentInfo {
+  recruitmentId: number;
+  title: string;
+  recruitmentStatus: RecruitmentStatus;
+  workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
   workSalaryUnitType: WorkSalaryUnitType;
   workSalaryAmount: number;
   description: string;
-  isRecruiting: boolean;
+  createdAt: string;
+  elderlyInfo: ElderlyInfo;
   institutionInfo: InstitutionInfo;
 }
 
@@ -80,10 +97,12 @@ export interface Recruitment {
 export interface ElderlyInfo {
   name: string;
   gender: 'MALE' | 'FEMALE';
+  bitrhDate: string;
   age: number;
   address: string;
   profileImageUrl: string;
   careLevel: string;
+  detailCareTypes: CareType[];
   healthCondition: string;
   institutionName: string;
   hasInmate: boolean;
