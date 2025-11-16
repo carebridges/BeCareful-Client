@@ -1,39 +1,52 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
-import InputBox from '@/components/common/InputBox/InputBox';
+import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
+import { SearchInput } from '@/components/SignUp/CareGiverSignUpFunnel/common/SearchInput';
+import { PostcodeModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step5CurrentAddress/PostcodeEmbed';
 import { CertificateSelectModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateSelectModal';
-import { CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateComponentMap';
+import { CAREGIVER_CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateComponentMap';
+import InputBox from '@/components/common/InputBox/InputBox';
+import BirthInputBox from '@/components/common/InputBox/BirthInputBox';
+import ProfileImgUploader from '@/components/common/ProfileImgUploader';
 import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
 import { CaregiverMyRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
 import { usePutMyMutation } from '@/hooks/Caregiver/mutation/usePutMyMutation';
 import { useCaregiverBasicForm } from '@/hooks/Caregiver/mypage/useCaregiverBasicForm';
 import { useCaregiverCertForm } from '@/hooks/Caregiver/mypage/useCaregiverCertForm';
+import { useProfileImg } from '@/hooks/useProfileImg';
 import { useCaregiverMyPageInfoQuery } from '@/api/caregiver';
-import { useUploadCareGiverProfileImage } from '@/api/caregiverFunnel';
 
 const CaregiverEditProfilePage = () => {
-  const { handleGoBack } = useHandleNavigate();
+  const { handleNavigate, handleGoBack } = useHandleNavigate();
   const [isChanged, setIsChanged] = useState(false);
   const { data, error } = useCaregiverMyPageInfoQuery();
   if (error) {
     console.log('getCaregiverMyPageInfo 에러: ', error);
   }
 
+  const profileUpload = useProfileImg('/caregiver/profile-img/presigned-url');
+  const [isImgActionSheetOpen, setIsImgActionSheetOpen] = useState(false);
+
   const {
+    name,
+    birth,
     phoneNumber,
     isEduChecked,
     isCarChecked,
-    handlePhoneNumber,
     handleEduToggleChange,
     handleCarToggleChange,
+    streetAddress,
+    detailAddress,
+    isAddressModalOpen,
+    setIsAddressModalOpen,
+    handleAddressComplete,
+    handleDetailAddressChange,
   } = useCaregiverBasicForm(data?.caregiverInfo, setIsChanged);
 
   const {
@@ -41,36 +54,37 @@ const CaregiverEditProfilePage = () => {
     socialworkerCert,
     nursingCert,
     selectedKeys,
-    isModalOpen,
-    setIsModalOpen,
+    isAddCertModalOpen,
+    setIsAddCertModalOpen,
     handleCertificateChange,
     handleAddCertificate,
+    handleDeleteCertificate,
   } = useCaregiverCertForm(
     data?.caregiverInfo.caregiverDetailInfo,
     setIsChanged,
   );
 
-  const { mutate: uploadImage } = useUploadCareGiverProfileImage();
-  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<File>({
-      initialImgUrl: data?.caregiverInfo.profileImageUrl,
-      setIsChanged,
-      uploadMutate: uploadImage,
-    });
-
   const { mutate: updateMy } = usePutMyMutation();
   const handleEditBtnClick = () => {
+    const profileUrl = profileUpload.getProfileImageKeyForServer();
+
     const caregiverData: CaregiverMyRequest = {
       phoneNumber: phoneNumber,
+      profileImageTempKey: profileUrl,
       caregiverCertificate: caregiverCert,
       socialWorkerCertificate: socialworkerCert,
       nursingCareCertificate: nursingCert,
+      address: {
+        streetAddress: streetAddress,
+        detailAddress: detailAddress,
+      },
       isHavingCar: isCarChecked,
       isCompleteDementiaEducation: isEduChecked,
     };
+    console.log(caregiverData);
     updateMy(caregiverData, {
       onSuccess: () => {
-        handleGoBack();
+        handleNavigate('/caregiver/my');
         setIsChanged(false);
       },
     });
@@ -80,51 +94,78 @@ const CaregiverEditProfilePage = () => {
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
-        center={<NavCenter>프로필 수정하기</NavCenter>}
+        center={<NavCenter>프로필 수정</NavCenter>}
         color="white"
       />
 
-      <ProfileImgWrapper>
-        <div>
-          <img src={imgUrl} alt="협회 프로필 이미지" />
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-          />
-          <Camera onClick={handleCameraClick} />
-        </div>
-      </ProfileImgWrapper>
-
-      <InputBox
-        title="휴대전화 번호"
-        placeholder="예) 010-1234-5678"
-        value={phoneNumber}
-        onChange={handlePhoneNumber}
+      {/* <ProfileImageEditor<File, UploadResult>
+        initialImgUrl={data?.caregiverInfo.profileImageUrl}
+        uploadMutate={uploadImage}
+        setIsChanged={setIsChanged}
+        onImageChange={(url) => setProfileImgUrl(url)}
+        getUrl={(res) => res.presignedUrl}
+        setIsImgChanged={setIsImgChanged}
+        actionSheetTitle="프로필 사진을 설정해주세요"
+      /> */}
+      <ProfileImgUploader
+        hook={profileUpload}
+        initialImgUrl={data?.caregiverInfo.profileImageUrl ?? ''}
+        defaultImgUrl=""
+        isImgActionSheetOpen={isImgActionSheetOpen}
+        setIsImgActionSheetOpen={setIsImgActionSheetOpen}
+        setIsChanged={setIsChanged}
       />
 
-      <>
+      <InputWrapper>
+        <InputBox title="이름" gray={true} value={name} />
+        <BirthInputBox birth={birth} />
+        <InputBox title="휴대전화" gray={true} value={phoneNumber} />
+        <AddressWrapper>
+          <label className="title">
+            주소 <span>*</span>
+          </label>
+          <SearchInput
+            placeholder="도로명, 지번, 건물명 검색"
+            onClick={() => setIsAddressModalOpen(true)}
+            value={streetAddress}
+            readOnly
+          />
+          <PlainInputBox
+            width=""
+            state="default"
+            placeholder="상세 주소 입력"
+            guide=""
+            value={detailAddress}
+            onChange={handleDetailAddressChange}
+          />
+        </AddressWrapper>
+      </InputWrapper>
+
+      <Border style={{ marginTop: '12px', marginBottom: '24px' }} />
+
+      <CertWrapper>
         {selectedKeys.map((key) => {
-          const Card = CERTIFICATE_CARD_MAP[key];
+          const Card = CAREGIVER_CERTIFICATE_CARD_MAP[key];
           const label = CERTIFICATE_LABEL[key];
           return (
             <CertCardWrapper key={key}>
               <Card
                 initialType={label}
                 onChange={(data) => handleCertificateChange(key, data)}
+                initialCert={data?.caregiverInfo.caregiverDetailInfo?.[key]}
+                onDelete={() => handleDeleteCertificate(key)}
               />
             </CertCardWrapper>
           );
         })}
-      </>
+      </CertWrapper>
 
       {selectedKeys.length < 3 && (
         <CardWrapper>
           <Button
             height="52px"
             variant="subBlue"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => setIsAddCertModalOpen(true)}
             style={{
               display: 'flex',
               gap: '10px',
@@ -137,8 +178,8 @@ const CaregiverEditProfilePage = () => {
           </Button>
           <CertificateSelectModal
             width="312px"
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            isOpen={isAddCertModalOpen}
+            onClose={() => setIsAddCertModalOpen(false)}
             onAddCertificate={handleAddCertificate}
           />
         </CardWrapper>
@@ -168,6 +209,12 @@ const CaregiverEditProfilePage = () => {
           프로필 수정하기
         </Button>
       </Bottom>
+
+      <PostcodeModal
+        open={isAddressModalOpen}
+        onClose={() => setIsAddressModalOpen(false)}
+        onComplete={handleAddressComplete}
+      />
     </Container>
   );
 };
@@ -177,10 +224,6 @@ export default CaregiverEditProfilePage;
 const Container = styled.div`
   margin: auto 20px;
   margin-bottom: 100px;
-
-  div {
-    display: flex;
-  }
 
   label {
     color: ${({ theme }) => theme.colors.gray900};
@@ -208,38 +251,36 @@ const Border = styled.div`
   margin-left: -20px;
 `;
 
-const ProfileImgWrapper = styled.div`
+const InputWrapper = styled.div`
+  padding: 16px 0px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+`;
 
-  div {
-    width: 100px;
-    height: 100px;
-    position: relative;
+const AddressWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .title {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
 
-  img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 1px solid ${({ theme }) => theme.colors.gray100};
-    object-fit: cover;
-  }
-
-  input {
-    display: none;
-  }
-
-  svg {
-    position: absolute;
-    top: 68px;
-    left: 68px;
-    cursor: pointer;
+  span {
+    color: ${({ theme }) => theme.colors.mainBlue};
   }
 `;
 
+const CertWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
 const CertCardWrapper = styled.div`
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -255,6 +296,7 @@ const CardWrapper = styled.div`
 
 const ToggleWrapper = styled.div`
   padding: 20px 0px;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 
@@ -265,6 +307,7 @@ const ToggleWrapper = styled.div`
 
 const Bottom = styled.div`
   padding: 20px;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;

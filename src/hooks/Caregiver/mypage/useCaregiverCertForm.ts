@@ -8,21 +8,17 @@ export const useCaregiverCertForm = (
   data: CaregiverDetailInfo | undefined,
   setIsChanged: Dispatch<SetStateAction<boolean>>,
 ) => {
-  const defaultCert: CertificateInfo = {
-    grade: 'FIRST',
-    certificateNumber: '',
-  };
-
-  const [caregiverCert, setCaregiverCert] =
-    useState<CertificateInfo>(defaultCert);
+  const [caregiverCert, setCaregiverCert] = useState<CertificateInfo | null>(
+    null,
+  );
   const [socialworkerCert, setSocialworkerCert] =
-    useState<CertificateInfo>(defaultCert);
-  const [nursingCert, setNursingCert] = useState<CertificateInfo>(defaultCert);
+    useState<CertificateInfo | null>(null);
+  const [nursingCert, setNursingCert] = useState<CertificateInfo | null>(null);
 
   const [selectedKeys, setSelectedKeys] = useState<CertificateKey[]>([
     'caregiverCertificate',
   ]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddCertModalOpen, setIsAddCertModalOpen] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -32,24 +28,17 @@ export const useCaregiverCertForm = (
       if (data.caregiverCertificate) {
         setCaregiverCert(data.caregiverCertificate);
         initialSelectedKeys.push('caregiverCertificate');
-      } else {
-        setCaregiverCert(defaultCert);
       }
 
       // 사회복지사 자격증
       if (data.socialWorkerCertificate) {
         setSocialworkerCert(data.socialWorkerCertificate);
         initialSelectedKeys.push('socialWorkerCertificate');
-      } else {
-        setSocialworkerCert(defaultCert);
       }
-
       // 간호조무사 자격증
       if (data.nursingCareCertificate) {
         setNursingCert(data.nursingCareCertificate);
         initialSelectedKeys.push('nursingCareCertificate');
-      } else {
-        setNursingCert(defaultCert);
       }
 
       setSelectedKeys(initialSelectedKeys);
@@ -93,7 +82,21 @@ export const useCaregiverCertForm = (
     if (!key || selectedKeys.includes(key)) return;
 
     setSelectedKeys((prev) => [...prev, key]);
-    setIsModalOpen(false);
+    setIsAddCertModalOpen(false);
+    setIsChanged(true);
+  };
+
+  const handleDeleteCertificate = (keyToDelete: CertificateKey) => {
+    setSelectedKeys((prev) => prev.filter((key) => key !== keyToDelete));
+
+    if (keyToDelete === 'caregiverCertificate') {
+      setCaregiverCert(null);
+    } else if (keyToDelete === 'socialWorkerCertificate') {
+      setSocialworkerCert(null);
+    } else if (keyToDelete === 'nursingCareCertificate') {
+      setNursingCert(null);
+    }
+
     setIsChanged(true);
   };
 
@@ -102,9 +105,10 @@ export const useCaregiverCertForm = (
     socialworkerCert,
     nursingCert,
     selectedKeys,
-    isModalOpen,
-    setIsModalOpen,
+    isAddCertModalOpen,
+    setIsAddCertModalOpen,
     handleCertificateChange,
     handleAddCertificate,
+    handleDeleteCertificate,
   };
 };
