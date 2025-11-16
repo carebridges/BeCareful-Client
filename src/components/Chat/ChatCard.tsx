@@ -60,7 +60,8 @@ const ChatCard = ({
         {name} 어르신 근무 조건 확인 후<br />
         최종 승인하기 버튼을 눌러주세요.
       </div>
-      <InfoDisplay items={chatInfo} gapColumn="8px" isChat={true} />
+      {/* <InfoDisplay items={chatInfo} gapColumn="8px" isChat={true} /> */}
+      <InfoDisplay items={chatInfo} gapColumn="8px" />
       {hasButton && (
         <Button height="40px" variant="subBlue" onClick={buttonClick}>
           {buttonContent}
