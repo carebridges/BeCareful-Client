@@ -13,10 +13,10 @@ interface CaregiverMyworkCardProps {
 const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
   const work = [
     {
-      title: '근무요일',
-      detail: formatDaysToKR(workInfo.workDays),
+      title: '근무일정',
+      detail: `${formatDaysToKR(workInfo.workDays)} ${workInfo.workStartTime}~${workInfo.workEndTime}`,
     },
-    { title: '주소', detail: workInfo.elderlyInfo.address },
+    { title: '근무지역', detail: workInfo.elderlyInfo.address },
     { title: '케어항목', detail: formatCaretype(workInfo.careTypes, 2) },
     { title: '건강상태', detail: workInfo.elderlyInfo.healthCondition },
     { title: '기관명', detail: workInfo.elderlyInfo.institutionName },

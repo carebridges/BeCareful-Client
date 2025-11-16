@@ -4,12 +4,10 @@ import {
   WorkSalaryUnitType,
   WorkTime,
   WorkApplication,
-  ElderlyInfo,
   Recruitment,
-  RecruitmentInfo,
   MatchingResultStatus,
+  MyRecruitmentInfo,
 } from '@/types/Caregiver/common';
-import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 /* 요양보호사 일자리 화면 */
 // 일자리 신청 정보 조회 응답
@@ -33,9 +31,7 @@ export type MatchingListResponse = Recruitment[];
 
 // 매칭 공고 상세 조회 응답
 export interface MatchingRecruitmentResponse {
-  recruitmentInfo: RecruitmentInfo;
-  elderlyInfo: ElderlyInfo;
-  institutionInfo: InstitutionInfo;
+  recruitmentInfo: MyRecruitmentInfo;
   matchingResultStatus: MatchingResultStatus;
   isHotRecruitment: boolean;
   isHourlySalaryTop: boolean;

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { Button } from '@/components/common/Button/Button';
 import { SALARY_EN_TO_KR } from '@/constants/common/salary';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Recruitment } from '@/types/Caregiver/common';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
+import { formatDateTime } from '@/utils/formatTime';
 
 type ColorKey = keyof typeof colors;
 interface CaregiverWorkCardProps {
@@ -31,17 +31,23 @@ const CaregiverWorkCard = ({
       detail: formatCaretype(recruitment.recruitmentInfo.careTypes, 2),
     },
     {
-      title: '근무요일',
-      detail: formatDaysToKR(recruitment.recruitmentInfo.workDays),
+      title: '근무일정',
+      detail: `${formatDaysToKR(recruitment.recruitmentInfo.workDays)} ${recruitment.recruitmentInfo.workStartTime}~${recruitment.recruitmentInfo.workEndTime}`,
     },
     {
-      title: '근무시간',
-      detail: `${recruitment.recruitmentInfo.workStartTime} ~ ${recruitment.recruitmentInfo.workEndTime}`,
+      title: '근무지역',
+      detail: recruitment.recruitmentInfo.workLocation,
     },
   ];
 
   return (
-    <CardContainer>
+    <CardContainer
+      onClick={() =>
+        handleNavigate(
+          `/caregiver/${navigatePath}/${recruitment.recruitmentInfo.recruitmentId}`,
+        )
+      }
+    >
       <State bgColor={bgColor} stateColor={stateColor}>
         <div className="circle" />
         <label className="state">{stateLabel}</label>
@@ -72,27 +78,22 @@ const CaregiverWorkCard = ({
 
       <InfoDisplay items={applyInfo} gapColumn="4px" gapRow="12px" />
 
-      <Salary>
-        <label className="type">
-          {SALARY_EN_TO_KR[recruitment.recruitmentInfo.workSalaryUnitType]}
-        </label>
-        <label className="amount">
-          {recruitment.recruitmentInfo.workSalaryAmount.toLocaleString('ko-KR')}
-          <span>원</span>
-        </label>
-      </Salary>
-
-      <Button
-        height="52px"
-        variant="subBlue"
-        onClick={() =>
-          handleNavigate(
-            `/caregiver/${navigatePath}/${recruitment.recruitmentInfo.recruitmentId}`,
-          )
-        }
-      >
-        자세히 보기
-      </Button>
+      <Bottom>
+        <Salary>
+          <label className="type">
+            {SALARY_EN_TO_KR[recruitment.recruitmentInfo.workSalaryUnitType]}
+          </label>
+          <label className="amount">
+            {recruitment.recruitmentInfo.workSalaryAmount.toLocaleString(
+              'ko-KR',
+            )}
+            <span>원</span>
+          </label>
+        </Salary>
+        <div className="date">
+          {formatDateTime(recruitment.recruitmentInfo.createdTime)}
+        </div>
+      </Bottom>
     </CardContainer>
   );
 };
@@ -167,6 +168,18 @@ const Tags = styled.div`
     background: ${({ theme }) => theme.colors.subBlue};
     color: ${({ theme }) => theme.colors.mainBlue};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  }
+`;
+
+const Bottom = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+
+  .date {
+    color: ${({ theme }) => theme.colors.gray800};
+    font-size: ${({ theme }) => theme.typography.fontSize.body4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
   }
 `;
 
