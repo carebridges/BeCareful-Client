@@ -26,6 +26,8 @@ export interface CaregiverHomeResponse {
 export interface CaregiverCompletedMatching {
   id: number;
   workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
   careTypes: string[];
   note: string;
   elderlyInfo: ElderlyInfo;

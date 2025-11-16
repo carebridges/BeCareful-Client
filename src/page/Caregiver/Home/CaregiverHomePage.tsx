@@ -81,9 +81,9 @@ const CaregiverHomePage = () => {
         <ButtonsWrapper>
           <ApplyButton onClick={() => handleNavigate('/caregiver/my')}>
             <div className="top">
-              <label>일자리 신청</label>
+              <label>일자리 지원</label>
               <label className="title">
-                {data?.isApplying ? '신청중' : '미신청'}
+                {data?.isApplying ? '지원중' : '미지원'}
               </label>
             </div>
             <div className="bottom">
