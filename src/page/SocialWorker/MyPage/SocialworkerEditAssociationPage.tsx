@@ -1,47 +1,47 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
-import { Button } from '@/components/common/Button/Button';
+import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
 import { ExpelButton } from '@/components/common/Button/LogoutButton';
 import { NavBar } from '@/components/common/NavBar/NavBar';
+import AgreeSectionCommunity from '@/components/SocialWorker/MyPage/AgreeSectionCommunity';
 import InputBox from '@/components/common/InputBox/InputBox';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useAssociationChangeForm } from '@/hooks/Community/Association/useAssociationChangeForm';
+import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
+import { CommunityAgreementValues } from '@/types/Socialworker/common';
+import { usePutAssociationLeave } from '@/api/communityAssociation';
 import {
-  UploadResult,
-  useProfileImageUpload,
-} from '@/hooks/useProfileImageUpload';
-import {
-  useAssociationInfo,
-  usePutAssociationInfo,
-  usePutAssociationLeave,
-} from '@/api/communityAssociation';
-import { AssociationInfoRequest } from '@/types/Community/association';
-import { useUploadAssociationProfileImage } from '@/api/communityFunnel';
+  usePatchSocialAssociationInfo,
+  useSocialAssociationInfo,
+} from '@/api/socialworker';
+import ModalLimit from '@/components/common/Modal/ModalLimit';
+import { getTodayDateTime } from '@/utils/getTodayDate';
 
 const SocialworkerEditAssociationPage = () => {
   const { handleGoBack } = useHandleNavigate();
-  const [isChanged, setIsChanged] = useState(false);
-  const { data } = useAssociationInfo();
+  // const [isChanged, setIsChanged] = useState(false);
 
-  const { name, year, handleNameChange, handleYearChange } =
-    useAssociationChangeForm(data, setIsChanged);
+  const { data } = useSocialAssociationInfo();
 
-  const { mutate: uploadImage } = useUploadAssociationProfileImage();
-  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<File, UploadResult>({
-      initialImgUrl: data?.associationProfileImageUrl,
-      setIsChanged,
-      uploadMutate: uploadImage,
-      getUrl: (res) => res.previewUrl,
-    });
+  const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
+
+  const defalutAgreemet = data?.communityAgreement ?? {
+    agreedToTerms: true,
+    agreedToCollectPersonalInfo: true,
+    agreedToReceiveMarketingInfo: true,
+  };
+  const [agreementStates, setAgreementStates] =
+    useState<CommunityAgreementValues>(defalutAgreemet);
+  const handleAgreementChange = (
+    updatedAgreements: CommunityAgreementValues,
+  ) => {
+    setAgreementStates(updatedAgreements);
+  };
 
   const { mutate: leaveAssociation } = usePutAssociationLeave();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-
   const handleWithdraw = () => {
     console.log('협회탈퇴');
     leaveAssociation(undefined, {
@@ -52,69 +52,71 @@ const SocialworkerEditAssociationPage = () => {
     });
   };
 
-  const { mutate: updateAssociation } = usePutAssociationInfo();
-  const handleEditBtnClick = async () => {
-    const associationRequest: AssociationInfoRequest = {
-      associationImageUrl: imgUrl ?? data?.associationProfileImageUrl ?? null,
-      associationName: name,
-      associationEstablishedYear: Number(year),
-    };
-    updateAssociation(associationRequest, {
-      onSuccess: () => {
-        handleGoBack();
-        setIsChanged(false);
+  const { mutate: updateAssociation } = usePatchSocialAssociationInfo();
+  const handleMarketingClick = async () => {
+    updateAssociation(
+      {
+        isAgreedToReceiveMarketingInfo:
+          agreementStates?.agreedToReceiveMarketingInfo,
       },
-    });
+      {
+        onSuccess: () => {
+          // handleGoBack();
+          // setIsChanged(false);
+          setIsAgreeModalOpen(true);
+        },
+      },
+    );
   };
 
   return (
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
-        center={<NavCenter>협회 정보 수정</NavCenter>}
+        center={<NavCenter>소속 협회 정보</NavCenter>}
         color="white"
       />
 
-      <ProfileImgWrapper>
-        <div>
-          <img src={imgUrl} alt="협회 프로필 이미지" />
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-          />
-          <Camera onClick={handleCameraClick} />
-        </div>
-      </ProfileImgWrapper>
-
       <InputBox
-        title="협회명"
-        detail="협회의 정확한 명칭을 입력해 주세요."
-        placeholder="협회명을 입력해주세요"
-        value={name}
-        onChange={handleNameChange}
+        title="소속된 협회명"
+        gray={true}
+        value={data?.associationInfo.associationName}
       />
 
-      <InputBox
-        title="협회 설립일"
-        detail="협회의 설립일을 입력해 주세요."
-        placeholder="예) 2000"
-        value={year}
-        onChange={handleYearChange}
-        pattern="[0-9]{4}"
-        min="1900"
-        max={new Date().getFullYear()}
+      <CheckWrapper>
+        <div className="titleWrapper">
+          <label className="title">
+            협회 회원 유형 <span>*</span>
+          </label>
+        </div>
+        {['회장', '임원진', '회원'].map((type) => (
+          <CheckButton
+            key={type}
+            active={
+              ASSOCIATION_RANK_EN_TO_KR[data?.associationRank ?? 'MEMBER'] ===
+              type
+            }
+          >
+            <Check />
+            {type} 입니다
+          </CheckButton>
+        ))}
+      </CheckWrapper>
+
+      <AgreeSectionCommunity
+        communityAgreement={agreementStates}
+        onAgreementChange={handleAgreementChange}
+        onMarketingClick={handleMarketingClick}
       />
 
       <Border />
 
       <WithdrawWrapper>
-        <label className="title">탈퇴하기</label>
+        <label className="title">협회 탈퇴</label>
         <ExpelButton onClick={() => setIsWithdrawModalOpen(true)} />
       </WithdrawWrapper>
 
-      <Bottom>
+      {/* <Bottom>
         <Button
           height="56px"
           variant={isChanged ? 'mainBlue' : 'disabled'}
@@ -123,7 +125,7 @@ const SocialworkerEditAssociationPage = () => {
         >
           협회 정보 수정하기
         </Button>
-      </Bottom>
+      </Bottom> */}
 
       <Modal
         isOpen={isWithdrawModalOpen}
@@ -132,11 +134,23 @@ const SocialworkerEditAssociationPage = () => {
         <ModalButtons
           onClose={() => setIsWithdrawModalOpen(false)}
           title="정말 탈퇴 하시겠습니까?"
-          detail={`${data?.associationName} 커뮤니티에서 탈퇴됩니다.\n계속하시겠습니까?`}
+          detail={`${data?.associationInfo.associationName} 커뮤니티에서 탈퇴됩니다.\n계속하시겠습니까?`}
           left="취소"
           right="탈퇴하기"
           handleLeftBtnClick={() => setIsWithdrawModalOpen(false)}
           handleRightBtnClick={handleWithdraw}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={isAgreeModalOpen}
+        onClose={() => setIsAgreeModalOpen(false)}
+      >
+        <ModalLimit
+          onClose={() => setIsAgreeModalOpen(false)}
+          title={`마케팅 정보 수신에 ${data?.communityAgreement.agreedToReceiveMarketingInfo ? '철회' : '동의'}하셨습니다.`}
+          detail={getTodayDateTime()}
+          handleBtnClick={() => setIsAgreeModalOpen(false)}
         />
       </Modal>
     </Container>
@@ -166,34 +180,50 @@ const NavCenter = styled.div`
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;
 
-const ProfileImgWrapper = styled.div`
-  margin-top: -16px;
+const CheckWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
 
-  div {
-    width: 100px;
-    height: 100px;
-    position: relative;
+  .titleWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 1px solid ${({ theme }) => theme.colors.gray100};
-    object-fit: cover;
+  .title {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
 
-  input {
-    display: none;
+  span {
+    color: ${({ theme }) => theme.colors.mainBlue};
   }
+`;
 
-  svg {
-    position: absolute;
-    top: 68px;
-    left: 68px;
-    cursor: pointer;
+const CheckButton = styled.div<{ active: boolean }>`
+  height: 32px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1px solid
+    ${({ theme, active }) =>
+      active ? theme.colors.gray200 : theme.colors.gray100};
+  background: ${({ theme, active }) =>
+    active ? theme.colors.gray50 : theme.colors.white};
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: ${({ theme, active }) =>
+    active ? theme.colors.gray600 : theme.colors.gray900};
+  font-weight: ${({ theme, active }) =>
+    active
+      ? theme.typography.fontWeight.bold
+      : theme.typography.fontWeight.medium};
+
+  path {
+    fill: ${({ theme, active }) => (active ? theme.colors.gray600 : '')};
   }
 `;
 
@@ -216,17 +246,17 @@ const Border = styled.div`
   margin-left: -20px;
 `;
 
-const Bottom = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: ${({ theme }) => theme.colors.white};
-  border-top: 1px solid ${({ theme }) => theme.colors.gray50};
+// const Bottom = styled.div`
+//   padding: 20px;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+//   background: ${({ theme }) => theme.colors.white};
+//   border-top: 1px solid ${({ theme }) => theme.colors.gray50};
 
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`;
+//   position: fixed;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+// `;
