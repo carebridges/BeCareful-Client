@@ -1,19 +1,7 @@
 import { CARE_LEVELS } from '@/constants/socialworker/careLevels.socialWorker';
 import { CARE_TYPES } from '@/constants/socialworker/careTypes.socialWorker';
-
-export interface AreaSocial {
-  siDo: string;
-  siGuGun: string;
-  eupMyeonDong: string;
-}
-
-export interface AreaSelectData {
-  name: string;
-  gu: {
-    name: string;
-    dong: string[];
-  }[];
-}
+import { AreaSocial } from '@/types/common/matching';
+import { RecruitmentItem } from '@/types/Socialworker/matching';
 
 export type CareLevel = (typeof CARE_LEVELS)[number];
 
@@ -21,18 +9,21 @@ export type CareType = (typeof CARE_TYPES)[number];
 
 export type Gender = 'MALE' | 'FEMALE';
 
+export type ResidentialLocation = Pick<
+  AreaSocial,
+  'siDo' | 'siGuGun' | 'eupMyeonDong'
+> & {};
+
 export interface ElderlyRegisterPayload {
   name: string;
   birthday: string;
-  inmate: boolean;
-  pet: boolean;
+  hasInmate: boolean;
+  hasPet: boolean;
   gender: Gender;
   careLevel: CareLevel;
-  siDo: AreaSocial['siDo'];
-  siGuGun: AreaSocial['siGuGun'];
-  eupMyeonDong: AreaSocial['eupMyeonDong'];
+  residentialLocation: ResidentialLocation;
   detailAddress: string;
-  profileImageUrl: string;
+  profileImageTempKey: string;
   healthCondition: string;
   detailCareTypeList: CareType[];
 }
@@ -46,4 +37,45 @@ export interface ElderlyListItem {
   careLevel: string;
   caregiverNum: number;
   isMatching: boolean;
+}
+
+export interface ElderMatchingCardDto {
+  id: number;
+  name: string;
+  age: number;
+  gender: string;
+  status: string;
+  scheduleText: string;
+  location: string;
+  description?: string;
+  autoMatchCount: number;
+  applyCount: number;
+  createdAtText: string;
+  careTags: string[];
+  careDetailMap?: Record<string, string[]>;
+}
+
+export interface ElderDetailCareType {
+  careType: string;
+  detailCareTypes: string[];
+}
+
+export interface ElderDetailInfo {
+  name: string;
+  gender: Gender;
+  birthDate: string;
+  age: number;
+  address: string;
+  profileImageUrl?: string;
+  careLevel: string;
+  detailCareTypes?: ElderDetailCareType[];
+  healthCondition: string;
+  institutionName: string;
+  hasInmate: boolean;
+  hasPet: boolean;
+}
+
+export interface ElderDetailResponse {
+  elderlyInfo: ElderDetailInfo;
+  recruitments: RecruitmentItem[];
 }

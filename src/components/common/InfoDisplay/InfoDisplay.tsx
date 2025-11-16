@@ -10,18 +10,11 @@ interface InfoDisplayProps {
   gapRow?: string;
   gapColumn?: string;
   width?: string;
-  isChat?: boolean;
 }
 
-const InfoDisplay = ({
-  items,
-  gapRow,
-  gapColumn,
-  width,
-  isChat,
-}: InfoDisplayProps) => {
+const InfoDisplay = ({ items, gapRow, gapColumn, width }: InfoDisplayProps) => {
   return (
-    <Container row={gapRow} column={gapColumn} width={width} $isChat={isChat}>
+    <Container row={gapRow} column={gapColumn} width={width}>
       <div className="leftWrapper">
         {items.map((item) => (
           <div key={item.title} className="info-title">
@@ -46,17 +39,9 @@ const Container = styled.div<{
   row?: string;
   column?: string;
   width?: string;
-  $isChat?: boolean;
 }>`
   display: flex;
   gap: ${({ row }) => row || '32px'};
-
-  justify-content: ${({ $isChat }) =>
-    $isChat ? 'space-between' : 'flex-start'};
-  background: ${({ $isChat, theme }) =>
-    $isChat ? theme.colors.gray50 : 'transparent'};
-  padding: ${({ $isChat }) => ($isChat ? '12px' : '0')};
-  border-radius: ${({ $isChat }) => ($isChat ? '8px' : '0')};
 
   .leftWrapper,
   .rightWrapper {
@@ -67,11 +52,6 @@ const Container = styled.div<{
 
   .leftWrapper {
     width: ${({ width }) => width || 'auto'};
-  }
-
-  .rightWrapper {
-    flex: 1;
-    align-items: flex-end;
   }
 
   .info-title {

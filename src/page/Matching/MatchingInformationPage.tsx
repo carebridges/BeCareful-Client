@@ -49,6 +49,8 @@ export const MatchingInformationPage = () => {
   );
 };
 
+//삭제예정
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

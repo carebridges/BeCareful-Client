@@ -51,9 +51,9 @@ const CaregiverWorkPage = () => {
                 </span>
               </div>
             ) : (
-              <label className="date">아직 등록된 신청서가 없어요!</label>
+              <label className="date">아직 등록된 지원서 없어요!</label>
             )}
-            <label className="title">{userInfo.realName} 일자리 신청서</label>
+            <label className="title">{userInfo.realName} 일자리 지원서</label>
           </div>
 
           <div className="right">
@@ -62,7 +62,7 @@ const CaregiverWorkPage = () => {
               onChange={handleToggleChange}
             />
             <ToggleLabel isBlue={isToggleChecked}>
-              {isToggleChecked ? '신청중' : '미신청'}
+              {isToggleChecked ? '지원중' : '미지원'}
             </ToggleLabel>
           </div>
         </Top>
@@ -70,7 +70,7 @@ const CaregiverWorkPage = () => {
         <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
 
         <Button onClick={() => handleNavigate('/caregiver/my/application')}>
-          내 신청서 {applicationData?.workApplicationDto ? '수정' : '등록'}하기
+          내 지원서 {applicationData?.workApplicationDto ? '수정' : '등록'}하기
         </Button>
       </Application>
 
@@ -90,6 +90,14 @@ const CaregiverWorkPage = () => {
       </FiltersWrapper>
 
       <ApplicationsWrapper>
+        <div className="count">총 {filteredMatchingList.length}건</div>
+        {filteredMatchingList.length === 0 && (
+          <div className="noapply">
+            알맞은 일자리가 없어요.
+            <br />
+            일자리 지원서를 등록해보세요!
+          </div>
+        )}
         {filteredMatchingList.map((matching) => (
           <CaregiverWorkCard
             key={matching.recruitmentInfo.recruitmentId}
@@ -118,10 +126,6 @@ export default CaregiverWorkPage;
 const Container = styled.div`
   margin: auto 20px;
   padding-bottom: 72px;
-
-  div {
-    display: flex;
-  }
 `;
 
 const NavLeft = styled.label`
@@ -140,20 +144,24 @@ const NavRight = styled.div`
 const Application = styled.div`
   padding-top: 16px;
   padding-bottom: 32px;
+  display: flex;
   flex-direction: column;
   gap: 12px;
   background: ${({ theme }) => theme.colors.white};
 `;
 
 const Top = styled.div`
+  display: flex;
   justify-content: space-between;
 
   .left {
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
   }
 
   .dateWrapper {
+    display: flex;
     gap: 6px;
   }
 
@@ -176,6 +184,7 @@ const Top = styled.div`
   }
 
   .right {
+    display: flex;
     flex-direction: column;
     gap: 4px;
     align-items: center;
@@ -208,6 +217,7 @@ const Button = styled.button`
 
 const FiltersWrapper = styled.div`
   padding: 16px 0px;
+  display: flex;
   gap: 8px;
   overflow-x: scroll;
   flex-wrap: nowrap;
@@ -222,8 +232,9 @@ const FiltersWrapper = styled.div`
 const Filter = styled.div<{ active: boolean }>`
   padding: 8px 12px;
   display: flex;
-  gap: 4px;
-  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  white-space: nowrap;
   text-align: center;
   cursor: pointer;
   color: ${({ theme, active }) =>
@@ -239,6 +250,21 @@ const Filter = styled.div<{ active: boolean }>`
 `;
 
 const ApplicationsWrapper = styled.div`
+  display: flex;
   flex-direction: column;
   gap: 12px;
+
+  .count {
+    color: ${({ theme }) => theme.colors.gray700};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .noapply {
+    margin-top: 8px;
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+    text-align: center;
+  }
 `;

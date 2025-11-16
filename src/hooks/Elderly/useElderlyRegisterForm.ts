@@ -1,6 +1,6 @@
 import { useRegisterElderly } from '@/api/elderly';
+import { AreaSocial } from '@/types/common/matching';
 import {
-  AreaSocial,
   CareLevel,
   CareType,
   ElderlyRegisterPayload,
@@ -11,13 +11,15 @@ import { useNavigate } from 'react-router-dom';
 
 export const useElderlyRegisterForm = () => {
   const navigate = useNavigate();
-  const [profileImageUrl, setProfileImageUrl] = useState('');
-
+  const [profileImageTempKey, setProfileImageTempKey] = useState('default');
+  const [profileImagePreviewUrl, setProfileImagePreviewUrl] = useState<
+    string | null
+  >(null);
   const [name, setName] = useState('');
   const [birth, setBirth] = useState('');
   const [gender, setGender] = useState<Gender | ''>('');
-  const [inmate, setInmate] = useState<'있음' | '없음' | ''>('');
-  const [pet, setPet] = useState<'있음' | '없음' | ''>('');
+  const [hasInmate, sethasInmate] = useState<'있음' | '없음' | ''>('');
+  const [hasPet, sethasPet] = useState<'있음' | '없음' | ''>('');
 
   const [selectedGrade, setSelectedGrade] = useState<CareLevel | ''>('');
 
@@ -35,8 +37,8 @@ export const useElderlyRegisterForm = () => {
     name !== '' &&
     birth !== '' &&
     gender !== '' &&
-    inmate !== '' &&
-    pet !== '' &&
+    hasInmate !== '' &&
+    hasPet !== '' &&
     selectedGrade !== '' &&
     selectedArea !== null &&
     detailAddress !== '' &&
@@ -44,7 +46,7 @@ export const useElderlyRegisterForm = () => {
     selectedDetails.length > 0;
 
   const handleSubmit = async () => {
-    if (!isValid) {
+    if (!isValid || !selectedArea) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
@@ -52,15 +54,17 @@ export const useElderlyRegisterForm = () => {
     const payload: ElderlyRegisterPayload = {
       name,
       birthday: birth,
-      inmate: inmate === '있음',
-      pet: pet === '있음',
-      gender,
-      careLevel: selectedGrade,
-      siDo: selectedArea.siDo,
-      siGuGun: selectedArea.siGuGun,
-      eupMyeonDong: selectedArea.eupMyeonDong,
+      hasInmate: hasInmate === '있음',
+      hasPet: hasPet === '있음',
+      gender: gender as Gender,
+      careLevel: selectedGrade as CareLevel,
+      residentialLocation: {
+        siDo: selectedArea.siDo,
+        siGuGun: selectedArea.siGuGun,
+        eupMyeonDong: selectedArea.eupMyeonDong,
+      },
       detailAddress,
-      profileImageUrl,
+      profileImageTempKey,
       healthCondition,
       detailCareTypeList: selectedDetails as CareType[],
     };
@@ -72,19 +76,22 @@ export const useElderlyRegisterForm = () => {
       },
     });
   };
+
   return {
-    profileImageUrl,
-    setProfileImageUrl,
+    profileImageTempKey,
+    setProfileImageTempKey,
+    profileImagePreviewUrl,
+    setProfileImagePreviewUrl,
     name,
     setName,
     birth,
     setBirth,
     gender,
     setGender,
-    inmate,
-    setInmate,
-    pet,
-    setPet,
+    hasInmate,
+    sethasInmate,
+    hasPet,
+    sethasPet,
     selectedGrade,
     setSelectedGrade,
     selectedArea,

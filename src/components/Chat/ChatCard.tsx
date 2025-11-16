@@ -3,7 +3,9 @@ import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { Button } from '@/components/common/Button/Button';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
+
 import { Contract } from '@/types/common/chat';
+
 import { ElderlyDetail } from '@/types/Socialworker/common';
 
 interface ChatCardProps {
@@ -60,7 +62,8 @@ const ChatCard = ({
         {name} 어르신 근무 조건 확인 후<br />
         최종 승인하기 버튼을 눌러주세요.
       </div>
-      <InfoDisplay items={chatInfo} gapColumn="8px" isChat={true} />
+      {/* <InfoDisplay items={chatInfo} gapColumn="8px" isChat={true} /> */}
+      <InfoDisplay items={chatInfo} gapColumn="8px" />
       {hasButton && (
         <Button height="40px" variant="subBlue" onClick={buttonClick}>
           {buttonContent}

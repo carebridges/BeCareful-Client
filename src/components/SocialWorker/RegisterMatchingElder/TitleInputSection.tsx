@@ -32,6 +32,7 @@ const TitleContainer = styled.div`
   width: 100%;
   gap: 8px;
   flex-direction: column;
+  box-sizing: border-box;
 
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   color: ${({ theme }) => theme.colors.gray900};

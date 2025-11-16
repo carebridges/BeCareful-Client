@@ -32,7 +32,7 @@ export const CaregiverSignUpProvider = ({
     isAgreedToTerms: false,
     isAgreedToCollectPersonalInfo: false,
     isAgreedToReceiveMarketingInfo: false,
-    profileImageUrl: '',
+    profileImageTempKey: '',
   });
 
   return (

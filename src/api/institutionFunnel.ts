@@ -5,32 +5,54 @@ import { Institution } from '@/types/SocialSignUp';
 import { getAddressFromPublicApi } from '@/utils/getAddressFromPublicApi';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 
+type Presigned = {
+  tempKey: string;
+  presignedUrl: string;
+};
+
+type UploadResult = {
+  tempKey: string;
+  previewUrl: string;
+};
+
 export const useUploadInstitutionProfileImage = () =>
-  useMutation({
-    mutationFn: async ({ file, name }: { file: File; name: string }) => {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('institutionName', name);
+  useMutation<UploadResult, Error, File>({
+    mutationFn: async (file) => {
+      const contentType =
+        file.type && file.type.trim() !== ''
+          ? file.type
+          : 'application/octet-stream';
 
-      const { data } = await axiosInstance.post(
-        '/nursingInstitution/upload-profile-img',
-        formData,
+      const { data } = await axiosInstance.post<Presigned>(
+        '/nursingInstitution/profile-img/presigned-url',
+        null,
+        {
+          params: {
+            fileName: file.name,
+            contentType,
+          },
+        },
       );
-      return data.profileImageUrl as string;
+
+      const res = await fetch(data.presignedUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': contentType,
+        },
+        body: file,
+      });
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`S3 PUT 실패 ${res.status}: ${body}`);
+      }
+
+      return {
+        tempKey: data.tempKey,
+        previewUrl: URL.createObjectURL(file),
+      };
     },
   });
-
-export const useRegisterInstitution = () =>
-  useMutation({
-    mutationFn: async (formData: InstitutionFormData) => {
-      const { data } = await axiosInstance.post(
-        '/nursingInstitution/for-guest/register',
-        formData,
-      );
-      return data.institutionId as number;
-    },
-  });
-
 export const checkInstitutionCode = async (code: string): Promise<boolean> => {
   const { data } = await axiosInstance.get<boolean>(
     '/nursingInstitution/for-guest/check/already-register',
@@ -82,3 +104,14 @@ export const mapPublicApiDtoToInstitution = (
     siGunGuCd: siGunGuCdNum,
   };
 };
+
+export const useRegisterInstitution = () =>
+  useMutation({
+    mutationFn: async (formData: InstitutionFormData) => {
+      const { data } = await axiosInstance.post(
+        '/nursingInstitution/for-guest/register',
+        formData,
+      );
+      return data.institutionId as number;
+    },
+  });

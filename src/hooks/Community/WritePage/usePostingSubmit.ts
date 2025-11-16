@@ -1,4 +1,4 @@
-import { PostRequest } from '@/types/Community/post';
+import { PostPostRequest, PostPutRequest } from '@/types/Community/post';
 import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
 import { getDraftStorageKey } from '@/utils/getDraftStorageKey';
 import { usePostPostingMutation, usePutPostingMutation } from '@/api/community';
@@ -26,15 +26,10 @@ export const usePostingSubmit = (
     postId as number,
   );
 
-  const handleSubmit = async (postData: PostRequest) => {
+  const handlePostSubmit = async (postData: PostPostRequest) => {
     try {
-      if (isEditMode && typeof postId === 'number') {
-        await putPostingMutate(postData);
-        console.log('게시글 수정 완료', postData);
-      } else {
-        await postPostingMutate(postData);
-        console.log('게시글 작성 완료', postData);
-      }
+      await postPostingMutate(postData);
+      console.log('게시글 작성 완료', postData);
 
       const storageKey = getDraftStorageKey(board);
       localStorage.removeItem(storageKey);
@@ -45,5 +40,21 @@ export const usePostingSubmit = (
     }
   };
 
-  return { handleSubmit };
+  const handleEditSubmit = async (postData: PostPutRequest) => {
+    try {
+      if (isEditMode && typeof postId === 'number') {
+        await putPostingMutate(postData);
+        console.log('게시글 수정 완료', postData);
+      }
+
+      const storageKey = getDraftStorageKey(board);
+      localStorage.removeItem(storageKey);
+
+      onClose();
+    } catch (error) {
+      console.log('게시글 수정 put 실패: ', error);
+    }
+  };
+
+  return { handlePostSubmit, handleEditSubmit };
 };

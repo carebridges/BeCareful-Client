@@ -4,14 +4,14 @@ import { styled } from 'styled-components';
 
 interface MatchingCareCardProps {
   title: string;
-  description: string;
+  Icon: React.FC<React.SVGProps<SVGSVGElement>>;
   initialChecked: boolean;
   onChange: (checked: boolean) => void;
 }
 
 export const MatchingCareCard = ({
   title,
-  description,
+  Icon,
   initialChecked,
   onChange,
 }: MatchingCareCardProps) => {
@@ -27,7 +27,7 @@ export const MatchingCareCard = ({
     <CardContainer $isClicked={isClicked} onClick={handleClick}>
       <LeftContainer>
         <span className="highlight">{title}</span>
-        <span>{description}</span>
+        <Icon />
       </LeftContainer>
       <RightContainer $isClicked={isClicked}>
         <CircleCheck />
@@ -38,8 +38,8 @@ export const MatchingCareCard = ({
 
 const CardContainer = styled.div<{ $isClicked: boolean }>`
   display: flex;
-  height: 90px;
-  padding: 20px 16px;
+  height: 52px;
+  padding: 24px 16px;
   gap: 4px;
   width: 100%;
   box-sizing: border-box;
@@ -54,10 +54,11 @@ const CardContainer = styled.div<{ $isClicked: boolean }>`
 
 const LeftContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.gray500};
 
@@ -69,7 +70,7 @@ const LeftContainer = styled.div`
 
 const RightContainer = styled.div<{ $isClicked: boolean }>`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 
   path {
     fill: ${({ $isClicked, theme }) =>

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as ElderList } from '@/assets/icons/elderly/ElderList.svg';
-import { ElderData } from '@/types/Matching';
+import { ElderDataTemp } from '@/types/Matching';
 
 export const ElderlyCard = ({
   isMatching,
@@ -10,7 +10,7 @@ export const ElderlyCard = ({
   careLevel,
   caregiverNum,
   imageUrl,
-}: ElderData) => {
+}: ElderDataTemp) => {
   return (
     <CardContainer isMatching={!!isMatching}>
       {isMatching && (

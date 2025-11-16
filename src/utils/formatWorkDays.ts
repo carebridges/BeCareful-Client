@@ -6,3 +6,8 @@ export const translateWorkDaysToKo = (days: string[]): string => {
     .map((day) => DAY_EN_TO_KO[day as keyof typeof DAY_EN_TO_KO] || day)
     .join(', ');
 };
+
+export const sortWorkDays = (days: string[]): string[] => {
+  const order = Object.keys(DAY_EN_TO_KO);
+  return [...days].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+};

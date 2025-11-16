@@ -1,14 +1,14 @@
 import { CommunityHomeResponse } from '@/types/Community/community';
 import { axiosInstance } from './axiosInstance';
-import { MediaItem, PageableRequest } from '@/types/Community/common';
+import { PageableRequest } from '@/types/Community/common';
 import {
   BoardPostListResponse,
   ImportantPostListResponse,
   PostDetailResponse,
-  PostRequest,
+  PostPostRequest,
+  PostPutRequest,
 } from '@/types/Community/post';
 import { CommentListResponse, CommentRequest } from '@/types/Community/comment';
-import { getVideoDuration } from '@/utils/communityMedia';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 /* CommunityPage */
@@ -24,47 +24,12 @@ export const useGetCommunityHome = (enabled: boolean) => {
   });
 };
 
-// 미디어 파일 업로드
-export const postMedia = async (
-  file: File,
-  fileTypeParam: 'FILE' | 'IMAGE' | 'VIDEO',
-): Promise<MediaItem | null> => {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  let duration = 0;
-  if (fileTypeParam === 'VIDEO') {
-    try {
-      duration = await getVideoDuration(file);
-    } catch (e) {
-      console.error(`영상 길이 얻기 실패: ${file.name}`, e);
-      duration = 0;
-    }
-  }
-
-  const response = await axiosInstance.post(
-    '/community/media/upload',
-    formData,
-    {
-      params: {
-        fileType: fileTypeParam,
-        ...(fileTypeParam === 'VIDEO' && { videoDuration: duration }),
-      },
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    },
-  );
-
-  return response.data;
-};
-
 // 게시글 작성
 export const usePostPostingMutation = (boardType: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (postData: PostRequest) => {
+    mutationFn: async (postData: PostPostRequest) => {
       const response = await axiosInstance.post(
         `/community/board/${boardType}/post`,
         postData,
@@ -87,7 +52,7 @@ export const usePutPostingMutation = (boardType: string, postId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (postData: PostRequest) => {
+    mutationFn: async (postData: PostPutRequest) => {
       const response = await axiosInstance.put(
         `/community/board/${boardType}/post/${postId}`,
         postData,

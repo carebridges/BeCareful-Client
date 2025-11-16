@@ -1,9 +1,11 @@
 import { styled } from 'styled-components';
 import { ReactComponent as ElderProfile } from '@/assets/icons/matching/ElderProfile.svg';
-import { ElderData } from '@/types/Matching';
+import { ElderDataTemp } from '@/types/Matching';
+import { theme } from '@/style/theme';
 
-export interface ElderCardProps extends ElderData {
-  onClick: (data: ElderData) => void;
+export interface ElderCardProps extends ElderDataTemp {
+  onClick?: (data: ElderDataTemp) => void;
+  selected?: boolean;
 }
 
 export const ElderCard = ({
@@ -15,11 +17,13 @@ export const ElderCard = ({
   careLevel,
   imageUrl,
   onClick,
+  selected = false,
 }: ElderCardProps) => {
   return (
     <CardContainer
+      $selected={selected}
       onClick={() =>
-        onClick({
+        onClick?.({
           elderlyId,
           name,
           age,
@@ -59,7 +63,7 @@ const ElderProfileStyled = styled.img`
   border-radius: 8px;
 `;
 
-const CardContainer = styled.div`
+const CardContainer = styled.div<{ $selected: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -69,8 +73,16 @@ const CardContainer = styled.div`
   width: 100%;
 
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  border: 2px solid
+    ${({ $selected, theme }) =>
+      $selected ? theme.colors.mainBlue : theme.colors.gray50};
+  background: ${({ $selected }) =>
+    $selected ? theme.colors.subBlue : theme.colors.white};
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
+
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease;
 `;
 
 const CardLeftContainer = styled.div`

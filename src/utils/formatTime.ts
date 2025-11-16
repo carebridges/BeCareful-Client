@@ -19,7 +19,7 @@ export const formatDateLabel = (dateStr: string) => {
 };
 
 // 2025-08-15T08:15:45.072466를 2025.05.05 09:07의 형식으로
-export const formatDateTime = (isoStr: string) => {
+export const formatDateTime = (isoStr: string, onlyDate?: boolean) => {
   const date = new Date(isoStr);
 
   const utcYear = date.getUTCFullYear();
@@ -37,6 +37,8 @@ export const formatDateTime = (isoStr: string) => {
   const day = kstDate.getDate().toString().padStart(2, '0');
   const hour = kstDate.getHours().toString().padStart(2, '0');
   const minute = kstDate.getMinutes().toString().padStart(2, '0');
+
+  if (onlyDate) return `${year}.${month}.${day}`;
 
   return `${year}.${month}.${day} ${hour}:${minute}`;
 };
@@ -61,3 +63,6 @@ export const groupByDate = (contracts: Contract[]) => {
     return acc;
   }, {});
 };
+
+export const shortenYear = (dateTime: string) =>
+  dateTime.replace(/^(\d{2})\d{2}\./, '$1.');

@@ -72,7 +72,7 @@ const SocialworkerHomePage = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onClick={() => handleNavigate('/socialworker/matching/dashboard')}
+          onClick={() => handleNavigate('/socialworker/recruitment/new')}
         >
           <Plus /> 새 공고 등록하기
         </Button>

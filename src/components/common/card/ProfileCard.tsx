@@ -1,20 +1,21 @@
 import styled from 'styled-components';
+import { ReactComponent as ChevronIcon } from '@/assets/icons/ChevronRightProfile.svg';
 
 interface ProfileCardProps {
   profileImgURL: string;
   name: string;
   nickname?: string;
-  point?: number;
+  chevronClick?: () => void;
   phoneNumber: string;
   age: number;
   gender: string;
-  pointPagePath?: string;
 }
 
 const ProfileCard = ({
   profileImgURL,
   name,
   nickname,
+  chevronClick,
   phoneNumber,
   age,
   gender,
@@ -26,7 +27,8 @@ const ProfileCard = ({
       <div className="right">
         <NameWrapper>
           <label className="name">{name}</label>
-          <label className="nickname">{nickname}</label>
+          {nickname && <label className="nickname">{nickname}</label>}
+          {chevronClick && <Chevron onClick={chevronClick} />}
         </NameWrapper>
 
         <InfoWrapper>
@@ -62,6 +64,18 @@ const CardContainter = styled.div`
     flex-direction: column;
     gap: 6px;
   }
+`;
+
+const NameWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .name {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
 
   .nickname {
     color: ${({ theme }) => theme.colors.mainBlue};
@@ -70,15 +84,8 @@ const CardContainter = styled.div`
   }
 `;
 
-const NameWrapper = styled.div`
-  display: flex;
-  gap: 8px;
-
-  .name {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.title4};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  }
+const Chevron = styled(ChevronIcon)`
+  cursor: pointer;
 `;
 
 const InfoWrapper = styled.div`

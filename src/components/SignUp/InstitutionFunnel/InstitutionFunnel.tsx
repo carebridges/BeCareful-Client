@@ -24,7 +24,7 @@ export interface InstitutionFormData {
   phoneNumber: string;
   streetAddress?: string;
   detailAddress?: string;
-  profileImageUrl?: string | null;
+  profileImageTempKey?: string | null;
 }
 
 export const InstitutionFunnel = ({
@@ -42,7 +42,7 @@ export const InstitutionFunnel = ({
         phoneNumber: '',
         streetAddress: '',
         detailAddress: '',
-        profileImageUrl: null,
+        profileImageTempKey: null,
       };
     });
   const [currentStep, setCurrentStep] = useState(0);

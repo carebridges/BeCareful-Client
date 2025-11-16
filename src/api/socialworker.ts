@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SocialworkerHomeResponse } from '@/types/Socialworker/home';
 import {
   NursingAssociationInfoRequest,
+  SocialworkerAssociationRequest,
+  SocialworkerAssociationResponse,
   SocialworkerMyEditResponse,
   SocialworkerMyRequest,
   SocialworkerMyResponse,
@@ -94,6 +96,44 @@ export const usePutInstitutionInfo = () => {
     },
     onError: (error) => {
       console.error('usePutInstitutionInfo - 요양기관 수정 실패:', error);
+    },
+  });
+};
+
+// 사회복지사 협회 상세 정보 조회
+export const useSocialAssociationInfo = () => {
+  return useQuery<SocialworkerAssociationResponse, Error>({
+    queryKey: ['socialworkerAssociationInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/social-worker/my/association');
+      return response.data;
+    },
+  });
+};
+
+// 사회복지사 협회 상세 정보 수정
+export const usePatchSocialAssociationInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (associationInfo: SocialworkerAssociationRequest) => {
+      const response = await axiosInstance.patch(
+        '/social-worker/my/association',
+        associationInfo,
+      );
+      return response;
+    },
+    onSuccess: () => {
+      console.log('usePatchSocialAssociationInfo - 협회 정보 수정 성공');
+      queryClient.invalidateQueries({
+        queryKey: ['socialworkerAssociationInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error(
+        'usePatchSocialAssociationInfo - 협회 정보 수정 실패',
+        error,
+      );
     },
   });
 };

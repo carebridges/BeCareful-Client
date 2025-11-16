@@ -41,9 +41,23 @@ export const CareTypeSection = ({
   };
 
   const updateCareUnit = (id: string, updated: Partial<CareUnit>) => {
-    setCareUnits((prev) =>
-      prev.map((unit) => (unit.id === id ? { ...unit, ...updated } : unit)),
-    );
+    setCareUnits((prev) => {
+      if (updated.selectedCare) {
+        const isDuplicate = prev.some(
+          (unit) =>
+            unit.id !== id && unit.selectedCare === updated.selectedCare,
+        );
+
+        if (isDuplicate) {
+          alert('이미 선택한 케어 항목입니다.');
+          return prev;
+        }
+      }
+
+      return prev.map((unit) =>
+        unit.id === id ? { ...unit, ...updated } : unit,
+      );
+    });
   };
 
   const toggleDetail = (id: string, item: string) => {

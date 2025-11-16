@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { ReactComponent as Camera } from '@/assets/icons/Camera.svg';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
+import ProfileImgUploader from '@/components/common/ProfileImgUploader';
 import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
 import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';
+import { useProfileImg } from '@/hooks/useProfileImg';
 import { NursingAssociationInfoRequest } from '@/types/Socialworker/mypage';
-import { useUploadInstitutionProfileImage } from '@/api/institutionFunnel';
 import {
   useGetSocialWorkerMy,
   usePutInstitutionInfo,
@@ -22,6 +21,11 @@ const SocialworkerEditInstitutionPage = () => {
   const [isChanged, setIsChanged] = useState(false);
   const { data } = useGetSocialWorkerMy();
 
+  const profileUpload = useProfileImg(
+    '/nursingInstitution/profile-img/presigned-url',
+  );
+  const [isImgActionSheetOpen, setIsImgActionSheetOpen] = useState(false);
+
   const {
     institutionName,
     institutionCode,
@@ -30,29 +34,22 @@ const SocialworkerEditInstitutionPage = () => {
     phoneNumber,
     setInstitutionId,
     setInstitutionName,
+    setInstitutionCode,
     handleChange,
     handleTypesChange,
   } = useInstitutionForm(data?.institutionInfo, setIsChanged);
 
-  const { mutate: uploadImage } = useUploadInstitutionProfileImage();
-  const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<{ file: File; name: string }>({
-      initialImgUrl: data?.institutionInfo.institutionImageUrl,
-      setIsChanged,
-      uploadMutate: uploadImage,
-      additionalUploadData: { name: institutionName },
-    });
-
   const { mutate: updateInstitution } = usePutInstitutionInfo();
   const handleEditBtnClick = async () => {
+    const profileUrl = profileUpload.getProfileImageKeyForServer();
+
     const institutionData: NursingAssociationInfoRequest = {
       institutionName: institutionName,
       institutionCode: institutionCode,
       openYear: year,
       facilityTypeList: types,
       phoneNumber: phoneNumber,
-      profileImageUrl:
-        imgUrl ?? data?.institutionInfo.institutionImageUrl ?? '',
+      profileImageTempKey: profileUrl,
     };
     console.log(institutionData);
     updateInstitution(institutionData, {
@@ -71,18 +68,14 @@ const SocialworkerEditInstitutionPage = () => {
         color="white"
       />
 
-      <ProfileImgWrapper>
-        <div>
-          <img src={imgUrl} alt="기관 프로필 이미지" />
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-          />
-          <Camera onClick={handleCameraClick} />
-        </div>
-      </ProfileImgWrapper>
+      <ProfileImgUploader
+        hook={profileUpload}
+        initialImgUrl={data?.institutionInfo.institutionImageUrl ?? ''}
+        defaultImgUrl=""
+        isImgActionSheetOpen={isImgActionSheetOpen}
+        setIsImgActionSheetOpen={setIsImgActionSheetOpen}
+        setIsChanged={setIsChanged}
+      />
 
       <CardContainer>
         <label className="title">
@@ -92,9 +85,10 @@ const SocialworkerEditInstitutionPage = () => {
           소속된 기관의 정확한 명칭을 검색해 주세요.
         </label>
         <InstitutionSearchInput
-          onInstitutionSelect={(name, id) => {
+          onInstitutionSelect={(name, id, _address, code) => {
             setInstitutionName(name);
             if (id) setInstitutionId(id);
+            if (code) setInstitutionCode(code);
             setIsChanged(true);
           }}
           institution={institutionName}
@@ -186,38 +180,6 @@ const NavCenter = styled.div`
   color: ${({ theme }) => theme.colors.gray900};
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-`;
-
-const ProfileImgWrapper = styled.div`
-  margin-top: -16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  div {
-    width: 100px;
-    height: 100px;
-    position: relative;
-  }
-
-  img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 1px solid ${({ theme }) => theme.colors.gray100};
-    object-fit: cover;
-  }
-
-  input {
-    display: none;
-  }
-
-  svg {
-    position: absolute;
-    top: 68px;
-    left: 68px;
-    cursor: pointer;
-  }
 `;
 
 const CardContainer = styled.div`

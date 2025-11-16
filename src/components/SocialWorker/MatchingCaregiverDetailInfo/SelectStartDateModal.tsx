@@ -53,7 +53,12 @@ export const SelectStartDateModal = ({
     <Overlay>
       <ModalContent width={width}>
         <ModalMiddleContainer>
-          <span>근무 시작일 선택</span>
+          <span>근무시작일 선택</span>
+          <span className="highlight">
+            요양보호사의 근무 시작일을 입력해 주세요.
+            <br />
+            확인 버튼 클릭 시 근무 제안이 발송됩니다.
+          </span>
           <DateRow>
             <Dropdown
               title="연도"
@@ -74,12 +79,6 @@ export const SelectStartDateModal = ({
               setSelectedContents={setSelectedDay}
             />
           </DateRow>
-
-          <span className="highlight">
-            확인 클릭 시 채용 제안이 발송되며,
-            <br />
-            이때 포인트 300P가 차감됩니다.
-          </span>
         </ModalMiddleContainer>
 
         <ModalBottomContainer>

@@ -1,21 +1,26 @@
 import styled from 'styled-components';
+import { ReactComponent as Chevron } from '@/assets/icons/ChevronRightProfile.svg';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 
 interface AssociationCardProps {
   association: string;
+  onClick?: () => void;
   type: string;
-  rank: string;
 }
 
-const AssociationCard = ({ association, type, rank }: AssociationCardProps) => {
-  const associationInfo = [
-    { title: '회원유형', detail: type },
-    { title: '직급', detail: rank },
-  ];
+const AssociationCard = ({
+  association,
+  onClick,
+  type,
+}: AssociationCardProps) => {
+  const associationInfo = [{ title: '회원유형', detail: type }];
 
   return (
     <CardContainer>
-      <label className="association">{association}</label>
+      <div className="top">
+        <label className="association">{association}</label>
+        {onClick && <Chevron onClick={onClick} />}
+      </div>
       <InfoDisplay items={associationInfo} />
     </CardContainer>
   );
@@ -32,6 +37,16 @@ const CardContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.gray50};
   background: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  svg {
+    cursor: pointer;
+  }
 
   .association {
     color: ${({ theme }) => theme.colors.gray900};

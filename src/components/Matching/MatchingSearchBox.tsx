@@ -65,7 +65,7 @@ const StyledInput = styled.input`
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.gray500};
+    color: ${({ theme }) => theme.colors.gray300};
     font-size: ${({ theme }) => theme.typography.fontSize.body1};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }

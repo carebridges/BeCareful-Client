@@ -7,6 +7,8 @@ import {
   PAY_CODE_TO_LABEL,
   PAY_LABEL_TO_CODE,
 } from '@/constants/socialworker/payType.socialWorker';
+import { WorkDay } from '@/types/Caregiver/common';
+import { SalaryUnit } from '@/types/common/matching';
 import { Gender } from '@/types/Elderly';
 
 export interface MatchingRecruitmentPayload {
@@ -28,7 +30,7 @@ export interface Caregiver {
   resumeTitle: string;
 }
 
-export interface MatchingElderData {
+export interface RawMatchingElderData {
   recruitmentInfo: {
     careType: string[];
     workDays: string[];
@@ -44,10 +46,27 @@ export interface MatchingElderData {
       profileImageUrl: string;
       careLevel: string;
       healthCondition: string;
+      institutionName: string;
+      detailCareTypes: {
+        careType: string;
+        detailCareTypes: string[];
+      }[];
     };
   };
-  matchedCaregivers: MatchingCaregiver[];
-  appliedCaregivers: MatchingCaregiver[];
+  matchedCaregivers: RawMatchingCaregiver[];
+  appliedCaregivers: RawMatchingCaregiver[];
+}
+
+export interface RawMatchingCaregiver {
+  caregiverInfo: {
+    caregiverInfo: {
+      caregiverId: number;
+      name: string;
+      profileImageUrl: string;
+    };
+    applicationTitle: string;
+  };
+  matchingResultStatus: string;
 }
 
 export interface MatchingCaregiver {
@@ -66,7 +85,7 @@ export type PayCode = keyof typeof PAY_CODE_TO_LABEL;
 export interface MatchingCareTypeOption {
   key: string;
   title: string;
-  description: string;
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
 export type DayLabel = (typeof DAY_LABELS)[number];
@@ -155,6 +174,12 @@ export interface ElderMatchingStatus {
   applyCount: number;
 }
 
+export interface MatchingElderData {
+  recruitmentInfo: RawMatchingElderData['recruitmentInfo'];
+  matchedCaregivers: MatchingCaregiver[];
+  appliedCaregivers: MatchingCaregiver[];
+}
+
 type CareerDetail = {
   workInstitution: string;
   workYear: string;
@@ -169,3 +194,15 @@ type CareerInfo = {
 export interface CareerSectionProps {
   careerInfo?: CareerInfo | null;
 }
+
+export type RecruitmentForm = {
+  elderlyId: number | null;
+  title: string;
+  workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
+  careTypes: string[];
+  workSalaryUnitType: SalaryUnit;
+  workSalaryAmount: number;
+  description: string;
+};

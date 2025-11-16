@@ -23,10 +23,10 @@ export const PaySection = ({
   return (
     <SectionWrapper>
       <SectionTitleWrapper>
-        <SectionTitle color="">희망 급여</SectionTitle>
+        <SectionTitle color="">급여</SectionTitle>
         <SectionTitle color="blue">*</SectionTitle>
       </SectionTitleWrapper>
-
+      <SectionGuide>최저시급 10,030원 이상으로 입력해 주세요.</SectionGuide>
       <PayWrapper>
         <MatchingApplicationDropdown
           title="시급"
@@ -60,6 +60,13 @@ const SectionWrapper = styled.div`
   flex-direction: column;
   padding: 40px 20px 0px 20px;
   gap: 8px;
+  box-sizing: border-box;
+`;
+
+const SectionGuide = styled.label`
+  color: ${({ theme }) => theme.colors.gray500};
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const SectionTitleWrapper = styled.div`
