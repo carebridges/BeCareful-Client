@@ -29,6 +29,8 @@ const CaregiverMyworkPage = () => {
     );
   }, [searchTerm, data]);
 
+  const workList = searchTerm ? filteredWorks : data;
+
   return (
     <Container isData={!!(data && data.length > 0)}>
       <NavBar
@@ -49,13 +51,9 @@ const CaregiverMyworkPage = () => {
               <Search onClick={() => setSearchTerm(searchTerm)} />
             </IconWrapper>
           </SearchBarWrapper>
-          {searchTerm
-            ? filteredWorks?.map((workInfo) => (
-                <CaregiverMyworkCard key={workInfo.id} workInfo={workInfo} />
-              ))
-            : data?.map((workInfo) => (
-                <CaregiverMyworkCard key={workInfo.id} workInfo={workInfo} />
-              ))}
+          {workList?.map((workInfo) => (
+            <CaregiverMyworkCard key={workInfo.id} workInfo={workInfo} />
+          ))}
         </CardWrapper>
       ) : (
         <NoWorkingCard>
