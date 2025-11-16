@@ -110,11 +110,6 @@ const SocialworkerMyPage = () => {
                   data?.socialWorkerInfo.associationRank ?? 'MEMBER'
                 ]
               }
-              rank={
-                INSTITUTION_RANK_EN_TO_KR[
-                  data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
-                ]
-              }
             />
           </SectionWrapper>
         </>

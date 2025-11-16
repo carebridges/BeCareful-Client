@@ -13,7 +13,6 @@ import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ProfileCard from '@/components/common/card/ProfileCard';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import {
   ASSOCIATION_RANK_KR_TO_EN,
   ASSOCIATION_RANK_EN_TO_KR,
@@ -126,7 +125,6 @@ const CommunityMemberDetailPage = () => {
         <AssociationCard
           association={data?.associationName}
           type={ASSOCIATION_RANK_EN_TO_KR[data?.associationRank]}
-          rank={INSTITUTION_RANK_EN_TO_KR[data?.institutionRank]}
         />
         {isChairman && (
           <Button
