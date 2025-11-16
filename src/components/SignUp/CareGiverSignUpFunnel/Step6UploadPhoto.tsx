@@ -6,6 +6,7 @@ import { Button } from '@/components/common/Button/Button';
 import { CaregiverProfileImageUploader } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto/CaregiverProfileImageUploader';
 
 import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useState } from 'react';
 import { styled } from 'styled-components';
 
 export const Step6UploadPhoto = () => {
@@ -14,13 +15,16 @@ export const Step6UploadPhoto = () => {
   const { mutate: uploadImage } = useUploadCareGiverProfileImage();
   const { mutate: registerCaregiver, isPending } = useRegisterCaregiver();
 
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const handleImageUpload = (file: File) => {
     uploadImage(file, {
-      onSuccess: (url) => {
+      onSuccess: ({ tempKey, previewUrl }) => {
         setFormData((prev) => ({
           ...prev,
-          profileImageUrl: url,
+          profileImageTempKey: tempKey,
         }));
+
+        setPreviewUrl(previewUrl);
       },
       onError: () => {
         alert('이미지 업로드에 실패했습니다.');
@@ -52,7 +56,7 @@ export const Step6UploadPhoto = () => {
       </HeaderSection>
       <ProfileContainer>
         <CaregiverProfileImageUploader
-          imageUrl={formData.profileImageUrl}
+          imageUrl={previewUrl ?? undefined}
           onChange={handleImageUpload}
         />
       </ProfileContainer>

@@ -8,7 +8,10 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import {
+  UploadResult,
+  useProfileImageUpload,
+} from '@/hooks/useProfileImageUpload';
 import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';
 import { NursingAssociationInfoRequest } from '@/types/Socialworker/mypage';
 import { useUploadInstitutionProfileImage } from '@/api/institutionFunnel';
@@ -36,7 +39,7 @@ const SocialworkerEditInstitutionPage = () => {
 
   const { mutate: uploadImage } = useUploadInstitutionProfileImage();
   const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<{ file: File; name: string }>({
+    useProfileImageUpload<File, UploadResult>({
       initialImgUrl: data?.institutionInfo.institutionImageUrl,
       setIsChanged,
       uploadMutate: uploadImage,

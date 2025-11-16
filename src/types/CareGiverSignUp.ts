@@ -18,7 +18,7 @@ export interface CaregiverSignUpFormData {
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;
   isAgreedToReceiveMarketingInfo: boolean;
-  profileImageUrl: string;
+  profileImageTempKey: string;
 }
 
 export type CertificateKey =

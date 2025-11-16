@@ -12,7 +12,10 @@ import { CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSignUpFunnel/
 import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
 import { CaregiverMyRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useProfileImageUpload } from '@/hooks/useProfileImageUpload';
+import {
+  UploadResult,
+  useProfileImageUpload,
+} from '@/hooks/useProfileImageUpload';
 import { usePutMyMutation } from '@/hooks/Caregiver/mutation/usePutMyMutation';
 import { useCaregiverBasicForm } from '@/hooks/Caregiver/mypage/useCaregiverBasicForm';
 import { useCaregiverCertForm } from '@/hooks/Caregiver/mypage/useCaregiverCertForm';
@@ -52,12 +55,12 @@ const CaregiverEditProfilePage = () => {
 
   const { mutate: uploadImage } = useUploadCareGiverProfileImage();
   const { imgUrl, fileInputRef, handleImageChange, handleCameraClick } =
-    useProfileImageUpload<File>({
+    useProfileImageUpload<File, UploadResult>({
       initialImgUrl: data?.caregiverInfo.profileImageUrl,
       setIsChanged,
       uploadMutate: uploadImage,
+      getUrl: (res) => res.previewUrl,
     });
-
   const { mutate: updateMy } = usePutMyMutation();
   const handleEditBtnClick = () => {
     const caregiverData: CaregiverMyRequest = {

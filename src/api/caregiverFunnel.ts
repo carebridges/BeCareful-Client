@@ -5,20 +5,54 @@ import {
 } from '@/types/CareGiverSignUp';
 import { useMutation } from '@tanstack/react-query';
 
-export const useUploadCareGiverProfileImage = () =>
-  useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
+type Presigned = {
+  tempKey: string;
+  presignedUrl: string;
+};
 
-      const { data } = await axiosInstance.post(
-        '/caregiver/upload-profile-img',
-        formData,
+type UploadResult = {
+  tempKey: string;
+  previewUrl: string;
+};
+
+export const useUploadCareGiverProfileImage = () =>
+  useMutation<UploadResult, Error, File>({
+    mutationFn: async (file) => {
+      const contentType =
+        file.type && file.type.trim() !== ''
+          ? file.type
+          : 'application/octet-stream';
+
+      const { data } = await axiosInstance.post<Presigned>(
+        '/caregiver/profile-img/presigned-url',
+        null,
+        {
+          params: {
+            fileName: file.name,
+            contentType,
+          },
+        },
       );
-      return data.profileImageUrl as string;
+
+      const res = await fetch(data.presignedUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': contentType,
+        },
+        body: file,
+      });
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error(`S3 PUT 실패 ${res.status}: ${body}`);
+      }
+
+      return {
+        tempKey: data.tempKey,
+        previewUrl: URL.createObjectURL(file),
+      };
     },
   });
-
 export const useRegisterCaregiver = () =>
   useMutation({
     mutationFn: async (formData: CaregiverSignUpFormData) => {
