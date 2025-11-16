@@ -238,7 +238,7 @@ export const useApplicationListQuery = (activeTab: string) => {
         '/matching/caregiver/my/recruitment',
         {
           params: {
-            matchingStatus: activeTab,
+            appliedStatusFilter: activeTab,
           },
         },
       );

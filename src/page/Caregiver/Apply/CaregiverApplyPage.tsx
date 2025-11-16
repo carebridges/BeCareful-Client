@@ -7,7 +7,6 @@ import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import {
   APPLY_TABS,
   MATCHING_STATUS,
-  MATCHING_STATUS_KR_TO_EN,
 } from '@/constants/caregiver/matchingStatus';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationListQuery } from '@/api/caregiver';
@@ -21,9 +20,7 @@ const CaregiverApplyPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const { data, error } = useApplicationListQuery(
-    MATCHING_STATUS_KR_TO_EN[activeTab],
-  );
+  const { data, error } = useApplicationListQuery(activeTab);
   if (error) {
     console.log('getApplicationList 에러: ', error);
   }
@@ -57,13 +54,20 @@ const CaregiverApplyPage = () => {
       </TabWrapper>
 
       <ApplicationsWrapper>
+        <div className="count">총 {data?.recruitments.length}건</div>
+        {data?.recruitments.length === 0 && (
+          <div className="noapply">
+            최근 {activeTab === '검토중' ? '검토 중인' : activeTab} 내역이
+            없습니다.
+          </div>
+        )}
         {data?.recruitments?.map((application) => {
-          const status = MATCHING_STATUS[application.matchingStatus];
+          const status = MATCHING_STATUS[activeTab];
 
           return (
             <CaregiverWorkCard
-              key={application.recruitmentInfo.recruitmentInfo.recruitmentId}
-              recruitment={application.recruitmentInfo}
+              key={application.recruitmentInfo.recruitmentId}
+              recruitment={application}
               stateColor={status.stateColor}
               bgColor={status.bgColor}
               stateLabel={status.stateLabel}
@@ -156,4 +160,18 @@ const ApplicationsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  .count {
+    color: ${({ theme }) => theme.colors.gray700};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .noapply {
+    margin-top: 8px;
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+    text-align: center;
+  }
 `;

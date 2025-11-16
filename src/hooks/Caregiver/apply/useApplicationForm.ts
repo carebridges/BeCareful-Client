@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SALARY_EN_TO_KR } from '@/constants/common/salary';
 import { DAY_EN_TO_KR } from '@/constants/common/day';
-import { TIME_EN_TO_KR } from '@/constants/common/time';
+import { TIME_EN_TO_LONG } from '@/constants/common/time';
 import { WorkApplication } from '@/types/Caregiver/common';
 
 export const useApplicationForm = (data: WorkApplication | undefined) => {
@@ -61,7 +61,7 @@ export const useApplicationForm = (data: WorkApplication | undefined) => {
       setPayType(SALARY_EN_TO_KR[data.workSalaryUnitType]);
       setPay(data.workSalaryAmount.toLocaleString('ko-KR'));
       setSelectDay(data.workDays.map((day) => DAY_EN_TO_KR[day]));
-      setSelectTime(data.workTimes.map((time) => TIME_EN_TO_KR[time]));
+      setSelectTime(data.workTimes.map((time) => TIME_EN_TO_LONG[time]));
       setSelectCaretype(data.careTypes);
     }
   }, [data]);
