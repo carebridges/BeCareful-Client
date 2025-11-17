@@ -90,6 +90,9 @@ const CaregiverEditProfilePage = () => {
     });
   };
 
+  const defaultImgUrl =
+    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png';
+
   return (
     <Container>
       <NavBar
@@ -109,8 +112,8 @@ const CaregiverEditProfilePage = () => {
       /> */}
       <ProfileImgUploader
         hook={profileUpload}
-        initialImgUrl={data?.caregiverInfo.profileImageUrl ?? ''}
-        defaultImgUrl=""
+        initialImgUrl={data?.caregiverInfo.profileImageUrl ?? defaultImgUrl}
+        defaultImgUrl={defaultImgUrl}
         isImgActionSheetOpen={isImgActionSheetOpen}
         setIsImgActionSheetOpen={setIsImgActionSheetOpen}
         setIsChanged={setIsChanged}
