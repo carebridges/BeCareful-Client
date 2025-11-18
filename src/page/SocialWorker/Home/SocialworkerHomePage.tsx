@@ -16,6 +16,13 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialWorkerHome } from '@/api/socialworker';
 
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import PostOverviewAd from '@/components/Community/common/PostOverviewAd';
+import { adPostList } from '@/constants/Ad';
+
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
   const [isNew, setIsNew] = useState(false);
@@ -56,6 +63,32 @@ const SocialworkerHomePage = () => {
           />
         </div>
       </Top>
+
+      <CustomPagination>
+        <Swiper
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
+          loop={true}
+          spaceBetween={10}
+          slidesPerView={1}
+          style={{ width: '100%', height: 'auto' }}
+        >
+          {adPostList.map((post) => (
+            <SwiperSlide key={post.postId}>
+              <PostWrapper>
+                <PostOverviewAd key={post.postId} post={post} />
+              </PostWrapper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </CustomPagination>
+
+      {/* {searchResults.map((post, index) => ( */}
+      {/* <React.Fragment key={post.postId}> */}
+      {/* <PostOverviewAd key={adPost.postId} post={adPost} /> */}
+      {/* {index < searchResults.length - 1 && <Border />} */}
+      {/* </React.Fragment> */}
+      {/* ))} */}
 
       <SectionWrapper>
         <div className="titleWrapper">
@@ -189,4 +222,27 @@ const SectionWrapper = styled.div`
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
     cursor: pointer;
   }
+`;
+
+const CustomPagination = styled.div`
+  padding: 20px;
+  padding-bottom: 0px;
+
+  .swiper-pagination {
+    display: flex;
+    justify-content: center;
+  }
+`;
+
+const PostWrapper = styled.div`
+  margin-bottom: 32px;
+  padding: 24px 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 12px;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray50};
+  background: ${({ theme }) => theme.colors.white};
+  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.03);
 `;
