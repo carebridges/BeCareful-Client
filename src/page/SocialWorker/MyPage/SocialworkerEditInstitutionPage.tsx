@@ -60,6 +60,9 @@ const SocialworkerEditInstitutionPage = () => {
     });
   };
 
+  const defaultImgUrl =
+    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/institution-profile-image/default/institution_default.png';
+
   return (
     <Container>
       <NavBar
@@ -70,8 +73,10 @@ const SocialworkerEditInstitutionPage = () => {
 
       <ProfileImgUploader
         hook={profileUpload}
-        initialImgUrl={data?.institutionInfo.institutionImageUrl ?? ''}
-        defaultImgUrl=""
+        initialImgUrl={
+          data?.institutionInfo.institutionImageUrl ?? defaultImgUrl
+        }
+        defaultImgUrl={defaultImgUrl}
         isImgActionSheetOpen={isImgActionSheetOpen}
         setIsImgActionSheetOpen={setIsImgActionSheetOpen}
         setIsChanged={setIsChanged}

@@ -49,6 +49,14 @@ const GlobalStyle = createGlobalStyle`
     border: none;
   }
 
+  input:focus {
+    outline: none;
+  }
+
+  input {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   @media (hover: none) and (pointer: coarse) {
   * {
     -webkit-tap-highlight-color: transparent;

@@ -30,5 +30,17 @@ jobs:
           commit-message: 'Deploy: ${{ github.sha }}'
           target-branch: main
 
+      - name: Push to another repo (dev)
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
+        with:
+          source-directory: 'output'
+          destination-github-username: Early-Us
+          destination-repository-name: BeCareful-Client
+          user-email: ${{ secrets.OFFICIAL_ACCOUNT_EMAIL }}
+          commit-message: 'Deploy: ${{ github.sha }}'
+          target-branch: dev
+
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
