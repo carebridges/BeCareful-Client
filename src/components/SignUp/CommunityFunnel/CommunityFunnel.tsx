@@ -27,7 +27,7 @@ export const CommunityFunnel = ({ onDone, onCancel }: CommunityFunnelProps) => {
   const [communityFormData, setCommunityFormData] = useState<CommunityFormData>(
     {
       name: '',
-      profileImageTempKey: '',
+      profileImageTempKey: 'default',
       establishedYear: 0,
       isAgreedToTerms: false,
       isAgreedToCollectPersonalInfo: false,

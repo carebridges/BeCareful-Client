@@ -42,7 +42,7 @@ export const InstitutionFunnel = ({
         phoneNumber: '',
         streetAddress: '',
         detailAddress: '',
-        profileImageTempKey: null,
+        profileImageTempKey: 'default',
       };
     });
   const [currentStep, setCurrentStep] = useState(0);
