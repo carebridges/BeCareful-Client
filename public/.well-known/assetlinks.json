@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "kr.carebridges.www.twa",
+      "sha256_cert_fingerprints": [
+        "44:6C:9B:11:86:4D:E3:DA:46:F2:78:E2:D8:FC:9D:4E:0D:3B:89:80:1F:9D:99:8D:22:A4:29:F2:6C:BE:76:0F"
+      ]
+    }
+  }
+]
