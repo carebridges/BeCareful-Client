@@ -1,31 +1,33 @@
 import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
-
-import { ChatResponse, CaregiverInfo } from '@/types/common/chat';
-import { ElderlyDetail } from '@/types/Socialworker/common';
-
-export interface SocialworkerContractEditRequest {
-  matchingId: number;
-  workDays: WorkDay[];
-  workStartTime: string;
-  workEndTime: string;
-  workSalaryUnitType: WorkSalaryUnitType;
-  workSalaryAmount: number;
-  workStartDate: string;
-  careTypes: string[];
-}
+import { ChatRoomContractStatus, ChatRoomStatus } from '../Caregiver/chat';
 
 export interface SocialworkerChatList {
-  matchingId: number;
-  recruitmentId: number;
-  caregiverInfo: CaregiverInfo;
+  chatRoomId: number;
+  caregiverId: number;
+  caregiverProfileImageUrl: string;
+  caregiverName: string;
+  elderlyName: string;
+  elderlyAge: number;
+  elderlyGender: 'FEMALE' | 'MALE';
   recentChat: string;
-  time: string;
-  elderlyInfo: ElderlyDetail;
+  lastSendTime: string;
+  unreadCount: number;
+  isContractAccepted: boolean;
 }
 
 export type SocialworkerChatListResponse = SocialworkerChatList[];
 
-export type SocialworkerChatResponse = ChatResponse;
+export interface SocialworkerChatResponse {
+  caregiverName: string;
+  caregiverProfileImageUrl: string;
+  caregiverPhoneNumber: string;
+  elderlyName: string;
+  elderlyProfileImageUrl: string;
+  chatRoomStatus: ChatRoomStatus;
+  chatRoomContractStatus: ChatRoomContractStatus;
+  recruitmentId: number;
+  chatList: [];
+}
 
 interface CareInfoList {
   careType: string;
@@ -34,7 +36,6 @@ interface CareInfoList {
 }
 
 export interface SocialworkerContractResponse {
-  matchingId: number;
   workDays: WorkDay[];
   workStartTime: string;
   workEndTime: string;
