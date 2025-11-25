@@ -9,12 +9,6 @@ import {
   SocialworkerMyRequest,
   SocialworkerMyResponse,
 } from '@/types/Socialworker/mypage';
-import {
-  SocialworkerChatListResponse,
-  SocialworkerChatResponse,
-  SocialworkerContractEditRequest,
-  SocialworkerContractResponse,
-} from '@/types/Socialworker/chat';
 
 /* 사회복지사 홈화면 */
 // 사회복지사 홈화면 조회
@@ -172,79 +166,6 @@ export const useDeleteSocialworker = () => {
     },
     onError: (error) => {
       console.error('useDeleteSocialworker - 사회복지사 탈퇴 실패:', error);
-    },
-  });
-};
-
-/* 채팅 */
-// 사회복지사 채팅 목록
-export const useGetSocialworkerChatList = () =>
-  useQuery<SocialworkerChatListResponse>({
-    queryKey: ['socialworkerChatList'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get('/chat/social-worker/list');
-      return data;
-    },
-  });
-
-// 사회복지사 채팅 데이터 조회
-export const useGetSocialworkerChat = (matchingId: number) =>
-  useQuery<SocialworkerChatResponse>({
-    queryKey: ['socialworkerChat', matchingId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get(
-        `/chat/social-worker?matchingId=${matchingId}`,
-      );
-      return data;
-    },
-    enabled: Number.isFinite(matchingId) && matchingId > 0,
-  });
-
-// 계약서 상세 내용
-export const useGetSocialworkerContract = (contractId: number) =>
-  useQuery<SocialworkerContractResponse>({
-    queryKey: ['socialworkerContract', contractId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get(
-        `/chat/social-worker/contract/${contractId}`,
-      );
-      return data;
-    },
-  });
-
-// 수정 계약서 생성
-export const usePostSocialworkerContract = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (contractData: SocialworkerContractEditRequest) => {
-      const response = await axiosInstance.post(
-        '/chat/social-worker/contract/edit',
-        contractData,
-      );
-      const locationHeader = response.headers['location'];
-      const newContractId = parseInt(
-        locationHeader.split('/').pop() || '0',
-        10,
-      );
-      return { response, contractId: newContractId };
-    },
-    onSuccess: (data, contractData) => {
-      const { contractId } = data;
-      console.log('usePostSocialworkerContract - 사회복지사 계약 수정 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['socialworkerContract', contractId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['socialworkerChat', contractData.matchingId],
-      });
-      queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
-    },
-    onError: (error) => {
-      console.error(
-        'usePostSocialworkerContract - 사회복지사 계약 수정 실패:',
-        error,
-      );
     },
   });
 };
