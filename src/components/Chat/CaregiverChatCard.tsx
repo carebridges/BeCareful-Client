@@ -12,7 +12,7 @@ const CaregiverChatCard = ({ chat }: ChatListCardProps) => {
 
   return (
     <Container
-      onClick={() => handleNavigate(`/caregiver/chat/${chat.matchingId}`)}
+      onClick={() => handleNavigate(`/caregiver/chat/${chat.chatRoomId}`)}
     >
       <img src={chat.nursingInstitutionProfileImageUrl} />
       <div className="left">

@@ -13,31 +13,30 @@ const SocialworkerChatCard = ({ chat }: ChatListCardProps) => {
 
   return (
     <Container
-      onClick={() => handleNavigate(`/socialworker/chat/${chat.matchingId}`)}
+      onClick={() => handleNavigate(`/socialworker/chat/${chat.chatRoomId}`)}
     >
-      <img src={chat.caregiverInfo.profileImageUrl} />
+      <img src={chat.caregiverProfileImageUrl} />
       <div className="left">
-        <label className="caregiver">
-          {chat.caregiverInfo.name} 요양보호사
-        </label>
+        <label className="caregiver">{chat.caregiverName} 요양보호사</label>
         <label className="recent">
           {textTruncateFormat(chat.recentChat, 30)}
         </label>
         <div className="elderWrapper">
-          <label className="elder">{chat.elderlyInfo.elderlyName} 어르신</label>
+          <label className="elder">{chat.elderlyName} 어르신</label>
           <label className="elder">|</label>
-          <label className="elder">{chat.elderlyInfo.elderlyAge}세</label>
+          <label className="elder">{chat.elderlyAge}세</label>
           <label className="elder">|</label>
           <label className="elder">
-            {GENDER_EN_TO_KR_2[chat.elderlyInfo.elderlyGender]}
+            {GENDER_EN_TO_KR_2[chat.elderlyGender]}
           </label>
         </div>
       </div>
       <div className="right">
-        <label className="time">{chat.time}</label>
-        {/* {chat.unreadCount > 0 && (
+        <label className="time">{chat.lastSendTime}</label>
+        {chat.unreadCount > 0 && (
           <label className="unread">{chat.unreadCount}</label>
-        )} */}
+        )}
+        {chat.isContractAccepted && <label className="accept">승인중</label>}
       </div>
     </Container>
   );
@@ -112,6 +111,12 @@ const Container = styled.div`
 
     color: ${({ theme }) => theme.colors.white};
     font-size: ${({ theme }) => theme.typography.fontSize.body4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .accept {
+    color: ${({ theme }) => theme.colors.mainGreen};
+    font-size: ${({ theme }) => theme.typography.fontSize.body3};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 `;
