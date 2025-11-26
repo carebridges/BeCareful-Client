@@ -7,7 +7,7 @@ interface ChatListCardProps {
   chat: CaregiverChatList;
 }
 
-const CaregiverChatCard = ({ chat }: ChatListCardProps) => {
+const ChatListCardCaregiver = ({ chat }: ChatListCardProps) => {
   const { handleNavigate } = useHandleNavigate();
 
   return (
@@ -31,7 +31,7 @@ const CaregiverChatCard = ({ chat }: ChatListCardProps) => {
   );
 };
 
-export default CaregiverChatCard;
+export default ChatListCardCaregiver;
 
 const Container = styled.div`
   padding: 20px;

@@ -8,7 +8,7 @@ interface ChatListCardProps {
   chat: SocialworkerChatList;
 }
 
-const SocialworkerChatCard = ({ chat }: ChatListCardProps) => {
+const ChatListCardSocialworker = ({ chat }: ChatListCardProps) => {
   const { handleNavigate } = useHandleNavigate();
 
   return (
@@ -42,7 +42,7 @@ const SocialworkerChatCard = ({ chat }: ChatListCardProps) => {
   );
 };
 
-export default SocialworkerChatCard;
+export default ChatListCardSocialworker;
 
 const Container = styled.div`
   padding: 20px;

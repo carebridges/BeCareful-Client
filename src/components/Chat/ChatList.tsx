@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import NoChatList from '@/components/Chat/NoChatList';
+import ChatListEmpty from '@/components/Chat/ChatListEmpty';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ChatItem {
@@ -31,7 +31,7 @@ const ChatList = <T extends ChatItem>({
 
       {data?.length === 0 ? (
         <NoChatWrapper>
-          <NoChatList isCaregiver={isCaregiver} />
+          <ChatListEmpty isCaregiver={isCaregiver} />
         </NoChatWrapper>
       ) : (
         data?.map((chat) => <CardComponent key={chat.chatRoomId} chat={chat} />)

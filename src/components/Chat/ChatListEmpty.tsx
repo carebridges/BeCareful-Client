@@ -3,7 +3,7 @@ import { ReactComponent as Icon } from '@/assets/icons/NoContent.svg';
 import { Button } from '../common/Button/Button';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
-const NoChatList = ({ isCaregiver }: { isCaregiver: boolean }) => {
+const ChatListEmpty = ({ isCaregiver }: { isCaregiver: boolean }) => {
   const { handleNavigate } = useHandleNavigate();
   const navigatePath = isCaregiver
     ? '/caregiver/work'
@@ -31,7 +31,7 @@ const NoChatList = ({ isCaregiver }: { isCaregiver: boolean }) => {
   );
 };
 
-export default NoChatList;
+export default ChatListEmpty;
 
 const Container = styled.div`
   padding: 20px;

@@ -1,5 +1,5 @@
 import ChatList from '@/components/Chat/ChatList';
-import SocialworkerChatCard from '@/components/Chat/SocialworkerChatCard';
+import ChatListCardSocialworker from '@/components/Chat/ChatListCardSocialworker';
 import { useGetSocialworkerChatList } from '@/api/chat';
 
 const SocialworkerChatListPage = () => {
@@ -8,7 +8,7 @@ const SocialworkerChatListPage = () => {
   return (
     <ChatList
       data={data}
-      CardComponent={SocialworkerChatCard}
+      CardComponent={ChatListCardSocialworker}
       isCaregiver={false}
     />
   );
