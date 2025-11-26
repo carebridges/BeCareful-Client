@@ -19,6 +19,8 @@ import { MatchingInfoPage } from '@/page/Matching/MatchingInfoPage';
 import { ElderlyEditPage } from '@/page/Elderly/ElderlyEditPage';
 import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
 
+import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
+
 const SocialworkerRoute = () => {
   const location = useLocation();
 
@@ -62,6 +64,7 @@ const SocialworkerRoute = () => {
           <Route path="elderly" element={<ElderlyListPage />} />
           <Route path="elderly/new" element={<ElderlyRegisterPage />} />
           <Route path="/elderly/:elderlyId" element={<ElderlyDetailPage />} />
+
           <Route
             path="/elderly/:elderlyId/edit"
             element={<ElderlyEditPage />}
