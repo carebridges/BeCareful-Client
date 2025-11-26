@@ -20,6 +20,7 @@ const getColorByStatus = (status: string): TagColor => {
       return 'gray';
     case '매칭 완료':
       return 'blue';
+    case '공고 마감':
     case '공고마감':
       return 'orange';
     default:

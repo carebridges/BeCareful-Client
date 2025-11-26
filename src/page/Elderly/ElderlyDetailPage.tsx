@@ -115,9 +115,19 @@ export const ElderlyDetailPage = () => {
         </RecruitmentDashboard>
       </Container>
       <ButtonContainer>
-        <Button height="52px" variant="white">
+        <Button
+          height="52px"
+          variant="white"
+          onClick={() => {
+            if (elderlyId) {
+              navigate(`/socialworker/elderly/${elderlyId}/edit`);
+              window.scrollTo(0, 0);
+            }
+          }}
+        >
           정보 수정
         </Button>
+
         <Button
           height="52px"
           variant="blue"

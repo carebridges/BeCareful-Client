@@ -9,6 +9,7 @@ import GlobalStyle from '@/style/GlobalStyle';
 import App from '@/App';
 import { ErrorPage } from '@/page/Error/ErrorPage';
 import { theme } from '@/style/theme/index';
+import { NetworkGuardModal } from '@/components/common/NetworkGuard/NetworkGuardModal';
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <BrowserRouter>
+          <NetworkGuardModal />
           <ErrorBoundary fallback={<ErrorPage />}>
             <App />
           </ErrorBoundary>

@@ -96,7 +96,7 @@ export const CareGiverDetailInfoPage = () => {
       </ButtonContainer>
       {isStartDateModalOpen && (
         <SelectStartDateModal
-          width="400px"
+          width="312px"
           onClose={() => setStartDateModalOpen(false)}
           onCancel={() => {
             setStartDateModalOpen(false);
