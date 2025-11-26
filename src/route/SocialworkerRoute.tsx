@@ -16,7 +16,7 @@ import ElderlyListPage from '@/page/Elderly/ElderlyListPage';
 import { ElderlyDetailPage } from '@/page/Elderly/ElderlyDetailPage';
 import { RecruitmentDetailPage } from '@/page/SocialWorker/Matching/RecruitmentDetailPage';
 import { MatchingInfoPage } from '@/page/Matching/MatchingInfoPage';
-
+import { ElderlyEditPage } from '@/page/Elderly/ElderlyEditPage';
 import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
 
 const SocialworkerRoute = () => {
@@ -28,6 +28,7 @@ const SocialworkerRoute = () => {
     '/socialworker/my/association',
     '/socialworker/elderly/new',
     '/socialworker/elderly/:elderlyId',
+    '/socialworker/elderly/:elderlyId/edit',
     '/socialworker/matching/new',
     '/socialworker/matching/:recruitmentId/caregiver/:caregiverId',
     '/socialworker/apply/:recruitmentId/caregiver/:caregiverId',
@@ -61,6 +62,10 @@ const SocialworkerRoute = () => {
           <Route path="elderly" element={<ElderlyListPage />} />
           <Route path="elderly/new" element={<ElderlyRegisterPage />} />
           <Route path="/elderly/:elderlyId" element={<ElderlyDetailPage />} />
+          <Route
+            path="/elderly/:elderlyId/edit"
+            element={<ElderlyEditPage />}
+          />
 
           <Route
             path="match/social"

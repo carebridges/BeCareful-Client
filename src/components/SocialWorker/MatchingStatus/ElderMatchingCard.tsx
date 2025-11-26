@@ -35,21 +35,18 @@ export const ElderMatchingCard = ({
   const name = e.elderlyName;
   const age = e.elderlyAge;
   const gender = e.elderlyGender === 'MALE' ? '남' : '여';
-  const status = r.recruitmentStatus === '모집중' ? '매칭중' : '공고마감';
+  const status = data.recruitmentStatus;
 
   const daysKo = translateWorkDaysToKo(sortWorkDays(r.workDays));
   const scheduleText = `${daysKo} ${formatHHMM(r.workStartTime)}~${formatHHMM(r.workEndTime)}`;
 
-  const location = e.elderlyLocation ?? r.elderlyInfo.address;
+  const location =
+    e.elderlyLocation || r.workLocation || r.institutionInfo.address;
   const description = r.title;
 
-  const createdAtText = shortenYear(formatDateTime(r.createdAt));
+  const createdAtText = shortenYear(formatDateTime(r.createdTime));
 
-  const allTags =
-    r.elderlyInfo.detailCareTypes?.flatMap((c) => [
-      c.careType,
-      ...(c.detailCareTypes ?? []),
-    ]) ?? [];
+  const allTags = r.careTypes ?? [];
   const displayTags = allTags.slice(0, 3);
   const hasMore = allTags.length > 3;
 
@@ -60,7 +57,7 @@ export const ElderMatchingCard = ({
           <Info>
             <strong>{name}</strong>
             <DetailInfo>
-              {age}세 {gender}
+              {age}세 <div className="light">|</div> {gender}
             </DetailInfo>
           </Info>
           <StatusTag status={status} />
@@ -194,9 +191,17 @@ const Info = styled.div`
 `;
 
 const DetailInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   color: ${({ theme }) => theme.colors.gray500};
+
+  .light {
+    color: ${({ theme }) => theme.colors.gray50};
+  }
 `;
 
 const ApplyInfo = styled.div`

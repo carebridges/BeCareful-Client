@@ -65,4 +65,4 @@ export const groupByDate = (contracts: Contract[]) => {
 };
 
 export const shortenYear = (dateTime: string) =>
-  dateTime.replace(/^(\d{2})\d{2}\./, '$1.');
+  dateTime.replace(/^\d{2}(\d{2})\./, '$1.');

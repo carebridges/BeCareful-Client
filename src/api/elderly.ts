@@ -15,6 +15,17 @@ export const useRegisterElderly = () =>
     },
   });
 
+export const useUpdateElderly = (elderlyId: number) =>
+  useMutation({
+    mutationFn: async (payload: ElderlyRegisterPayload) => {
+      const { data } = await axiosInstance.put(
+        `/elderly/${elderlyId}`,
+        payload,
+      );
+      return data;
+    },
+  });
+
 export const useUploadElderlyProfileImage = () =>
   useMutation<UploadResult, Error, { file: File }>({
     mutationFn: async ({ file }) => {

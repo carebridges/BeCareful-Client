@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 
 export const SectionWrapper = styled.div`
   width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -176,7 +177,10 @@ export const AreaArea = styled.div<{ color: boolean }>`
 
 export const CareWrapper = styled.div`
   display: flex;
+  width: 100%;
+  box-sizing: border-box;
   justify-content: space-between;
+  align-items: center;
   gap: 8px;
 `;
 

@@ -40,6 +40,11 @@ export const CareTypeSection = ({
     setCareUnits((prev) => [...prev, newUnit]);
   };
 
+  const handleRemoveCareUnit = (id: string) => {
+    setCareUnits((prev) => prev.filter((unit) => unit.id !== id));
+    if (openModalId === id) setOpenModalId(null);
+  };
+
   const updateCareUnit = (id: string, updated: Partial<CareUnit>) => {
     setCareUnits((prev) => {
       if (updated.selectedCare) {
@@ -95,6 +100,7 @@ export const CareTypeSection = ({
           isModalOpen={openModalId === unit.id}
           onOpenModal={() => setOpenModalId(unit.id)}
           onCloseModal={() => setOpenModalId(null)}
+          onRemove={() => handleRemoveCareUnit(unit.id)}
         />
       ))}
 

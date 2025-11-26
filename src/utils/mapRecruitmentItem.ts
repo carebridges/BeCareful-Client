@@ -8,28 +8,26 @@ export const mapRecruitmentItemToCardDto = (
   it: RecruitmentItem,
 ): ElderMatchingCardDto => {
   const r = it.recruitmentInfo;
-  const e = r.elderlyInfo;
+  const e = it.elderlyInfo;
 
   const daysText = r.workDays.map((d) => DAY_EN_TO_KO[d]).join(', ');
-  const gender = GENDER_EN_TO_KR_1[e.gender];
+  const gender = GENDER_EN_TO_KR_1[e.elderlyGender];
 
-  const careTags = (e.detailCareTypes ?? []).map((c) => c.careType);
-  const careDetailMap = Object.fromEntries(
-    (e.detailCareTypes ?? []).map((c) => [c.careType, c.detailCareTypes ?? []]),
-  );
+  const careTags = r.careTypes ?? [];
+  const careDetailMap: Record<string, string[]> = {};
 
   return {
     id: r.recruitmentId,
-    name: e.name,
-    age: e.age,
+    name: e.elderlyName,
+    age: e.elderlyAge,
     gender,
-    status: r.recruitmentStatus,
+    status: it.recruitmentStatus,
     scheduleText: `${daysText} ${r.workStartTime}~${r.workEndTime}`,
-    location: e.address,
-    description: r.description,
+    location: e.elderlyLocation || r.workLocation,
+    description: r.title,
     autoMatchCount: it.matchingCount,
     applyCount: it.applyCount,
-    createdAtText: formatDateTime(r.createdAt),
+    createdAtText: formatDateTime(r.createdTime),
     careTags,
     careDetailMap,
   };
