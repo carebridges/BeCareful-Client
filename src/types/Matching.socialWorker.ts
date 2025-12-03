@@ -206,3 +206,14 @@ export type RecruitmentForm = {
   workSalaryAmount: number;
   description: string;
 };
+
+export type EditRecruitmentForm = {
+  title: string;
+  workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
+  careTypes: string[];
+  workSalaryUnitType: SalaryUnit;
+  workSalaryAmount: number;
+  description: string;
+};

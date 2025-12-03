@@ -58,13 +58,11 @@ const TitleContainer = styled.div`
   box-sizing: border-box;
   flex-direction: column;
 
-  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-size: ${({ theme }) => theme.typography.fontSize.body1};
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   color: ${({ theme }) => theme.colors.gray900};
 
   .highlight {
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
     color: ${({ theme }) => theme.colors.mainBlue};
   }
 

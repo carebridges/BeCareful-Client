@@ -7,6 +7,7 @@ import {
   MatchingCaregiver,
   RecruitmentForm,
   RawMatchingElderData,
+  EditRecruitmentForm,
 } from '@/types/Matching.socialWorker';
 
 import { RecruitmentDetailResponse } from '@/types/Socialworker/matching';
@@ -71,7 +72,7 @@ export const useMatchingRecruitment = (recruitmentId: string) =>
   useQuery<MatchingElderData>({
     queryKey: ['matching-recruitment', recruitmentId],
     queryFn: async () => {
-      const data = await getMatchingRecruitment(recruitmentId); // Raw 타입
+      const data = await getMatchingRecruitment(recruitmentId);
 
       return {
         ...data,
@@ -155,4 +156,25 @@ export const useDeleteRecruitment = (recruitmentId: number) =>
       );
       return data;
     },
+  });
+
+export const useEditMatchingRecruitment = (recruitmentId: number) =>
+  useMutation({
+    mutationFn: (body: EditRecruitmentForm) =>
+      axiosInstance.put(
+        `/matching/social-worker/recruitment/${recruitmentId}`,
+        body,
+      ),
+  });
+
+export const usePendingMatching = () =>
+  useMutation({
+    mutationFn: (applicationId: number) =>
+      axiosInstance.patch(
+        `/matching/social-worker/${applicationId}/pending`,
+        null,
+        {
+          params: { applicationId },
+        },
+      ),
   });

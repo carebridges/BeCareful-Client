@@ -11,7 +11,7 @@ import {
 interface WorkLocation {
   siDo: string;
   siGuGun: string;
-  dongEupMyeon: string;
+  eupMyeonDong: string;
 }
 
 interface WorkPreferenceSectionProps {
@@ -49,7 +49,7 @@ export const WorkPreferenceSection = ({ data }: WorkPreferenceSectionProps) => {
           <span className="highlight">근무지역</span>
           <span>
             {data.workLocations
-              .map((loc) => `${loc.siDo} ${loc.siGuGun} ${loc.dongEupMyeon}`)
+              .map((loc) => `${loc.siDo} ${loc.siGuGun} ${loc.eupMyeonDong}`)
               .join(', ')}
           </span>
         </DetailContent>

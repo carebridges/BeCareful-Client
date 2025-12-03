@@ -17,8 +17,8 @@ import { ElderlyDetailPage } from '@/page/Elderly/ElderlyDetailPage';
 import { RecruitmentDetailPage } from '@/page/SocialWorker/Matching/RecruitmentDetailPage';
 import { MatchingInfoPage } from '@/page/Matching/MatchingInfoPage';
 import { ElderlyEditPage } from '@/page/Elderly/ElderlyEditPage';
-
 import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
+import { RecruitmentEditPage } from '@/page/SocialWorker/Matching/RecruitmentEditPage';
 
 const SocialworkerRoute = () => {
   const location = useLocation();
@@ -40,6 +40,7 @@ const SocialworkerRoute = () => {
     '/socialworker/point',
     '/socialworker/recruitment/new',
     '/socialworker/recruitment/:recruitmentId',
+    '/socialworker/recruitment/:recruitmentId/edit',
 
     '/socialworker/ad/:adId',
   ];
@@ -63,6 +64,10 @@ const SocialworkerRoute = () => {
           <Route path="elderly" element={<ElderlyListPage />} />
           <Route path="elderly/new" element={<ElderlyRegisterPage />} />
           <Route path="/elderly/:elderlyId" element={<ElderlyDetailPage />} />
+          <Route
+            path="/elderly/:elderlyId/edit"
+            element={<ElderlyEditPage />}
+          />
 
           <Route
             path="/elderly/:elderlyId/edit"
@@ -99,6 +104,11 @@ const SocialworkerRoute = () => {
           <Route
             path="/recruitment/:recruitmentId"
             element={<RecruitmentDetailPage />}
+          />
+
+          <Route
+            path="/recruitment/:recruitmentId/edit"
+            element={<RecruitmentEditPage />}
           />
 
           <Route path="chat" element={<SocialworkerChatListPage />} />

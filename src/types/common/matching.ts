@@ -7,7 +7,7 @@ export type WorkDay =
   | 'SATURDAY'
   | 'SUNDAY';
 
-export type RecruitmentStatus = '모집중' | '모집완료' | '조율중' | '마감';
+export type RecruitmentStatus = '모집중' | '모집완료' | '조율중' | '공고마감';
 export type SalaryUnit = 'HOUR' | 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
 
 export interface AreaSocial {

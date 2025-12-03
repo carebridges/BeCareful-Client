@@ -8,6 +8,7 @@ import { MATCH_REASON_TEXT } from '@/constants/socialworker/matching.socialWorke
 import {
   useCaregiverDetail,
   useHireCaregiver,
+  usePendingMatching,
 } from '@/api/matching.socialWorker';
 import { Button } from '@/components/common/Button/Button';
 import { SelectStartDateModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/SelectStartDateModal';
@@ -16,11 +17,13 @@ import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIn
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { ProposalModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalSentModal';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
+import { ProposalHoldBlockModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalHoldBlockModal';
 
 export const CareGiverDetailInfoPage = () => {
   const navigate = useNavigate();
   const [isStartDateModalOpen, setStartDateModalOpen] = useState(false);
   const [isProposalModalOpen, setProposalModalOpen] = useState(false);
+  const [isProposalHoldBlockOpen, setProposalHoldBlockOpen] = useState(false);
 
   const { recruitmentId, caregiverId } = useParams<{
     recruitmentId: string;
@@ -28,6 +31,7 @@ export const CareGiverDetailInfoPage = () => {
   }>();
 
   const { mutate: hireCaregiver } = useHireCaregiver();
+  const { mutate: setPending } = usePendingMatching();
 
   const { data, isLoading, error } = useCaregiverDetail(
     recruitmentId ?? '',
@@ -40,6 +44,20 @@ export const CareGiverDetailInfoPage = () => {
 
   if (isLoading) return <LoadingIndicator />;
   if (error || !data) return <ErrorIndicator />;
+
+  const handlePending = () => {
+    const applicationId = data.workApplicationInfo?.workApplicationId;
+
+    setPending(applicationId, {
+      onSuccess: () => {
+        setProposalHoldBlockOpen(false);
+        navigate(-1);
+      },
+      onError: () => {
+        alert('보류 처리에 실패했습니다. 다시 시도해주세요.');
+      },
+    });
+  };
 
   return (
     <Container>
@@ -87,6 +105,13 @@ export const CareGiverDetailInfoPage = () => {
 
       <ButtonContainer>
         <Button
+          variant="white"
+          height="52px"
+          onClick={() => setProposalHoldBlockOpen(true)}
+        >
+          보류하기
+        </Button>
+        <Button
           onClick={() => setStartDateModalOpen(true)}
           height="52px"
           variant="blue"
@@ -124,11 +149,19 @@ export const CareGiverDetailInfoPage = () => {
 
       {isProposalModalOpen && (
         <ProposalModal
-          width="400px"
+          width="312px"
           onClose={() => setProposalModalOpen(false)}
           onCancel={() => {
             //TODO
           }}
+        />
+      )}
+
+      {isProposalHoldBlockOpen && (
+        <ProposalHoldBlockModal
+          width="312px"
+          onClose={() => setProposalHoldBlockOpen(false)}
+          onCancel={handlePending}
         />
       )}
     </Container>
@@ -252,6 +285,7 @@ const ButtonContainer = styled.div`
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
+  gap: 8px;
 `;
 
 const MatchReasonContainer = styled.div`
