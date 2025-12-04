@@ -31,7 +31,6 @@ export const useGetSocialworkerChat = (chatRoomId: number) =>
       );
       return data;
     },
-    enabled: Number.isFinite(chatRoomId) && chatRoomId > 0,
   });
 
 // 계약서 상세 내용

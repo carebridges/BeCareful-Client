@@ -1,5 +1,4 @@
-import { ElderlyDetail } from '@/types/Socialworker/common';
-import { InstitutionInfo } from '@/types/common/institutionInfo';
+import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
 
 export interface Contract {
   contractId: number;
@@ -12,17 +11,103 @@ export interface Contract {
   createdDate: string;
 }
 
-export interface CaregiverInfo {
-  caregiverId: number;
-  name: string;
-  profileImageUrl: string;
+export type SenderType = 'CAREGIVER' | 'SOCIAL_WORKER' | 'SYSTEM';
+
+export type SendRequestType =
+  | 'SEND_TEXT'
+  | 'EDIT_CONTRACT'
+  | 'CONFIRM_MATCHING'
+  | 'ACCEPT_CONTRACT';
+
+export type ChatType =
+  | 'TEXT'
+  | 'CONTRACT'
+  | 'CHATROOM_CONTRACT_STATUS_UPDATED'
+  | 'CHATROOM_ACTIVE_STATUS_UPDATED';
+// | 'SYSTEM_INFO';
+
+export interface SendTextChatRequest {
+  sendRequestType: 'SEND_TEXT';
+  text: string;
 }
 
-export interface ChatResponse {
-  matchingId: number;
-  recruitmentId: number;
-  elderlyInfo: ElderlyDetail;
-  institutionInfo: InstitutionInfo;
-  caregiverInfo: CaregiverInfo;
-  contractList: Contract[];
+export interface EditContractChatRequest {
+  sendRequestType: 'EDIT_CONTRACT';
+  workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
+  workSalaryUnitType: WorkSalaryUnitType;
+  workSalaryAmount: number;
+  workStartDate: string;
+  careTypes: string[];
 }
+
+export interface ConfirmContractChatRequest {
+  sendRequestType: 'CONFIRM_MATCHING';
+  lastContractChatId: number;
+}
+
+export interface AcceptContractChatRequest {
+  sendRequestType: 'ACCEPT_CONTRACT';
+  lastContractChatId: number;
+}
+
+export interface TextChatResponse {
+  chatId: number;
+  chatType: 'TEXT';
+  senderType: SenderType;
+  text: string;
+  sentTime: string;
+}
+
+export interface ContractChatResponse {
+  chatType: 'CONTRACT';
+  chatId: number;
+  senderType: SenderType;
+  sentTime: string;
+  careTypes: string[];
+  workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
+  workSalaryAmount: number;
+  workStartDate: string;
+}
+
+export interface ChatRoomContractStatusUpdatedChatResponse {
+  chatType: 'CHATROOM_CONTRACT_STATUS_UPDATED';
+  status: '채용확정';
+  sentTime?: string;
+  senderType?: string;
+}
+
+export interface ChatRoomActiveStatusUpdatedChatResponse {
+  chatType: 'CHATROOM_ACTIVE_STATUS_UPDATED';
+  status:
+    | '타매칭채용완료'
+    | '요양보호사탈퇴'
+    | '사회복지사전원탈퇴'
+    | '공고마감';
+  sentTime?: string;
+  senderType?: string;
+}
+
+export interface SystemInfo {
+  chatType: 'SYSTEM_INFO';
+  senderType: 'SYSTEM';
+  title: string;
+  detail: string;
+  sentTime?: string;
+}
+
+export type ChatRequest =
+  | SendTextChatRequest
+  | EditContractChatRequest
+  | AcceptContractChatRequest
+  | ConfirmContractChatRequest;
+
+export type ChatResponse =
+  | TextChatResponse
+  | ContractChatResponse
+  | ChatRoomContractStatusUpdatedChatResponse
+  | ChatRoomActiveStatusUpdatedChatResponse
+  | SystemInfo;
