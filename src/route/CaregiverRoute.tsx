@@ -23,7 +23,7 @@ const CaregiverRoute = () => {
     '/caregiver/my/career',
     '/caregiver/my/application',
     '/caregiver/chat',
-    '/caregiver/chat/:matchingId',
+    '/caregiver/chat/:chatRoomId',
   ];
   const shouldHideTabBar = () => {
     return hideTabBarPaths.some((pathPattern) => {
@@ -53,7 +53,7 @@ const CaregiverRoute = () => {
           <Route path="my/*" element={<CaregiverMyRoute />} />
 
           <Route path="chat" element={<CaregiverChatListPage />} />
-          <Route path="chat/:matchingId" element={<CaregiverChatPage />} />
+          <Route path="chat/:chatRoomId" element={<CaregiverChatPage />} />
 
           <Route path="point" element={<PointPage />} />
         </Routes>

@@ -33,7 +33,7 @@ const SocialworkerRoute = () => {
     '/socialworker/apply/:recruitmentId/caregiver/:caregiverId',
     '/socialworker/match/info/:recruitmentId',
     '/socialworker/chat',
-    '/socialworker/chat/:matchingId',
+    '/socialworker/chat/:chatRoomId',
     '/socialworker/chat/:contractId/edit',
     '/socialworker/point',
     '/socialworker/recruitment/new',
@@ -95,7 +95,7 @@ const SocialworkerRoute = () => {
           />
 
           <Route path="chat" element={<SocialworkerChatListPage />} />
-          <Route path="chat/:matchingId" element={<SocialworkerChatPage />} />
+          <Route path="chat/:chatRoomId" element={<SocialworkerChatPage />} />
           <Route
             path="chat/:contractId/edit"
             element={<SocialworkerEditContractPage />}
