@@ -1,167 +1,193 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Client, IMessage } from '@stomp/stompjs';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { Button } from '@/components/common/Button/Button';
+import { ReactComponent as DotIcon } from '@/assets/icons/community/Dots.svg';
+import { ReactComponent as Delete } from '@/assets/icons/CloseCircle.svg';
+import { ReactComponent as Send } from '@/assets/icons/community/ReplySend.svg';
+import { ReactComponent as SendDefault } from '@/assets/icons/community/ReplySendDefault.svg';
+import { ReactComponent as KakaoChannelIcon } from '@/assets/icons/KakaoChannel.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import ChatCard from '@/components/Chat/ChatCard';
+import BottomSheet from '@/components/Community/common/BottomSheet';
+import ChatRoom from '@/components/Chat/ChatRoom';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
+import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import {
-  formatDateLabel,
-  formatTimeLabel,
-  groupByDate,
-} from '@/utils/formatTime';
-import { useGetCaregiverChat, usePostCaregiverContract } from '@/api/caregiver';
 import { handleModal } from '@/utils/handleModal';
+import { useGetCaregiverChat } from '@/api/chat';
+import { ChatRoomStatus } from '@/types/Caregiver/chat';
+import {
+  ChatRequest,
+  ChatResponse,
+  SendTextChatRequest,
+  SystemInfo,
+} from '@/types/common/chat';
 
 const CaregiverChatPage = () => {
-  const { matchingId } = useParams<{ matchingId: string }>();
+  const { chatRoomIdParam } = useParams();
+  const chatRoomId = Number(chatRoomIdParam);
+  const { data } = useGetCaregiverChat(chatRoomId);
+  const { handleGoBack } = useHandleNavigate();
 
-  const { handleGoBack, handleNavigate } = useHandleNavigate();
-
-  const { data } = useGetCaregiverChat(Number(matchingId));
-
-  // 매칭 공고 지원
-  const { mutate: confirmApply } = usePostCaregiverContract();
-
-  // 일자리 지원 최종 확정 여부
-  const [finalConfirm, setFinalConfirm] = useState(false);
-  // 최종 승인하기 팝업
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  // 최종 승인하기 팝업 - 최종 승인하기
-  const handleConfirm = () => {
-    const lastContractId =
-      data?.contractList?.[data?.contractList.length - 1]?.contractId;
-    if (!lastContractId) {
-      console.error('유효한 계약 ID가 없습니다.');
-      return;
-    }
-    confirmApply(
-      {
-        contractId: lastContractId,
-        matchingId: data.matchingId,
-        recruitmentId: data.recruitmentId,
-      },
-      {
-        onSuccess: () => {
-          setFinalConfirm(true);
-          handleModal(setIsCompleteModalOpen, setIsConfirmModalOpen);
-        },
-      },
-    );
-  };
-  // 최종 확정 팝업
+  const [isKakaoSheetOpen, setIsKakaoSheetOpen] = useState(false);
+  const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
-  const groupedContracts = groupByDate(data?.contractList ?? []);
-  const sortedDates = Object.keys(groupedContracts).sort((a, b) =>
-    a > b ? 1 : -1,
-  );
+  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const [chat, setChat] = useState<ChatResponse[]>([]);
+
+  const [chatRoomStatus, setChatRoomStatus] =
+    useState<ChatRoomStatus>('채팅가능');
+  const [lastContractChatId, setLastContractId] = useState<number | null>();
+
+  const [newChat, setNewChat] = useState('');
+  const handleNewChatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewChat(e.target.value);
+  };
+  const handleNewChatSend = (e?: React.FormEvent | React.MouseEvent) => {
+    e?.preventDefault();
+    if (!newChat.trim()) return; // 댓글 내용이 비어있으면 전송 x
+    const request: SendTextChatRequest = {
+      sendRequestType: 'SEND_TEXT',
+      text: newChat,
+    };
+    sendNewChat(chatRoomId, request);
+  };
+
+  const handleAgree = () => {
+    // TODO: 동의하기 전송
+    handleModal(setIsCompleteModalOpen, setIsAgreeModalOpen);
+  };
+
+  const handleIncoming = useCallback((c: ChatResponse) => {
+    setChat((prev) => [...prev, c]);
+
+    if (c.chatType === 'CONTRACT') {
+      setLastContractId(c.chatId);
+    }
+
+    if (c.chatType === 'CHATROOM_CONTRACT_STATUS_UPDATED') {
+      setLastContractId(null);
+    }
+
+    if (c.chatType === 'CHATROOM_ACTIVE_STATUS_UPDATED') {
+      setChatRoomStatus(c.status);
+    }
+  }, []);
+
+  useEffect(() => {
+    setChatRoomStatus(data?.chatRoomStatus ?? '채팅가능');
+    setChat(data?.chatList ?? []);
+
+    const client = new Client({
+      brokerURL: import.meta.env.VITE_APP_WS_URL,
+      reconnectDelay: 5000,
+
+      onConnect: () => {
+        console.log('웹소켓 연결 시작');
+        client.subscribe(
+          `/topic/chat-room/${chatRoomId}`,
+          (message: IMessage) => {
+            const chatData = JSON.parse(message.body);
+            setChat((prev) => [...prev, chatData]);
+          },
+        );
+      },
+    });
+
+    client.activate();
+    setStompClient(client);
+
+    return () => {
+      console.log('웹소켓 종료!');
+      client.deactivate();
+    };
+  }, [chatRoomId, handleIncoming]);
+
+  const sendNewChat = (chatRoomId: number, request: ChatRequest) => {
+    if (!stompClient) return;
+    stompClient.publish({
+      destination: `/app/chat/send/${chatRoomId}`,
+      body: JSON.stringify(request),
+    });
+    setNewChat('');
+  };
+
+  const addLocalSystemMessage = (title: string, detail: string) => {
+    const message: SystemInfo = {
+      chatType: 'SYSTEM_INFO',
+      senderType: 'SYSTEM',
+      title: title,
+      detail: detail,
+      sentTime: new Date().toISOString(),
+    };
+    setChat((prev) => [...prev, message]);
+  };
 
   return (
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
-        center={<NavCenter>{data?.institutionInfo.name}</NavCenter>}
+        center={<NavCenter>{data?.institutionName}</NavCenter>}
+        right={<NavRight onClick={() => setIsKakaoSheetOpen(true)} />}
         color=""
       />
 
       <Elder>
         <div className="left">
-          <img src={data?.elderlyInfo.elderlyProfileImageUrl} />
-          <div className="name">{data?.elderlyInfo.elderlyName} 어르신</div>
+          <img src={data?.elderlyProfileImageUrl} />
+          <div className="name">{data?.elderlyName} 어르신</div>
         </div>
         <div className="right">정보 보기</div>
       </Elder>
 
-      <ChatRoom>
-        {sortedDates.map((date) => {
-          const isLastDate = date === sortedDates[sortedDates.length - 1];
-          const contracts = groupedContracts[date];
+      <ChatRoom
+        chat={chat}
+        role="CAREGIVER"
+        lastContractChatId={lastContractChatId ?? null}
+        chatRoomId={chatRoomId}
+        send={sendNewChat}
+        onLocalSystemMessage={addLocalSystemMessage}
+        profileImg={data?.institutionProfileImageUrl ?? ''}
+        name={data?.institutionName ?? ''}
+        elderlyName={data?.elderlyName ?? ''}
+        status={chatRoomStatus}
+      />
 
-          return (
-            <ChatWrapper key={date}>
-              <label className="date">{formatDateLabel(date)}</label>
-              {contracts.map((contract, index) => {
-                const isLastItem = index === contracts.length - 1;
-                return (
-                  <Chat key={contract.contractId}>
-                    <img
-                      src={data?.elderlyInfo.elderlyProfileImageUrl}
-                      alt="프로필"
-                    />
-                    <div className="right">
-                      <div className="chat">
-                        <label className="institution">
-                          {data?.institutionInfo.name}
-                        </label>
-                        <ChatCard
-                          border="left"
-                          title="합격을 축하드립니다!"
-                          name={data?.elderlyInfo.elderlyName ?? ''}
-                          items={contract}
-                          hasButton={isLastDate && isLastItem}
-                          buttonContent="최종 승인하기"
-                          buttonClick={() => setIsConfirmModalOpen(true)}
-                        />
-                      </div>
-                      <label className="time">
-                        {formatTimeLabel(contract.createdDate)}
-                      </label>
-                    </div>
-                  </Chat>
-                );
-              })}
-            </ChatWrapper>
-          );
-        })}
-        {finalConfirm && (
-          <>
-            <ApproveWrapper>
-              <label className="title">최종 승인이 확정되었습니다!</label>
-              <label className="detail">
-                {data?.elderlyInfo.elderlyName} 어르신을 위한 돌봄 일정이
-                추가되었습니다.
-              </label>
-            </ApproveWrapper>
-            <Buttons>
-              <Button
-                height="52px"
-                variant="mainBlue"
-                onClick={() => handleNavigate('/caregiver/work')}
-              >
-                추가된 일정 확인하기
-              </Button>
-              <Button
-                height="52px"
-                variant="mainBlue"
-                onClick={() =>
-                  handleNavigate(`/caregiver/apply/${data?.recruitmentId}`)
-                }
-              >
-                내 일자리 확인하기
-              </Button>
-            </Buttons>
-          </>
+      <ChatInputWrapper>
+        <div className="comment">
+          <ChatInput
+            placeholder="근무 조건 조율을 원하시면 메시지를 전송해주세요."
+            value={newChat}
+            onChange={handleNewChatChange}
+          />
+          {newChat.length > 0 && (
+            <Delete className="delete" onClick={() => setNewChat('')} />
+          )}
+        </div>
+        {newChat.length > 0 ? (
+          <Send className="svg" onClick={handleNewChatSend} />
+        ) : (
+          <SendDefault className="svg" onClick={handleNewChatSend} />
         )}
-      </ChatRoom>
+      </ChatInputWrapper>
 
       <Modal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
+        isOpen={isAgreeModalOpen}
+        onClose={() => setIsAgreeModalOpen(false)}
       >
         <ModalButtons
-          onClose={() => setIsConfirmModalOpen(false)}
-          title={'일자리 지원을\n최종 확정하시겠습니까?'}
+          onClose={() => setIsAgreeModalOpen(false)}
+          title="근무 조건에 동의하시겠습니까?"
           detail={
-            '최종 승인시 조율 요청이 불가능하며,\n기관 담당자에게 근무 확정 알림이 가요.'
+            '근무 조건 동의시 더이상 조율이 불가능하며,\n기관 담당자에게 근무 확정 요청 알림이 가요.'
           }
           left="취소"
-          right="최종 승인하기"
-          handleLeftBtnClick={() => setIsConfirmModalOpen(false)}
-          handleRightBtnClick={handleConfirm}
+          right="동의하기"
+          handleLeftBtnClick={() => setIsAgreeModalOpen(false)}
+          handleRightBtnClick={handleAgree}
         />
       </Modal>
 
@@ -169,18 +195,40 @@ const CaregiverChatPage = () => {
         isOpen={isCompleteModalOpen}
         onClose={() => setIsCompleteModalOpen(false)}
       >
-        <ModalButtons
+        <ModalLimit
           onClose={() => setIsCompleteModalOpen(false)}
-          title={'일자리 지원이\n최종 확정되었습니다!'}
-          detail="구인 연락을 기다려주세요!"
-          left="일정 보러가기"
-          right="채팅 보기"
-          handleLeftBtnClick={() =>
-            handleNavigate(`/caregiver/apply/${data?.recruitmentId}`)
+          title="근무 조건에 동의하셨습니다!"
+          detail={
+            '기관 담당자에게 근무 확정 알림을 전송했어요.\n최종 채용 확정을 기다려 주세요.'
           }
-          handleRightBtnClick={() => setIsCompleteModalOpen(false)}
+          button="채팅방으로 이동하기"
+          handleBtnClick={() => setIsCompleteModalOpen(false)}
         />
       </Modal>
+
+      <BottomSheet
+        isOpen={isKakaoSheetOpen}
+        setIsOpen={setIsKakaoSheetOpen}
+        title="고객센터"
+        titleStar={false}
+      >
+        <BottomSheetContainer>
+          <div className="ask">
+            문의하고 싶은 내용이 있으신가요?
+            <br />
+            돌봄다리 카카오톡 채널을 통해 편하게 문의해주세요.
+          </div>
+          <div className="border" />
+          <KakaoContainer
+            onClick={() =>
+              (window.location.href = 'http://pf.kakao.com/_xczamn/friend')
+            }
+          >
+            <KakaoChannelIcon />
+            <div className="channel">카카오톡 채널 바로가기</div>
+          </KakaoContainer>
+        </BottomSheetContainer>
+      </BottomSheet>
     </Container>
   );
 };
@@ -201,6 +249,11 @@ const NavCenter = styled.label`
   color: ${({ theme }) => theme.colors.black};
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+`;
+
+const NavRight = styled(DotIcon)`
+  margin-right: 20px;
+  cursor: pointer;
 `;
 
 const Elder = styled.div`
@@ -239,91 +292,94 @@ const Elder = styled.div`
   }
 `;
 
-const ChatRoom = styled.div`
-  padding: 24px 20px;
+const ChatInputWrapper = styled.div`
+  padding: 10px 20px;
+  height: 44px;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const ChatWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  .date {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-`;
-
-const Chat = styled.div`
-  display: flex;
-  gap: 8px;
-
-  img {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-
-  .right {
-    display: flex;
-    gap: 8px;
-    align-items: flex-end;
-  }
-
-  .chat {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .institution {
-    color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.body3};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  }
-
-  .time {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body4};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
-  }
-`;
-
-const ApproveWrapper = styled.div`
-  padding: 40px 0px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   justify-content: center;
   align-items: center;
+  background: ${({ theme }) => theme.colors.white};
 
-  .title {
-    color: ${({ theme }) => theme.colors.mainBlue};
-    font-size: ${({ theme }) => theme.typography.fontSize.title5};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-    text-align: center;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .comment {
+    width: 100%;
+    display: flex;
+    position: relative;
   }
 
-  .detail {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body2};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
-    text-align: center;
+  .delete {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .svg {
+    padding: 4px;
+    cursor: pointer;
   }
 `;
 
-const Buttons = styled.div`
-  margin-bottom: 60px;
+const ChatInput = styled.input`
+  outline: none;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  color: ${({ theme }) => theme.colors.gray800};
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+
+  padding: 9px 16px;
+  width: 100%;
+  height: 26px;
+  display: flex;
+  align-items: start;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray300};
+  }
+
+  caret-color: ${({ theme }) => theme.colors.mainBlue};
+`;
+
+const BottomSheetContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+
+  .ask {
+    margin-bottom: 36px;
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .border {
+    margin: 0px -20px;
+    widht: 100%;
+    height: 1px;
+    background: ${({ theme }) => theme.colors.gray50};
+  }
+`;
+
+const KakaoContainer = styled.button`
+  padding: 17px 16px;
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  background: var(--kakao, #fee500);
+  cursor: pointer;
+
+  .channel {
+    margin: 0 auto;
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
 `;
