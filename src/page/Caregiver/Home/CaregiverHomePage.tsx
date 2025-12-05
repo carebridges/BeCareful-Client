@@ -36,21 +36,13 @@ const CaregiverHomePage = () => {
 
       <BannerWrapper>
         <div className="labelWrapper">
-          {data?.isWorking ? (
-            <label>
-              {data.name}님,
-              <br />
-              돌봄을 시작하세요!
-            </label>
-          ) : (
-            <label>
-              {data?.name}님,
-              <br />
-              오늘의 일정이에요!
-            </label>
-          )}
+          <label>
+            {data?.name}님,
+            <br />
+            {data?.isWorking ? '돌봄을 시작하세요!' : '오늘의 일정이에요!'}
+          </label>
         </div>
-        <Person style={{ position: 'absolute', right: '0', top: '51px' }} />
+        <Person style={{ marginTop: '-5px' }} />
       </BannerWrapper>
 
       <MainWrapper>
@@ -134,11 +126,7 @@ export default CaregiverHomePage;
 
 const Container = styled.div`
   background: #f2f3f7;
-  position: relative;
-  // min-height: 100vh;
-
-  background: black;
-  border: 1px solid orange;
+  min-height: 100vh;
 `;
 
 const NavLeft = styled(Logo)`
@@ -155,8 +143,10 @@ const NavRight = styled.div`
 `;
 
 const BannerWrapper = styled.div`
-  background: ${({ theme }) => theme.colors.mainBlue};
   height: 188px;
+  display: flex;
+  justify-content: space-between;
+  background: ${({ theme }) => theme.colors.mainBlue};
 
   .labelWrapper {
     display: flex;
@@ -185,13 +175,11 @@ const BannerWrapper = styled.div`
 `;
 
 const MainWrapper = styled.div`
+  margin-top: -50px;
+  padding: 0px 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 192px;
 `;
 
 const CardWrapper = styled.div`
