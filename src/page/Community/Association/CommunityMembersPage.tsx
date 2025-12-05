@@ -47,7 +47,6 @@ const CommunityMembersPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>회원 목록</NavCenter>}
-        color="white"
       />
       <Tabs>
         {tabs.map((tab) => (

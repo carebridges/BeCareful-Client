@@ -96,7 +96,6 @@ const CommunityMemberDetailPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>회원 정보</NavCenter>}
-        color="white"
       />
 
       <ProfileCard

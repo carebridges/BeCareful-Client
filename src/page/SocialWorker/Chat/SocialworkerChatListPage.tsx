@@ -15,7 +15,6 @@ const SocialworkerChatListPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>채팅 목록</NavCenter>}
-        color=""
       />
       {data?.map((chat) => (
         <SocialworkerChatCard key={chat.matchingId} chat={chat} />

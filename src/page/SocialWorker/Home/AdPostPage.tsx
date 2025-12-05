@@ -51,7 +51,6 @@ const AdPostPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>광고</NavCenter>}
-        color="white"
       />
 
       <TitleSection

@@ -98,7 +98,6 @@ export const SocialWorkerMatchingListPage = () => {
             </NavLeft>
           }
           center={<NavCenter>매칭</NavCenter>}
-          color="white"
         />
 
         <TabContainer>

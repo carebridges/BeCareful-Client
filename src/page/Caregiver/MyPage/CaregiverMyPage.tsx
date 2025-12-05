@@ -60,7 +60,7 @@ const CaregiverMyPage = () => {
 
   return (
     <Container>
-      <NavBar left={<NavLeft>마이페이지</NavLeft>} color="" />
+      <NavBar left={<NavLeft>마이페이지</NavLeft>} />
 
       <ProfileSection data={data?.caregiverInfo} />
 

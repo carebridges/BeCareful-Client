@@ -34,7 +34,6 @@ export const ElderlyDetailPage = () => {
               </NavLeft>
             }
             center={<NavCenter>어르신 정보</NavCenter>}
-            color="white"
           />
         </NavBarContainer>
 

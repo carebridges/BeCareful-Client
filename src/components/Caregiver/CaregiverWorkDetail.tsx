@@ -102,7 +102,6 @@ const CaregiverWorkDetail = ({ work }: CaregiverWorkDetailProps) => {
             {work.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
-        color="white"
       />
 
       <WorkInfoWrapper>

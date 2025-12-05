@@ -34,7 +34,6 @@ const CaregiverApplyPage = () => {
             {data?.hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
-        color=""
       />
 
       <TabWrapper>

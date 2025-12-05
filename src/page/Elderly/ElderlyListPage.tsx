@@ -49,7 +49,6 @@ const ElderlyListPage = () => {
             </NavLeft>
           }
           center={<NavCenter>어르신 목록</NavCenter>}
-          color="white"
         />
 
         <MatchingSearchBox

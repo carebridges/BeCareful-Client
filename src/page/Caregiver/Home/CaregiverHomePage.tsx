@@ -33,6 +33,7 @@ const CaregiverHomePage = () => {
         }
         color="blue"
       />
+
       <BannerWrapper>
         <div className="labelWrapper">
           {data?.isWorking ? (
@@ -97,7 +98,9 @@ const CaregiverHomePage = () => {
               <div className="left">
                 <label className="title">모집공고</label>
                 <div className="detail">
-                  <label className="number">{data?.recruitmentCount}</label>
+                  <label className="number">
+                    {data?.recruitmentCount ?? 0}
+                  </label>
                   <label className="unit">건</label>
                 </div>
               </div>
@@ -107,7 +110,9 @@ const CaregiverHomePage = () => {
               <div className="left">
                 <label className="title">지원현황</label>
                 <div className="detail">
-                  <label className="number">{data?.applicationCount}</label>
+                  <label className="number">
+                    {data?.applicationCount ?? 0}
+                  </label>
                   <label className="unit">건</label>
                 </div>
               </div>
@@ -130,7 +135,10 @@ export default CaregiverHomePage;
 const Container = styled.div`
   background: #f2f3f7;
   position: relative;
-  min-height: 100vh;
+  // min-height: 100vh;
+
+  background: black;
+  border: 1px solid orange;
 `;
 
 const NavLeft = styled(Logo)`

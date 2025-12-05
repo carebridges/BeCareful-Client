@@ -68,7 +68,6 @@ const SocialworkerEditInstitutionPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>기관 정보 수정</NavCenter>}
-        color="white"
       />
 
       <ProfileImgUploader

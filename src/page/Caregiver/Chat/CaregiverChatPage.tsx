@@ -65,7 +65,6 @@ const CaregiverChatPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>{data?.institutionInfo.name}</NavCenter>}
-        color=""
       />
 
       <Elder>

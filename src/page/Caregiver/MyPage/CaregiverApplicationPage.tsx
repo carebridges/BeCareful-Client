@@ -111,7 +111,6 @@ const CaregiverApplicationPage = () => {
             일자리 지원서 {data?.workApplicationDto ? '수정' : '등록'}
           </NavCenter>
         }
-        color="white"
       />
 
       <SectionWrapper>

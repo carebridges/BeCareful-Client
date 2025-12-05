@@ -15,7 +15,6 @@ const CaregiverChatListPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>채팅 목록</NavCenter>}
-        color=""
       />
       {data?.map((chat) => (
         <CaregiverChatCard key={chat.matchingId} chat={chat} />

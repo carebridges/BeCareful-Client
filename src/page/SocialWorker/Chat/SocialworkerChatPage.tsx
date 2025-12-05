@@ -37,7 +37,6 @@ const SocialworkerChatPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>{data?.caregiverInfo.name} 요양보호사</NavCenter>}
-        color=""
       />
 
       <Elder>

@@ -108,7 +108,6 @@ export const RecruitmentRegisterPage = () => {
             </NavLeft>
           }
           center={<NavCenter>공고 등록</NavCenter>}
-          color="white"
         />
       </NavBarContainer>
 

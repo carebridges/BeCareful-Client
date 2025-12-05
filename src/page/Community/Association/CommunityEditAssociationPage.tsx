@@ -51,7 +51,6 @@ const CommunityEditAssociationPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>협회 정보 수정</NavCenter>}
-        color=""
       />
 
       {/* title="협회 대표 대문 사진을 설정해 주세요." */}

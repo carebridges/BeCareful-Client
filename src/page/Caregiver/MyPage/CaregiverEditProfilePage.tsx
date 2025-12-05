@@ -98,7 +98,6 @@ const CaregiverEditProfilePage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>프로필 수정</NavCenter>}
-        color="white"
       />
 
       {/* <ProfileImageEditor<File, UploadResult>
