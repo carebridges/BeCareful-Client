@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export const usePostings = (initialData?: PostDetailResponse) => {
   const [isImportant, setIsImportant] = useState(
-    initialData?.isImportant ?? true,
+    initialData?.isImportant ?? false,
   );
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [content, setContent] = useState(initialData?.content ?? '');
