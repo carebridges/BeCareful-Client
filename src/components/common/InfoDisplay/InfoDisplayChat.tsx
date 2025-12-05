@@ -48,6 +48,10 @@ const Container = styled.div<{ role: string }>`
     gap: 8px;
   }
 
+  .rightWrapper {
+    align-items: flex-end;
+  }
+
   .info-title {
     color: ${({ theme }) => theme.colors.gray500};
     font-size: ${({ theme }) => theme.typography.fontSize.body2};

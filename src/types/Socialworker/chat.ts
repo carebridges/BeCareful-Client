@@ -1,5 +1,6 @@
 import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
-import { ChatRoomContractStatus, ChatRoomStatus } from '../Caregiver/chat';
+import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
+import { ChatResponse } from '@/types/common/chat';
 
 export interface SocialworkerChatList {
   chatRoomId: number;
@@ -26,7 +27,7 @@ export interface SocialworkerChatResponse {
   chatRoomStatus: ChatRoomStatus;
   chatRoomContractStatus: ChatRoomContractStatus;
   recruitmentId: number;
-  chatList: [];
+  chatList: ChatResponse[];
 }
 
 interface CareInfoList {

@@ -1,20 +1,21 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Button } from '@/components/common/Button/Button';
+import Modal from '@/components/common/Modal/Modal';
+import ModalButtons from '@/components/common/Modal/ModalButtons';
+import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 import {
   AcceptContractChatRequest,
   ChatRequest,
   ConfirmContractChatRequest,
   SenderType,
 } from '@/types/common/chat';
-import { ChatRoomStatus } from '@/types/Caregiver/chat';
-import Modal from '../common/Modal/Modal';
-import ModalButtons from '../common/Modal/ModalButtons';
 
 interface ChatContractButtonProps {
   role: SenderType;
   senderType: SenderType;
-  status: ChatRoomStatus;
+  chatRoomStatus: ChatRoomStatus;
+  contractStatus: ChatRoomContractStatus;
   lastContractChatId: number;
   chatRoomId: number;
   send: (chatRoomId: number, request: ChatRequest) => void;
@@ -23,7 +24,8 @@ interface ChatContractButtonProps {
 
 const ChatContractButton = ({
   role,
-  status,
+  chatRoomStatus,
+  contractStatus,
   senderType,
   lastContractChatId,
   chatRoomId,
@@ -38,12 +40,6 @@ const ChatContractButton = ({
       lastContractChatId,
     };
     send(chatRoomId, request);
-    onLocalSystemMessage(
-      '요양보호사님이 근무 조건에 동의했습니다.',
-      role === 'CAREGIVER'
-        ? '근무 계약 최종 채용 확정을 기다려 주세요.'
-        : '근무 조건 확인 후\n최종 채용하기 버튼을 눌러주세요.',
-    );
   };
 
   const handleConfirm = () => {
@@ -73,13 +69,13 @@ const ChatContractButton = ({
   //     // onLocalSystemMessage('기관에서 근무 조건을 수정했습니다.', userRole==="CAREGIVER"?"근무 조건 확인 후 동의 버튼을 눌러주세요.":"조율 요청이 들어오면 수정 버튼을 눌러 내용을 반영해 주세요.");
   //   };
 
-  if (status === '채팅가능' && senderType === 'CAREGIVER') {
+  if (contractStatus === '근무조건동의' && senderType === 'SOCIAL_WORKER') {
     return (
-      <Container>
+      <Container role={role}>
         <div className="ask">문의사항은 채팅을 이용해주세요.</div>
         <Button
           height="40px"
-          variant="mainBlue"
+          variant={chatRoomStatus === '채팅가능' ? 'mainBlue' : 'disabled'}
           onClick={() => setIsConfirmModalOpen(true)}
         >
           최종 채용 확정하기
@@ -104,13 +100,13 @@ const ChatContractButton = ({
   }
 
   return (
-    <Container>
+    <Container role={role}>
       <div className="ask">문의사항은 채팅을 이용해주세요.</div>
       {role === 'CAREGIVER' ? (
         <Button
           height="40px"
-          variant={status === '채팅가능' ? 'subBlue' : 'disabled'}
-          disabled={status !== '채팅가능'}
+          variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
+          disabled={chatRoomStatus !== '채팅가능'}
           onClick={handleAccept}
         >
           근무 조건에 동의합니다
@@ -118,8 +114,8 @@ const ChatContractButton = ({
       ) : (
         <Button
           height="40px"
-          variant={status === '채팅가능' ? 'subBlue' : 'disabled'}
-          disabled={status !== '채팅가능'}
+          variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
+          disabled={chatRoomStatus !== '채팅가능'}
           /* onClick={handleEdit} */
         >
           근무 조건 수정하기
@@ -131,13 +127,15 @@ const ChatContractButton = ({
 
 export default ChatContractButton;
 
-const Container = styled.div`
+const Container = styled.div<{ role: string }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
 
   .ask {
-    color: ${({ theme }) => theme.colors.gray500};
+    text-align: center;
+    color: ${({ theme, role }) =>
+      role === 'CAREGIVER' ? theme.colors.white : theme.colors.gray500};
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
     font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
   }

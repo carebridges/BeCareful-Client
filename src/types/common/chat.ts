@@ -1,4 +1,5 @@
 import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
+import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 
 export interface Contract {
   contractId: number;
@@ -75,18 +76,14 @@ export interface ContractChatResponse {
 
 export interface ChatRoomContractStatusUpdatedChatResponse {
   chatType: 'CHATROOM_CONTRACT_STATUS_UPDATED';
-  status: '채용확정';
+  status: ChatRoomContractStatus;
   sentTime?: string;
   senderType?: string;
 }
 
 export interface ChatRoomActiveStatusUpdatedChatResponse {
   chatType: 'CHATROOM_ACTIVE_STATUS_UPDATED';
-  status:
-    | '타매칭채용완료'
-    | '요양보호사탈퇴'
-    | '사회복지사전원탈퇴'
-    | '공고마감';
+  status: ChatRoomStatus;
   sentTime?: string;
   senderType?: string;
 }

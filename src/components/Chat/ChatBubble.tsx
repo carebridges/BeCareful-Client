@@ -1,8 +1,8 @@
-import { ChatResponse, SenderType } from '@/types/common/chat';
-import { formatTimeLabel } from '@/utils/formatTime';
 import styled from 'styled-components';
-import ChatContract from './ChatContract';
-import ChatGuide from './ChatGuide';
+import ChatContract from '@/components/Chat/ChatContract';
+import ChatGuide from '@/components/Chat/ChatGuide';
+import { formatTimeLabel } from '@/utils/formatTime';
+import { ChatResponse, SenderType } from '@/types/common/chat';
 
 interface ChatBubbleProps {
   chat: ChatResponse;
@@ -28,9 +28,9 @@ const ChatBubble = ({
   caregiverPhoneNumber,
 }: ChatBubbleProps) => {
   return (
-    <Container className={isMyChat ? 'right' : 'left'}>
+    <Container isMyChat={isMyChat}>
       {isMyChat ? (
-        <Content role={role}>
+        <Content role={role} isMyChat={isMyChat}>
           {chat.chatType === 'TEXT' && <div>{chat.text}</div>}
 
           {chat.chatType === 'CONTRACT' && (
@@ -54,7 +54,7 @@ const ChatBubble = ({
               {name}
               {role === 'SOCIAL_WORKER' && ' 요양보호사'}
             </div>
-            <Content role={role}>
+            <Content role={role} isMyChat={isMyChat}>
               {chat.chatType === 'TEXT' && <div>{chat.text}</div>}
 
               {chat.chatType === 'CONTRACT' && (
@@ -82,19 +82,11 @@ const ChatBubble = ({
 
 export default ChatBubble;
 
-const Container = styled.div`
+const Container = styled.div<{ isMyChat: boolean }>`
   display: flex;
+  flex-direction: ${({ isMyChat }) => (isMyChat ? 'row-reverse' : '')};
   gap: 8px;
   align-items: flex-end;
-
-  .left {
-    justify-content: flex-start;
-  }
-
-  .right {
-    justify-content: flex-end;
-    flex-direction: row-reverse;
-  }
 
   .time {
     color: ${({ theme }) => theme.colors.gray500};
@@ -127,13 +119,14 @@ const Container = styled.div`
   }
 `;
 
-const Content = styled.div<{ role: string }>`
+const Content = styled.div<{ role: string; isMyChat: boolean }>`
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 
-  border-radius: 12px 0 12px 12px;
+  border-radius: ${({ isMyChat }) =>
+    isMyChat ? '12px 0 12px 12px' : '0 12px 12px 12px'};
   background: ${({ theme, role }) =>
     role === 'CAREGIVER' ? theme.colors.mainBlue : theme.colors.white};
   color: ${({ theme, role }) =>

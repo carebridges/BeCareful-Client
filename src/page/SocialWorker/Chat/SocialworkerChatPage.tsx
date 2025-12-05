@@ -10,11 +10,11 @@ import { ReactComponent as SendDefault } from '@/assets/icons/community/ReplySen
 import { ReactComponent as KakaoChannelIcon } from '@/assets/icons/KakaoChannel.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import BottomSheet from '@/components/Community/common/BottomSheet';
+import ChatRoom from '@/components/Chat/ChatRoom';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialworkerChat } from '@/api/chat';
-import { ChatRoomStatus } from '@/types/Caregiver/chat';
+import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 import { ChatRequest, ChatResponse, SystemInfo } from '@/types/common/chat';
-import ChatRoom from '@/components/Chat/ChatRoom';
 
 const SocialworkerChatPage = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
@@ -30,6 +30,8 @@ const SocialworkerChatPage = () => {
   const [chat, setChat] = useState<ChatResponse[]>([]);
   const [chatRoomStatus, setChatRoomStatus] =
     useState<ChatRoomStatus>('채팅가능');
+  const [contractStatus, setContractStatus] =
+    useState<ChatRoomContractStatus>('근무조건조율중');
   const [lastContractChatId, setLastContractId] = useState<number | null>();
 
   const [newChat, setNewChat] = useState('');
@@ -38,14 +40,17 @@ const SocialworkerChatPage = () => {
 
   // 채팅 수신 처리
   const handleIncoming = useCallback((c: ChatResponse) => {
+    console.log('handleIncoming');
     setChat((prev) => [...prev, c]);
 
     if (c.chatType === 'CONTRACT') {
+      console.log('contract');
       setLastContractId(c.chatId);
     }
 
     if (c.chatType === 'CHATROOM_CONTRACT_STATUS_UPDATED') {
       setLastContractId(null);
+      setContractStatus(c.status);
     }
 
     if (c.chatType === 'CHATROOM_ACTIVE_STATUS_UPDATED') {
@@ -56,7 +61,8 @@ const SocialworkerChatPage = () => {
   // 초기 데이터 로드 & WebSocket 연결
   useEffect(() => {
     setChatRoomStatus(data?.chatRoomStatus ?? '채팅가능');
-    setChat(data?.chatList ?? []);
+    // setChat(data?.chatList ?? []);
+    data?.chatList.forEach((c) => handleIncoming(c));
 
     // 기존 클라이언트 정리
     if (stompRef.current) {
@@ -135,7 +141,7 @@ const SocialworkerChatPage = () => {
 
       <ChatRoom
         chat={chat}
-        role="CAREGIVER"
+        role="SOCIAL_WORKER"
         lastContractChatId={lastContractChatId ?? null}
         chatRoomId={roomId}
         send={sendNewChat}
@@ -145,7 +151,8 @@ const SocialworkerChatPage = () => {
         elderlyName={data?.elderlyName ?? ''}
         caregiverName={data?.caregiverName}
         caregiverPhoneNumber={data?.caregiverPhoneNumber}
-        status={chatRoomStatus}
+        chatRoomStatus={chatRoomStatus}
+        contractStatus={contractStatus}
       />
       <div ref={bottomRef} />
 

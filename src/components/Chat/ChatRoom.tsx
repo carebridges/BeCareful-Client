@@ -1,9 +1,9 @@
-import { ChatResponse, ChatRequest, SenderType } from '@/types/common/chat';
-import { formatDateLabel, groupByDate } from '@/utils/formatTime';
 import styled from 'styled-components';
-import ChatBubble from './ChatBubble';
-import ChatContractButton from './ChatContractButton';
-import { ChatRoomStatus } from '@/types/Caregiver/chat';
+import ChatBubble from '@/components/Chat/ChatBubble';
+import ChatContractButton from '@/components/Chat/ChatContractButton';
+import { formatDateLabel, groupByDate } from '@/utils/formatTime';
+import { ChatResponse, ChatRequest, SenderType } from '@/types/common/chat';
+import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 
 interface ChatRoomProps {
   chat: ChatResponse[];
@@ -17,7 +17,8 @@ interface ChatRoomProps {
   elderlyName: string;
   caregiverName?: string;
   caregiverPhoneNumber?: string;
-  status: ChatRoomStatus;
+  chatRoomStatus: ChatRoomStatus;
+  contractStatus: ChatRoomContractStatus;
 }
 
 const ChatRoom = ({
@@ -32,7 +33,8 @@ const ChatRoom = ({
   elderlyName,
   caregiverName,
   caregiverPhoneNumber,
-  status,
+  chatRoomStatus,
+  contractStatus,
 }: ChatRoomProps) => {
   const chatGroupByDate = groupByDate(chat);
 
@@ -58,7 +60,8 @@ const ChatRoom = ({
                   lastContractChatId === chat.chatId && (
                     <ChatContractButton
                       role={role}
-                      status={status}
+                      chatRoomStatus={chatRoomStatus}
+                      contractStatus={contractStatus}
                       senderType={chat.senderType}
                       lastContractChatId={lastContractChatId}
                       chatRoomId={chatRoomId}

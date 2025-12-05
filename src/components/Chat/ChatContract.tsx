@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { ContractChatResponse } from '@/types/common/chat';
+import InfoDisplayChat from '@/components/common/InfoDisplay/InfoDisplayChat';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
-import InfoDisplayChat from '../common/InfoDisplay/InfoDisplayChat';
+import { ContractChatResponse } from '@/types/common/chat';
 
 interface ChatContractProps {
   contract: ContractChatResponse;
@@ -61,7 +61,7 @@ const ChatContract = ({
           },
           {
             title: '근무시간',
-            detail: `${contract.workStartTime} ~ ${contract.workEndTime}`,
+            detail: `${contract.workStartTime.slice(0, 5)} ~ ${contract.workEndTime.slice(0, 5)}`,
           },
           {
             title: '급여',
