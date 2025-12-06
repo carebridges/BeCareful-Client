@@ -7,33 +7,33 @@ export const formatHHMM = (time: string): string => {
 
 // 2025-08-15T08:15:45.072466를 2025.05.05 09:07의 형식으로
 export const formatDateTime = (isoStr: string, onlyDate?: boolean) => {
-  const date = new Date(isoStr);
+  const utcIsoStr = `${isoStr}Z`;
+  const date = new Date(utcIsoStr);
 
-  const utcYear = date.getUTCFullYear();
-  const utcMonth = date.getUTCMonth();
-  const utcDay = date.getUTCDate();
-  const utcHour = date.getUTCHours();
-  const utcMinute = date.getUTCMinutes();
+  const yearMonthDay = new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone: 'Asia/Seoul',
+  }).format(date);
 
-  const kstDate = new Date(
-    Date.UTC(utcYear, utcMonth, utcDay, utcHour + 9, utcMinute),
-  );
+  const hourMinute = new Intl.DateTimeFormat('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'Asia/Seoul',
+  }).format(date);
 
-  const year = kstDate.getFullYear();
-  const month = (kstDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = kstDate.getDate().toString().padStart(2, '0');
-  const hour = kstDate.getHours().toString().padStart(2, '0');
-  const minute = kstDate.getMinutes().toString().padStart(2, '0');
+  if (onlyDate) return `${yearMonthDay}`;
 
-  if (onlyDate) return `${year}.${month}.${day}`;
-
-  return `${year}.${month}.${day} ${hour}:${minute}`;
+  return `${yearMonthDay} ${hourMinute}`;
 };
 
 // 채팅에서 사용하는 날짜, 시간 포맷
 // 날짜를 "2025년 02월 14일 금요일" 형식으로 변환
-export const formatDateLabel = (dateStr: string) => {
-  const date = new Date(dateStr);
+export const formatDateLabel = (isoStr: string) => {
+  const utcIsoStr = `${isoStr}Z`;
+  const date = new Date(utcIsoStr);
   return new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
     month: 'long',
@@ -45,7 +45,8 @@ export const formatDateLabel = (dateStr: string) => {
 
 // 시간 "오후 01:32" 형식 변환
 export const formatTimeLabel = (isoStr: string) => {
-  const date = new Date(isoStr);
+  const utcIsoStr = `${isoStr}Z`;
+  const date = new Date(utcIsoStr);
   return new Intl.DateTimeFormat('ko-KR', {
     hour: '2-digit',
     minute: '2-digit',
@@ -58,8 +59,18 @@ export const formatTimeLabel = (isoStr: string) => {
 export const groupByDate = (chat: ChatResponse[]) => {
   const groups: Record<string, ChatResponse[]> = {};
   chat.forEach((c) => {
-    const key = (c.sentTime ?? new Date().toISOString()).slice(0, 10);
+    const utcIsoStr = `${c.sentTime ?? new Date().toISOString().slice(0, 23)}Z`;
+    const date = new Date(utcIsoStr);
+
+    const key = new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'Asia/Seoul',
+    }).format(date);
+
     if (!groups[key]) groups[key] = [];
+
     groups[key].push(c);
   });
   return groups;
