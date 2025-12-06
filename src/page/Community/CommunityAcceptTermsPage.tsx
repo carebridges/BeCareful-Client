@@ -192,6 +192,7 @@ const ButtonContainer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.gray50};
   box-sizing: border-box;
   width: 100%;
+  background: ${({ theme }) => theme.colors.white};
 `;
 
 const AgreeWrapper = styled.div`
