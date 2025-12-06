@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
+import { ReactComponent as Chevron } from '@/assets/icons/ChevronUp.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
@@ -11,6 +12,7 @@ import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilte
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
 import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';
+import { useState } from 'react';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -20,6 +22,9 @@ const CaregiverWorkPage = () => {
   // 상단 부분(신청서 조회)
   const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =
     useApplicationData();
+
+  // 지원서 펼침 상태
+  const [showApplication, setShowApplication] = useState(false);
 
   // 하단 부분(일자리 조회)
   const { activeTab, handleTabChange, filteredMatchingList } =
@@ -52,7 +57,13 @@ const CaregiverWorkPage = () => {
             ) : (
               <label className="date">아직 등록된 지원서 없어요!</label>
             )}
-            <label className="title">{userInfo.realName} 일자리 지원서</label>
+            <div className="title">
+              {userInfo.realName} 일자리 지원서{' '}
+              <ApplicationToggle
+                down={showApplication}
+                onClick={() => setShowApplication(!showApplication)}
+              />
+            </div>
           </div>
 
           <div className="right">
@@ -66,11 +77,16 @@ const CaregiverWorkPage = () => {
           </div>
         </Top>
 
-        <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
-
-        <Button onClick={() => handleNavigate('/caregiver/my/application')}>
-          내 지원서 {applicationData?.workApplicationDto ? '수정' : '등록'}하기
-        </Button>
+        {showApplication && (
+          <>
+            {' '}
+            <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
+            <Button onClick={() => handleNavigate('/caregiver/my/application')}>
+              내 지원서 {applicationData?.workApplicationDto ? '수정' : '등록'}
+              하기
+            </Button>
+          </>
+        )}
       </Application>
 
       <Border />
@@ -177,6 +193,10 @@ const Top = styled.div`
   }
 
   .title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title4};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
@@ -188,6 +208,13 @@ const Top = styled.div`
     gap: 4px;
     align-items: center;
   }
+`;
+
+const ApplicationToggle = styled(Chevron)<{ down: boolean }>`
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.gray800};
+  transform: ${({ down }) => (down ? 'rotate(180deg)' : 'none')};
+  transition: transform 0.5s ease;
 `;
 
 const ToggleLabel = styled.label<{ isBlue: boolean | undefined }>`
