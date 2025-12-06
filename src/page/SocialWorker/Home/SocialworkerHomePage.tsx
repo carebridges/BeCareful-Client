@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Plus } from '@/assets/icons/socialworker/home/Plus.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -158,8 +158,8 @@ const NavRight = styled.div`
   padding-right: 20px;
   width: 28px;
   height: 28px;
-  color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const Top = styled.div`

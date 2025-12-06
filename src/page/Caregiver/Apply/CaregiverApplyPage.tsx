@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import {

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ReactComponent as Search } from '@/assets/icons/Search.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 // import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Write } from '@/assets/icons/community/Write.svg';

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { SALARY_EN_TO_KR } from '@/constants/common/salary';
@@ -189,7 +189,7 @@ const NavLeft = styled(ArrowLeft)`
   cursor: pointer;
 `;
 
-const NavRight = styled(ChatNew)`
+const NavRight = styled.div`
   width: 28px;
   height: 28px;
   cursor: pointer;
