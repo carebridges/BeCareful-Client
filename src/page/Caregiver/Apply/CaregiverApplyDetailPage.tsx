@@ -36,7 +36,7 @@ const CaregiverApplyDetailPage = () => {
             data.recruitmentDetailInfo.recruitmentInfo.recruitmentStatus ===
             '공고마감'
           }
-          onClick={() => handleNavigate('/chat')}
+          onClick={() => handleNavigate('/caregiver/chat')}
         >
           {data.recruitmentDetailInfo.recruitmentInfo.recruitmentStatus ===
           '공고마감'
