@@ -1,3 +1,4 @@
+import { SenderType } from '@/types/common/chat';
 import styled from 'styled-components';
 
 interface InfoItem {
@@ -7,12 +8,12 @@ interface InfoItem {
 
 interface InfoDisplayChatProps {
   items: InfoItem[];
-  role: string;
+  sender: SenderType;
 }
 
-const InfoDisplayChat = ({ items, role }: InfoDisplayChatProps) => {
+const InfoDisplayChat = ({ items, sender }: InfoDisplayChatProps) => {
   return (
-    <Container role={role}>
+    <Container sender={sender}>
       <div className="leftWrapper">
         {items.map((item) => (
           <div key={item.title} className="info-title">
@@ -33,19 +34,23 @@ const InfoDisplayChat = ({ items, role }: InfoDisplayChatProps) => {
 
 export default InfoDisplayChat;
 
-const Container = styled.div<{ role: string }>`
+const Container = styled.div<{ sender: string }>`
   padding: 12px;
   border-radius: 8px;
-  background: ${({ theme, role }) =>
-    role === 'CAREGIVER' ? theme.colors.white : theme.colors.gray50};
+  background: ${({ theme, sender }) =>
+    sender === 'CAREGIVER' ? theme.colors.white : theme.colors.gray50};
   display: flex;
-  justify-content: space-between;
+  white-space: nowrap;
 
   .leftWrapper,
   .rightWrapper {
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+
+  .leftWrapper {
+    width: 60px;
   }
 
   .rightWrapper {
