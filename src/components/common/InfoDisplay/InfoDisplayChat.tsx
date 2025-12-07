@@ -50,7 +50,7 @@ const Container = styled.div<{ sender: string }>`
   }
 
   .leftWrapper {
-    width: 60px;
+    width: 64px;
   }
 
   .rightWrapper {
