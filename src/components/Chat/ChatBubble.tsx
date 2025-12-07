@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import ChatContract from '@/components/Chat/ChatContract';
-import ChatGuide from '@/components/Chat/ChatGuide';
 import { formatTimeLabel } from '@/utils/formatTime';
 import { ChatResponse, SenderType } from '@/types/common/chat';
 
@@ -46,10 +45,6 @@ const ChatBubble = ({
               />
             )}
             {children}
-
-            {chat.chatType === 'SYSTEM_INFO' && (
-              <ChatGuide title={chat.title} detail={chat.detail} />
-            )}
           </Content>
           <div className="time">
             {formatTimeLabel(chat.sentTime || new Date().toISOString())}
@@ -79,10 +74,6 @@ const ChatBubble = ({
                   />
                 )}
                 {children}
-
-                {chat.chatType === 'SYSTEM_INFO' && (
-                  <ChatGuide title={chat.title} detail={chat.detail} />
-                )}
               </Content>
               <div className="time">
                 {formatTimeLabel(chat.sentTime || new Date().toISOString())}

@@ -15,7 +15,7 @@ import ChatGuide from '@/components/Chat/ChatGuide';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialworkerChat } from '@/api/chat';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
-import { ChatRequest, ChatResponse, SystemInfo } from '@/types/common/chat';
+import { ChatRequest, ChatResponse } from '@/types/common/chat';
 
 const SocialworkerChatPage = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
@@ -36,12 +36,13 @@ const SocialworkerChatPage = () => {
 
   const [newChat, setNewChat] = useState('');
 
+  const [statusTitle, setStatusTitle] = useState('');
+  const [statusDetail, setStatusDetail] = useState('');
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   // 채팅 수신 처리
   const handleIncoming = useCallback((c: ChatResponse) => {
-    setChat((prev) => [...prev, c]);
-
     if (c.chatType === 'CONTRACT') {
       console.log('contract');
       setLastContractId(c.chatId);
@@ -50,11 +51,15 @@ const SocialworkerChatPage = () => {
     if (c.chatType === 'CHATROOM_CONTRACT_STATUS_UPDATED') {
       setLastContractId(null);
       setContractStatus(c.status);
+      return;
     }
 
     if (c.chatType === 'CHATROOM_ACTIVE_STATUS_UPDATED') {
       setChatRoomStatus(c.status);
+      return;
     }
+
+    setChat((prev) => [...prev, c]);
   }, []);
 
   // 초기 데이터 로드 & WebSocket 연결
@@ -83,7 +88,7 @@ const SocialworkerChatPage = () => {
         });
       },
 
-      // debug: (msg) => console.log(msg),
+      debug: (msg) => console.log(msg),
     });
 
     stompRef.current = client;
@@ -105,28 +110,12 @@ const SocialworkerChatPage = () => {
     setNewChat('');
   };
 
-  const addLocalSystemMessage = (title: string, detail: string) => {
-    const message: SystemInfo = {
-      chatType: 'SYSTEM_INFO',
-      senderType: 'SYSTEM',
-      title: title,
-      detail: detail,
-      sentTime: new Date().toISOString().slice(0, -1),
-    };
-    handleIncoming(message);
-  };
-
-  const [statusTitle, setStatusTitle] = useState('');
-  const [statusDetail, setStatusDetail] = useState('');
-
   useEffect(() => {
-    console.log(chatRoomStatus, contractStatus);
     if (contractStatus === '채용완료') {
       setStatusTitle('최종 채용이 확정되었습니다!');
       setStatusDetail(
         `${data?.elderlyName} 어르신을 위한 돌봄 일정이 추가되었습니다.`,
       );
-      addLocalSystemMessage(statusTitle, statusDetail);
     }
     if (chatRoomStatus !== '채팅가능') {
       setStatusTitle('더 이상 메시지를 보낼 수 없습니다.');
@@ -139,7 +128,6 @@ const SocialworkerChatPage = () => {
         setStatusDetail('더 이상 메시지를 보낼 수 없습니다. ');
       if (chatRoomStatus === '타매칭채용완료')
         setStatusDetail('해당 공고는 다른 지원자와의 채용이 완료되었습니다.');
-      addLocalSystemMessage(statusTitle, statusDetail);
     }
   }, [contractStatus, chatRoomStatus]);
 
@@ -147,6 +135,11 @@ const SocialworkerChatPage = () => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chat]);
+
+  useEffect(() => {
+    console.log(chatRoomStatus, contractStatus);
+    console.log(lastContractChatId);
+  }, [lastContractChatId, chatRoomStatus, contractStatus]);
 
   return (
     <Container>
@@ -166,12 +159,11 @@ const SocialworkerChatPage = () => {
         <div className="right">정보 보기</div>
       </Elder>
 
-      {contractStatus === '채용완료' ||
-        (chatRoomStatus !== '채팅가능' && (
-          <StatusWrapper>
-            <ChatGuide title={statusTitle} detail={statusDetail} top={true} />
-          </StatusWrapper>
-        ))}
+      {(contractStatus === '채용완료' || chatRoomStatus !== '채팅가능') && (
+        <StatusWrapper>
+          <ChatGuide title={statusTitle} detail={statusDetail} top={true} />
+        </StatusWrapper>
+      )}
 
       <ChatRoom
         chat={chat}
@@ -186,6 +178,8 @@ const SocialworkerChatPage = () => {
         caregiverPhoneNumber={data?.caregiverPhoneNumber}
         chatRoomStatus={chatRoomStatus}
         contractStatus={contractStatus}
+        statusTitle={statusTitle}
+        statusDetail={statusDetail}
       />
       <div ref={bottomRef} />
 
@@ -311,7 +305,7 @@ const StatusWrapper = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
 
   position: fixed;
-  top: 104px;
+  top: 106px;
   left: 0;
   right: 0;
 `;

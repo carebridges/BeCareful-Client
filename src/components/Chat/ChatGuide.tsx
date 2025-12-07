@@ -18,6 +18,7 @@ const ChatGuide = ({ title, detail, top = false }: ChatGuideProps) => {
 export default ChatGuide;
 
 const Container = styled.div<{ top: boolean }>`
+  margin-bottom: ${({ top }) => (top ? '0px' : '20px')};
   padding: ${({ top }) => (top ? '10px 0' : '20px 0')};
   display: flex;
   flex-direction: column;

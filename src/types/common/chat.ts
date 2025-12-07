@@ -76,6 +76,7 @@ export interface ContractChatResponse {
 
 export interface ChatRoomContractStatusUpdatedChatResponse {
   chatType: 'CHATROOM_CONTRACT_STATUS_UPDATED';
+  chatId?: number;
   status: ChatRoomContractStatus;
   sentTime?: string;
   senderType?: string;
@@ -83,17 +84,10 @@ export interface ChatRoomContractStatusUpdatedChatResponse {
 
 export interface ChatRoomActiveStatusUpdatedChatResponse {
   chatType: 'CHATROOM_ACTIVE_STATUS_UPDATED';
+  chatId?: number;
   status: ChatRoomStatus;
   sentTime?: string;
   senderType?: string;
-}
-
-export interface SystemInfo {
-  chatType: 'SYSTEM_INFO';
-  senderType: 'SYSTEM';
-  title: string;
-  detail: string;
-  sentTime?: string;
 }
 
 export type ChatRequest =
@@ -106,5 +100,4 @@ export type ChatResponse =
   | TextChatResponse
   | ContractChatResponse
   | ChatRoomContractStatusUpdatedChatResponse
-  | ChatRoomActiveStatusUpdatedChatResponse
-  | SystemInfo;
+  | ChatRoomActiveStatusUpdatedChatResponse;

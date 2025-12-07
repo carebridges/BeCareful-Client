@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import ChatBubble from '@/components/Chat/ChatBubble';
 import ChatContractButton from '@/components/Chat/ChatContractButton';
+import ChatGuide from '@/components/Chat/ChatGuide';
 import { formatDateLabel, groupByDate } from '@/utils/formatTime';
 import { ChatResponse, ChatRequest, SenderType } from '@/types/common/chat';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
@@ -18,6 +19,8 @@ interface ChatRoomProps {
   caregiverPhoneNumber?: string;
   chatRoomStatus: ChatRoomStatus;
   contractStatus: ChatRoomContractStatus;
+  statusTitle: string;
+  statusDetail: string;
 }
 
 const ChatRoom = ({
@@ -33,6 +36,8 @@ const ChatRoom = ({
   caregiverPhoneNumber,
   chatRoomStatus,
   contractStatus,
+  statusTitle,
+  statusDetail,
 }: ChatRoomProps) => {
   const chatGroupByDate = groupByDate(chat);
 
@@ -60,6 +65,7 @@ const ChatRoom = ({
                   lastContractChatId === chat.chatId && (
                     <ChatContractButton
                       role={role}
+                      chat={chat}
                       chatRoomStatus={chatRoomStatus}
                       contractStatus={contractStatus}
                       senderType={chat.senderType}
@@ -71,6 +77,9 @@ const ChatRoom = ({
               </ChatBubble>
             );
           })}
+          {(contractStatus === '채용완료' || chatRoomStatus !== '채팅가능') && (
+            <ChatGuide title={statusTitle} detail={statusDetail} />
+          )}
         </ChatWrapper>
       ))}
     </Container>
