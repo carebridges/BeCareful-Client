@@ -11,6 +11,7 @@ import { ReactComponent as KakaoChannelIcon } from '@/assets/icons/KakaoChannel.
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import ChatRoom from '@/components/Chat/ChatRoom';
+import ChatGuide from '@/components/Chat/ChatGuide';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialworkerChat } from '@/api/chat';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
@@ -24,7 +25,6 @@ const SocialworkerChatPage = () => {
 
   const [isKakaoSheetOpen, setIsKakaoSheetOpen] = useState(false);
 
-  // const [stompClient, setStompClient] = useState<Client | null>(null);
   const stompRef = useRef<Client | null>(null);
 
   const [chat, setChat] = useState<ChatResponse[]>([]);
@@ -40,7 +40,6 @@ const SocialworkerChatPage = () => {
 
   // 채팅 수신 처리
   const handleIncoming = useCallback((c: ChatResponse) => {
-    console.log('handleIncoming');
     setChat((prev) => [...prev, c]);
 
     if (c.chatType === 'CONTRACT') {
@@ -61,7 +60,7 @@ const SocialworkerChatPage = () => {
   // 초기 데이터 로드 & WebSocket 연결
   useEffect(() => {
     setChatRoomStatus(data?.chatRoomStatus ?? '채팅가능');
-    // setChat(data?.chatList ?? []);
+    setContractStatus(data?.chatRoomContractStatus ?? '근무조건조율중');
     data?.chatList.forEach((c) => handleIncoming(c));
 
     // 기존 클라이언트 정리
@@ -84,7 +83,7 @@ const SocialworkerChatPage = () => {
         });
       },
 
-      debug: (msg) => console.log(msg),
+      // debug: (msg) => console.log(msg),
     });
 
     stompRef.current = client;
@@ -112,10 +111,37 @@ const SocialworkerChatPage = () => {
       senderType: 'SYSTEM',
       title: title,
       detail: detail,
-      sentTime: new Date().toISOString(),
+      sentTime: new Date().toISOString().slice(0, -1),
     };
     handleIncoming(message);
   };
+
+  const [statusTitle, setStatusTitle] = useState('');
+  const [statusDetail, setStatusDetail] = useState('');
+
+  useEffect(() => {
+    console.log(chatRoomStatus, contractStatus);
+    if (contractStatus === '채용완료') {
+      setStatusTitle('최종 채용이 확정되었습니다!');
+      setStatusDetail(
+        `${data?.elderlyName} 어르신을 위한 돌봄 일정이 추가되었습니다.`,
+      );
+      addLocalSystemMessage(statusTitle, statusDetail);
+    }
+    if (chatRoomStatus !== '채팅가능') {
+      setStatusTitle('더 이상 메시지를 보낼 수 없습니다.');
+      if (chatRoomStatus === '공고마감')
+        setStatusDetail('해당 공고의 모집이 마감되었습니다.');
+      if (
+        chatRoomStatus === '사회복지사전원탈퇴' ||
+        chatRoomStatus === '요양보호사탈퇴'
+      )
+        setStatusDetail('더 이상 메시지를 보낼 수 없습니다. ');
+      if (chatRoomStatus === '타매칭채용완료')
+        setStatusDetail('해당 공고는 다른 지원자와의 채용이 완료되었습니다.');
+      addLocalSystemMessage(statusTitle, statusDetail);
+    }
+  }, [contractStatus, chatRoomStatus]);
 
   // 스크롤 맨 아래로 고정
   useEffect(() => {
@@ -129,6 +155,7 @@ const SocialworkerChatPage = () => {
         center={<NavCenter>{data?.caregiverName} 요양보호사</NavCenter>}
         right={<NavRight onClick={() => setIsKakaoSheetOpen(true)} />}
         color=""
+        fix={true}
       />
 
       <Elder>
@@ -139,13 +166,19 @@ const SocialworkerChatPage = () => {
         <div className="right">정보 보기</div>
       </Elder>
 
+      {contractStatus === '채용완료' ||
+        (chatRoomStatus !== '채팅가능' && (
+          <StatusWrapper>
+            <ChatGuide title={statusTitle} detail={statusDetail} top={true} />
+          </StatusWrapper>
+        ))}
+
       <ChatRoom
         chat={chat}
         role="SOCIAL_WORKER"
         lastContractChatId={lastContractChatId ?? null}
         chatRoomId={roomId}
         send={sendNewChat}
-        onLocalSystemMessage={addLocalSystemMessage}
         profileImg={data?.caregiverProfileImageUrl ?? ''}
         name={data?.caregiverName ?? ''}
         elderlyName={data?.elderlyName ?? ''}
@@ -171,11 +204,6 @@ const SocialworkerChatPage = () => {
           <Send
             className="svg"
             onClick={() => {
-              console.log('send 클릭');
-              console.log('Sending chat request:', {
-                sendRequestType: 'SEND_TEXT',
-                text: newChat,
-              });
               sendNewChat(roomId, {
                 sendRequestType: 'SEND_TEXT',
                 text: newChat,
@@ -246,6 +274,11 @@ const Elder = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
   background: ${({ theme }) => theme.colors.white};
 
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+
   .left {
     display: flex;
     gap: 8px;
@@ -271,6 +304,16 @@ const Elder = styled.div`
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     cursor: pointer;
   }
+`;
+
+const StatusWrapper = styled.div`
+  background: ${({ theme }) => theme.colors.white};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
+
+  position: fixed;
+  top: 104px;
+  left: 0;
+  right: 0;
 `;
 
 const ChatInputWrapper = styled.div`

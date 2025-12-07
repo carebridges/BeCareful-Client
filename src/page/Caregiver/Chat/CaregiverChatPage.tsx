@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client, IMessage } from '@stomp/stompjs';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
@@ -11,56 +11,34 @@ import { ReactComponent as KakaoChannelIcon } from '@/assets/icons/KakaoChannel.
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import ChatRoom from '@/components/Chat/ChatRoom';
-import Modal from '@/components/common/Modal/Modal';
-import ModalButtons from '@/components/common/Modal/ModalButtons';
-import ModalLimit from '@/components/common/Modal/ModalLimit';
+import ChatGuide from '@/components/Chat/ChatGuide';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { handleModal } from '@/utils/handleModal';
 import { useGetCaregiverChat } from '@/api/chat';
-import { ChatRoomStatus } from '@/types/Caregiver/chat';
-import {
-  ChatRequest,
-  ChatResponse,
-  SendTextChatRequest,
-  SystemInfo,
-} from '@/types/common/chat';
+import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
+import { ChatRequest, ChatResponse, SystemInfo } from '@/types/common/chat';
 
 const CaregiverChatPage = () => {
-  const { chatRoomIdParam } = useParams();
-  const chatRoomId = Number(chatRoomIdParam);
-  const { data } = useGetCaregiverChat(chatRoomId);
+  const { chatRoomId } = useParams<{ chatRoomId: string }>();
+  const roomId = Number(chatRoomId);
+  const { data } = useGetCaregiverChat(roomId);
   const { handleGoBack } = useHandleNavigate();
 
   const [isKakaoSheetOpen, setIsKakaoSheetOpen] = useState(false);
-  const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
-  const [stompClient, setStompClient] = useState<Client | null>(null);
+  const stompRef = useRef<Client | null>(null);
+
   const [chat, setChat] = useState<ChatResponse[]>([]);
-
   const [chatRoomStatus, setChatRoomStatus] =
     useState<ChatRoomStatus>('채팅가능');
+  const [contractStatus, setContractStatus] =
+    useState<ChatRoomContractStatus>('근무조건조율중');
   const [lastContractChatId, setLastContractId] = useState<number | null>();
 
   const [newChat, setNewChat] = useState('');
-  const handleNewChatChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewChat(e.target.value);
-  };
-  const handleNewChatSend = (e?: React.FormEvent | React.MouseEvent) => {
-    e?.preventDefault();
-    if (!newChat.trim()) return; // 댓글 내용이 비어있으면 전송 x
-    const request: SendTextChatRequest = {
-      sendRequestType: 'SEND_TEXT',
-      text: newChat,
-    };
-    sendNewChat(chatRoomId, request);
-  };
 
-  const handleAgree = () => {
-    // TODO: 동의하기 전송
-    handleModal(setIsCompleteModalOpen, setIsAgreeModalOpen);
-  };
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  // 채팅 수신 처리
   const handleIncoming = useCallback((c: ChatResponse) => {
     setChat((prev) => [...prev, c]);
 
@@ -70,6 +48,7 @@ const CaregiverChatPage = () => {
 
     if (c.chatType === 'CHATROOM_CONTRACT_STATUS_UPDATED') {
       setLastContractId(null);
+      setContractStatus(c.status);
     }
 
     if (c.chatType === 'CHATROOM_ACTIVE_STATUS_UPDATED') {
@@ -77,38 +56,48 @@ const CaregiverChatPage = () => {
     }
   }, []);
 
+  // 초기 데이터 로드 & WebSocket 연결
   useEffect(() => {
     setChatRoomStatus(data?.chatRoomStatus ?? '채팅가능');
-    setChat(data?.chatList ?? []);
+    setContractStatus(data?.chatRoomContractStatus ?? '근무조건조율중');
+    data?.chatList.forEach((c) => handleIncoming(c));
+
+    // 기존 클라이언트 정리
+    if (stompRef.current) {
+      stompRef.current.deactivate();
+      stompRef.current = null;
+    }
 
     const client = new Client({
       brokerURL: import.meta.env.VITE_APP_WS_URL,
-      reconnectDelay: 5000,
+      connectHeaders: {},
+      reconnectDelay: 3000,
+      webSocketFactory: () => new WebSocket(import.meta.env.VITE_APP_WS_URL),
 
       onConnect: () => {
         console.log('웹소켓 연결 시작');
-        client.subscribe(
-          `/topic/chat-room/${chatRoomId}`,
-          (message: IMessage) => {
-            const chatData = JSON.parse(message.body);
-            setChat((prev) => [...prev, chatData]);
-          },
-        );
+        client.subscribe(`/topic/chat-room/${roomId}`, (message: IMessage) => {
+          const chatData = JSON.parse(message.body);
+          handleIncoming(chatData);
+        });
       },
+
+      // debug: (msg) => console.log(msg),
     });
 
+    stompRef.current = client;
     client.activate();
-    setStompClient(client);
 
     return () => {
       console.log('웹소켓 종료!');
       client.deactivate();
     };
-  }, [chatRoomId, handleIncoming]);
+  }, [roomId, handleIncoming, data]);
 
+  // 채팅 전송
   const sendNewChat = (chatRoomId: number, request: ChatRequest) => {
-    if (!stompClient) return;
-    stompClient.publish({
+    if (!stompRef.current) return;
+    stompRef.current.publish({
       destination: `/app/chat/send/${chatRoomId}`,
       body: JSON.stringify(request),
     });
@@ -121,10 +110,41 @@ const CaregiverChatPage = () => {
       senderType: 'SYSTEM',
       title: title,
       detail: detail,
-      sentTime: new Date().toISOString(),
+      sentTime: new Date().toISOString().slice(0, -1),
     };
-    setChat((prev) => [...prev, message]);
+    handleIncoming(message);
   };
+
+  const [statusTitle, setStatusTitle] = useState('');
+  const [statusDetail, setStatusDetail] = useState('');
+
+  useEffect(() => {
+    if (contractStatus === '채용완료') {
+      setStatusTitle('최종 채용이 확정되었습니다!');
+      setStatusDetail(
+        `${data?.elderlyName} 어르신을 위한 돌봄 일정이 추가되었습니다.`,
+      );
+      addLocalSystemMessage(statusTitle, statusDetail);
+    }
+    if (chatRoomStatus !== '채팅가능') {
+      setStatusTitle('더 이상 메시지를 보낼 수 없습니다.');
+      if (chatRoomStatus === '공고마감')
+        setStatusDetail('해당 공고의 모집이 마감되었습니다.');
+      if (
+        chatRoomStatus === '사회복지사전원탈퇴' ||
+        chatRoomStatus === '요양보호사탈퇴'
+      )
+        setStatusDetail('더 이상 메시지를 보낼 수 없습니다. ');
+      if (chatRoomStatus === '타매칭채용완료')
+        setStatusDetail('해당 공고는 다른 지원자와의 채용이 완료되었습니다.');
+      addLocalSystemMessage(statusTitle, statusDetail);
+    }
+  }, [contractStatus, chatRoomStatus]);
+
+  // 스크롤 맨 아래로 고정
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chat]);
 
   return (
     <Container>
@@ -133,6 +153,7 @@ const CaregiverChatPage = () => {
         center={<NavCenter>{data?.institutionName}</NavCenter>}
         right={<NavRight onClick={() => setIsKakaoSheetOpen(true)} />}
         color=""
+        fix={true}
       />
 
       <Elder>
@@ -143,68 +164,52 @@ const CaregiverChatPage = () => {
         <div className="right">정보 보기</div>
       </Elder>
 
+      {contractStatus === '채용완료' ||
+        (chatRoomStatus !== '채팅가능' && (
+          <StatusWrapper>
+            <ChatGuide title={statusTitle} detail={statusDetail} top={true} />
+          </StatusWrapper>
+        ))}
+
       <ChatRoom
         chat={chat}
         role="CAREGIVER"
         lastContractChatId={lastContractChatId ?? null}
-        chatRoomId={chatRoomId}
+        chatRoomId={roomId}
         send={sendNewChat}
-        onLocalSystemMessage={addLocalSystemMessage}
         profileImg={data?.institutionProfileImageUrl ?? ''}
         name={data?.institutionName ?? ''}
         elderlyName={data?.elderlyName ?? ''}
-        status={chatRoomStatus}
+        chatRoomStatus={chatRoomStatus}
+        contractStatus={contractStatus}
       />
+      <div ref={bottomRef} />
 
       <ChatInputWrapper>
         <div className="comment">
           <ChatInput
             placeholder="근무 조건 조율을 원하시면 메시지를 전송해주세요."
             value={newChat}
-            onChange={handleNewChatChange}
+            onChange={(e) => setNewChat(e.target.value)}
           />
           {newChat.length > 0 && (
             <Delete className="delete" onClick={() => setNewChat('')} />
           )}
         </div>
         {newChat.length > 0 ? (
-          <Send className="svg" onClick={handleNewChatSend} />
+          <Send
+            className="svg"
+            onClick={() => {
+              sendNewChat(roomId, {
+                sendRequestType: 'SEND_TEXT',
+                text: newChat,
+              });
+            }}
+          />
         ) : (
-          <SendDefault className="svg" onClick={handleNewChatSend} />
+          <SendDefault className="svg" />
         )}
       </ChatInputWrapper>
-
-      <Modal
-        isOpen={isAgreeModalOpen}
-        onClose={() => setIsAgreeModalOpen(false)}
-      >
-        <ModalButtons
-          onClose={() => setIsAgreeModalOpen(false)}
-          title="근무 조건에 동의하시겠습니까?"
-          detail={
-            '근무 조건 동의시 더이상 조율이 불가능하며,\n기관 담당자에게 근무 확정 요청 알림이 가요.'
-          }
-          left="취소"
-          right="동의하기"
-          handleLeftBtnClick={() => setIsAgreeModalOpen(false)}
-          handleRightBtnClick={handleAgree}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={isCompleteModalOpen}
-        onClose={() => setIsCompleteModalOpen(false)}
-      >
-        <ModalLimit
-          onClose={() => setIsCompleteModalOpen(false)}
-          title="근무 조건에 동의하셨습니다!"
-          detail={
-            '기관 담당자에게 근무 확정 알림을 전송했어요.\n최종 채용 확정을 기다려 주세요.'
-          }
-          button="채팅방으로 이동하기"
-          handleBtnClick={() => setIsCompleteModalOpen(false)}
-        />
-      </Modal>
 
       <BottomSheet
         isOpen={isKakaoSheetOpen}
@@ -265,6 +270,11 @@ const Elder = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
   background: ${({ theme }) => theme.colors.white};
 
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+
   .left {
     display: flex;
     gap: 8px;
@@ -290,6 +300,16 @@ const Elder = styled.div`
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
     cursor: pointer;
   }
+`;
+
+const StatusWrapper = styled.div`
+  background: ${({ theme }) => theme.colors.white};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray50};
+
+  position: fixed;
+  top: 104px;
+  left: 0;
+  right: 0;
 `;
 
 const ChatInputWrapper = styled.div`
