@@ -59,7 +59,7 @@ export const formatTimeLabel = (isoStr: string) => {
 export const groupByDate = (chat: ChatResponse[]) => {
   const groups: Record<string, ChatResponse[]> = {};
   chat.forEach((c) => {
-    const utcIsoStr = `${c.sentTime ?? new Date().toISOString().slice(0, 23)}Z`;
+    const utcIsoStr = `${c.sentTime}Z`;
     const date = new Date(utcIsoStr);
 
     const key = new Intl.DateTimeFormat('ko-KR', {
