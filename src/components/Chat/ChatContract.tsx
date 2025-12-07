@@ -19,7 +19,7 @@ const ChatContract = ({
   role,
 }: ChatContractProps) => {
   const contractInfo =
-    role === 'CAERGIVER'
+    role === 'CAREGIVER'
       ? [
           {
             title: '인적사항',
@@ -35,7 +35,7 @@ const ChatContract = ({
           },
           {
             title: '근무시간',
-            detail: `${contract.workStartTime} ~ ${contract.workEndTime}`,
+            detail: `${contract.workStartTime.slice(0, 5)} ~ ${contract.workEndTime.slice(0, 5)}`,
           },
           {
             title: '급여',
@@ -82,27 +82,27 @@ const ChatContract = ({
         ];
 
   return (
-    <Container role={role}>
+    <Container sender={contract.senderType}>
       <div className="contract">
-        {role === 'CAERGIVER'
-          ? '근무 조건에 동의했습니다'
+        {contract.senderType === 'CAREGIVER'
+          ? '근무 조건에 동의했습니다.'
           : '근무 제안이 전송되었습니다.'}
       </div>
-      <InfoDisplayChat items={contractInfo} role={role} />
+      <InfoDisplayChat items={contractInfo} sender={contract.senderType} />
     </Container>
   );
 };
 
 export default ChatContract;
 
-const Container = styled.div<{ role: string }>`
+const Container = styled.div<{ sender: string }>`
   display: flex;
   flex-direction: column;
   gap: 8px;
 
   .contract {
-    color: ${({ theme, role }) =>
-      role === 'CAREGIVER' ? theme.colors.white : theme.colors.gray900};
+    color: ${({ theme, sender }) =>
+      sender === 'CAREGIVER' ? theme.colors.white : theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }

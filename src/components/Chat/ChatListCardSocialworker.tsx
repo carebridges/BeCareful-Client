@@ -23,9 +23,9 @@ const ChatListCardSocialworker = ({ chat }: ChatListCardProps) => {
         </label>
         <div className="elderWrapper">
           <label className="elder">{chat.elderlyName} 어르신</label>
-          <label className="elder">|</label>
+          <span className="border">|</span>
           <label className="elder">{chat.elderlyAge}세</label>
-          <label className="elder">|</label>
+          <span className="border">|</span>
           <label className="elder">
             {GENDER_EN_TO_KR_2[chat.elderlyGender]}
           </label>
@@ -73,12 +73,17 @@ const Container = styled.div`
   .elderWrapper {
     display: flex;
     gap: 4px;
+    align-items: center;
   }
 
   .elder {
     color: ${({ theme }) => theme.colors.gray500};
     font-size: ${({ theme }) => theme.typography.fontSize.body4};
     font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
+  }
+
+  .border {
+    color: ${({ theme }) => theme.colors.gray50};
   }
 
   .recent {

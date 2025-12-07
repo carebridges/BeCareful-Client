@@ -30,22 +30,31 @@ const ChatBubble = ({
   return (
     <Container isMyChat={isMyChat}>
       {isMyChat ? (
-        <Content role={role} isMyChat={isMyChat}>
-          {chat.chatType === 'TEXT' && <div>{chat.text}</div>}
+        <>
+          <Content sender={chat.senderType ?? ''} isMyChat={isMyChat}>
+            {chat.chatType === 'TEXT' && (
+              <div className="text">{chat.text}</div>
+            )}
 
-          {chat.chatType === 'CONTRACT' && (
-            <ChatContract
-              contract={chat}
-              elderName={elderlyName ?? ''}
-              caregiverName={caregiverName}
-              caregiverPhoneNumber={caregiverPhoneNumber}
-              role={role}
-            />
-          )}
-          {children}
+            {chat.chatType === 'CONTRACT' && (
+              <ChatContract
+                contract={chat}
+                elderName={elderlyName ?? ''}
+                caregiverName={caregiverName}
+                caregiverPhoneNumber={caregiverPhoneNumber}
+                role={role}
+              />
+            )}
+            {children}
 
-          {chat.chatType === 'SYSTEM_INFO' && <ChatGuide guide={chat} />}
-        </Content>
+            {chat.chatType === 'SYSTEM_INFO' && (
+              <ChatGuide title={chat.title} detail={chat.detail} />
+            )}
+          </Content>
+          <div className="time">
+            {formatTimeLabel(chat.sentTime || new Date().toISOString())}
+          </div>
+        </>
       ) : (
         <div className="bubble">
           <img className="profile" alt="프로필 이미지" src={profileImg} />
@@ -54,28 +63,34 @@ const ChatBubble = ({
               {name}
               {role === 'SOCIAL_WORKER' && ' 요양보호사'}
             </div>
-            <Content role={role} isMyChat={isMyChat}>
-              {chat.chatType === 'TEXT' && <div>{chat.text}</div>}
+            <div className="chat">
+              <Content sender={chat.senderType ?? ''} isMyChat={isMyChat}>
+                {chat.chatType === 'TEXT' && (
+                  <div className="text">{chat.text}</div>
+                )}
 
-              {chat.chatType === 'CONTRACT' && (
-                <ChatContract
-                  contract={chat}
-                  elderName={elderlyName ?? ''}
-                  caregiverName={caregiverName}
-                  caregiverPhoneNumber={caregiverPhoneNumber}
-                  role={role}
-                />
-              )}
-              {children}
+                {chat.chatType === 'CONTRACT' && (
+                  <ChatContract
+                    contract={chat}
+                    elderName={elderlyName ?? ''}
+                    caregiverName={caregiverName}
+                    caregiverPhoneNumber={caregiverPhoneNumber}
+                    role={role}
+                  />
+                )}
+                {children}
 
-              {chat.chatType === 'SYSTEM_INFO' && <ChatGuide guide={chat} />}
-            </Content>
+                {chat.chatType === 'SYSTEM_INFO' && (
+                  <ChatGuide title={chat.title} detail={chat.detail} />
+                )}
+              </Content>
+              <div className="time">
+                {formatTimeLabel(chat.sentTime || new Date().toISOString())}
+              </div>
+            </div>
           </div>
         </div>
       )}
-      <div className="time">
-        {formatTimeLabel(chat.sentTime || new Date().toISOString())}
-      </div>
     </Container>
   );
 };
@@ -112,6 +127,12 @@ const Container = styled.div<{ isMyChat: boolean }>`
     gap: 2px;
   }
 
+  .chat {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+  }
+
   .name {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.body3};
@@ -119,16 +140,39 @@ const Container = styled.div<{ isMyChat: boolean }>`
   }
 `;
 
-const Content = styled.div<{ role: string; isMyChat: boolean }>`
+const Content = styled.div<{ sender: string; isMyChat: boolean }>`
   padding: 16px;
+  border-radius: ${({ isMyChat }) =>
+    isMyChat ? '12px 0 12px 12px' : '0 12px 12px 12px'};
+  background: ${({ theme, sender }) =>
+    sender === 'CAREGIVER' ? theme.colors.mainBlue : theme.colors.white};
   display: flex;
   flex-direction: column;
   gap: 8px;
 
-  border-radius: ${({ isMyChat }) =>
-    isMyChat ? '12px 0 12px 12px' : '0 12px 12px 12px'};
-  background: ${({ theme, role }) =>
-    role === 'CAREGIVER' ? theme.colors.mainBlue : theme.colors.white};
-  color: ${({ theme, role }) =>
-    role === 'CAREGIVER' ? theme.colors.white : theme.colors.gray900};
+  .text {
+    max-width: 200px;
+    color: ${({ theme, sender }) =>
+      sender === 'CAREGIVER' ? theme.colors.white : theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  @media (min-width: 400px) {
+    .text {
+      max-width: 250px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .text {
+      max-width: 280px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .text {
+      max-width: 320px;
+    }
+  }
 `;

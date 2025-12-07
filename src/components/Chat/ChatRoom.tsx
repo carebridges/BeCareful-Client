@@ -11,7 +11,6 @@ interface ChatRoomProps {
   lastContractChatId: number | null;
   chatRoomId: number;
   send: (chatRoomId: number, request: ChatRequest) => void;
-  onLocalSystemMessage: (title: string, detail: string) => void;
   profileImg: string;
   name: string;
   elderlyName: string;
@@ -27,7 +26,6 @@ const ChatRoom = ({
   lastContractChatId,
   chatRoomId,
   send,
-  onLocalSystemMessage,
   profileImg,
   name,
   elderlyName,
@@ -39,14 +37,16 @@ const ChatRoom = ({
   const chatGroupByDate = groupByDate(chat);
 
   return (
-    <Container>
+    <Container
+      top={chatRoomStatus !== '채팅가능' || contractStatus === '채용완료'}
+    >
       {Object.keys(chatGroupByDate).map((date) => (
         <ChatWrapper key={date}>
           <div className="date">{formatDateLabel(date)}</div>
-          {chatGroupByDate[date].map((chat) => {
+          {chatGroupByDate[date].map((chat, index) => {
             return (
               <ChatBubble
-                key={chat.sentTime}
+                key={index}
                 chat={chat}
                 isMyChat={chat.senderType === role}
                 profileImg={profileImg}
@@ -66,7 +66,6 @@ const ChatRoom = ({
                       lastContractChatId={lastContractChatId}
                       chatRoomId={chatRoomId}
                       send={send}
-                      onLocalSystemMessage={onLocalSystemMessage}
                     />
                   )}
               </ChatBubble>
@@ -80,8 +79,9 @@ const ChatRoom = ({
 
 export default ChatRoom;
 
-const Container = styled.div`
+const Container = styled.div<{ top: boolean }>`
   padding: 20px 20px 84px 20px;
+  padding-top: ${({ top }) => (top ? '188px' : '124px')};
   display: flex;
   flex-direction: column;
   gap: 20px;

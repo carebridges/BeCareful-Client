@@ -1,31 +1,24 @@
 import styled from 'styled-components';
-import React from 'react';
-import { SystemInfo } from '@/types/common/chat';
 
 interface ChatGuideProps {
-  guide: SystemInfo;
+  title: string;
+  detail: string;
+  top?: boolean;
 }
 
-const ChatGuide = ({ guide }: ChatGuideProps) => {
+const ChatGuide = ({ title, detail, top = false }: ChatGuideProps) => {
   return (
-    <Container>
-      <div className="blue">{guide.title}</div>
-      <div className="gray">
-        {guide.detail.split('\n').map((line, index) => (
-          <React.Fragment key={index}>
-            {line}
-            <br />
-          </React.Fragment>
-        ))}
-      </div>
+    <Container top={top}>
+      <div className="blue">{title}</div>
+      <div className="gray">{detail}</div>
     </Container>
   );
 };
 
 export default ChatGuide;
 
-const Container = styled.div`
-  padding: 20px 0;
+const Container = styled.div<{ top: boolean }>`
+  padding: ${({ top }) => (top ? '10px 0' : '20px 0')};
   display: flex;
   flex-direction: column;
   gap: 8px;
