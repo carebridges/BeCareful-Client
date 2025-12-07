@@ -105,7 +105,8 @@ export const CareGiverDetailInfoPage = () => {
             if (!data) return;
             hireCaregiver(
               {
-                matchingId: data.matchingId,
+                recruitmentId: Number(recruitmentId),
+                caregiverId: Number(caregiverId),
                 workStartDate: selectedDate,
               },
               {

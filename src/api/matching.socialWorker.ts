@@ -15,14 +15,16 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 export const useHireCaregiver = () =>
   useMutation({
     mutationFn: async ({
-      matchingId,
+      recruitmentId,
+      caregiverId,
       workStartDate,
     }: {
-      matchingId: number;
+      recruitmentId: number;
+      caregiverId: number;
       workStartDate: string;
     }) => {
       const { data } = await axiosInstance.post(
-        `/matching/social-worker/${matchingId}/hire`,
+        `/matching/social-worker/recruitment/${recruitmentId}/caregiver/${caregiverId}/propose`,
         undefined,
         {
           params: { workStartDate },
