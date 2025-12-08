@@ -8,13 +8,16 @@ import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 import {
   AcceptContractChatRequest,
   ChatRequest,
+  ChatResponse,
   ConfirmContractChatRequest,
   SenderType,
 } from '@/types/common/chat';
 import { handleModal } from '@/utils/handleModal';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ChatContractButtonProps {
   role: SenderType;
+  chat: ChatResponse;
   senderType: SenderType;
   chatRoomStatus: ChatRoomStatus;
   contractStatus: ChatRoomContractStatus;
@@ -25,6 +28,7 @@ interface ChatContractButtonProps {
 
 const ChatContractButton = ({
   role,
+  chat,
   chatRoomStatus,
   contractStatus,
   senderType,
@@ -32,6 +36,8 @@ const ChatContractButton = ({
   chatRoomId,
   send,
 }: ChatContractButtonProps) => {
+  const { handleNavigateState } = useHandleNavigate();
+
   // 사회복지사 최종 채용 확정
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
@@ -56,21 +62,6 @@ const ChatContractButton = ({
     send(chatRoomId, request);
     handleModal(setIsCompleteModalOpen, setIsAgreeModalOpen);
   };
-
-  //   const handleEdit = () => {
-  //     const request: EditContractChatRequest = {
-  //       sendRequestType: 'EDIT_CONTRACT',
-  //       workDays: ['MONDAY', 'TUESDAY'],
-  //       workStartTime: '09:00',
-  //       workEndTime: '18:00',
-  //       workSalaryUnitType: 'HOURLY',
-  //       workSalaryAmount: 32000,
-  //       workStartDate: '2025-12-01',
-  //       careTypes: ['BATH', 'MEAL'],
-  //     };
-  //     send(request);
-  //     // onLocalSystemMessage('기관에서 근무 조건을 수정했습니다.', userRole==="CAREGIVER"?"근무 조건 확인 후 동의 버튼을 눌러주세요.":"조율 요청이 들어오면 수정 버튼을 눌러 내용을 반영해 주세요.");
-  //   };
 
   if (contractStatus === '근무조건동의') {
     return (
@@ -107,25 +98,30 @@ const ChatContractButton = ({
   return (
     <Container sender={senderType}>
       <div className="ask">문의사항은 채팅을 이용해주세요.</div>
-      {role === 'CAREGIVER' ? (
-        <Button
-          height="40px"
-          variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
-          disabled={chatRoomStatus !== '채팅가능'}
-          onClick={() => setIsAgreeModalOpen(true)}
-        >
-          근무 조건에 동의합니다
-        </Button>
-      ) : (
-        <Button
-          height="40px"
-          variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
-          disabled={chatRoomStatus !== '채팅가능'}
-          /* onClick={handleEdit} */
-        >
-          근무 조건 수정하기
-        </Button>
-      )}
+      {contractStatus !== '채용완료' &&
+        (role === 'CAREGIVER' ? (
+          <Button
+            height="40px"
+            variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
+            disabled={chatRoomStatus !== '채팅가능'}
+            onClick={() => setIsAgreeModalOpen(true)}
+          >
+            근무 조건에 동의합니다
+          </Button>
+        ) : (
+          <Button
+            height="40px"
+            variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
+            disabled={chatRoomStatus !== '채팅가능'}
+            onClick={() =>
+              handleNavigateState(`/chat/${chat.chatId}/edit`, {
+                state: { chat },
+              })
+            }
+          >
+            근무 조건 수정하기
+          </Button>
+        ))}
 
       <Modal
         isOpen={isAgreeModalOpen}
