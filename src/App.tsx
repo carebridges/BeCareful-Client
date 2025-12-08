@@ -12,6 +12,7 @@ import SocialworkerRoute from '@/route/SocialworkerRoute';
 import LandingPage from '@/page/Landing/LandingPage';
 import { TestPage } from '@/page/TestPage';
 import { ErrorPage } from '@/page/Error/ErrorPage';
+import LoginPage from '@/page/Login/LoginPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/" element={<SplashPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route
         path="/signup/institution"
         element={
