@@ -65,18 +65,24 @@ export const SelectStartDateModal = ({
               contents={years}
               selectedContents={selectedYear}
               setSelectedContents={setSelectedYear}
+              height="48px"
+              borderRadius="12px"
             />
             <Dropdown
               title="월"
               contents={months}
               selectedContents={selectedMonth}
               setSelectedContents={setSelectedMonth}
+              height="48px"
+              borderRadius="12px"
             />
             <Dropdown
               title="일"
               contents={days}
               selectedContents={selectedDay}
               setSelectedContents={setSelectedDay}
+              height="48px"
+              borderRadius="12px"
             />
           </DateRow>
         </ModalMiddleContainer>
