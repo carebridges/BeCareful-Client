@@ -21,7 +21,7 @@ const SocialworkerChatPage = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();
   const roomId = Number(chatRoomId);
   const { data } = useGetSocialworkerChat(roomId);
-  const { handleGoBack } = useHandleNavigate();
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
 
   const [isKakaoSheetOpen, setIsKakaoSheetOpen] = useState(false);
 
@@ -156,7 +156,12 @@ const SocialworkerChatPage = () => {
           <img src={data?.elderlyProfileImageUrl} />
           <div className="name">{data?.elderlyName} 어르신</div>
         </div>
-        <div className="right">정보 보기</div>
+        <div
+          className="right"
+          onClick={() => handleNavigate(`/recruitment/${data?.recruitmentId}`)}
+        >
+          정보 보기
+        </div>
       </Elder>
 
       {(contractStatus === '채용완료' || chatRoomStatus !== '채팅가능') && (
