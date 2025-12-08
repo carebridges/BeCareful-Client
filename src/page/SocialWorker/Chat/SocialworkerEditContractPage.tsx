@@ -9,25 +9,27 @@ import { Dropdown } from '@/components/common/Dropdown/Dropdown';
 import { TimeDropdown } from '@/components/common/Dropdown/TimeDropdown';
 import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDropdown';
 import { MatchingCareCard } from '@/page/Matching/MatchingCareCard';
+import { useChat } from '@/hooks/useChat';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { DAY_EN_TO_KR, DAYS } from '@/constants/common/day';
 import { SALARY_KR_TO_EN, salaryTypes } from '@/constants/common/salary';
 import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/socialworker/careTypes.socialWorker';
+import { formatDaysToEN } from '@/utils/caregiverFormatter';
 import {
   ContractChatResponse,
   EditContractChatRequest,
 } from '@/types/common/chat';
-import { formatDaysToEN } from '@/utils/caregiverFormatter';
 
 type LocationState = { chat?: ContractChatResponse };
 
 const SocialworkerEditContractPage = () => {
   const location = useLocation();
-  const chatRoomId = useParams<{ chatRoomId: string }>();
-  const roomId = Number(chatRoomId);
+  const param = useParams<{ chatRoomId: string }>();
+  const chatRoomId = Number(param.chatRoomId);
   const state = location.state as LocationState | null;
 
   const { handleGoBack } = useHandleNavigate();
+  const { send } = useChat({ chatRoomId });
 
   const [contract] = useState<ContractChatResponse | null>(state?.chat ?? null);
 
@@ -43,11 +45,16 @@ const SocialworkerEditContractPage = () => {
   const [selectedMonth, setSelectedMonth] = useState<string[]>([]);
   const [selectedDay, setSelectedDay] = useState<string[]>([]);
 
+  const years = Array.from({ length: 50 }, (_, i) => `${2025 + i}`);
+  const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
+  const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
+
   useEffect(() => {
+    console.log(contract);
     if (contract) {
       setWorkday(contract.workDays.map((day) => DAY_EN_TO_KR[day]));
-      setWorkStartTime(contract.workStartTime);
-      setWorkEndTime(contract.workEndTime);
+      setWorkStartTime(contract.workStartTime.slice(0, 5));
+      setWorkEndTime(contract.workEndTime.slice(0, 5));
       setCareTypes(contract.careTypes);
       // setPayType(SALARY_EN_TO_KR[chat.workSalaryUnitType]);
       setWorkSalaryAmount(contract.workSalaryAmount.toLocaleString('ko-KR'));
@@ -58,10 +65,6 @@ const SocialworkerEditContractPage = () => {
       setSelectedDay([startDate]);
     }
   }, [contract]);
-
-  const years = Array.from({ length: 50 }, (_, i) => `${2025 + i}`);
-  const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
-  const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
 
   const handleSelectDay = (id: string) => {
     setWorkday((prev) => {
@@ -109,6 +112,30 @@ const SocialworkerEditContractPage = () => {
     setIsChanged(true);
   };
 
+  // 연도 선택 핸들러
+  const handleYearChange = (newYearArray: string[]) => {
+    if (selectedYear[0] !== newYearArray[0]) {
+      setSelectedYear(newYearArray);
+      setIsChanged(true);
+    }
+  };
+
+  // 월 선택 핸들러
+  const handleMonthChange = (newMonthArray: string[]) => {
+    if (selectedMonth[0] !== newMonthArray[0]) {
+      setSelectedMonth(newMonthArray);
+      setIsChanged(true);
+    }
+  };
+
+  // 일 선택 핸들러
+  const handleDayChange = (newDayArray: string[]) => {
+    if (selectedDay[0] !== newDayArray[0]) {
+      setSelectedDay(newDayArray);
+      setIsChanged(true);
+    }
+  };
+
   const handleEdit = () => {
     const year = selectedYear[0];
     const month = selectedMonth[0]?.padStart(2, '0');
@@ -125,8 +152,8 @@ const SocialworkerEditContractPage = () => {
       careTypes: careTypes,
     };
 
-    console.log(request);
-    // send(roomId, request);
+    send(chatRoomId, request);
+    handleGoBack();
   };
 
   return (
@@ -195,9 +222,9 @@ const SocialworkerEditContractPage = () => {
       <SectionWrapper>
         <label className="title">
           급여 <span>*</span>
-          <label className="guide">
-            최저시급 10,030원 이상으로 입력해 주세요.
-          </label>
+        </label>
+        <label className="guide">
+          최저시급 10,030원 이상으로 입력해 주세요.
         </label>
         <PayWrapper>
           <ApplicationDropdown
@@ -224,22 +251,31 @@ const SocialworkerEditContractPage = () => {
         </label>
         <DateRow>
           <Dropdown
+            width="100%"
             title="연도"
             contents={years}
             selectedContents={selectedYear}
-            setSelectedContents={setSelectedYear}
+            setSelectedContents={handleYearChange}
+            height="48px"
+            borderRadius="12px"
           />
           <Dropdown
+            width="100%"
             title="월"
             contents={months}
             selectedContents={selectedMonth}
-            setSelectedContents={setSelectedMonth}
+            setSelectedContents={handleMonthChange}
+            height="48px"
+            borderRadius="12px"
           />
           <Dropdown
+            width="100%"
             title="일"
             contents={days}
             selectedContents={selectedDay}
-            setSelectedContents={setSelectedDay}
+            setSelectedContents={handleDayChange}
+            height="48px"
+            borderRadius="12px"
           />
         </DateRow>
       </SectionWrapper>
@@ -319,10 +355,10 @@ const TimeBoxContainer = styled.div`
 `;
 
 const PayWrapper = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   gap: 8px;
-  width: 100%;
 
   .pay {
     position: relative;
@@ -339,7 +375,6 @@ const PayWrapper = styled.div`
 
 const Pay = styled.input`
   width: 100%;
-  height: 20px;
   padding: 16px;
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.colors.gray100};
