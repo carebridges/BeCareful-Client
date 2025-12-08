@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -11,147 +10,31 @@ import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDr
 import { MatchingCareCard } from '@/page/Matching/MatchingCareCard';
 import { useChat } from '@/hooks/useChat';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { DAY_EN_TO_KR, DAYS } from '@/constants/common/day';
-import { SALARY_KR_TO_EN, salaryTypes } from '@/constants/common/salary';
+import { DAYS } from '@/constants/common/day';
+import { salaryTypes } from '@/constants/common/salary';
 import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/socialworker/careTypes.socialWorker';
-import { formatDaysToEN } from '@/utils/caregiverFormatter';
-import {
-  ContractChatResponse,
-  EditContractChatRequest,
-} from '@/types/common/chat';
-
-type LocationState = { chat?: ContractChatResponse };
+import { ContractChatResponse } from '@/types/common/chat';
+import { useEditContractForm } from '@/hooks/Socialworker/useEditContractForm';
 
 const SocialworkerEditContractPage = () => {
   const location = useLocation();
   const param = useParams<{ chatRoomId: string }>();
   const chatRoomId = Number(param.chatRoomId);
-  const state = location.state as LocationState | null;
+
+  const state = location.state as { chat?: ContractChatResponse };
+  const contract = state?.chat ?? null;
 
   const { handleGoBack } = useHandleNavigate();
   const { send } = useChat({ chatRoomId });
 
-  const [contract] = useState<ContractChatResponse | null>(state?.chat ?? null);
-
-  const [isChanged, setIsChanged] = useState(false);
-
-  const [workday, setWorkday] = useState<string[]>([]);
-  const [workStartTime, setWorkStartTime] = useState('');
-  const [workEndTime, setWorkEndTime] = useState('');
-  const [careTypes, setCareTypes] = useState<string[]>([]);
-  const [workSalaryType, setWorkSalaryType] = useState('시급');
-  const [workSalaryAmount, setWorkSalaryAmount] = useState('');
-  const [selectedYear, setSelectedYear] = useState<string[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string[]>([]);
-  const [selectedDay, setSelectedDay] = useState<string[]>([]);
+  const form = useEditContractForm(contract);
 
   const years = Array.from({ length: 50 }, (_, i) => `${2025 + i}`);
   const months = Array.from({ length: 12 }, (_, i) => `${i + 1}`);
   const days = Array.from({ length: 31 }, (_, i) => `${i + 1}`);
 
-  useEffect(() => {
-    console.log(contract);
-    if (contract) {
-      setWorkday(contract.workDays.map((day) => DAY_EN_TO_KR[day]));
-      setWorkStartTime(contract.workStartTime.slice(0, 5));
-      setWorkEndTime(contract.workEndTime.slice(0, 5));
-      setCareTypes(contract.careTypes);
-      // setPayType(SALARY_EN_TO_KR[chat.workSalaryUnitType]);
-      setWorkSalaryAmount(contract.workSalaryAmount.toLocaleString('ko-KR'));
-      const [startYear, startMonth, startDate] =
-        contract.workStartDate.split('-');
-      setSelectedYear([startYear]);
-      setSelectedMonth([startMonth]);
-      setSelectedDay([startDate]);
-    }
-  }, [contract]);
-
-  const handleSelectDay = (id: string) => {
-    setWorkday((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((day) => day !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
-    setIsChanged(true);
-  };
-
-  const handleStartTime = (t: string) => {
-    setWorkStartTime(t);
-    setIsChanged(true);
-  };
-
-  const handleEndTime = (t: string) => {
-    setWorkEndTime(t);
-    setIsChanged(true);
-  };
-
-  const handleCareTypeChange = (careType: string) => {
-    setCareTypes((prev) => {
-      const exists = prev.includes(careType);
-      const next = exists
-        ? prev.filter((type) => type !== careType)
-        : [...prev, careType];
-
-      return next;
-    });
-    setIsChanged(true);
-  };
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    const format = input.replace(/[^0-9]/g, '');
-    const amount = Number(format);
-
-    if (!isNaN(amount) && format !== '') {
-      setWorkSalaryAmount(amount.toLocaleString('ko-KR'));
-    } else {
-      setWorkSalaryAmount('');
-    }
-    setIsChanged(true);
-  };
-
-  // 연도 선택 핸들러
-  const handleYearChange = (newYearArray: string[]) => {
-    if (selectedYear[0] !== newYearArray[0]) {
-      setSelectedYear(newYearArray);
-      setIsChanged(true);
-    }
-  };
-
-  // 월 선택 핸들러
-  const handleMonthChange = (newMonthArray: string[]) => {
-    if (selectedMonth[0] !== newMonthArray[0]) {
-      setSelectedMonth(newMonthArray);
-      setIsChanged(true);
-    }
-  };
-
-  // 일 선택 핸들러
-  const handleDayChange = (newDayArray: string[]) => {
-    if (selectedDay[0] !== newDayArray[0]) {
-      setSelectedDay(newDayArray);
-      setIsChanged(true);
-    }
-  };
-
   const handleEdit = () => {
-    const year = selectedYear[0];
-    const month = selectedMonth[0]?.padStart(2, '0');
-    const day = selectedDay[0]?.padStart(2, '0');
-
-    const request: EditContractChatRequest = {
-      sendRequestType: 'EDIT_CONTRACT',
-      workDays: formatDaysToEN(workday),
-      workStartTime: workStartTime,
-      workEndTime: workEndTime,
-      workSalaryUnitType: SALARY_KR_TO_EN[workSalaryType],
-      workSalaryAmount: Number(workSalaryAmount.replaceAll(',', '')),
-      workStartDate: `${year}-${month}-${day}`,
-      careTypes: careTypes,
-    };
-
+    const request = form.getRequest();
     send(chatRoomId, request);
     handleGoBack();
   };
@@ -175,8 +58,8 @@ const SocialworkerEditContractPage = () => {
               key={day}
               id={day}
               label={day}
-              checked={workday.includes(day)}
-              onChange={handleSelectDay}
+              checked={form.workday.includes(day)}
+              onChange={form.handleWorkday}
               width="100%"
               height="42px"
             />
@@ -191,14 +74,14 @@ const SocialworkerEditContractPage = () => {
         <TimeBoxContainer>
           <TimeDropdown
             width="50%"
-            value={workStartTime || '00:00'}
-            onChange={handleStartTime}
+            value={form.workStartTime || '00:00'}
+            onChange={form.handleWorkStartTime}
           />
           ~
           <TimeDropdown
             width="50%"
-            value={workEndTime || '00:00'}
-            onChange={handleEndTime}
+            value={form.workEndTime || '00:00'}
+            onChange={form.handleWorkEndTime}
           />
         </TimeBoxContainer>
       </SectionWrapper>
@@ -213,8 +96,8 @@ const SocialworkerEditContractPage = () => {
             key={key}
             title={title}
             Icon={Icon}
-            initialChecked={careTypes.includes(key)}
-            onChange={() => handleCareTypeChange(key)}
+            initialChecked={form.careTypes.includes(key)}
+            onChange={() => form.handleCareTypes(key)}
           />
         ))}
       </SectionWrapper>
@@ -228,17 +111,19 @@ const SocialworkerEditContractPage = () => {
         </label>
         <PayWrapper>
           <ApplicationDropdown
-            title={workSalaryType || '시급'}
+            title={form.workSalaryType || '시급'}
             contents={salaryTypes}
-            selectedContents={[workSalaryType]}
-            setSelectedContents={(values) => setWorkSalaryType(values[0] || '')}
+            selectedContents={[form.workSalaryType]}
+            setSelectedContents={(values) =>
+              form.setWorkSalaryType(values[0] || '')
+            }
           />
           <div className="pay">
             <Pay
               id="pay"
               placeholder="10,030"
-              value={workSalaryAmount}
-              onChange={handleAmountChange}
+              value={form.workSalaryAmount}
+              onChange={form.handleWorkSalaryAmount}
             />
             <label className="count">원</label>
           </div>
@@ -254,8 +139,8 @@ const SocialworkerEditContractPage = () => {
             width="100%"
             title="연도"
             contents={years}
-            selectedContents={selectedYear}
-            setSelectedContents={handleYearChange}
+            selectedContents={form.selectedYear}
+            setSelectedContents={form.handleSelectedYear}
             height="48px"
             borderRadius="12px"
           />
@@ -263,8 +148,8 @@ const SocialworkerEditContractPage = () => {
             width="100%"
             title="월"
             contents={months}
-            selectedContents={selectedMonth}
-            setSelectedContents={handleMonthChange}
+            selectedContents={form.selectedMonth}
+            setSelectedContents={form.handleSelectedMonth}
             height="48px"
             borderRadius="12px"
           />
@@ -272,8 +157,8 @@ const SocialworkerEditContractPage = () => {
             width="100%"
             title="일"
             contents={days}
-            selectedContents={selectedDay}
-            setSelectedContents={handleDayChange}
+            selectedContents={form.selectedDay}
+            setSelectedContents={form.handleSelectedDay}
             height="48px"
             borderRadius="12px"
           />
@@ -283,8 +168,8 @@ const SocialworkerEditContractPage = () => {
       <Bottom>
         <Button
           height="56px"
-          variant={isChanged ? 'mainBlue' : 'disabled'}
-          disabled={!isChanged}
+          variant={form.isChanged ? 'mainBlue' : 'disabled'}
+          disabled={!form.isChanged}
           onClick={handleEdit}
         >
           수정하기
