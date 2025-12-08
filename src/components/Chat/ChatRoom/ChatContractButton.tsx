@@ -7,23 +7,22 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 import {
   AcceptContractChatRequest,
-  ChatRequest,
   ChatResponse,
   ConfirmContractChatRequest,
-  SenderType,
+  UserRole,
 } from '@/types/common/chat';
 import { handleModal } from '@/utils/handleModal';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useChat } from '@/hooks/useChat';
 
 interface ChatContractButtonProps {
-  role: SenderType;
+  role: UserRole;
   chat: ChatResponse;
-  senderType: SenderType;
+  senderType: UserRole;
   chatRoomStatus: ChatRoomStatus;
   contractStatus: ChatRoomContractStatus;
   lastContractChatId: number;
   chatRoomId: number;
-  send: (chatRoomId: number, request: ChatRequest) => void;
 }
 
 const ChatContractButton = ({
@@ -34,9 +33,9 @@ const ChatContractButton = ({
   senderType,
   lastContractChatId,
   chatRoomId,
-  send,
 }: ChatContractButtonProps) => {
   const { handleNavigateState } = useHandleNavigate();
+  const { send } = useChat({ chatRoomId });
 
   // 사회복지사 최종 채용 확정
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -114,7 +113,7 @@ const ChatContractButton = ({
             variant={chatRoomStatus === '채팅가능' ? 'subBlue' : 'disabled'}
             disabled={chatRoomStatus !== '채팅가능'}
             onClick={() =>
-              handleNavigateState(`/chat/${chat.chatId}/edit`, {
+              handleNavigateState(`edit`, {
                 state: { chat },
               })
             }

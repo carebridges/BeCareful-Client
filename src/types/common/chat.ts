@@ -1,18 +1,17 @@
 import { WorkDay, WorkSalaryUnitType } from '@/types/Caregiver/common';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 
-export interface Contract {
-  contractId: number;
-  careTypes: string[];
-  workDays: string[];
-  workStartTime: string;
-  workEndTime: string;
-  workSalaryAmount: number;
-  workStartDate: string;
-  createdDate: string;
+export type UserRole = 'CAREGIVER' | 'SOCIAL_WORKER';
+
+export interface StatusMessage {
+  title: string;
+  detail: string;
 }
 
-export type SenderType = 'CAREGIVER' | 'SOCIAL_WORKER';
+export interface OtherUserProfile {
+  profileImg: string;
+  name: string;
+}
 
 export type SendRequestType =
   | 'SEND_TEXT'
@@ -55,7 +54,7 @@ export interface AcceptContractChatRequest {
 export interface TextChatResponse {
   chatId: number;
   chatType: 'TEXT';
-  senderType: SenderType;
+  senderType: UserRole;
   text: string;
   sentTime: string;
 }
@@ -63,7 +62,7 @@ export interface TextChatResponse {
 export interface ContractChatResponse {
   chatType: 'CONTRACT';
   chatId: number;
-  senderType: SenderType;
+  senderType: UserRole;
   sentTime: string;
   careTypes: string[];
   workDays: WorkDay[];

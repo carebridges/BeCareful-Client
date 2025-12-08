@@ -1,4 +1,4 @@
-import { SenderType } from '@/types/common/chat';
+import { UserRole } from '@/types/common/chat';
 import styled from 'styled-components';
 
 interface InfoItem {
@@ -8,7 +8,7 @@ interface InfoItem {
 
 interface InfoDisplayChatProps {
   items: InfoItem[];
-  sender: SenderType;
+  sender: UserRole;
 }
 
 const InfoDisplayChat = ({ items, sender }: InfoDisplayChatProps) => {

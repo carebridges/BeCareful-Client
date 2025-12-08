@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import ChatContract from '@/components/Chat/ChatRoom/ChatContract';
 import { formatTimeLabel } from '@/utils/formatTime';
-import { ChatResponse, SenderType } from '@/types/common/chat';
+import { ChatResponse, OtherUserProfile, UserRole } from '@/types/common/chat';
 
 interface ChatBubbleProps {
   chat: ChatResponse;
-  isMyChat: boolean;
-  profileImg?: string;
-  name?: string;
-  role: SenderType;
+  other: OtherUserProfile;
+  role: UserRole;
   children?: React.ReactNode;
   elderlyName?: string;
   caregiverName?: string;
@@ -17,15 +15,15 @@ interface ChatBubbleProps {
 
 const ChatBubble = ({
   chat,
-  isMyChat,
-  profileImg,
-  name,
+  other,
   role,
   children,
   elderlyName,
   caregiverName,
   caregiverPhoneNumber,
 }: ChatBubbleProps) => {
+  const isMyChat = chat.senderType === role;
+
   return (
     <Container isMyChat={isMyChat}>
       {isMyChat ? (
@@ -34,7 +32,6 @@ const ChatBubble = ({
             {chat.chatType === 'TEXT' && (
               <div className="text">{chat.text}</div>
             )}
-
             {chat.chatType === 'CONTRACT' && (
               <ChatContract
                 contract={chat}
@@ -52,10 +49,10 @@ const ChatBubble = ({
         </>
       ) : (
         <div className="bubble">
-          <img className="profile" alt="프로필 이미지" src={profileImg} />
+          <img className="profile" alt="프로필 이미지" src={other.profileImg} />
           <div className="center">
             <div className="name">
-              {name}
+              {other.name}
               {role === 'SOCIAL_WORKER' && ' 요양보호사'}
             </div>
             <div className="chat">

@@ -3,24 +3,26 @@ import ChatBubble from '@/components/Chat/ChatRoom/ChatBubble';
 import ChatContractButton from '@/components/Chat/ChatRoom/ChatContractButton';
 import ChatGuide from '@/components/Chat/ChatRoom/ChatGuide';
 import { formatDateLabel, groupByDate } from '@/utils/formatTime';
-import { ChatResponse, ChatRequest, SenderType } from '@/types/common/chat';
+import {
+  ChatResponse,
+  UserRole,
+  StatusMessage,
+  OtherUserProfile,
+} from '@/types/common/chat';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 
 interface ChatRoomProps {
   chat: ChatResponse[];
-  role: SenderType;
+  role: UserRole;
   lastContractChatId: number | null;
   chatRoomId: number;
-  send: (chatRoomId: number, request: ChatRequest) => void;
-  profileImg: string;
-  name: string;
+  other: OtherUserProfile;
   elderlyName: string;
   caregiverName?: string;
   caregiverPhoneNumber?: string;
   chatRoomStatus: ChatRoomStatus;
   contractStatus: ChatRoomContractStatus;
-  statusTitle: string;
-  statusDetail: string;
+  status: StatusMessage;
 }
 
 const ChatRoom = ({
@@ -28,16 +30,13 @@ const ChatRoom = ({
   role,
   lastContractChatId,
   chatRoomId,
-  send,
-  profileImg,
-  name,
+  other,
   elderlyName,
   caregiverName,
   caregiverPhoneNumber,
   chatRoomStatus,
   contractStatus,
-  statusTitle,
-  statusDetail,
+  status,
 }: ChatRoomProps) => {
   const chatGroupByDate = groupByDate(chat);
 
@@ -53,9 +52,7 @@ const ChatRoom = ({
               <ChatBubble
                 key={index}
                 chat={chat}
-                isMyChat={chat.senderType === role}
-                profileImg={profileImg}
-                name={name}
+                other={other}
                 role={role}
                 elderlyName={elderlyName}
                 caregiverName={caregiverName}
@@ -71,17 +68,16 @@ const ChatRoom = ({
                       senderType={chat.senderType}
                       lastContractChatId={lastContractChatId}
                       chatRoomId={chatRoomId}
-                      send={send}
                     />
                   )}
               </ChatBubble>
             );
           })}
-          {(contractStatus === '채용완료' || chatRoomStatus !== '채팅가능') && (
-            <ChatGuide title={statusTitle} detail={statusDetail} />
-          )}
         </ChatWrapper>
       ))}
+      {(contractStatus === '채용완료' || chatRoomStatus !== '채팅가능') && (
+        <ChatGuide title={status.title} detail={status.title} />
+      )}
     </Container>
   );
 };
