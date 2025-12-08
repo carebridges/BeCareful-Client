@@ -12,7 +12,7 @@ export interface Contract {
   createdDate: string;
 }
 
-export type SenderType = 'CAREGIVER' | 'SOCIAL_WORKER' | 'SYSTEM';
+export type SenderType = 'CAREGIVER' | 'SOCIAL_WORKER';
 
 export type SendRequestType =
   | 'SEND_TEXT'
@@ -25,7 +25,6 @@ export type ChatType =
   | 'CONTRACT'
   | 'CHATROOM_CONTRACT_STATUS_UPDATED'
   | 'CHATROOM_ACTIVE_STATUS_UPDATED';
-// | 'SYSTEM_INFO';
 
 export interface SendTextChatRequest {
   sendRequestType: 'SEND_TEXT';
