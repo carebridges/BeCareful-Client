@@ -1,5 +1,5 @@
-import ChatList from '@/components/Chat/ChatList';
-import ChatListCardCaregiver from '@/components/Chat/ChatListCardCaregiver';
+import ChatList from '@/components/Chat/ChatList/ChatList';
+import ChatListCardCaregiver from '@/components/Chat/ChatList/ChatListCardCaregiver';
 import { useGetCaregiverChatList } from '@/api/chat';
 
 const CaregiverChatListPage = () => {

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import ChatListEmpty from '@/components/Chat/ChatListEmpty';
+import ChatListEmpty from '@/components/Chat/ChatList/ChatListEmpty';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ChatItem {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ChatContract from '@/components/Chat/ChatContract';
+import ChatContract from '@/components/Chat/ChatRoom/ChatContract';
 import { formatTimeLabel } from '@/utils/formatTime';
 import { ChatResponse, SenderType } from '@/types/common/chat';
 

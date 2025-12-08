@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as Icon } from '@/assets/icons/NoContent.svg';
-import { Button } from '../common/Button/Button';
+import { Button } from '../../common/Button/Button';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 const ChatListEmpty = ({ isCaregiver }: { isCaregiver: boolean }) => {

@@ -10,8 +10,8 @@ import { ReactComponent as SendDefault } from '@/assets/icons/community/ReplySen
 import { ReactComponent as KakaoChannelIcon } from '@/assets/icons/KakaoChannel.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import BottomSheet from '@/components/Community/common/BottomSheet';
-import ChatRoom from '@/components/Chat/ChatRoom';
-import ChatGuide from '@/components/Chat/ChatGuide';
+import ChatRoom from '@/components/Chat/ChatRoom/ChatRoom';
+import ChatGuide from '@/components/Chat/ChatRoom/ChatGuide';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialworkerChat } from '@/api/chat';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';

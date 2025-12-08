@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import ChatBubble from '@/components/Chat/ChatBubble';
-import ChatContractButton from '@/components/Chat/ChatContractButton';
-import ChatGuide from '@/components/Chat/ChatGuide';
+import ChatBubble from '@/components/Chat/ChatRoom/ChatBubble';
+import ChatContractButton from '@/components/Chat/ChatRoom/ChatContractButton';
+import ChatGuide from '@/components/Chat/ChatRoom/ChatGuide';
 import { formatDateLabel, groupByDate } from '@/utils/formatTime';
 import { ChatResponse, ChatRequest, SenderType } from '@/types/common/chat';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
