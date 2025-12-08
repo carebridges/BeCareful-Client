@@ -6,10 +6,13 @@ import { ReactComponent as CheckBox } from '@/assets/icons/SquareCheck.svg';
 import { useState } from 'react';
 import { Button } from '@/components/common/Button/Button';
 import { useNavigate } from 'react-router-dom';
+import { KakaoButton } from '@/components/common/Button/KakaoButton';
+import { useIsIOS } from '@/hooks/useIsIOS';
 
 const LoginPage = () => {
   const [autoLogin, setAutoLogin] = useState(false);
   const navigate = useNavigate();
+  const isIOS = useIsIOS();
 
   const handleToggleAutoLogin = () => {
     setAutoLogin((prev) => !prev);
@@ -45,6 +48,7 @@ const LoginPage = () => {
           <Button variant="blue" height="52px">
             로그인
           </Button>
+          {!isIOS && <KakaoButton />}
         </SubmitContainer>
         <Gap />
         <Description>
@@ -112,6 +116,9 @@ const AutoLogin = styled.div<{ checked: boolean }>`
 
 const SubmitContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+
   padding: 24px 0px;
   width: 100%;
   box-sizing: border-box;
