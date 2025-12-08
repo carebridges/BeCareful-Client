@@ -25,7 +25,7 @@ export const SignUpPage = () => {
     <PageLayout>
       <ContentWrapper>
         <BackButtonWrapper>
-          <IconArrowLeft onClick={() => navigate('/onboarding')} />
+          <IconArrowLeft onClick={() => navigate(-1)} />
         </BackButtonWrapper>
         <Header>
           환영합니다!
