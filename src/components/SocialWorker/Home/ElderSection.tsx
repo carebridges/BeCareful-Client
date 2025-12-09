@@ -2,12 +2,15 @@ import styled from 'styled-components';
 import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
 import { MatchingElderlyList } from '@/types/Socialworker/home';
 import { Button } from '@/components/common/Button/Button';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ElderSectionProps {
   data: MatchingElderlyList[] | undefined;
 }
 
 const ElderSection = ({ data }: ElderSectionProps) => {
+  const { handleNavigate } = useHandleNavigate();
+
   if (!data || data.length === 0) {
     return (
       <Elder>
@@ -53,7 +56,11 @@ const ElderSection = ({ data }: ElderSectionProps) => {
             width="50px"
             height="32px"
             variant="subBlue"
-            // onClick={() => handleNavigate()}
+            onClick={() =>
+              handleNavigate(
+                `/socialworker/elderly/${elderly.elderlyDetail.elderlyId}`,
+              )
+            }
           >
             관리
           </Button>
