@@ -10,7 +10,7 @@ const CaregiverSignUpContext = createContext<CaregiverSignUpContextType | null>(
   null,
 );
 
-export const CaregiverSignUpProvider = ({
+export const KakaoCaregiverSignUpProvider = ({
   children,
 }: {
   children: React.ReactNode;

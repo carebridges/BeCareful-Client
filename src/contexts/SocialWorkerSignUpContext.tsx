@@ -27,7 +27,11 @@ interface SignUpContextType extends ReturnType<typeof useFunnel> {
 
 const SignUpContext = createContext<SignUpContextType | null>(null);
 
-export const SignUpProvider = ({ children }: { children: React.ReactNode }) => {
+export const KakaoSocialworkerSignUpProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const funnel = useFunnel(0);
 
   const [formData, setFormData] = useState<SignUpFormData>({

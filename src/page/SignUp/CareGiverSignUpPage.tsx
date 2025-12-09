@@ -1,7 +1,7 @@
-import { CareGiverSignUpFunnel } from '@/components/SignUp/CareGiverSignUpFunnel/CaregiverSignUpFunnel';
+import { KakaoCareGiverSignUpFunnel } from '@/components/SignUp/CareGiverSignUpFunnel/KakaoCaregiverSignUpFunnel';
 import { useGetGuestInfoForCaregiver } from '@/hooks/SignUp/useGuestInfoForCaregiver';
 
-export const CareGiverSignUpPage = () => {
+export const KakaoCareGiverSignUpPage = () => {
   useGetGuestInfoForCaregiver();
-  return <CareGiverSignUpFunnel />;
+  return <KakaoCareGiverSignUpFunnel />;
 };

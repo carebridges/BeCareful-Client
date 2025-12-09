@@ -1,11 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import SplashPage from '@/page/SplashPage';
 import { OnboardingPage } from '@/page/Onboarding/OnboardingPage';
-import { SignUpProvider } from '@/contexts/SocialWorkerSignUpContext';
-import { CaregiverSignUpProvider } from '@/contexts/CaregiverSignUpContext';
-import { InstitutionSignUpPage } from '@/page/SignUp/InstitutionSignUpPage';
-import { SignUpPage } from '@/page/SignUp/SignUpPage';
-import { CareGiverSignUpPage } from './page/SignUp/CareGiverSignUpPage';
+import { KakaoSocialworkerSignUpProvider } from '@/contexts/SocialWorkerSignUpContext';
+import { KakaoCaregiverSignUpProvider } from '@/contexts/CaregiverSignUpContext';
+import { KakaoCareGiverSignUpPage } from './page/SignUp/CareGiverSignUpPage';
 import CaregiverRoute from '@/route/CaregiverRoute';
 import CommunityRoute from '@/route/CommunityRoute';
 import SocialworkerRoute from '@/route/SocialworkerRoute';
@@ -13,6 +11,8 @@ import LandingPage from '@/page/Landing/LandingPage';
 import { TestPage } from '@/page/TestPage';
 import { ErrorPage } from '@/page/Error/ErrorPage';
 import LoginPage from '@/page/Login/LoginPage';
+import { KakaoInstitutionSignUpPage } from '@/page/SignUp/InstitutionSignUpPage';
+import { KakaoSignUpPage } from '@/page/SignUp/SignUpPage';
 
 function App() {
   return (
@@ -20,22 +20,22 @@ function App() {
       {/* 초기 - 스플래시, 온보딩, 회원가입 페이지 */}
       <Route path="/" element={<SplashPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/signup/kakao" element={<KakaoSignUpPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route
-        path="/signup/institution"
+        path="/signup/institution/kakao"
         element={
-          <SignUpProvider>
-            <InstitutionSignUpPage />
-          </SignUpProvider>
+          <KakaoSocialworkerSignUpProvider>
+            <KakaoInstitutionSignUpPage />
+          </KakaoSocialworkerSignUpProvider>
         }
       />
       <Route
-        path="/signup/caregiver"
+        path="/signup/caregiver/kakao"
         element={
-          <CaregiverSignUpProvider>
-            <CareGiverSignUpPage />
-          </CaregiverSignUpProvider>
+          <KakaoCaregiverSignUpProvider>
+            <KakaoCareGiverSignUpPage />
+          </KakaoCaregiverSignUpProvider>
         }
       />
       {/* 요양보호사 */}

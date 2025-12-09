@@ -10,7 +10,7 @@ import {
   SignUpCardSelector,
 } from '@/components/SignUp/common/SignUpCardSelector';
 
-export const SignUpPage = () => {
+export const KakaoSignUpPage = () => {
   const [cardPressed, setCardPressed] = useState<CardType | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -18,7 +18,9 @@ export const SignUpPage = () => {
 
   const handleNextStep = () => {
     if (!cardPressed) return;
-    navigate(`/signup/${cardPressed}?guestKey=${guestKey}&role=${cardPressed}`);
+    navigate(
+      `/signup/${cardPressed}/kakao?guestKey=${guestKey}&role=${cardPressed}`,
+    );
   };
 
   return (

@@ -1,10 +1,11 @@
-import { Step1SelectRole } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step1SelectRole';
-
-import { Step3InstitutionName } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName';
-import { Step4BasicInfo } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo';
-import { Step5AcceptTerms } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step5AcceptTerms';
-import { Step6SignUpComplete } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step6SignUpComplete';
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { Step1BasicInfo } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo';
+import { Step2AddCertificate } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate';
+import { Step3IsCarOwner } from '@/components/SignUp/CareGiverSignUpFunnel/Step3IsCarOwner';
+import { Step4IsDementialTrained } from '@/components/SignUp/CareGiverSignUpFunnel/Step4IsDementialTrained';
+import { Step5CurrentAddress } from '@/components/SignUp/CareGiverSignUpFunnel/Step5CurrentAddress';
+import { Step6UploadPhoto } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto';
+import { Step7SignUpComplete } from '@/components/SignUp/CareGiverSignUpFunnel/Step7SignUpComplete';
+import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
 
 import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
@@ -14,19 +15,22 @@ import { SignUpModal } from '@/components/SignUp/common/SingUpModal';
 import { useState } from 'react';
 
 const steps = [
-  Step1SelectRole,
-  Step3InstitutionName,
-  Step4BasicInfo,
-  Step5AcceptTerms,
-  Step6SignUpComplete,
+  Step1BasicInfo,
+  Step2AddCertificate,
+  Step3IsCarOwner,
+  Step4IsDementialTrained,
+  Step5CurrentAddress,
+  Step6UploadPhoto,
+  Step7SignUpComplete,
 ];
-const stepPercents = [25, 50, 75, 100, 100];
 
-export const SignUpFunnel = () => {
-  const { currentStep, isInstitutionFunnel } = useSignUpContext();
+const stepPercents = [18, 36, 54, 72, 90, 100];
+
+export const KakaoCareGiverSignUpFunnel = () => {
+  const { currentStep } = useCaregiverSignUpContext();
   const StepComponent = steps[currentStep];
   const percent = stepPercents[currentStep];
-  const isLastStep = currentStep === 5;
+  const isLastStep = currentStep === 6;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClickBack = () => {
     setIsModalOpen(true);
@@ -41,7 +45,7 @@ export const SignUpFunnel = () => {
       <IconContainer>
         <IconClose onClick={handleClickBack} />
       </IconContainer>
-      {!isInstitutionFunnel && !isLastStep && <ProgressBar percent={percent} />}
+      {!isLastStep && <ProgressBar percent={percent} />}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}

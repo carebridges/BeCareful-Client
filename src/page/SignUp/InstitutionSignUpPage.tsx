@@ -1,11 +1,11 @@
-import { SignUpFunnel } from '@/components/SignUp/SocialWorkerSignUpFunnel/SignUpFunnel';
+import { KakaoSocialworkerSignUpFunnel } from '@/components/SignUp/SocialWorkerSignUpFunnel/KakaoSocialworkerSignUpFunnel';
 import { useGetGuestInfo } from '@/hooks/SignUp/useGetGuestInfo';
 
-export const InstitutionSignUpPage = () => {
+export const KakaoInstitutionSignUpPage = () => {
   useGetGuestInfo();
   return (
     <>
-      <SignUpFunnel />
+      <KakaoSocialworkerSignUpFunnel />
     </>
   );
 };

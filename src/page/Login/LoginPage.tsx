@@ -53,7 +53,7 @@ const LoginPage = () => {
         <Gap />
         <Description>
           돌봄다리에 처음 오셨나요?
-          <div className="gotosignup" onClick={() => navigate('/signup')}>
+          <div className="gotosignup" onClick={() => navigate('/signup/kakao')}>
             회원가입
           </div>
         </Description>
