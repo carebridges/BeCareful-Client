@@ -10,7 +10,7 @@ import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import WorkLocationModal from '@/components/Caregiver/Apply/WorkLocationModal';
 import { caretypes } from '@/constants/common/caretypes';
-import { days } from '@/constants/common/day';
+import { DAYS } from '@/constants/common/day';
 import { TIMES_LONG, TIMES_LONG_TO_SHORT } from '@/constants/common/time';
 import { SALARY_KR_TO_EN, salaryTypes } from '@/constants/common/salary';
 import { WorkApplicationRequest } from '@/types/Caregiver/work';
@@ -150,7 +150,7 @@ const CaregiverApplicationPage = () => {
         </label>
         <label className="guide">중복선택 가능</label>
         <SelectWrapper gap="4px">
-          {days.map((day) => (
+          {DAYS.map((day) => (
             <CheckBoxSelect
               key={day}
               id={day}

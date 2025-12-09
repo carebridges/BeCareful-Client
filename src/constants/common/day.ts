@@ -1,6 +1,6 @@
 import { WorkDay } from '@/types/Caregiver/common';
 
-export const days = ['월', '화', '수', '목', '금', '토', '일'];
+export const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
 
 export const DAY_EN_TO_KR: { [key: string]: string } = {
   MONDAY: '월',

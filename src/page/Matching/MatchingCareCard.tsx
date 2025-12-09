@@ -1,5 +1,5 @@
 import { ReactComponent as CircleCheck } from '@/assets/icons/matching/CircleCheck.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 interface MatchingCareCardProps {
@@ -16,6 +16,10 @@ export const MatchingCareCard = ({
   onChange,
 }: MatchingCareCardProps) => {
   const [isClicked, setIsClicked] = useState(initialChecked);
+
+  useEffect(() => {
+    setIsClicked(initialChecked);
+  }, [initialChecked]);
 
   const handleClick = () => {
     const newCheckedState = !isClicked;

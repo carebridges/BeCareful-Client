@@ -1,15 +1,16 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface NavbarProps {
   color: string;
   left?: React.ReactNode;
   center?: React.ReactNode;
   right?: React.ReactNode;
+  fix?: boolean;
 }
 
-export const NavBar = ({ color, left, center, right }: NavbarProps) => {
+export const NavBar = ({ color, left, center, right, fix }: NavbarProps) => {
   return (
-    <NavbarWrapper color={color}>
+    <NavbarWrapper color={color} fix={fix}>
       <NavLeft>{left}</NavLeft>
       <NavCenter>{center}</NavCenter>
       <NavRight>{right}</NavRight>
@@ -17,13 +18,22 @@ export const NavBar = ({ color, left, center, right }: NavbarProps) => {
   );
 };
 
-const NavbarWrapper = styled.div<{ color: string }>`
+const NavbarWrapper = styled.div<{ color: string; fix?: boolean }>`
   background: ${({ theme, color }) =>
     color === 'blue' ? theme.colors.mainBlue : theme.colors.white};
   width: 100%;
   height: 56px;
   display: flex;
   align-items: center;
+
+  ${({ fix }) =>
+    fix &&
+    css`
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    `};
 `;
 
 const NavLeft = styled.div`

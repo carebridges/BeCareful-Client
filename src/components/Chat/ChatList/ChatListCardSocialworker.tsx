@@ -1,37 +1,48 @@
 import styled from 'styled-components';
+import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { CaregiverChatList } from '@/types/Caregiver/chat';
+import { SocialworkerChatList } from '@/types/Socialworker/chat';
 import { textTruncateFormat } from '@/utils/formatText';
 
 interface ChatListCardProps {
-  chat: CaregiverChatList;
+  chat: SocialworkerChatList;
 }
 
-const CaregiverChatCard = ({ chat }: ChatListCardProps) => {
+const ChatListCardSocialworker = ({ chat }: ChatListCardProps) => {
   const { handleNavigate } = useHandleNavigate();
 
   return (
     <Container
-      onClick={() => handleNavigate(`/caregiver/chat/${chat.matchingId}`)}
+      onClick={() => handleNavigate(`/socialworker/chat/${chat.chatRoomId}`)}
     >
-      <img src={chat.nursingInstitutionProfileImageUrl} />
+      <img src={chat.caregiverProfileImageUrl} />
       <div className="left">
-        <label className="institution">{chat.nursingInstitutionName}</label>
+        <label className="caregiver">{chat.caregiverName} 요양보호사</label>
         <label className="recent">
           {textTruncateFormat(chat.recentChat, 30)}
         </label>
+        <div className="elderWrapper">
+          <label className="elder">{chat.elderlyName} 어르신</label>
+          <span className="border">|</span>
+          <label className="elder">{chat.elderlyAge}세</label>
+          <span className="border">|</span>
+          <label className="elder">
+            {GENDER_EN_TO_KR_2[chat.elderlyGender]}
+          </label>
+        </div>
       </div>
       <div className="right">
         <label className="time">{chat.lastSendTime}</label>
         {chat.unreadCount > 0 && (
           <label className="unread">{chat.unreadCount}</label>
         )}
+        {chat.isContractAccepted && <label className="accept">승인중</label>}
       </div>
     </Container>
   );
 };
 
-export default CaregiverChatCard;
+export default ChatListCardSocialworker;
 
 const Container = styled.div`
   padding: 20px;
@@ -53,10 +64,26 @@ const Container = styled.div`
     gap: 2px;
   }
 
-  .institution {
+  .caregiver {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  }
+
+  .elderWrapper {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .elder {
+    color: ${({ theme }) => theme.colors.gray500};
+    font-size: ${({ theme }) => theme.typography.fontSize.body4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
+  }
+
+  .border {
+    color: ${({ theme }) => theme.colors.gray50};
   }
 
   .recent {
@@ -89,6 +116,12 @@ const Container = styled.div`
 
     color: ${({ theme }) => theme.colors.white};
     font-size: ${({ theme }) => theme.typography.fontSize.body4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+
+  .accept {
+    color: ${({ theme }) => theme.colors.mainGreen};
+    font-size: ${({ theme }) => theme.typography.fontSize.body3};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 `;
