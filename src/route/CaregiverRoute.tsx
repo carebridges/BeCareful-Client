@@ -1,4 +1,5 @@
 import { matchPath, Route, Routes, useLocation } from 'react-router-dom';
+import { RecruitmentReadStatusProvider } from '@/contexts/RecruitmentReadStatusContext';
 import CaregiverTabBar from '@/components/Caregiver/CaregiverTabBar';
 import CaregiverHomePage from '@/page/Caregiver/Home/CaregiverHomePage';
 import CaregiverMyworkPage from '@/page/Caregiver/Home/CaregiverMyworkPage';
@@ -33,34 +34,36 @@ const CaregiverRoute = () => {
   const isHideTabBar = shouldHideTabBar();
 
   return (
-    <div
-      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
-    >
-      <main>
-        <Routes>
-          <Route index element={<CaregiverHomePage />} />
-          <Route path="mywork" element={<CaregiverMyworkPage />} />
-          <Route path="work" element={<CaregiverWorkPage />} />
-          <Route
-            path="work/:recruitmentId"
-            element={<CaregiverWorkDetailPage />}
-          />
-          <Route path="apply" element={<CaregiverApplyPage />} />
-          <Route
-            path="apply/:recruitmentId"
-            element={<CaregiverApplyDetailPage />}
-          />
-          <Route path="my/*" element={<CaregiverMyRoute />} />
+    <RecruitmentReadStatusProvider>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+      >
+        <main>
+          <Routes>
+            <Route index element={<CaregiverHomePage />} />
+            <Route path="mywork" element={<CaregiverMyworkPage />} />
+            <Route path="work" element={<CaregiverWorkPage />} />
+            <Route
+              path="work/:recruitmentId"
+              element={<CaregiverWorkDetailPage />}
+            />
+            <Route path="apply" element={<CaregiverApplyPage />} />
+            <Route
+              path="apply/:recruitmentId"
+              element={<CaregiverApplyDetailPage />}
+            />
+            <Route path="my/*" element={<CaregiverMyRoute />} />
 
-          <Route path="chat" element={<CaregiverChatListPage />} />
-          <Route path="chat/:chatRoomId" element={<CaregiverChatPage />} />
+            <Route path="chat" element={<CaregiverChatListPage />} />
+            <Route path="chat/:chatRoomId" element={<CaregiverChatPage />} />
 
-          <Route path="point" element={<PointPage />} />
-        </Routes>
-      </main>
+            <Route path="point" element={<PointPage />} />
+          </Routes>
+        </main>
 
-      {!isHideTabBar && <CaregiverTabBar />}
-    </div>
+        {!isHideTabBar && <CaregiverTabBar />}
+      </div>
+    </RecruitmentReadStatusProvider>
   );
 };
 

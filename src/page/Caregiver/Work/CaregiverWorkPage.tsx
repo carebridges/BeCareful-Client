@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
 import { ReactComponent as Chevron } from '@/assets/icons/ChevronUp.svg';
@@ -12,7 +13,6 @@ import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilte
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
 import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';
-import { useState } from 'react';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -58,7 +58,7 @@ const CaregiverWorkPage = () => {
               <label className="date">아직 등록된 지원서 없어요!</label>
             )}
             <div className="title">
-              {userInfo.realName} 일자리 지원서{' '}
+              {userInfo.realName} 일자리 지원서
               <ApplicationToggle
                 down={showApplication}
                 onClick={() => setShowApplication(!showApplication)}
@@ -79,7 +79,6 @@ const CaregiverWorkPage = () => {
 
         {showApplication && (
           <>
-            {' '}
             <InfoDisplay items={applyInfo} gapColumn="8px" gapRow="32px" />
             <Button onClick={() => handleNavigate('/caregiver/my/application')}>
               내 지원서 {applicationData?.workApplicationDto ? '수정' : '등록'}
