@@ -26,7 +26,6 @@ const ChatList = <T extends ChatItem>({
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>채팅 목록</NavCenter>}
-        color=""
       />
 
       {data?.length === 0 ? (

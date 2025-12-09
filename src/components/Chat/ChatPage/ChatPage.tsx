@@ -106,7 +106,6 @@ const ChatPage = ({
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>{chatRoomName}</NavCenter>}
         right={<NavRight onClick={() => setIsKakaoSheetOpen(true)} />}
-        color=""
         fix={true}
       />
 
