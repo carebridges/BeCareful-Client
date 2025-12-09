@@ -30,6 +30,12 @@ export const TimeDropdown = ({
   );
 
   useEffect(() => {
+    const [hour, minute] = value.split(':');
+    setSelectedHour(hour || '00');
+    setSelectedMinute(minute || '00');
+  }, [value]);
+
+  useEffect(() => {
     if (hourRef.current) {
       const middleIndex = Math.floor(hours.length / 2);
       hourRef.current.scrollTop =

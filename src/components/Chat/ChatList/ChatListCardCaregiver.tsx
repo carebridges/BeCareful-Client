@@ -1,49 +1,37 @@
 import styled from 'styled-components';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { SocialworkerChatList } from '@/types/Socialworker/chat';
+import { CaregiverChatList } from '@/types/Caregiver/chat';
 import { textTruncateFormat } from '@/utils/formatText';
 
 interface ChatListCardProps {
-  chat: SocialworkerChatList;
+  chat: CaregiverChatList;
 }
 
-const SocialworkerChatCard = ({ chat }: ChatListCardProps) => {
+const ChatListCardCaregiver = ({ chat }: ChatListCardProps) => {
   const { handleNavigate } = useHandleNavigate();
 
   return (
     <Container
-      onClick={() => handleNavigate(`/socialworker/chat/${chat.matchingId}`)}
+      onClick={() => handleNavigate(`/caregiver/chat/${chat.chatRoomId}`)}
     >
-      <img src={chat.caregiverInfo.profileImageUrl} />
+      <img src={chat.nursingInstitutionProfileImageUrl} />
       <div className="left">
-        <label className="caregiver">
-          {chat.caregiverInfo.name} 요양보호사
-        </label>
+        <label className="institution">{chat.nursingInstitutionName}</label>
         <label className="recent">
           {textTruncateFormat(chat.recentChat, 30)}
         </label>
-        <div className="elderWrapper">
-          <label className="elder">{chat.elderlyInfo.elderlyName} 어르신</label>
-          <label className="elder">|</label>
-          <label className="elder">{chat.elderlyInfo.elderlyAge}세</label>
-          <label className="elder">|</label>
-          <label className="elder">
-            {GENDER_EN_TO_KR_2[chat.elderlyInfo.elderlyGender]}
-          </label>
-        </div>
       </div>
       <div className="right">
-        <label className="time">{chat.time}</label>
-        {/* {chat.unreadCount > 0 && (
+        <label className="time">{chat.lastSendTime}</label>
+        {chat.unreadCount > 0 && (
           <label className="unread">{chat.unreadCount}</label>
-        )} */}
+        )}
       </div>
     </Container>
   );
 };
 
-export default SocialworkerChatCard;
+export default ChatListCardCaregiver;
 
 const Container = styled.div`
   padding: 20px;
@@ -65,21 +53,10 @@ const Container = styled.div`
     gap: 2px;
   }
 
-  .caregiver {
+  .institution {
     color: ${({ theme }) => theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
-  }
-
-  .elderWrapper {
-    display: flex;
-    gap: 4px;
-  }
-
-  .elder {
-    color: ${({ theme }) => theme.colors.gray500};
-    font-size: ${({ theme }) => theme.typography.fontSize.body4};
-    font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
   }
 
   .recent {

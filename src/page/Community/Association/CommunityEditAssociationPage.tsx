@@ -72,8 +72,8 @@ const CommunityEditAssociationPage = () => {
       />
 
       <InputBox
-        title="협회 설립일"
-        detail="협회의 설립일을 입력해 주세요."
+        title="협회 설립 연도"
+        detail="협회 설립 연도를 입력해 주세요."
         placeholder="예) 2000"
         value={year}
         onChange={handleYearChange}
