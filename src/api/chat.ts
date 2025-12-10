@@ -19,6 +19,8 @@ export const useGetSocialworkerChatList = () =>
       const { data } = await axiosInstance.get('/chat/social-worker/list');
       return data;
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 3000,
   });
 
 // 사회복지사 채팅 데이터 조회
@@ -54,6 +56,8 @@ export const useGetCaregiverChatList = () =>
       const { data } = await axiosInstance.get('/chat/caregiver/list');
       return data;
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 3000,
   });
 
 // 요양보호사 채팅 데이터 조회

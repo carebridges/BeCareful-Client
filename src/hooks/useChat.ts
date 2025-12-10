@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Client, IMessage } from '@stomp/stompjs';
+import { useQueryClient } from '@tanstack/react-query';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 import { ChatRequest, ChatResponse } from '@/types/common/chat';
 
@@ -16,6 +17,7 @@ interface UseChatProps {
 
 export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
   const stompRef = useRef<Client | null>(null);
+  const queryClient = useQueryClient();
 
   const [chat, setChat] = useState<ChatResponse[]>([]);
   const [chatRoomStatus, setChatRoomStatus] =
@@ -40,6 +42,9 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
     }
 
     setChat((prev) => [...prev, c]);
+
+    queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
+    queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
   }, []);
 
   useEffect(() => {
@@ -108,13 +113,19 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
     };
   }, [chatRoomId]);
 
-  const send = useCallback((chatRoomId: number, request: ChatRequest) => {
-    if (!stompRef.current) return;
-    stompRef.current.publish({
-      destination: `/app/chat/send/${chatRoomId}`,
-      body: JSON.stringify(request),
-    });
-  }, []);
+  const send = useCallback(
+    (chatRoomId: number, request: ChatRequest) => {
+      if (!stompRef.current) return;
+      stompRef.current.publish({
+        destination: `/app/chat/send/${chatRoomId}`,
+        body: JSON.stringify(request),
+      });
+
+      queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
+    },
+    [queryClient],
+  );
 
   return {
     chat,
