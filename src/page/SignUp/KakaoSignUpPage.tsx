@@ -19,7 +19,7 @@ export const KakaoSignUpPage = () => {
   const handleNextStep = () => {
     if (!cardPressed) return;
     navigate(
-      `/signup/${cardPressed}/kakao?guestKey=${guestKey}&role=${cardPressed}`,
+      `/signup/kakao/${cardPressed}?guestKey=${guestKey}&role=${cardPressed}`,
     );
   };
 

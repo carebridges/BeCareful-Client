@@ -1,4 +1,4 @@
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { useGetGuestInfoBase } from '@/hooks/SignUp/useGetGuestInfoBase';
 import { getGenderCode } from '@/utils/getGenderCode';
 

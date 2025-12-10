@@ -22,7 +22,7 @@ const steps = [
 ];
 const stepPercents = [25, 50, 75, 100, 100];
 
-export const KakaoSocialworkerSignUpFunnel = () => {
+export const CommonSocialworkerSignUpFunnel = () => {
   const { currentStep, isInstitutionFunnel } = useSignUpContext();
   const StepComponent = steps[currentStep];
   const percent = stepPercents[currentStep];

@@ -1,4 +1,4 @@
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';

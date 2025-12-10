@@ -5,7 +5,7 @@ import { Step4IsDementialTrained } from '@/components/SignUp/CareGiverSignUpFunn
 import { Step5CurrentAddress } from '@/components/SignUp/CareGiverSignUpFunnel/Step5CurrentAddress';
 import { Step6UploadPhoto } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto';
 import { Step7SignUpComplete } from '@/components/SignUp/CareGiverSignUpFunnel/Step7SignUpComplete';
-import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 
 import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 
 export const useInstitutionSearch = () => {
   const { setFormData, goToNext, goToPrev } = useSignUpContext();
