@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ReactComponent as Chevron } from '@/assets/icons/ChevronRightProfile.svg';
-import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 
 interface AssociationCardProps {
   association: string;
@@ -8,20 +7,13 @@ interface AssociationCardProps {
   type: string;
 }
 
-const AssociationCard = ({
-  association,
-  onClick,
-  type,
-}: AssociationCardProps) => {
-  const associationInfo = [{ title: '회원유형', detail: type }];
-
+const AssociationCard = ({ association, onClick }: AssociationCardProps) => {
   return (
     <CardContainer>
       <div className="top">
         <label className="association">{association}</label>
         {onClick && <Chevron onClick={onClick} />}
       </div>
-      <InfoDisplay items={associationInfo} />
     </CardContainer>
   );
 };
