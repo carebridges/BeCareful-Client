@@ -44,7 +44,7 @@ const CommunityEditAssociationPage = () => {
   };
 
   const defaultImgUrl =
-    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_default.png';
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_default.png';
 
   return (
     <Container>

@@ -91,7 +91,7 @@ const CaregiverEditProfilePage = () => {
   };
 
   const defaultImgUrl =
-    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png';
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png';
 
   return (
     <Container>
