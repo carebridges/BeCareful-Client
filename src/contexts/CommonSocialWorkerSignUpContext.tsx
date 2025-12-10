@@ -19,7 +19,7 @@ export interface SignUpFormData {
 
   //api 나오면 수정 예정
   password: string;
-  progileImgeTempKey?: string;
+  profileImgeTempKey?: string;
 }
 
 interface SignUpContextType extends ReturnType<typeof useFunnel> {
@@ -50,7 +50,7 @@ export const CommonSocialworkerSignUpProvider = ({
     isAgreedToCollectPersonalInfo: false,
     isAgreedToReceiveMarketingInfo: false,
     password: '',
-    progileImgeTempKey: 'default',
+    profileImgeTempKey: 'default',
   });
 
   const [isInstitutionFunnel, setIsInstitutionFunnel] = useState(false);
@@ -70,10 +70,10 @@ export const CommonSocialworkerSignUpProvider = ({
   );
 };
 
-export const useSignUpContext = () => {
+export const useCommonSignUpContext = () => {
   const context = useContext(SignUpContext);
   if (!context) {
-    throw new Error('signupcontext.tsx error');
+    throw new Error('commonsignupcontext.tsx error');
   }
   return context;
 };

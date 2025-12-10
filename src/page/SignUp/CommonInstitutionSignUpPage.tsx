@@ -1,4 +1,4 @@
-import { CommonSocialworkerSignUpFunnel } from '@/components/SignUp/SocialWorkerSignUpFunnel/CommonSocialworkerSignUpFunnel';
+import { CommonSocialworkerSignUpFunnel } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/CommonSocialworkerSignUpFunnel';
 import { CommonSocialworkerSignUpProvider } from '@/contexts/CommonSocialWorkerSignUpContext';
 
 export const CommonInstitutionSignUpPage = () => {

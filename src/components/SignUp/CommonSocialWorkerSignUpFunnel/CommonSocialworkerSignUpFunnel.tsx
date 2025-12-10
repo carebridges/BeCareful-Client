@@ -1,29 +1,29 @@
-import { Step1SelectRole } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step1SelectRole';
-
-import { Step3InstitutionName } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName';
-import { Step4BasicInfo } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo';
-import { Step5AcceptTerms } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step5AcceptTerms';
-import { Step6SignUpComplete } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step6SignUpComplete';
-import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
-
 import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { styled } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SignUpModal } from '@/components/SignUp/common/SingUpModal';
 import { useState } from 'react';
+import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
+import { Step2InstitutionName } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step2InstitutionName';
+import { Step3AccountCredentials } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials';
+import { Step1SelectRole } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step1SelectRole';
+import { Step4BasicInfo } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step4BasicInfo';
+import { Step5AcceptTerms } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step5AcceptTerms';
+import { Step6SignUpComplete } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step6SignUpComplete';
 
 const steps = [
   Step1SelectRole,
-  Step3InstitutionName,
+  Step2InstitutionName,
+  Step3AccountCredentials,
   Step4BasicInfo,
   Step5AcceptTerms,
   Step6SignUpComplete,
 ];
-const stepPercents = [25, 50, 75, 100, 100];
+const stepPercents = [18, 36, 54, 72, 90, 100];
 
 export const CommonSocialworkerSignUpFunnel = () => {
-  const { currentStep, isInstitutionFunnel } = useSignUpContext();
+  const { currentStep, isInstitutionFunnel } = useCommonSignUpContext();
   const StepComponent = steps[currentStep];
   const percent = stepPercents[currentStep];
   const isLastStep = currentStep === 5;
