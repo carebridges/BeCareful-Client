@@ -134,8 +134,6 @@ export const usePatchSocialAssociationInfo = () => {
 
 // 로그아웃
 export const useSocialworkerLogout = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.put('/social-worker/logout');
@@ -143,7 +141,6 @@ export const useSocialworkerLogout = () => {
     },
     onSuccess: () => {
       console.log('useSocialworkerLogout - 사회복지사 로그아웃 성공');
-      queryClient.clear();
     },
     onError: (error) => {
       console.error('useSocialworkerLogout - 사회복지사 로그아웃 실패:', error);
@@ -153,8 +150,6 @@ export const useSocialworkerLogout = () => {
 
 // 회원탈퇴
 export const useDeleteSocialworker = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.delete('/social-worker/leave');
@@ -162,7 +157,6 @@ export const useDeleteSocialworker = () => {
     },
     onSuccess: () => {
       console.log('useDeleteSocialworker - 사회복지사 탈퇴 성공');
-      queryClient.clear();
     },
     onError: (error) => {
       console.error('useDeleteSocialworker - 사회복지사 탈퇴 실패:', error);

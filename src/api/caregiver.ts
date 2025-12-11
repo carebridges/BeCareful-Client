@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   MatchingMyRecruitmentDetailResponse,
   MatchingMyRecruitmentResponse,
@@ -134,8 +134,6 @@ export const workApplicationInactive = async () => {
 
 // 로그아웃
 export const useCaregiverLogout = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.put('/caregiver/logout');
@@ -143,7 +141,6 @@ export const useCaregiverLogout = () => {
     },
     onSuccess: (response) => {
       console.log('useCaregiverLogout - 요양보호사 로그아웃 성공:', response);
-      queryClient.clear();
     },
     onError: (error) => {
       console.error('useCaregiverLogout - 요양보호사 로그아웃 실패:', error);
@@ -153,8 +150,6 @@ export const useCaregiverLogout = () => {
 
 // 회원탈퇴
 export const useDeleteCaregiver = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.delete('/caregiver/leave');
@@ -162,7 +157,6 @@ export const useDeleteCaregiver = () => {
     },
     onSuccess: () => {
       console.log('useDeleteCaregiver - 요양보호사 탈퇴 성공');
-      queryClient.clear();
     },
     onError: (error) => {
       console.error('useDeleteCaregiver - 요양보호사 탈퇴 실패:', error);
