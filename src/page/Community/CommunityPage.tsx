@@ -21,6 +21,7 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 import { useGetCommunityHome } from '@/api/community';
 import { useCancelJoinAssociation } from '@/api/communityAssociation';
+import { useGetSocialworkerHasNewChat } from '@/api/chat';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
@@ -49,6 +50,8 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     window.scrollTo(0, 0);
   };
 
+  const hasNewChat = useGetSocialworkerHasNewChat();
+
   const { data } = useGetCommunityHome(!previewMode);
   const {
     isPendingModalOpen,
@@ -75,7 +78,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         <div className="right">
           <Search onClick={() => handleNavigate('/community/search')} />
           <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </ChatWrapper>
         </div>
       </Top>

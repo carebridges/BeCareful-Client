@@ -10,6 +10,7 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 import { formatDaysToKR } from '@/utils/caregiverFormatter';
 import { formatDateTime } from '@/utils/formatTime';
+import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 interface CaregiverWorkDetailProps {
   work: MatchingRecruitmentResponse;
@@ -17,6 +18,8 @@ interface CaregiverWorkDetailProps {
 
 const CaregiverWorkDetail = ({ work }: CaregiverWorkDetailProps) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
+
+  const hasNewChat = useGetCaregiverHasNewChat();
 
   const workInfo = [
     {
@@ -99,7 +102,7 @@ const CaregiverWorkDetail = ({ work }: CaregiverWorkDetailProps) => {
         left={<NavLeft onClick={handleGoBack} />}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {work.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
       />

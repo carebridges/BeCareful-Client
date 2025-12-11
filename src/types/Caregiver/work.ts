@@ -12,7 +12,6 @@ import {
 /* 요양보호사 일자리 화면 */
 // 일자리 신청 정보 조회 응답
 export type WorkApplicationResponse = {
-  hasNewChat: boolean;
   workApplicationDto: WorkApplication;
 };
 
@@ -35,7 +34,6 @@ export interface MatchingRecruitmentResponse {
   matchingResultStatus: MatchingResultStatus;
   isHotRecruitment: boolean;
   isHourlySalaryTop: boolean;
-  hasNewChat: boolean;
 }
 
 export type MediationType = 'TIME' | 'DAY' | 'PAY';

@@ -10,6 +10,7 @@ import {
 } from '@/constants/caregiver/matchingStatus';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationListQuery } from '@/api/caregiver';
+import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverApplyPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -19,6 +20,8 @@ const CaregiverApplyPage = () => {
     setActiveTab(tabName);
     window.scrollTo(0, 0);
   };
+
+  const hasNewChat = useGetCaregiverHasNewChat();
 
   const { data, error } = useApplicationListQuery(activeTab);
   if (error) {
@@ -31,7 +34,7 @@ const CaregiverApplyPage = () => {
         left={<NavLeft>지원현황</NavLeft>}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
       />

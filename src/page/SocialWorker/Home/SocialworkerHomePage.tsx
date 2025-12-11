@@ -22,10 +22,12 @@ import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import PostOverviewAd from '@/components/Community/common/PostOverviewAd';
 import { adPostList } from '@/constants/Ad';
+import { useGetSocialworkerHasNewChat } from '@/api/chat';
 
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
   const [isNew, setIsNew] = useState(false);
+  const hasNewChat = useGetSocialworkerHasNewChat();
   const { data } = useGetSocialWorkerHome();
 
   return (
@@ -48,7 +50,7 @@ const SocialworkerHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/socialworker/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"

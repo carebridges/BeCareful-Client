@@ -13,11 +13,15 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
+import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const { data, error } = useCaregiverHomeInfoQuery();
+
+  const hasNewChat = useGetCaregiverHasNewChat();
+
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);
   }
@@ -28,7 +32,7 @@ const CaregiverHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"

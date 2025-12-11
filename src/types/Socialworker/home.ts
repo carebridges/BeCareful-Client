@@ -24,5 +24,4 @@ export interface SocialworkerHomeResponse {
   institutionInfo: SocialHomeInstitutionInfo;
   recruitmentStatistics: RecruitmentStatistics;
   matchingProcessingElderlys: MatchingElderlyList[];
-  hasNewChat: boolean;
 }

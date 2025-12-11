@@ -13,11 +13,14 @@ import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilte
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
 import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';
+import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const userInfo = useRecoilValue(currentUserInfo);
+
+  const hasNewChat = useGetCaregiverHasNewChat();
 
   // 상단 부분(신청서 조회)
   const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =
@@ -36,7 +39,7 @@ const CaregiverWorkPage = () => {
         left={<NavLeft>일자리</NavLeft>}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {applicationData?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
       />
