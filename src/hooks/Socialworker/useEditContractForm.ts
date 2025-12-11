@@ -5,7 +5,7 @@ import {
 } from '@/types/common/chat';
 import { DAY_EN_TO_KR } from '@/constants/common/day';
 import { formatDaysToEN } from '@/utils/caregiverFormatter';
-import { SALARY_KR_TO_EN } from '@/constants/common/salary';
+import { SALARY_EN_TO_KR, SALARY_KR_TO_EN } from '@/constants/common/salary';
 
 export const useEditContractForm = (contract: ContractChatResponse | null) => {
   const [workday, setWorkday] = useState<string[]>([]);
@@ -27,7 +27,7 @@ export const useEditContractForm = (contract: ContractChatResponse | null) => {
     setWorkStartTime(contract.workStartTime.slice(0, 5));
     setWorkEndTime(contract.workEndTime.slice(0, 5));
     setCareTypes(contract.careTypes);
-    // setPayType(SALARY_EN_TO_KR[chat.workSalaryUnitType]);
+    setWorkSalaryType(SALARY_EN_TO_KR[contract.workSalaryUnitType]);
     setWorkSalaryAmount(contract.workSalaryAmount.toLocaleString('ko-KR'));
     const [startYear, startMonth, startDate] =
       contract.workStartDate.split('-');
