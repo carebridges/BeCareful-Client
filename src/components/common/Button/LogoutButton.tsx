@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { ReactComponent as LogoutIcon } from '@/assets/icons/caregiver/my/Logout.svg';
+import { ReactComponent as LogoutIcon } from '@/assets/icons/Logout.svg';
 
 interface ButtonProps {
   onClick: () => void;
