@@ -100,15 +100,6 @@ const CaregiverEditProfilePage = () => {
         center={<NavCenter>프로필 수정</NavCenter>}
       />
 
-      {/* <ProfileImageEditor<File, UploadResult>
-        initialImgUrl={data?.caregiverInfo.profileImageUrl}
-        uploadMutate={uploadImage}
-        setIsChanged={setIsChanged}
-        onImageChange={(url) => setProfileImgUrl(url)}
-        getUrl={(res) => res.presignedUrl}
-        setIsImgChanged={setIsImgChanged}
-        actionSheetTitle="프로필 사진을 설정해주세요"
-      /> */}
       <ProfileImgUploader
         hook={profileUpload}
         initialImgUrl={data?.caregiverInfo.profileImageUrl ?? defaultImgUrl}
