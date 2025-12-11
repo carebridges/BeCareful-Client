@@ -7,8 +7,6 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { useRecoilValue } from 'recoil';
-import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilters';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
@@ -17,9 +15,6 @@ import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
-
-  const userInfo = useRecoilValue(currentUserInfo);
-
   const hasNewChat = useGetCaregiverHasNewChat();
 
   // 상단 부분(신청서 조회)
@@ -61,7 +56,7 @@ const CaregiverWorkPage = () => {
               <label className="date">아직 등록된 지원서 없어요!</label>
             )}
             <div className="title">
-              {userInfo.realName} 일자리 지원서
+              {applicationData?.caregiverName} 일자리 지원서
               <ApplicationToggle
                 down={showApplication}
                 onClick={() => setShowApplication(!showApplication)}
