@@ -9,10 +9,10 @@ interface AssociationCardProps {
 
 const AssociationCard = ({ association, onClick }: AssociationCardProps) => {
   return (
-    <CardContainer>
+    <CardContainer onClick={onClick}>
       <div className="top">
         <label className="association">{association}</label>
-        {onClick && <Chevron onClick={onClick} />}
+        {onClick && <Chevron />}
       </div>
     </CardContainer>
   );
@@ -38,6 +38,7 @@ const CardContainer = styled.div`
 
   svg {
     cursor: pointer;
+    color: ${({ theme }) => theme.colors.gray500};
   }
 
   .association {
