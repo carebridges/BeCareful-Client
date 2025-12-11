@@ -1,60 +1,55 @@
+import { useState } from 'react';
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
-import { NameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/NameInput';
-import { NicknameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/NicknameInput';
-import { PhoneNumberInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/PhoneNumberInput';
-import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
-import { useBasicInfoForm } from '@/hooks/SignUp/useBasicInfoForm';
 import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
+import { PasswordConfirmInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PasswordConfirmInput';
+import { PasswordInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PasswordInput';
+import { PhoneAuthInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PhoneAuthInput';
 
 export const Step3AccountCredentials = () => {
   const { goToNext, goToPrev } = useCommonSignUpContext();
-  const {
-    formData,
-    isFormValid,
-    handleChange,
-    handleCheckDuplicate,
-    handleBirthAndGenderChange,
-    message,
-    state,
-  } = useBasicInfoForm();
+
+  //임시 코드 api 나오면 수정 예정
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [authCode, setAuthCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+
+  const isFormValid =
+    phoneNumber.length > 0 &&
+    authCode.length === 6 &&
+    password.length > 0 &&
+    passwordConfirm.length > 0;
 
   return (
     <StepWrapper>
       <HeaderSection>
-        <Title>담당자 기본 정보를 입력하세요.</Title>
+        <Title>
+          로그인에 사용하실
+          <br />
+          전화번호/비밀번호를 입력하세요.
+          <span className="highlight"> *</span>
+        </Title>
       </HeaderSection>
 
-      <NameInput
-        value={formData.realName}
-        onChange={handleChange('realName')}
+      <PhoneAuthInput
+        phoneNumber={phoneNumber}
+        onPhoneNumberChange={(e) => setPhoneNumber(e.target.value)}
+        authCode={authCode}
+        onAuthCodeChange={(e) => setAuthCode(e.target.value)}
+        onSendCode={() => {}}
+        sendButtonLabel="인증번호 전송"
+        remainTimeText="남은시간 02:59"
       />
-      <NicknameInput
-        value={formData.nickName}
-        onChange={handleChange('nickName')}
-        onCheckDuplicate={handleCheckDuplicate}
+
+      <PasswordInput
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
-      {message && (
-        <ValidationMessage state={state}>{message}</ValidationMessage>
-      )}
-      <ResidentIdInput
-        birthDate={formData.birthYymmdd}
-        genderInput={
-          formData.genderCode > 0 ? formData.genderCode.toString() : ''
-        }
-        onBirthDateChange={(e) =>
-          handleBirthAndGenderChange(
-            e.target.value,
-            formData.genderCode.toString(),
-          )
-        }
-        onGenderChange={(e) =>
-          handleBirthAndGenderChange(formData.birthYymmdd, e.target.value)
-        }
-      />
-      <PhoneNumberInput
-        value={formData.phoneNumber}
-        onChange={handleChange('phoneNumber')}
+
+      <PasswordConfirmInput
+        value={passwordConfirm}
+        onChange={(e) => setPasswordConfirm(e.target.value)}
       />
 
       <ButtonContainer>
@@ -114,10 +109,10 @@ const ButtonContainer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.gray50};
   box-sizing: border-box;
   width: 100%;
-
   background: ${({ theme }) => theme.colors.white};
 `;
 
+/*
 const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`
   display: flex;
   justify-content: flex-start;
@@ -131,3 +126,4 @@ const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`
   color: ${({ theme, state }) =>
     state === 'error' ? theme.colors.mainOrange : theme.colors.mainBlue};
 `;
+*/
