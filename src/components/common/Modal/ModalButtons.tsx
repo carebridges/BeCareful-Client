@@ -11,6 +11,7 @@ interface ModalProps {
   right: string;
   handleLeftBtnClick: () => void;
   handleRightBtnClick: () => void;
+  color?: string;
 }
 
 const ModalButtons = ({
@@ -21,6 +22,7 @@ const ModalButtons = ({
   right,
   handleLeftBtnClick,
   handleRightBtnClick,
+  color = 'mainBlue',
 }: ModalProps) => {
   return (
     <ModalWrapper>
@@ -34,7 +36,7 @@ const ModalButtons = ({
             </React.Fragment>
           ))}
         </ModalTitleLabel>
-        <ModalDetailLabel>
+        <ModalDetailLabel color={color}>
           {detail.split('\n').map((line, index) => (
             <React.Fragment key={index}>
               {line}
@@ -44,10 +46,18 @@ const ModalButtons = ({
         </ModalDetailLabel>
       </ModalLabelWrapper>
       <ModalButtonWrapper>
-        <Button height="52px" variant="subBlue" onClick={handleLeftBtnClick}>
+        <Button
+          height="52px"
+          variant={color === 'red' ? 'gray' : 'subBlue'}
+          onClick={handleLeftBtnClick}
+        >
           {left}
         </Button>
-        <Button height="52px" variant="mainBlue" onClick={handleRightBtnClick}>
+        <Button
+          height="52px"
+          variant={color === 'red' ? 'mainOrange' : 'mainBlue'}
+          onClick={handleRightBtnClick}
+        >
           {right}
         </Button>
       </ModalButtonWrapper>
@@ -90,8 +100,9 @@ const ModalTitleLabel = styled.label`
   text-align: center;
 `;
 
-const ModalDetailLabel = styled.label`
-  color: ${({ theme }) => theme.colors.gray500};
+const ModalDetailLabel = styled.label<{ color: string }>`
+  color: ${({ theme, color }) =>
+    color === 'red' ? theme.colors.mainOrange : theme.colors.gray500};
   font-size: ${({ theme }) => theme.typography.fontSize.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   line-height: 140%;
