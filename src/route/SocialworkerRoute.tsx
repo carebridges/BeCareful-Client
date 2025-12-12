@@ -75,6 +75,11 @@ const SocialworkerRoute = () => {
           />
 
           <Route
+            path="/elderly/:elderlyId/edit"
+            element={<ElderlyEditPage />}
+          />
+
+          <Route
             path="match/social"
             element={<SocialWorkerMatchingListPage />}
           />
