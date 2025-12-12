@@ -15,7 +15,7 @@ import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
-  const hasNewChat = useGetCaregiverHasNewChat();
+  const { data: hasNewChat } = useGetCaregiverHasNewChat();
 
   // 상단 부분(신청서 조회)
   const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =

@@ -21,7 +21,7 @@ const CaregiverApplyPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const hasNewChat = useGetCaregiverHasNewChat();
+  const { data: hasNewChat } = useGetCaregiverHasNewChat();
 
   const { data, error } = useApplicationListQuery(activeTab);
   if (error) {

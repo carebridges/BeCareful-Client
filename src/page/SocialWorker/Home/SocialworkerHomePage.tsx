@@ -27,7 +27,7 @@ import { useGetSocialworkerHasNewChat } from '@/api/chat';
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
   const [isNew, setIsNew] = useState(false);
-  const hasNewChat = useGetSocialworkerHasNewChat();
+  const { data: hasNewChat } = useGetSocialworkerHasNewChat();
   const { data } = useGetSocialWorkerHome();
 
   return (

@@ -146,7 +146,7 @@ export const useEditContractForm = (contract: ContractChatResponse | null) => {
   );
 
   const getRequest = useCallback((): EditContractChatRequest => {
-    const year = selectedYear[0];
+    const year = selectedYear[0] ?? '';
     const month = selectedMonth[0]?.padStart(2, '0');
     const day = selectedDay[0]?.padStart(2, '0');
 

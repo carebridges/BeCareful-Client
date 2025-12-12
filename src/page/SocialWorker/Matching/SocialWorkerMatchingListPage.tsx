@@ -90,7 +90,7 @@ export const SocialWorkerMatchingListPage = () => {
           />
         ));
 
-  const hasNewChat = useGetSocialworkerHasNewChat();
+  const { data: hasNewChat } = useGetSocialworkerHasNewChat();
 
   return (
     <>

@@ -111,7 +111,7 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
 
       console.log(`Room ID: ${chatRoomId} 웹소켓 연결 종료`);
     };
-  }, [chatRoomId]);
+  }, [chatRoomId, handleIncoming]);
 
   const send = useCallback(
     (chatRoomId: number, request: ChatRequest) => {

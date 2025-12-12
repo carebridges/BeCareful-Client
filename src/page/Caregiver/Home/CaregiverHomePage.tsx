@@ -20,7 +20,7 @@ const CaregiverHomePage = () => {
 
   const { data, error } = useCaregiverHomeInfoQuery();
 
-  const hasNewChat = useGetCaregiverHasNewChat();
+  const { data: hasNewChat } = useGetCaregiverHasNewChat();
 
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);
