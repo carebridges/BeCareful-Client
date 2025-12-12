@@ -91,25 +91,15 @@ const CaregiverEditProfilePage = () => {
   };
 
   const defaultImgUrl =
-    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png';
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png';
 
   return (
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>프로필 수정</NavCenter>}
-        color="white"
       />
 
-      {/* <ProfileImageEditor<File, UploadResult>
-        initialImgUrl={data?.caregiverInfo.profileImageUrl}
-        uploadMutate={uploadImage}
-        setIsChanged={setIsChanged}
-        onImageChange={(url) => setProfileImgUrl(url)}
-        getUrl={(res) => res.presignedUrl}
-        setIsImgChanged={setIsImgChanged}
-        actionSheetTitle="프로필 사진을 설정해주세요"
-      /> */}
       <ProfileImgUploader
         hook={profileUpload}
         initialImgUrl={data?.caregiverInfo.profileImageUrl ?? defaultImgUrl}

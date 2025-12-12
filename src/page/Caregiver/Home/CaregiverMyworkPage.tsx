@@ -36,7 +36,6 @@ const CaregiverMyworkPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>나의 일자리</NavCenter>}
-        color="white"
       />
       {data && data.length > 0 ? (
         <CardWrapper>

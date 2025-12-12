@@ -7,6 +7,7 @@ import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg'
 import { Button } from '@/components/common/Button/Button';
 import RankCard from '@/components/SocialWorker/Home/RankCard';
 import Modal from '@/components/common/Modal/Modal';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { SocialHomeInstitutionInfo } from '@/types/Socialworker/home';
 
 interface InstitutionSectionProps {
@@ -14,6 +15,8 @@ interface InstitutionSectionProps {
 }
 
 const InstitutionSection = ({ data }: InstitutionSectionProps) => {
+  const { handleNavigate } = useHandleNavigate();
+
   const [isInstitutionModalOpen, setIsInstitutionModalOpen] = useState(false);
 
   return (
@@ -23,7 +26,10 @@ const InstitutionSection = ({ data }: InstitutionSectionProps) => {
           <Elderly />
           <label className="type">어르신</label>
         </div>
-        <div className="right">
+        <div
+          className="right"
+          onClick={() => handleNavigate('/socialworker/elderly')}
+        >
           <label className="people">
             <span>{data?.elderlyCount}</span>명
           </label>

@@ -12,7 +12,6 @@ const PointPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<label>포인트 적립 내역</label>}
-        color="white"
       />
 
       <NameWrapper>

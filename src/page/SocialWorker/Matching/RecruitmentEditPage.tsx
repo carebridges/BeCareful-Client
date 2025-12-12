@@ -78,7 +78,6 @@ export const RecruitmentEditPage = () => {
             </NavLeft>
           }
           center={<NavCenter>공고 수정</NavCenter>}
-          color="white"
         />
       </NavBarContainer>
 

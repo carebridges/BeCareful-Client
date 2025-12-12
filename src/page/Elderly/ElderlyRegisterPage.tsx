@@ -52,7 +52,6 @@ const ElderlyRegisterPage = () => {
           </NavLeft>
         }
         center={<NavCenter>어르신 등록</NavCenter>}
-        color="white"
       />
 
       <MainContent>

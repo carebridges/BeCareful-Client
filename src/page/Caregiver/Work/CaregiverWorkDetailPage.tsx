@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
+import { useRecruitmentReadStatus } from '@/contexts/RecruitmentReadStatusContext';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApply } from '@/hooks/Caregiver/work/useApply';
 import { useMediate } from '@/hooks/Caregiver/work/useMediate';
@@ -45,6 +47,16 @@ const CaregiverWorkDetailPage = () => {
     handleMediationChange,
     handleDescriptionChange,
   } = useMediate(recruitmentId);
+
+  // 게시글 읽음 상태 context 관리
+  const { readStatuses, markAsRead } = useRecruitmentReadStatus();
+  // 현재 게시글의 읽음 상태
+  const currentRecruitmentIsRead = readStatuses[recruitmentId] || false;
+  useEffect(() => {
+    if (!currentRecruitmentIsRead && recruitmentId >= 0) {
+      markAsRead(recruitmentId);
+    }
+  }, [recruitmentId, markAsRead, currentRecruitmentIsRead]);
 
   if (!data) {
     return <div>데이터를 불러오는 중입니다...</div>;

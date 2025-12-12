@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { SALARY_EN_TO_KR } from '@/constants/common/salary';
+import { useRecruitmentReadStatus } from '@/contexts/RecruitmentReadStatusContext';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Recruitment } from '@/types/Caregiver/common';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
@@ -24,6 +25,10 @@ const CaregiverWorkCard = ({
   navigatePath,
 }: CaregiverWorkCardProps) => {
   const { handleNavigate } = useHandleNavigate();
+
+  const { readStatuses } = useRecruitmentReadStatus();
+  const isRead =
+    readStatuses[recruitment.recruitmentInfo.recruitmentId] || false;
 
   const applyInfo = [
     {
@@ -53,7 +58,7 @@ const CaregiverWorkCard = ({
         <label className="state">{stateLabel}</label>
       </State>
 
-      <Title>
+      <Title isRead={isRead}>
         <label className="institution">
           {recruitment.recruitmentInfo.institutionInfo.name}
         </label>
@@ -61,18 +66,18 @@ const CaregiverWorkCard = ({
       </Title>
 
       {(recruitment.matchingResultStatus === '높음' ||
-        recruitment.isHotRecruitment ||
-        recruitment.isHourlySalaryTop) && (
+        recruitment.isTimeMatched) && (
         <Tags>
           {recruitment.matchingResultStatus === '높음' && (
             <label className="tag">적합도 높음</label>
           )}
-          {recruitment.isHotRecruitment && (
-            <label className="tag">인기공고</label>
+          {recruitment.isTimeMatched && (
+            <label className="tag">시간 일치</label>
           )}
-          {recruitment.isHourlySalaryTop && (
-            <label className="tag">시급 TOP</label>
-          )}
+          {recruitment.matchingResultStatus === '높음' &&
+            recruitment.isTimeMatched && (
+              <label className="tag">완벽 조건</label>
+            )}
         </Tags>
       )}
 
@@ -101,8 +106,8 @@ const CaregiverWorkCard = ({
 export default CaregiverWorkCard;
 
 const CardContainer = styled.div`
-  display: flex;
   padding: 20px 20px 28px 20px;
+  display: flex;
   flex-direction: column;
   gap: 12px;
 
@@ -110,10 +115,6 @@ const CardContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.gray50};
   background: ${({ theme }) => theme.colors.white};
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.08);
-
-  div {
-    display: flex;
-  }
 
   label {
     color: ${({ theme }) => theme.colors.gray800};
@@ -123,8 +124,8 @@ const CardContainer = styled.div`
 `;
 
 const State = styled.div<{ stateColor: ColorKey; bgColor: ColorKey }>`
-  width: fit-content;
   padding: 4px 8px;
+  width: fit-content;
   display: flex;
   gap: 4px;
   align-items: center;
@@ -144,7 +145,8 @@ const State = styled.div<{ stateColor: ColorKey; bgColor: ColorKey }>`
   }
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ isRead: boolean }>`
+  display: flex;
   flex-direction: column;
   gap: 4px;
 
@@ -153,13 +155,15 @@ const Title = styled.div`
   }
 
   .title {
-    color: ${({ theme }) => theme.colors.gray900};
+    color: ${({ theme, isRead }) =>
+      isRead ? theme.colors.gray300 : theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.title4};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   }
 `;
 
 const Tags = styled.div`
+  display: flex;
   gap: 6px;
 
   .tag {
@@ -184,6 +188,7 @@ const Bottom = styled.div`
 `;
 
 const Salary = styled.div`
+  display: flex;
   align-items: center;
 
   label {

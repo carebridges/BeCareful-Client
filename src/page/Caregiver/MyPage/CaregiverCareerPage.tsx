@@ -74,7 +74,6 @@ const CaregiverCareerPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>{data ? '경력서 수정' : '경력서 등록'}</NavCenter>}
-        color="white"
       />
 
       <TitleWrapper>

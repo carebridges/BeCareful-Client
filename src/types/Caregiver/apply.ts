@@ -5,7 +5,6 @@ import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 // 지원 현황 조회 응답
 export type MatchingMyRecruitmentResponse = {
   recruitments: Recruitment[];
-  hasNewChat: boolean;
 };
 
 // 지원 현황 상세 조회 응답

@@ -19,6 +19,8 @@ export const useGetSocialworkerChatList = () =>
       const { data } = await axiosInstance.get('/chat/social-worker/list');
       return data;
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 3000,
   });
 
 // 사회복지사 채팅 데이터 조회
@@ -45,6 +47,20 @@ export const useGetSocialworkerContract = (contractId: number) =>
     },
   });
 
+// 사회복지사 새로운 채팅 여부
+export const useGetSocialworkerHasNewChat = () =>
+  useQuery<CaregiverChatListResponse>({
+    queryKey: ['socialworkerHasNewChat'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get(
+        '/chat/social-worker/has-new-chat',
+      );
+      return data;
+    },
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
+  });
+
 /* 요양보호사 */
 // 요양보호사 채팅 목록
 export const useGetCaregiverChatList = () =>
@@ -54,6 +70,8 @@ export const useGetCaregiverChatList = () =>
       const { data } = await axiosInstance.get('/chat/caregiver/list');
       return data;
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 3000,
   });
 
 // 요양보호사 채팅 데이터 조회
@@ -66,4 +84,16 @@ export const useGetCaregiverChat = (chatRoomId: number) =>
       );
       return data;
     },
+  });
+
+// 요양보호사 새로운 채팅 여부
+export const useGetCaregiverHasNewChat = () =>
+  useQuery({
+    queryKey: ['caregiverHasNewChat'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get('/chat/caregiver/has-new-chat');
+      return data;
+    },
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
   });

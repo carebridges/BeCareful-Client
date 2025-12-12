@@ -64,10 +64,16 @@ export interface ContractChatResponse {
   chatId: number;
   senderType: UserRole;
   sentTime: string;
+  elderlyName: string;
+  elderlyAge: number;
+  elderlyGender: 'FEMALE' | 'MALE';
+  caregiverName: string;
+  caregiverPhoneNumber: string;
   careTypes: string[];
   workDays: WorkDay[];
   workStartTime: string;
   workEndTime: string;
+  workSalaryUnitType: WorkSalaryUnitType;
   workSalaryAmount: number;
   workStartDate: string;
 }

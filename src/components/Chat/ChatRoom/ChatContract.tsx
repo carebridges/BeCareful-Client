@@ -2,28 +2,20 @@ import styled from 'styled-components';
 import InfoDisplayChat from '@/components/common/InfoDisplay/InfoDisplayChat';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { ContractChatResponse } from '@/types/common/chat';
+import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
 
 interface ChatContractProps {
   contract: ContractChatResponse;
-  elderName: string;
-  caregiverName?: string;
-  caregiverPhoneNumber?: string;
   role: string;
 }
 
-const ChatContract = ({
-  contract,
-  elderName,
-  caregiverName,
-  caregiverPhoneNumber,
-  role,
-}: ChatContractProps) => {
+const ChatContract = ({ contract, role }: ChatContractProps) => {
   const contractInfo =
     role === 'CAREGIVER'
       ? [
           {
             title: '인적사항',
-            detail: `${elderName}`,
+            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_EN_TO_KR_1[contract.elderlyGender]}`,
           },
           {
             title: '케어항목',
@@ -49,7 +41,7 @@ const ChatContract = ({
       : [
           {
             title: '인적사항',
-            detail: `${elderName}`,
+            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_EN_TO_KR_1[contract.elderlyGender]}`,
           },
           {
             title: '케어항목',
@@ -73,11 +65,11 @@ const ChatContract = ({
           },
           {
             title: '근무자',
-            detail: caregiverName,
+            detail: contract.caregiverName,
           },
           {
             title: '근무자 번호',
-            detail: caregiverPhoneNumber,
+            detail: contract.caregiverPhoneNumber,
           },
         ];
 

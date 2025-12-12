@@ -163,7 +163,6 @@ export const RecruitmentDetailPage = () => {
                 <ThreeDots />
               </NavLeft>
             }
-            color="white"
           />
         </NavBarContainer>
 

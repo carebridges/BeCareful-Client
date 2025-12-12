@@ -1,14 +1,20 @@
 import styled, { css } from 'styled-components';
 
 interface NavbarProps {
-  color: string;
+  color?: string;
   left?: React.ReactNode;
   center?: React.ReactNode;
   right?: React.ReactNode;
   fix?: boolean;
 }
 
-export const NavBar = ({ color, left, center, right, fix }: NavbarProps) => {
+export const NavBar = ({
+  color = 'white',
+  left,
+  center,
+  right,
+  fix,
+}: NavbarProps) => {
   return (
     <NavbarWrapper color={color} fix={fix}>
       <NavLeft>{left}</NavLeft>

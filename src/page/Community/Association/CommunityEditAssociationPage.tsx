@@ -44,14 +44,13 @@ const CommunityEditAssociationPage = () => {
   };
 
   const defaultImgUrl =
-    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_default.png';
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_default.png';
 
   return (
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>협회 정보 수정</NavCenter>}
-        color=""
       />
 
       {/* title="협회 대표 대문 사진을 설정해 주세요." */}

@@ -23,14 +23,12 @@ export const useMatchingList = () => {
     switch (activeTab) {
       case '전체':
         return matchingListData;
-      case '시급 TOP':
-        return matchingListData.filter((item) => item.isHourlySalaryTop);
-      case '인기공고':
-        return matchingListData.filter((item) => item.isHotRecruitment);
-      case '조건일치':
-        return matchingListData.filter((item) =>
-          ['높음', '보통'].includes(item.matchingResultStatus),
+      case '모집중':
+        return matchingListData.filter(
+          (item) => item.recruitmentInfo.isRecruiting,
         );
+      case '시간일치':
+        return matchingListData.filter((item) => item.isTimeMatched);
       default:
         return matchingListData;
     }

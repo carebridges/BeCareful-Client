@@ -7,7 +7,6 @@ interface AssociationInfo {
 }
 // 커뮤니티 탭 협회 정보 조회 응답
 export interface CommunityHomeResponse {
-  hasNewChat: boolean;
   associationInfo: AssociationInfo;
 }
 

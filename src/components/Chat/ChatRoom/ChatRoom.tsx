@@ -17,9 +17,6 @@ interface ChatRoomProps {
   lastContractChatId: number | null;
   chatRoomId: number;
   other: OtherUserProfile;
-  elderlyName: string;
-  caregiverName?: string;
-  caregiverPhoneNumber?: string;
   chatRoomStatus: ChatRoomStatus;
   contractStatus: ChatRoomContractStatus;
   status: StatusMessage;
@@ -31,9 +28,6 @@ const ChatRoom = ({
   lastContractChatId,
   chatRoomId,
   other,
-  elderlyName,
-  caregiverName,
-  caregiverPhoneNumber,
   chatRoomStatus,
   contractStatus,
   status,
@@ -49,15 +43,7 @@ const ChatRoom = ({
           <div className="date">{formatDateLabel(date)}</div>
           {chatGroupByDate[date].map((chat, index) => {
             return (
-              <ChatBubble
-                key={index}
-                chat={chat}
-                other={other}
-                role={role}
-                elderlyName={elderlyName}
-                caregiverName={caregiverName}
-                caregiverPhoneNumber={caregiverPhoneNumber}
-              >
+              <ChatBubble key={index} chat={chat} other={other} role={role}>
                 {chat.chatType === 'CONTRACT' &&
                   lastContractChatId === chat.chatId && (
                     <ChatContractButton

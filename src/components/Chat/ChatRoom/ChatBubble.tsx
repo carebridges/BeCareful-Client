@@ -8,20 +8,9 @@ interface ChatBubbleProps {
   other: OtherUserProfile;
   role: UserRole;
   children?: React.ReactNode;
-  elderlyName?: string;
-  caregiverName?: string;
-  caregiverPhoneNumber?: string;
 }
 
-const ChatBubble = ({
-  chat,
-  other,
-  role,
-  children,
-  elderlyName,
-  caregiverName,
-  caregiverPhoneNumber,
-}: ChatBubbleProps) => {
+const ChatBubble = ({ chat, other, role, children }: ChatBubbleProps) => {
   const isMyChat = chat.senderType === role;
 
   return (
@@ -33,13 +22,7 @@ const ChatBubble = ({
               <div className="text">{chat.text}</div>
             )}
             {chat.chatType === 'CONTRACT' && (
-              <ChatContract
-                contract={chat}
-                elderName={elderlyName ?? ''}
-                caregiverName={caregiverName}
-                caregiverPhoneNumber={caregiverPhoneNumber}
-                role={role}
-              />
+              <ChatContract contract={chat} role={role} />
             )}
             {children}
           </Content>
@@ -62,13 +45,7 @@ const ChatBubble = ({
                 )}
 
                 {chat.chatType === 'CONTRACT' && (
-                  <ChatContract
-                    contract={chat}
-                    elderName={elderlyName ?? ''}
-                    caregiverName={caregiverName}
-                    caregiverPhoneNumber={caregiverPhoneNumber}
-                    role={role}
-                  />
+                  <ChatContract contract={chat} role={role} />
                 )}
                 {children}
               </Content>
@@ -129,7 +106,7 @@ const Container = styled.div<{ isMyChat: boolean }>`
 `;
 
 const Content = styled.div<{ sender: string; isMyChat: boolean }>`
-  padding: 16px;
+  padding: 12px;
   border-radius: ${({ isMyChat }) =>
     isMyChat ? '12px 0 12px 12px' : '0 12px 12px 12px'};
   background: ${({ theme, sender }) =>
@@ -139,28 +116,52 @@ const Content = styled.div<{ sender: string; isMyChat: boolean }>`
   gap: 8px;
 
   .text {
-    max-width: 200px;
+    max-width: 196px;
+    word-break: break-all;
+
     color: ${({ theme, sender }) =>
       sender === 'CAREGIVER' ? theme.colors.white : theme.colors.gray900};
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 
-  @media (min-width: 400px) {
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
+
+  @media (max-width: 390px) {
     .text {
-      max-width: 250px;
+      max-width: 196px;
     }
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 391px) and (max-width: 495px) {
     .text {
-      max-width: 280px;
+      max-width: 260px;
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 495px) and (max-width: 768px) {
     .text {
-      max-width: 320px;
+      max-width: 360px;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 992px) {
+    .text {
+      max-width: 420px;
+    }
+  }
+
+  @media (min-width: 993px) and (max-width: 1200px) {
+    .text {
+      max-width: 520px;
+    }
+  }
+
+  @media (min-width: 1201px) {
+    .text {
+      max-width: 640px;
     }
   }
 `;

@@ -44,7 +44,6 @@ const SocialworkerEditContractPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>근무 조건 수정</NavCenter>}
-        color="white"
       />
 
       <SectionWrapper>

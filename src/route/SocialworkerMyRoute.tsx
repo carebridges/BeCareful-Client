@@ -3,6 +3,7 @@ import SocialworkerEditAssociationPage from '@/page/SocialWorker/MyPage/Socialwo
 import SocialworkerEditInstitutionPage from '@/page/SocialWorker/MyPage/SocialworkerEditInstitutionPage';
 import SocialworkerEditProfilePage from '@/page/SocialWorker/MyPage/SocialworkerEditProfilePage';
 import SocialworkerMyPage from '@/page/SocialWorker/MyPage/SocialworkerMyPage';
+import SocialworkerSettingPage from '@/page/SocialWorker/MyPage/SocialworkerSettingPage';
 
 const SocialworkerMyRoute = () => {
   return (
@@ -18,6 +19,8 @@ const SocialworkerMyRoute = () => {
           path="association"
           element={<SocialworkerEditAssociationPage />}
         />
+        <Route path="setting" element={<SocialworkerSettingPage />} />
+        {/* <Route path="block" element={<SocialworkerBlockPage />} /> */}
       </Routes>
       <Outlet />
     </div>

@@ -239,7 +239,6 @@ const CommunityWritePage = () => {
             </button>
           </NavRight>
         }
-        color=""
       />
 
       <BoardSelect onClick={toggleBoardSheet}>

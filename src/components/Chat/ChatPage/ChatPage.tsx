@@ -106,7 +106,6 @@ const ChatPage = ({
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>{chatRoomName}</NavCenter>}
         right={<NavRight onClick={() => setIsKakaoSheetOpen(true)} />}
-        color=""
         fix={true}
       />
 
@@ -137,9 +136,6 @@ const ChatPage = ({
         lastContractChatId={lastContractChatId ?? null}
         chatRoomId={chatRoomId}
         other={otherUser}
-        elderlyName={data?.elderlyName ?? ''}
-        // caregiverName={data?.caregiverName}
-        // caregiverPhoneNumber={data?.caregiverPhoneNumber}
         chatRoomStatus={chatRoomStatus}
         contractStatus={contractStatus}
         status={status}

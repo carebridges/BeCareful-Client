@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Client, IMessage } from '@stomp/stompjs';
+import { useQueryClient } from '@tanstack/react-query';
 import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
 import { ChatRequest, ChatResponse } from '@/types/common/chat';
 
@@ -16,6 +17,7 @@ interface UseChatProps {
 
 export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
   const stompRef = useRef<Client | null>(null);
+  const queryClient = useQueryClient();
 
   const [chat, setChat] = useState<ChatResponse[]>([]);
   const [chatRoomStatus, setChatRoomStatus] =
@@ -40,6 +42,9 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
     }
 
     setChat((prev) => [...prev, c]);
+
+    queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
+    queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
   }, []);
 
   useEffect(() => {
@@ -61,7 +66,6 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
   useEffect(() => {
     // 기존 클라이언트 정리
     if (stompRef.current) {
-      //   stompRef.current.unsubscribe(`/topic/chat-room/${chatRoomId}`);
       stompRef.current.deactivate();
       stompRef.current = null;
     }
@@ -73,7 +77,7 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
       webSocketFactory: () => new WebSocket(import.meta.env.VITE_APP_WS_URL),
 
       onConnect: () => {
-        console.log('웹소켓 연결 시작');
+        console.log(`Room ID: ${chatRoomId} 웹소켓 연결 시작`);
         client.subscribe(
           `/topic/chat-room/${chatRoomId}`,
           (message: IMessage) => {
@@ -87,6 +91,14 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
         );
       },
 
+      onStompError: (frame) => {
+        console.error('STOMP 오류 발생:', frame);
+      },
+
+      onWebSocketClose: () => {
+        console.log('웹소켓 연결 종료됨');
+      },
+
       // debug: (msg) => console.log(msg),
     });
 
@@ -94,20 +106,26 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
     client.activate();
 
     return () => {
-      //   client.unsubscribe(`/topic/chat-room/${chatRoomId}`);
       client.deactivate();
       stompRef.current = null;
-      console.log('웹소켓 종료!');
+
+      console.log(`Room ID: ${chatRoomId} 웹소켓 연결 종료`);
     };
   }, [chatRoomId]);
 
-  const send = useCallback((chatRoomId: number, request: ChatRequest) => {
-    if (!stompRef.current) return;
-    stompRef.current.publish({
-      destination: `/app/chat/send/${chatRoomId}`,
-      body: JSON.stringify(request),
-    });
-  }, []);
+  const send = useCallback(
+    (chatRoomId: number, request: ChatRequest) => {
+      if (!stompRef.current) return;
+      stompRef.current.publish({
+        destination: `/app/chat/send/${chatRoomId}`,
+        body: JSON.stringify(request),
+      });
+
+      queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
+    },
+    [queryClient],
+  );
 
   return {
     chat,

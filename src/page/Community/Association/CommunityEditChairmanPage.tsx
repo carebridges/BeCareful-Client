@@ -71,7 +71,6 @@ const CommunityEditChairmanPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>회장 권한 위임</NavCenter>}
-        color=""
       />
 
       <SectionWrapper>

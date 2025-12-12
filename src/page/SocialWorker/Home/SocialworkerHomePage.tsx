@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Plus } from '@/assets/icons/socialworker/home/Plus.svg';
 import { Button } from '@/components/common/Button/Button';
@@ -22,10 +22,12 @@ import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import PostOverviewAd from '@/components/Community/common/PostOverviewAd';
 import { adPostList } from '@/constants/Ad';
+import { useGetSocialworkerHasNewChat } from '@/api/chat';
 
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
   const [isNew, setIsNew] = useState(false);
+  const hasNewChat = useGetSocialworkerHasNewChat();
   const { data } = useGetSocialWorkerHome();
 
   return (
@@ -48,7 +50,7 @@ const SocialworkerHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/socialworker/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"
@@ -158,8 +160,8 @@ const NavRight = styled.div`
   padding-right: 20px;
   width: 28px;
   height: 28px;
-  color: ${({ theme }) => theme.colors.white};
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const Top = styled.div`

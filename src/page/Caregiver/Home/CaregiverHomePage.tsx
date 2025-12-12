@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 // import { ReactComponent as Point } from '@/assets/icons/Point.svg';
 // import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Person } from '@/assets/icons/caregiver/home/Person.svg';
@@ -13,11 +13,15 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
+import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const { data, error } = useCaregiverHomeInfoQuery();
+
+  const hasNewChat = useGetCaregiverHasNewChat();
+
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);
   }
@@ -28,28 +32,21 @@ const CaregiverHomePage = () => {
         left={<NavLeft />}
         right={
           <NavRight onClick={() => handleNavigate('/caregiver/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </NavRight>
         }
         color="blue"
       />
+
       <BannerWrapper>
         <div className="labelWrapper">
-          {data?.isWorking ? (
-            <label>
-              {data.name}님,
-              <br />
-              돌봄을 시작하세요!
-            </label>
-          ) : (
-            <label>
-              {data?.name}님,
-              <br />
-              오늘의 일정이에요!
-            </label>
-          )}
+          <label>
+            {data?.name}님,
+            <br />
+            {data?.isWorking ? '돌봄을 시작하세요!' : '오늘의 일정이에요!'}
+          </label>
         </div>
-        <Person style={{ position: 'absolute', right: '0', top: '51px' }} />
+        <Person style={{ marginTop: '-5px' }} />
       </BannerWrapper>
 
       <MainWrapper>
@@ -97,7 +94,9 @@ const CaregiverHomePage = () => {
               <div className="left">
                 <label className="title">모집공고</label>
                 <div className="detail">
-                  <label className="number">{data?.recruitmentCount}</label>
+                  <label className="number">
+                    {data?.recruitmentCount ?? 0}
+                  </label>
                   <label className="unit">건</label>
                 </div>
               </div>
@@ -107,7 +106,9 @@ const CaregiverHomePage = () => {
               <div className="left">
                 <label className="title">지원현황</label>
                 <div className="detail">
-                  <label className="number">{data?.applicationCount}</label>
+                  <label className="number">
+                    {data?.applicationCount ?? 0}
+                  </label>
                   <label className="unit">건</label>
                 </div>
               </div>
@@ -129,7 +130,6 @@ export default CaregiverHomePage;
 
 const Container = styled.div`
   background: #f2f3f7;
-  position: relative;
   min-height: 100vh;
 `;
 
@@ -147,8 +147,10 @@ const NavRight = styled.div`
 `;
 
 const BannerWrapper = styled.div`
-  background: ${({ theme }) => theme.colors.mainBlue};
   height: 188px;
+  display: flex;
+  justify-content: space-between;
+  background: ${({ theme }) => theme.colors.mainBlue};
 
   .labelWrapper {
     display: flex;
@@ -177,13 +179,11 @@ const BannerWrapper = styled.div`
 `;
 
 const MainWrapper = styled.div`
+  margin-top: -50px;
+  padding: 0px 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 192px;
 `;
 
 const CardWrapper = styled.div`

@@ -61,14 +61,13 @@ const SocialworkerEditInstitutionPage = () => {
   };
 
   const defaultImgUrl =
-    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/institution-profile-image/default/institution_default.png';
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/institution-profile-image/default/institution_default.png';
 
   return (
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>기관 정보 수정</NavCenter>}
-        color="white"
       />
 
       <ProfileImgUploader
