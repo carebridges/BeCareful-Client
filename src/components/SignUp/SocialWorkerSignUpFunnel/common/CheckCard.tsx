@@ -29,7 +29,7 @@ const CardContainer = styled.div<{ $pressed: boolean }>`
     border 0.2s ease;
 
   display: flex;
-  height: 64px;
+  height: 52px;
   padding: 24px 16px;
   box-sizing: border-box;
   align-items: center;
