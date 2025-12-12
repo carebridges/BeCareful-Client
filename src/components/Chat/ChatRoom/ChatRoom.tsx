@@ -62,7 +62,7 @@ const ChatRoom = ({
         </ChatWrapper>
       ))}
       {(contractStatus === '채용완료' || chatRoomStatus !== '채팅가능') && (
-        <ChatGuide title={status.title} detail={status.title} />
+        <ChatGuide title={status.title} detail={status.detail} />
       )}
     </Container>
   );

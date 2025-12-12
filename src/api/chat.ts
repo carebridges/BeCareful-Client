@@ -49,7 +49,7 @@ export const useGetSocialworkerContract = (contractId: number) =>
 
 // 사회복지사 새로운 채팅 여부
 export const useGetSocialworkerHasNewChat = () =>
-  useQuery<CaregiverChatListResponse>({
+  useQuery({
     queryKey: ['socialworkerHasNewChat'],
     queryFn: async () => {
       const { data } = await axiosInstance.get(

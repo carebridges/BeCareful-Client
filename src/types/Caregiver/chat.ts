@@ -1,3 +1,5 @@
+import { ChatResponse } from '@/types/common/chat';
+
 export interface CaregiverChatList {
   chatRoomId: number;
   nursingInstitutionProfileImageUrl: string;
@@ -29,5 +31,5 @@ export interface CaregiverChatResponse {
   chatRoomStatus: ChatRoomStatus;
   chatRoomContractStatus: ChatRoomContractStatus;
   recruitmentId: number;
-  chatList: [];
+  chatList: ChatResponse[];
 }

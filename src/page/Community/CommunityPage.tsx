@@ -50,7 +50,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     window.scrollTo(0, 0);
   };
 
-  const hasNewChat = useGetSocialworkerHasNewChat();
+  const { data: hasNewChat } = useGetSocialworkerHasNewChat();
 
   const { data } = useGetCommunityHome(!previewMode);
   const {

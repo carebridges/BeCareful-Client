@@ -19,7 +19,7 @@ interface CaregiverWorkDetailProps {
 const CaregiverWorkDetail = ({ work }: CaregiverWorkDetailProps) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
-  const hasNewChat = useGetCaregiverHasNewChat();
+  const { data: hasNewChat } = useGetCaregiverHasNewChat();
 
   const workInfo = [
     {
