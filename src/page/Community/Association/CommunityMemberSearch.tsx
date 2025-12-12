@@ -43,7 +43,6 @@ const CommunityMemberSearch = ({
       <NavBar
         left={<NavLeft onClick={closeSearch} />}
         center={<NavCenter>검색</NavCenter>}
-        color=""
       />
 
       <SearchBarWrapper>

@@ -11,6 +11,7 @@ type RecruitmentManageSheetProps = {
   selectedOption: SheetOption | null;
   onSelectOption: (option: SheetOption) => void;
   onConfirm: () => void;
+  isEditDisabled: boolean;
 };
 
 export const RecruitmentManageSheet = ({
@@ -19,6 +20,7 @@ export const RecruitmentManageSheet = ({
   selectedOption,
   onSelectOption,
   onConfirm,
+  isEditDisabled,
 }: RecruitmentManageSheetProps) => {
   return (
     <BottomSheet
@@ -32,7 +34,11 @@ export const RecruitmentManageSheet = ({
           option="edit"
           pressed={selectedOption === 'edit'}
           text="공고 수정"
-          onClick={() => onSelectOption('edit')}
+          disabled={isEditDisabled}
+          onClick={() => {
+            if (isEditDisabled) return;
+            onSelectOption('edit');
+          }}
         />
         <RecruitmentManageCheckCard
           option="close"

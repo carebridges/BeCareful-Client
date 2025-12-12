@@ -44,14 +44,13 @@ const CommunityEditAssociationPage = () => {
   };
 
   const defaultImgUrl =
-    'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_default.png';
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_default.png';
 
   return (
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>협회 정보 수정</NavCenter>}
-        color=""
       />
 
       {/* title="협회 대표 대문 사진을 설정해 주세요." */}
@@ -73,8 +72,8 @@ const CommunityEditAssociationPage = () => {
       />
 
       <InputBox
-        title="협회 설립일"
-        detail="협회의 설립일을 입력해 주세요."
+        title="협회 설립 연도"
+        detail="협회 설립 연도를 입력해 주세요."
         placeholder="예) 2000"
         value={year}
         onChange={handleYearChange}

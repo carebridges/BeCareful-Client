@@ -22,10 +22,7 @@ import {
   WorkApplicationRequest,
   WorkApplicationResponse,
 } from '@/types/Caregiver/work';
-import {
-  CaregiverChatListResponse,
-  CaregiverChatResponse,
-} from '@/types/Caregiver/chat';
+import { MarketingAgreeInfo } from '@/types/Socialworker/mypage';
 
 /* 홈화면 */
 // 요양보호사 홈 화면 구성 데이터 조회
@@ -136,10 +133,42 @@ export const workApplicationInactive = async () => {
   return response;
 };
 
-// 로그아웃
-export const useCaregiverLogout = () => {
+// 요양보호사 마케팅 동의 여부 조회
+export const useGetCaregiverMarketingInfo = () => {
+  return useQuery<MarketingAgreeInfo, Error>({
+    queryKey: ['caregiverMarketingInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/caregiver/my/setting');
+      return response.data;
+    },
+  });
+};
+
+// 요양보호사 마케팅 동의 여부 수정
+export const usePatchCaregiverMarketingInfo = () => {
   const queryClient = useQueryClient();
 
+  return useMutation({
+    mutationFn: async (associationInfo: MarketingAgreeInfo) => {
+      const response = await axiosInstance.patch(
+        '/caregiver/my/marketing-info-receiving-agreement',
+        associationInfo,
+      );
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverMarketingInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('요양보호사 마케팅 동의 여부 변경 실패', error);
+    },
+  });
+};
+
+// 로그아웃
+export const useCaregiverLogout = () => {
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.put('/caregiver/logout');
@@ -147,7 +176,6 @@ export const useCaregiverLogout = () => {
     },
     onSuccess: (response) => {
       console.log('useCaregiverLogout - 요양보호사 로그아웃 성공:', response);
-      queryClient.clear();
     },
     onError: (error) => {
       console.error('useCaregiverLogout - 요양보호사 로그아웃 실패:', error);
@@ -157,8 +185,6 @@ export const useCaregiverLogout = () => {
 
 // 회원탈퇴
 export const useDeleteCaregiver = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.delete('/caregiver/leave');
@@ -166,7 +192,6 @@ export const useDeleteCaregiver = () => {
     },
     onSuccess: () => {
       console.log('useDeleteCaregiver - 요양보호사 탈퇴 성공');
-      queryClient.clear();
     },
     onError: (error) => {
       console.error('useDeleteCaregiver - 요양보호사 탈퇴 실패:', error);
@@ -258,66 +283,5 @@ export const useApplicationDetailQuery = (recruitmentId: number) => {
       return response.data;
     },
     enabled: !!recruitmentId,
-  });
-};
-
-/* 채팅 */
-// 요양보호사 채팅 목록
-export const useGetCaregiverChatList = () =>
-  useQuery<CaregiverChatListResponse>({
-    queryKey: ['caregiverChatList'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get('/chat/caregiver/list');
-      return data;
-    },
-  });
-
-// 요양보호사 채팅 데이터 조회
-export const useGetCaregiverChat = (matchingId: number) =>
-  useQuery<CaregiverChatResponse>({
-    queryKey: ['caregiverChat', matchingId],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get(
-        `/chat/caregiver?matchingId=${matchingId}`,
-      );
-      return data;
-    },
-  });
-
-// 계약서를 기반으로 매칭 확정
-export const usePostCaregiverContract = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (variables: {
-      contractId: number;
-      matchingId: number;
-      recruitmentId: number;
-    }) => {
-      const response = await axiosInstance.post(
-        `/chat/caregiver/contract/${variables.contractId}/confirm`,
-      );
-      return response;
-    },
-    onSuccess: (_, variables) => {
-      const { matchingId, recruitmentId } = variables;
-      console.log('usePostCaregiverContract - 요양보호사 매칭 성공:');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverCompletedMatchingList'],
-      });
-      queryClient.invalidateQueries({ queryKey: ['caregiverWorkList'] });
-      queryClient.invalidateQueries({ queryKey: ['caregiverApplicationList'] });
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverApplicationDetail', recruitmentId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverChat', matchingId],
-      });
-      queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
-      queryClient.invalidateQueries({ queryKey: ['caregiverHomeInfo'] });
-    },
-    onError: (error) => {
-      console.error('usePostCaregiverContract - 요양보호사 매칭 실패:', error);
-    },
   });
 };

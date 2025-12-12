@@ -76,6 +76,6 @@ export interface SocialworkerAssociationResponse {
   associationInfo: AssociationInfo;
 }
 
-export interface SocialworkerAssociationRequest {
+export interface MarketingAgreeInfo {
   isAgreedToReceiveMarketingInfo: boolean;
 }

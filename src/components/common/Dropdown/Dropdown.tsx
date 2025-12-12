@@ -8,6 +8,8 @@ interface DropdownProps {
   selectedContents: string[];
   setSelectedContents: (selectedContents: string[]) => void;
   width?: string;
+  height?: string;
+  borderRadius?: string;
   pressed?: boolean;
 }
 
@@ -17,6 +19,8 @@ export const Dropdown = ({
   selectedContents,
   setSelectedContents,
   width = '280px',
+  height = '42px',
+  borderRadius = '8px',
   pressed = false,
 }: DropdownProps) => {
   const [open, setOpen] = useState(false);
@@ -47,7 +51,12 @@ export const Dropdown = ({
 
   return (
     <Dropdowns ref={selectContainerRef} width={width}>
-      <DropdownHeader onClick={handleToggleDropdown} pressed={pressed}>
+      <DropdownHeader
+        onClick={handleToggleDropdown}
+        pressed={pressed}
+        height={height}
+        borderRadius={borderRadius}
+      >
         <DropdownLabel pressed={pressed}>{selectedLabel}</DropdownLabel>
         <IconWrapper pressed={pressed}>
           <IconPolygon5 />
@@ -81,14 +90,18 @@ const Dropdowns = styled.div<{ width: string }>`
   width: ${(props) => props.width};
 `;
 
-const DropdownHeader = styled.div<{ pressed?: boolean }>`
+const DropdownHeader = styled.div<{
+  pressed?: boolean;
+  height: string;
+  borderRadius: string;
+}>`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   padding: 0 16px;
-  height: 42px;
-  border-radius: 8px;
+  height: ${(props) => props.height};
+  border-radius: ${(props) => props.borderRadius};
   border: 1px solid
     ${({ theme, pressed }) =>
       pressed ? theme.colors.white : theme.colors.gray100};

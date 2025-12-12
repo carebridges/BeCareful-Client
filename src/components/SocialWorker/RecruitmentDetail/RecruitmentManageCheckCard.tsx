@@ -7,6 +7,7 @@ interface RecruitmentManageCheckCardProps {
   pressed?: boolean;
   option: RecruitmentManageOption;
   text: string;
+  disabled?: boolean;
   onClick?: () => void;
 }
 
@@ -14,11 +15,24 @@ export const RecruitmentManageCheckCard = ({
   pressed = false,
   option,
   text,
+  disabled = false,
   onClick,
 }: RecruitmentManageCheckCardProps) => {
+  const handleClick = () => {
+    if (disabled) return;
+    onClick?.();
+  };
+
+  const isPressed = pressed && !disabled;
+
   return (
-    <CardContainer $pressed={pressed} $option={option} onClick={onClick}>
-      <IconWrapper $pressed={pressed} $option={option}>
+    <CardContainer
+      $pressed={isPressed}
+      $option={option}
+      $disabled={disabled}
+      onClick={handleClick}
+    >
+      <IconWrapper $pressed={isPressed} $option={option} $disabled={disabled}>
         <CheckFilled />
       </IconWrapper>
       <span>{text}</span>
@@ -29,6 +43,7 @@ export const RecruitmentManageCheckCard = ({
 const CardContainer = styled.div<{
   $pressed: boolean;
   $option: RecruitmentManageOption;
+  $disabled: boolean;
 }>`
   will-change: background-color, border;
   transition:
@@ -45,14 +60,19 @@ const CardContainer = styled.div<{
 
   border-radius: 12px;
 
-  border: ${({ theme, $pressed, $option }) => {
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
+  pointer-events: ${({ $disabled }) => ($disabled ? 'none' : 'auto')};
+
+  border: ${({ theme, $pressed, $option, $disabled }) => {
+    if ($disabled) return `1px solid ${theme.colors.gray100}`;
     if (!$pressed) return `1px solid ${theme.colors.gray100}`;
     if ($option === 'edit') return `2px solid ${theme.colors.mainBlue}`;
     if ($option === 'close') return `2px solid ${theme.colors.mainOrange}`;
     return `2px solid ${theme.colors.mainOrange}`;
   }};
 
-  background-color: ${({ theme, $pressed, $option }) => {
+  background-color: ${({ theme, $pressed, $option, $disabled }) => {
+    if ($disabled) return theme.colors.gray50;
     if (!$pressed) return theme.colors.white;
     if ($option === 'edit') return theme.colors.subBlue;
     if ($option === 'close') return theme.colors.subOrange;
@@ -63,7 +83,8 @@ const CardContainer = styled.div<{
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 
-    color: ${({ theme, $pressed, $option }) => {
+    color: ${({ theme, $pressed, $option, $disabled }) => {
+      if ($disabled) return theme.colors.gray600;
       if (!$pressed) return theme.colors.gray900;
       if ($option === 'edit') return theme.colors.mainBlue;
       if ($option === 'close') return theme.colors.mainOrange;
@@ -75,6 +96,7 @@ const CardContainer = styled.div<{
 const IconWrapper = styled.div<{
   $pressed: boolean;
   $option: RecruitmentManageOption;
+  $disabled: boolean;
 }>`
   display: flex;
   align-items: center;
@@ -82,7 +104,8 @@ const IconWrapper = styled.div<{
 
   svg {
     path {
-      fill: ${({ theme, $pressed, $option }) => {
+      fill: ${({ theme, $pressed, $option, $disabled }) => {
+        if ($disabled) return theme.colors.gray200;
         if (!$pressed) return theme.colors.gray200;
         if ($option === 'edit') return theme.colors.mainBlue;
         if ($option === 'close') return theme.colors.mainOrange;

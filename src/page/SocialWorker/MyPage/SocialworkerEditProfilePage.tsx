@@ -79,7 +79,6 @@ const SocialworkerEditProfilePage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>프로필 수정하기</NavCenter>}
-        color="white"
       />
 
       <InfoWrapper>

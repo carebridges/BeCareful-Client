@@ -68,7 +68,6 @@ export const ElderlyEditPage = () => {
           </NavLeft>
         }
         center={<NavCenter>어르신 수정</NavCenter>}
-        color="white"
       />
 
       <MainContent>

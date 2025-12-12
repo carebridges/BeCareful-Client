@@ -18,11 +18,11 @@ export const CommunityCreatePage = () => {
   const userInfo = useRecoilValue(currentUserInfo);
 
   const handleLogoClick = () => {
-    navigate('/home/caregiver'); //TODO
+    navigate('/socialworker'); //TODO
   };
 
   const handleChatClick = () => {
-    navigate('/caregiver/chat'); //TODO
+    navigate('/socialworker/chat'); //TODO
   };
 
   return (
@@ -76,6 +76,7 @@ const NavRight = styled.div`
   height: 28px;
   padding-right: 20px;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.white};
 `;
 
 const MainWrapper = styled.div`

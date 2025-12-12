@@ -41,14 +41,12 @@ const InstitutionCard = ({
   ];
 
   return (
-    <CardContainer>
+    <CardContainer
+      onClick={() => handleNavigate('/socialworker/my/institution')}
+    >
       <div className="top">
         <label className="institution">{institution}</label>
-        {!isSocialworker && (
-          <Chevron
-            onClick={() => handleNavigate('/socialworker/my/institution')}
-          />
-        )}
+        {!isSocialworker && <Chevron />}
       </div>
       <InfoDisplay items={institutionInfo} />
     </CardContainer>
@@ -75,6 +73,7 @@ const CardContainer = styled.div`
 
   svg {
     cursor: pointer;
+    color: ${({ theme }) => theme.colors.gray500};
   }
 
   .institution {

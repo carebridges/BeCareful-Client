@@ -13,3 +13,5 @@ export const PAY_CODE_TO_LABEL = {
   MONTH: '월급',
   YEAR: '연봉',
 } as const;
+
+export const MIN_WAGE = 10030;

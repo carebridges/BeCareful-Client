@@ -65,7 +65,6 @@ const CommunityPostPage = () => {
         center={
           <NavCenter>{BOARD_PARAM_TO_KR[boardType ?? 'association']}</NavCenter>
         }
-        color="white"
       />
 
       <TitleSection

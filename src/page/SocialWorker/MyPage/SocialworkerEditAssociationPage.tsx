@@ -74,7 +74,6 @@ const SocialworkerEditAssociationPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>소속 협회 정보</NavCenter>}
-        color="white"
       />
 
       <InputBox

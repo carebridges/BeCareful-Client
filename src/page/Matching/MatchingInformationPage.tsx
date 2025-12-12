@@ -22,7 +22,7 @@ export const MatchingInformationPage = () => {
         <IconContainer onClick={() => navigate(-1)}>
           <IconArrowLeft />
         </IconContainer>
-        매칭 정보
+        매칭 현황
         <HideIconContainer />
       </TopContainer>
 

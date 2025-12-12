@@ -11,11 +11,13 @@ import { useRecruitment, useWaitingElderly } from '@/api/elderly';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
-import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
+import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
 import { NewElderRegistrationCard } from '@/components/SocialWorker/common/NewElderRegistrationCard';
 import { FloatingPostButton } from '@/components/SocialWorker/common/FloatingPostButton';
 import { ElderMatchingCard } from '@/components/SocialWorker/MatchingStatus/ElderMatchingCard';
 import { RegisterElderModal } from '@/components/SocialWorker/RegisterMatchingElder/RegisterElderModal';
+import { useGetSocialworkerHasNewChat } from '@/api/chat';
 
 const TAB_LABELS = ['매칭 대기', '매칭 중', '매칭 완료'] as const;
 
@@ -88,17 +90,18 @@ export const SocialWorkerMatchingListPage = () => {
           />
         ));
 
+  const { data: hasNewChat } = useGetSocialworkerHasNewChat();
+
   return (
     <>
       <Container>
         <NavBar
-          left={
-            <NavLeft onClick={() => navigate(-1)}>
-              <ArrowLeft />
-            </NavLeft>
+          left={<NavLeft>매칭</NavLeft>}
+          right={
+            <NavRight onClick={() => navigate('/caregiver/chat')}>
+              {hasNewChat ? <ChatNew /> : <Chat />}
+            </NavRight>
           }
-          center={<NavCenter>매칭</NavCenter>}
-          color="white"
         />
 
         <TabContainer>
@@ -179,14 +182,17 @@ const Container = styled.div`
 `;
 
 const NavLeft = styled.div`
-  cursor: pointer;
-`;
-
-const NavCenter = styled.div`
   color: ${({ theme }) => theme.colors.gray900};
-  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-size: ${({ theme }) => theme.typography.fontSize.title3};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   text-align: center;
+`;
+
+const NavRight = styled.div`
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.gray700};
 `;
 
 const TabContainer = styled.div`

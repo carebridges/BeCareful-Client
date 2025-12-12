@@ -17,8 +17,8 @@ import { ElderlyDetailPage } from '@/page/Elderly/ElderlyDetailPage';
 import { RecruitmentDetailPage } from '@/page/SocialWorker/Matching/RecruitmentDetailPage';
 import { MatchingInfoPage } from '@/page/Matching/MatchingInfoPage';
 import { ElderlyEditPage } from '@/page/Elderly/ElderlyEditPage';
-
 import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
+import { RecruitmentEditPage } from '@/page/SocialWorker/Matching/RecruitmentEditPage';
 
 const SocialworkerRoute = () => {
   const location = useLocation();
@@ -35,11 +35,12 @@ const SocialworkerRoute = () => {
     '/socialworker/apply/:recruitmentId/caregiver/:caregiverId',
     '/socialworker/match/info/:recruitmentId',
     '/socialworker/chat',
-    '/socialworker/chat/:matchingId',
-    '/socialworker/chat/:contractId/edit',
+    '/socialworker/chat/:chatRoomId',
+    '/socialworker/chat/:chatRoomId/edit',
     '/socialworker/point',
     '/socialworker/recruitment/new',
     '/socialworker/recruitment/:recruitmentId',
+    '/socialworker/recruitment/:recruitmentId/edit',
 
     '/socialworker/ad/:adId',
   ];
@@ -63,6 +64,15 @@ const SocialworkerRoute = () => {
           <Route path="elderly" element={<ElderlyListPage />} />
           <Route path="elderly/new" element={<ElderlyRegisterPage />} />
           <Route path="/elderly/:elderlyId" element={<ElderlyDetailPage />} />
+          <Route
+            path="/elderly/:elderlyId/edit"
+            element={<ElderlyEditPage />}
+          />
+
+          <Route
+            path="/elderly/:elderlyId/edit"
+            element={<ElderlyEditPage />}
+          />
 
           <Route
             path="/elderly/:elderlyId/edit"
@@ -101,10 +111,15 @@ const SocialworkerRoute = () => {
             element={<RecruitmentDetailPage />}
           />
 
-          <Route path="chat" element={<SocialworkerChatListPage />} />
-          <Route path="chat/:matchingId" element={<SocialworkerChatPage />} />
           <Route
-            path="chat/:contractId/edit"
+            path="/recruitment/:recruitmentId/edit"
+            element={<RecruitmentEditPage />}
+          />
+
+          <Route path="chat" element={<SocialworkerChatListPage />} />
+          <Route path="chat/:chatRoomId" element={<SocialworkerChatPage />} />
+          <Route
+            path="chat/:chatRoomId/edit"
             element={<SocialworkerEditContractPage />}
           />
 

@@ -11,6 +11,7 @@ import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { useState } from 'react';
 import { useRegisterMatchingRecruitment } from '@/api/matching.socialWorker';
 import { RegisterMatchingElderModal } from '@/components/SocialWorker/RegisterMatchingElder/RegisterMatchingElderModal';
+import { MIN_WAGE } from '@/constants/socialworker/payType.socialWorker';
 
 type RecruitmentRegisterLocationState = {
   elderlyId?: number;
@@ -72,6 +73,10 @@ export const RecruitmentRegisterPage = () => {
   };
 
   const handleConfirmRegister = async () => {
+    if (recruitmentForm.workSalaryAmount < MIN_WAGE) {
+      alert('최저시급은 10,030원 이상으로 입력해야 합니다.');
+      return;
+    }
     if (!isFinalStepValid || isPending) return;
     await registerRecruitment(recruitmentForm);
     window.scrollTo(0, 0);
@@ -103,7 +108,6 @@ export const RecruitmentRegisterPage = () => {
             </NavLeft>
           }
           center={<NavCenter>공고 등록</NavCenter>}
-          color="white"
         />
       </NavBarContainer>
 

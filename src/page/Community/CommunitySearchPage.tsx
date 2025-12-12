@@ -34,7 +34,6 @@ const CommunitySearchPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>검색</NavCenter>}
-        color=""
       />
 
       <SearchBarWrapper>

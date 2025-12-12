@@ -31,7 +31,7 @@ export const PostReadStatusProvider: React.FC<PostReadStatusProviderProps> = ({
   // 게시글 ID를 키로, 읽음 여부를 값으로 하는 상태 맵
   const [readStatuses, setReadStatuses] = useState<Record<number, boolean>>(
     () => {
-      const stored = localStorage.getItem('readStatuses');
+      const stored = localStorage.getItem('postReadStatuses');
       return stored ? JSON.parse(stored) : {};
     },
   );
@@ -43,7 +43,7 @@ export const PostReadStatusProvider: React.FC<PostReadStatusProviderProps> = ({
         ...prevStatuses,
         [postId]: true,
       };
-      localStorage.setItem('readStatuses', JSON.stringify(updated));
+      localStorage.setItem('postReadStatuses', JSON.stringify(updated));
       return updated;
     });
   }, []);

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ReactComponent as Search } from '@/assets/icons/Search.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
-import { ReactComponent as ChatNew } from '@/assets/icons/ChatNew.svg';
+import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 // import { ReactComponent as Plus } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Write } from '@/assets/icons/community/Write.svg';
@@ -21,6 +21,7 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
 import { useGetCommunityHome } from '@/api/community';
 import { useCancelJoinAssociation } from '@/api/communityAssociation';
+import { useGetSocialworkerHasNewChat } from '@/api/chat';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
@@ -49,6 +50,8 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
     window.scrollTo(0, 0);
   };
 
+  const { data: hasNewChat } = useGetSocialworkerHasNewChat();
+
   const { data } = useGetCommunityHome(!previewMode);
   const {
     isPendingModalOpen,
@@ -75,7 +78,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
         <div className="right">
           <Search onClick={() => handleNavigate('/community/search')} />
           <ChatWrapper onClick={() => handleNavigate('/socialworker/chat')}>
-            {data?.hasNewChat ? <ChatNew /> : <Chat />}
+            {hasNewChat ? <ChatNew /> : <Chat />}
           </ChatWrapper>
         </div>
       </Top>

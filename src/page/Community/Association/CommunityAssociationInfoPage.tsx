@@ -18,8 +18,8 @@ const CommunityAssociationInfoPage = () => {
   const isChairman = myData?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const associationInfo = [
-    { title: '설립일', detail: data?.associationEstablishedYear },
-    { title: '회원수', detail: data?.associationMemberCount },
+    { title: '설립일', detail: `${data?.associationEstablishedYear}년` },
+    { title: '회원수', detail: `${data?.associationMemberCount}명` },
   ];
 
   const chairmanInfo = [

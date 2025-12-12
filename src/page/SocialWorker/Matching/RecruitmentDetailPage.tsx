@@ -77,6 +77,9 @@ export const RecruitmentDetailPage = () => {
     institutionInfo,
   } = data;
 
+  const isEditDisabled =
+    recruitmentStatus === '모집완료' || recruitmentStatus === '공고마감';
+
   const workDayLabel = translateWorkDaysToKo(sortWorkDays(workDays));
 
   const salaryUnitLabel = (() => {
@@ -116,7 +119,7 @@ export const RecruitmentDetailPage = () => {
     }
 
     if (selectedOption === 'edit') {
-      //TODO
+      navigate(`/socialworker/recruitment/${id}/edit`);
       setIsSheetOpen(false);
       return;
     }
@@ -160,7 +163,6 @@ export const RecruitmentDetailPage = () => {
                 <ThreeDots />
               </NavLeft>
             }
-            color="white"
           />
         </NavBarContainer>
 
@@ -221,6 +223,7 @@ export const RecruitmentDetailPage = () => {
         selectedOption={selectedOption}
         onSelectOption={setSelectedOption}
         onConfirm={handleConfirmSheet}
+        isEditDisabled={isEditDisabled}
       />
 
       {toastMessage && <ErrorToast text={toastMessage} />}

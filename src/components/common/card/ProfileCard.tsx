@@ -25,10 +25,10 @@ const ProfileCard = ({
       <img src={profileImgURL} alt={'프로필 이미지'} />
 
       <div className="right">
-        <NameWrapper>
+        <NameWrapper onClick={chevronClick}>
           <label className="name">{name}</label>
           {nickname && <label className="nickname">{nickname}</label>}
-          {chevronClick && <Chevron onClick={chevronClick} />}
+          {chevronClick && <Chevron />}
         </NameWrapper>
 
         <InfoWrapper>
@@ -70,6 +70,7 @@ const NameWrapper = styled.div`
   display: flex;
   gap: 8px;
   align-items: center;
+  cursor: pointer;
 
   .name {
     color: ${({ theme }) => theme.colors.gray900};
@@ -85,7 +86,7 @@ const NameWrapper = styled.div`
 `;
 
 const Chevron = styled(ChevronIcon)`
-  cursor: pointer;
+  color: ${({ theme }) => theme.colors.gray500};
 `;
 
 const InfoWrapper = styled.div`

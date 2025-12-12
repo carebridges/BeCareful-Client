@@ -46,6 +46,7 @@ const ButtonContainer = styled.div`
   box-sizing: border-box;
   width: 100%;
   margin-top: 185px;
+  background: ${({ theme }) => theme.colors.white};
 `;
 
 const TopText = styled.h1`

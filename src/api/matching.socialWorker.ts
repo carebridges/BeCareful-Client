@@ -7,6 +7,7 @@ import {
   MatchingCaregiver,
   RecruitmentForm,
   RawMatchingElderData,
+  EditRecruitmentForm,
 } from '@/types/Matching.socialWorker';
 
 import { RecruitmentDetailResponse } from '@/types/Socialworker/matching';
@@ -15,14 +16,16 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 export const useHireCaregiver = () =>
   useMutation({
     mutationFn: async ({
-      matchingId,
+      recruitmentId,
+      caregiverId,
       workStartDate,
     }: {
-      matchingId: number;
+      recruitmentId: number;
+      caregiverId: number;
       workStartDate: string;
     }) => {
       const { data } = await axiosInstance.post(
-        `/matching/social-worker/${matchingId}/hire`,
+        `/matching/social-worker/recruitment/${recruitmentId}/caregiver/${caregiverId}/propose`,
         undefined,
         {
           params: { workStartDate },
@@ -71,7 +74,7 @@ export const useMatchingRecruitment = (recruitmentId: string) =>
   useQuery<MatchingElderData>({
     queryKey: ['matching-recruitment', recruitmentId],
     queryFn: async () => {
-      const data = await getMatchingRecruitment(recruitmentId); // Raw 타입
+      const data = await getMatchingRecruitment(recruitmentId);
 
       return {
         ...data,
@@ -155,4 +158,25 @@ export const useDeleteRecruitment = (recruitmentId: number) =>
       );
       return data;
     },
+  });
+
+export const useEditMatchingRecruitment = (recruitmentId: number) =>
+  useMutation({
+    mutationFn: (body: EditRecruitmentForm) =>
+      axiosInstance.put(
+        `/matching/social-worker/recruitment/${recruitmentId}`,
+        body,
+      ),
+  });
+
+export const usePendingMatching = () =>
+  useMutation({
+    mutationFn: (applicationId: number) =>
+      axiosInstance.patch(
+        `/matching/social-worker/${applicationId}/pending`,
+        null,
+        {
+          params: { applicationId },
+        },
+      ),
   });
