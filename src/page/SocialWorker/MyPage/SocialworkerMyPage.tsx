@@ -1,26 +1,15 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { ReactComponent as Setting } from '@/assets/icons/Setting.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import ProfileCard from '@/components/common/card/ProfileCard';
 import BelongCard from '@/components/SocialWorker/MyPage/BelongCard';
 import AssociationCard from '@/components/common/card/AssociationCard';
 import InstitutionCard from '@/components/common/card/InstitutionCard';
-import Modal from '@/components/common/Modal/Modal';
-import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useDeleteUserInfo } from '@/hooks/useDeleteUserInfo';
-import {
-  useDeleteSocialworker,
-  useGetSocialWorkerMy,
-  useSocialworkerLogout,
-} from '@/api/socialworker';
-import {
-  ExpelButton,
-  LogoutButton,
-} from '@/components/common/Button/LogoutButton';
+import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const SocialworkerMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -28,28 +17,14 @@ const SocialworkerMyPage = () => {
   const { data } = useGetSocialWorkerMy();
   const isNone = data?.socialWorkerInfo.associationRank === 'NONE';
 
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-
-  const { mutate: logout } = useSocialworkerLogout();
-  const { mutate: leave } = useDeleteSocialworker();
-  const deleteUserInfo = useDeleteUserInfo();
-
-  const handleLogout = () => {
-    logout(undefined, {
-      onSuccess: deleteUserInfo,
-    });
-  };
-
-  const handleWithdraw = () => {
-    leave(undefined, {
-      onSuccess: deleteUserInfo,
-    });
-  };
-
   return (
     <Container>
-      <NavBar left={<NavLeft>마이페이지</NavLeft>} />
+      <NavBar
+        left={<NavLeft>마이페이지</NavLeft>}
+        right={
+          <Setting onClick={() => handleNavigate('/socialworker/my/setting')} />
+        }
+      />
 
       <ProfileWrapper>
         <ProfileCard
@@ -114,44 +89,6 @@ const SocialworkerMyPage = () => {
           </SectionWrapper>
         </>
       )}
-
-      <Border style={{ height: '5px' }} />
-
-      <SectionWrapper>
-        <label className="section-title">계정</label>
-        <LogoutButton onClick={() => setIsLogoutModalOpen(true)} />
-        <ExpelButton onClick={() => setIsWithdrawModalOpen(true)} />
-      </SectionWrapper>
-
-      <Modal
-        isOpen={isLogoutModalOpen}
-        onClose={() => setIsLogoutModalOpen(false)}
-      >
-        <ModalButtons
-          onClose={() => setIsLogoutModalOpen(false)}
-          title="로그아웃 하시겠습니까?"
-          detail="현재 계정에서 로그아웃됩니다. 계속하시겠습니까?"
-          left="취소"
-          right="로그아웃"
-          handleLeftBtnClick={() => setIsLogoutModalOpen(false)}
-          handleRightBtnClick={handleLogout}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={isWithdrawModalOpen}
-        onClose={() => setIsWithdrawModalOpen(false)}
-      >
-        <ModalButtons
-          onClose={() => setIsWithdrawModalOpen(false)}
-          title="정말 탈퇴 하시겠습니까?"
-          detail={'돌봄다리 통합 서비스에서 탈퇴됩니다.\n계속하시겠습니까?'}
-          left="취소"
-          right="탈퇴하기"
-          handleLeftBtnClick={() => setIsWithdrawModalOpen(false)}
-          handleRightBtnClick={handleWithdraw}
-        />
-      </Modal>
     </Container>
   );
 };

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SocialworkerHomeResponse } from '@/types/Socialworker/home';
 import {
   NursingAssociationInfoRequest,
-  SocialworkerAssociationRequest,
+  MarketingAgreeInfo,
   SocialworkerAssociationResponse,
   SocialworkerMyEditResponse,
   SocialworkerMyRequest,
@@ -110,7 +110,7 @@ export const usePatchSocialAssociationInfo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (associationInfo: SocialworkerAssociationRequest) => {
+    mutationFn: async (associationInfo: MarketingAgreeInfo) => {
       const response = await axiosInstance.patch(
         '/social-worker/my/association',
         associationInfo,
@@ -118,7 +118,6 @@ export const usePatchSocialAssociationInfo = () => {
       return response;
     },
     onSuccess: () => {
-      console.log('usePatchSocialAssociationInfo - 협회 정보 수정 성공');
       queryClient.invalidateQueries({
         queryKey: ['socialworkerAssociationInfo'],
       });
@@ -128,6 +127,40 @@ export const usePatchSocialAssociationInfo = () => {
         'usePatchSocialAssociationInfo - 협회 정보 수정 실패',
         error,
       );
+    },
+  });
+};
+
+// 사회복지사 마케팅 동의 여부 조회
+export const useGetSocialMarketingInfo = () => {
+  return useQuery<MarketingAgreeInfo, Error>({
+    queryKey: ['socialworkerMarketingInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/social-worker/my/setting');
+      return response.data;
+    },
+  });
+};
+
+// 사회복지사 마케팅 동의 여부 수정
+export const usePatchSocialMarketingInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (associationInfo: MarketingAgreeInfo) => {
+      const response = await axiosInstance.patch(
+        '/social-worker/my/marketing-info-receiving-agreement',
+        associationInfo,
+      );
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['socialworkerMarketingInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('사회복지사 마케팅 동의 여부 변경 실패', error);
     },
   });
 };

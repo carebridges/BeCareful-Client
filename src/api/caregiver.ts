@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   MatchingMyRecruitmentDetailResponse,
   MatchingMyRecruitmentResponse,
@@ -22,6 +22,7 @@ import {
   WorkApplicationRequest,
   WorkApplicationResponse,
 } from '@/types/Caregiver/work';
+import { MarketingAgreeInfo } from '@/types/Socialworker/mypage';
 
 /* 홈화면 */
 // 요양보호사 홈 화면 구성 데이터 조회
@@ -130,6 +131,40 @@ export const workApplicationInactive = async () => {
     '/caregiver/work-application/inactive',
   );
   return response;
+};
+
+// 요양보호사 마케팅 동의 여부 조회
+export const useGetCaregiverMarketingInfo = () => {
+  return useQuery<MarketingAgreeInfo, Error>({
+    queryKey: ['caregiverMarketingInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get('/caregiver/my/setting');
+      return response.data;
+    },
+  });
+};
+
+// 요양보호사 마케팅 동의 여부 수정
+export const usePatchCaregiverMarketingInfo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (associationInfo: MarketingAgreeInfo) => {
+      const response = await axiosInstance.patch(
+        '/caregiver/my/marketing-info-receiving-agreement',
+        associationInfo,
+      );
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverMarketingInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('요양보호사 마케팅 동의 여부 변경 실패', error);
+    },
+  });
 };
 
 // 로그아웃
