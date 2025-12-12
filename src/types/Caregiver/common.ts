@@ -89,8 +89,8 @@ export interface MyRecruitmentInfo {
 export interface Recruitment {
   recruitmentInfo: RecruitmentInfo;
   matchingResultStatus: MatchingResultStatus;
-  isHotRecruitment: boolean;
-  isHourlySalaryTop: boolean;
+  recruitmentStatus: string;
+  isTimeMatched: boolean;
 }
 
 // 어르신 정보

@@ -66,18 +66,18 @@ const CaregiverWorkCard = ({
       </Title>
 
       {(recruitment.matchingResultStatus === '높음' ||
-        recruitment.isHotRecruitment ||
-        recruitment.isHourlySalaryTop) && (
+        recruitment.isTimeMatched) && (
         <Tags>
           {recruitment.matchingResultStatus === '높음' && (
             <label className="tag">적합도 높음</label>
           )}
-          {recruitment.isHotRecruitment && (
-            <label className="tag">인기공고</label>
+          {recruitment.isTimeMatched && (
+            <label className="tag">시간 일치</label>
           )}
-          {recruitment.isHourlySalaryTop && (
-            <label className="tag">시급 TOP</label>
-          )}
+          {recruitment.matchingResultStatus === '높음' &&
+            recruitment.isTimeMatched && (
+              <label className="tag">완벽 조건</label>
+            )}
         </Tags>
       )}
 

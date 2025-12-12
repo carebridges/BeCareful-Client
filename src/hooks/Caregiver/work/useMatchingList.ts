@@ -28,9 +28,7 @@ export const useMatchingList = () => {
           (item) => item.recruitmentInfo.isRecruiting,
         );
       case '시간일치':
-        return matchingListData.filter((item) =>
-          ['높음', '보통'].includes(item.matchingResultStatus),
-        );
+        return matchingListData.filter((item) => item.isTimeMatched);
       default:
         return matchingListData;
     }
