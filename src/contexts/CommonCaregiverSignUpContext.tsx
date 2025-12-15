@@ -1,10 +1,12 @@
 import { useFunnel } from '@/hooks/SignUp/useFunnel';
-import { CaregiverSignUpFormData } from '@/types/CareGiverSignUp';
+import { CommonCaregiverSignUpFormData } from '@/types/CareGiverSignUp';
 import { createContext, useContext, useState } from 'react';
 
 interface CaregiverSignUpContextType extends ReturnType<typeof useFunnel> {
-  formData: CaregiverSignUpFormData;
-  setFormData: React.Dispatch<React.SetStateAction<CaregiverSignUpFormData>>;
+  formData: CommonCaregiverSignUpFormData;
+  setFormData: React.Dispatch<
+    React.SetStateAction<CommonCaregiverSignUpFormData>
+  >;
 }
 const CaregiverSignUpContext = createContext<CaregiverSignUpContextType | null>(
   null,
@@ -17,11 +19,12 @@ export const CommonCaregiverSignUpProvider = ({
 }) => {
   const funnel = useFunnel(0);
 
-  const [formData, setFormData] = useState<CaregiverSignUpFormData>({
+  const [formData, setFormData] = useState<CommonCaregiverSignUpFormData>({
     realName: '',
     birthYymmdd: '',
     genderCode: 0,
     phoneNumber: '',
+    password: '',
     streetAddress: '',
     detailAddress: '',
     caregiverCertificate: { grade: undefined, certificateNumber: '' },
@@ -44,8 +47,8 @@ export const CommonCaregiverSignUpProvider = ({
   );
 };
 
-export const useCaregiverSignUpContext = () => {
+export const useCommonCaregiverSignUpContext = () => {
   const context = useContext(CaregiverSignUpContext);
-  if (!context) throw new Error('caregiversignupcontext.tsx error');
+  if (!context) throw new Error('commoncaregiversignupcontext.tsx error');
   return context;
 };

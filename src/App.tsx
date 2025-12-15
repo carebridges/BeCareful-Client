@@ -22,6 +22,9 @@ function App() {
       <Route path="/" element={<SplashPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/login" element={<LoginPage />} />
+      {/*api 변경 후 삭제*/}
+      <Route path="/signup" element={<KakaoSignUpPage />} />
+
       <Route path="/signup/kakao" element={<KakaoSignUpPage />} />
       <Route path="/signup/common" element={<CommonSignUpPage />} />
       <Route
@@ -54,18 +57,13 @@ function App() {
         // })()}
         element={<CaregiverRoute />}
       />
-
       {/* 커뮤니티 */}
       <Route path="/community/*" element={<CommunityRoute />} />
-
       {/*기관 관리자 */}
       <Route path="/socialworker/*" element={<SocialworkerRoute />} />
-
       {/*<Route path="/matching/caregiver" element={<CareGiverDetailInfoPage />} />*/}
-
       {/* 협회 랜딩페이지 */}
       <Route path="/landing" element={<LandingPage />} />
-
       {/* 테스트, 에러 페이지 */}
       <Route path="/test" element={<TestPage />} />
       <Route path="/error" element={<ErrorPage />} />
