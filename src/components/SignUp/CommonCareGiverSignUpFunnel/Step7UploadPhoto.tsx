@@ -1,7 +1,4 @@
-import {
-  useRegisterCaregiver,
-  useUploadCareGiverProfileImage,
-} from '@/api/caregiverFunnel';
+import { useUploadCareGiverProfileImage } from '@/api/caregiverFunnel';
 import { Button } from '@/components/common/Button/Button';
 import { CaregiverProfileImageUploader } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto/CaregiverProfileImageUploader';
 import { useCommonCaregiverSignUpContext } from '@/contexts/CommonCaregiverSignUpContext';
@@ -10,10 +7,8 @@ import { useState } from 'react';
 import { styled } from 'styled-components';
 
 export const Step7UploadPhoto = () => {
-  const { goToNext, formData, setFormData, goToPrev } =
-    useCommonCaregiverSignUpContext();
+  const { goToNext, setFormData, goToPrev } = useCommonCaregiverSignUpContext();
   const { mutate: uploadImage } = useUploadCareGiverProfileImage();
-  const { mutate: registerCaregiver, isPending } = useRegisterCaregiver();
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const handleImageUpload = (file: File) => {
@@ -28,18 +23,6 @@ export const Step7UploadPhoto = () => {
       },
       onError: () => {
         alert('이미지 업로드에 실패했습니다.');
-      },
-    });
-  };
-
-  const handleSubmit = () => {
-    registerCaregiver(formData, {
-      onSuccess: () => {
-        console.log('회원가입 완료');
-        goToNext();
-      },
-      onError: () => {
-        alert('회원가입에 실패했습니다.');
       },
     });
   };
@@ -64,13 +47,8 @@ export const Step7UploadPhoto = () => {
         <Button onClick={goToPrev} height="52px" variant="blue2">
           이전
         </Button>
-        <Button
-          onClick={handleSubmit}
-          height="52px"
-          variant="blue"
-          disabled={isPending}
-        >
-          {isPending ? '등록 중...' : '시작하기'}
+        <Button onClick={goToNext} height="52px" variant="blue">
+          다음
         </Button>
       </ButtonContainer>
     </StepWrapper>

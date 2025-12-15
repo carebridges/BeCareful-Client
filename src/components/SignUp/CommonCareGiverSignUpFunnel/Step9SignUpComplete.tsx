@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { ReactComponent as SignUpComplete } from '@/assets/icons/signup/SignUpComplete.svg';
 import { useNavigate } from 'react-router-dom';
 
-export const Step8SignUpComplete = () => {
+export const Step9SignUpComplete = () => {
   const navigate = useNavigate();
   return (
     <StepWrapper>

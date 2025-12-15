@@ -60,7 +60,7 @@ export const Step2BasicInfo = () => {
           variant={'blue'}
           //disabled={!isNextEnabled}
         >
-          다음 단계로 이동
+          다음
         </Button>
       </ButtonContainer>
     </StepWrapper>

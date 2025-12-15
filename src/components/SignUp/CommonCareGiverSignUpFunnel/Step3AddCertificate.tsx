@@ -73,7 +73,7 @@ export const Step3AddCertificate = () => {
           variant={isNextEnabled ? 'blue' : 'gray'}
           height="52px"
         >
-          다음 단계로 이동
+          다음
         </Button>
       </ButtonContainer>
     </StepWrapper>

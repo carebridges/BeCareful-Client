@@ -9,10 +9,11 @@ import { Step1AccountCredentials } from '@/components/SignUp/CommonCareGiverSign
 import { Step5IsDementialTrained } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step5IsDementialTrained';
 import { Step6CurrentAddress } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step6CurrentAddress';
 import { Step7UploadPhoto } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step7UploadPhoto';
-import { Step8SignUpComplete } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step8SignUpComplete';
 import { Step4IsCarOwner } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step4IsCarOwner';
 import { Step3AddCertificate } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step3AddCertificate';
 import { Step2BasicInfo } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step2BasicInfo';
+import { Step8AcceptTerms } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step8AcceptTerms';
+import { Step9SignUpComplete } from '@/components/SignUp/CommonCareGiverSignUpFunnel/Step9SignUpComplete';
 
 const steps = [
   Step1AccountCredentials,
@@ -22,16 +23,17 @@ const steps = [
   Step5IsDementialTrained,
   Step6CurrentAddress,
   Step7UploadPhoto,
-  Step8SignUpComplete,
+  Step8AcceptTerms,
+  Step9SignUpComplete,
 ];
 
-const stepPercents = [12, 24, 36, 48, 60, 72, 86, 100];
+const stepPercents = [11, 22, 33, 44, 55, 66, 77, 88, 100];
 
 export const CommonCareGiverSignUpFunnel = () => {
   const { currentStep } = useCommonCaregiverSignUpContext();
   const StepComponent = steps[currentStep];
   const percent = stepPercents[currentStep];
-  const isLastStep = currentStep === 8;
+  const isLastStep = currentStep === 9;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClickBack = () => {
     setIsModalOpen(true);
