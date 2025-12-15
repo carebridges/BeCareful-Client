@@ -1,8 +1,9 @@
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
-import { useInstitutionSearch } from '@/hooks/SignUp/useInstitutionSearch';
+
 import { CommonInstitutionFunnel } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/CommonInstitutionFunnel';
+import { useInstitutionSearchForCommon } from '@/hooks/SignUp/useInstitutionSearchForCommon';
 
 export const Step2InstitutionName = () => {
   const {
@@ -14,7 +15,7 @@ export const Step2InstitutionName = () => {
     handleRegisterComplete,
     handleRegisterCancel,
     handleNext,
-  } = useInstitutionSearch();
+  } = useInstitutionSearchForCommon();
 
   if (isRegisteringInstitution) {
     return (

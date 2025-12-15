@@ -5,6 +5,8 @@ import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpConte
 import { PasswordConfirmInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PasswordConfirmInput';
 import { PasswordInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PasswordInput';
 import { PhoneAuthInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PhoneAuthInput';
+import { PASSWORD_RULE_TEXT } from '@/constants/signup/signup';
+import { isValidPassword } from '@/hooks/SignUp/usePasswordValidation';
 
 export const Step3AccountCredentials = () => {
   const { goToNext, goToPrev } = useCommonSignUpContext();
@@ -15,11 +17,18 @@ export const Step3AccountCredentials = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
+  const passwordRuleOk = isValidPassword(password);
+  const hasPwInput = password.length > 0;
+
+  const hasConfirmInput = passwordConfirm.length > 0;
+  const isMatch = password.length > 0 && password === passwordConfirm;
+
   const isFormValid =
     phoneNumber.length > 0 &&
     authCode.length === 6 &&
-    password.length > 0 &&
-    passwordConfirm.length > 0;
+    passwordRuleOk &&
+    hasConfirmInput &&
+    isMatch;
 
   return (
     <StepWrapper>
@@ -47,10 +56,24 @@ export const Step3AccountCredentials = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
 
+      {hasPwInput && (
+        <ValidationMessage state={passwordRuleOk ? 'success' : 'error'}>
+          {PASSWORD_RULE_TEXT}
+        </ValidationMessage>
+      )}
+
       <PasswordConfirmInput
         value={passwordConfirm}
         onChange={(e) => setPasswordConfirm(e.target.value)}
       />
+
+      {hasConfirmInput && (
+        <ValidationMessage state={isMatch ? 'success' : 'error'}>
+          {isMatch
+            ? '* 비밀번호가 일치합니다.'
+            : '* 비밀번호가 일치하지 않습니다.'}
+        </ValidationMessage>
+      )}
 
       <ButtonContainer>
         <Button onClick={goToPrev} height="52px" variant="blue2">
@@ -112,7 +135,6 @@ const ButtonContainer = styled.div`
   background: ${({ theme }) => theme.colors.white};
 `;
 
-/*
 const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`
   display: flex;
   justify-content: flex-start;
@@ -126,4 +148,3 @@ const ValidationMessage = styled.p<{ state: 'default' | 'error' | 'success' }>`
   color: ${({ theme, state }) =>
     state === 'error' ? theme.colors.mainOrange : theme.colors.mainBlue};
 `;
-*/

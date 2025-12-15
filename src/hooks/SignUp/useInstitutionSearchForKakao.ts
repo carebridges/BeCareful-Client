@@ -1,8 +1,8 @@
-import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { useState } from 'react';
 
-export const useInstitutionSearch = () => {
-  const { setFormData, goToNext, goToPrev } = useCommonSignUpContext();
+export const useInstitutionSearchForKakao = () => {
+  const { setFormData, goToNext, goToPrev } = useSignUpContext();
 
   const [institutionName, setInstitutionName] = useState('');
   const [institutionId, setInstitutionId] = useState<number | null>(null);
