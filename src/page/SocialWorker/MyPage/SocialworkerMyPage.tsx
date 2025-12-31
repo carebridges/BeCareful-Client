@@ -28,7 +28,7 @@ const SocialworkerMyPage = () => {
 
       <ProfileWrapper>
         <ProfileCard
-          profileImgURL={data?.institutionInfo.institutionImageUrl ?? ''}
+          profileImgURL={data?.socialWorkerInfo.profileImageUrl ?? ''}
           name={data?.socialWorkerInfo.name ?? ''}
           nickname={data?.socialWorkerInfo.nickName ?? ''}
           chevronClick={() => handleNavigate('/socialworker/my/profile')}

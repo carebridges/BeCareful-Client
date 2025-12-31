@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import AgreeSection from '@/components/SocialWorker/MyPage/AgreeSection';
 import BirthInputBox from '@/components/common/InputBox/BirthInputBox';
 import InputBox from '@/components/common/InputBox/InputBox';
+import ProfileImgUploader from '@/components/common/ProfileImgUploader';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
@@ -12,10 +12,10 @@ import {
   INSTITUTION_RANK_EN_TO_RANK,
   INSTITUTION_RANK_LIST,
 } from '@/constants/common/institutionRank';
-import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useProfileImg } from '@/hooks/useProfileImg';
 import { useSocialworkerBasicForm } from '@/hooks/Socialworker/useSocialworkerBasicForm';
-import { useAgreementStateForm } from '@/hooks/Socialworker/useAgreementStateForm';
+import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import {
   useGetSocialWorkerMyEdit,
   usePutSocialworkerMy,
@@ -43,14 +43,18 @@ const SocialworkerEditProfilePage = () => {
     handleCheckDuplicate,
   } = useSocialworkerBasicForm(data, setIsChanged);
 
-  const { agreementStates, handleAgreementChange } = useAgreementStateForm(
-    data,
-    setIsChanged,
-  );
-
   const { mutate: updateSocialMy } = usePutSocialworkerMy();
 
+  const profileUpload = useProfileImg(
+    '/social-worker/profile-img/presigned-url',
+  );
+  const [isImgActionSheetOpen, setIsImgActionSheetOpen] = useState(false);
+  const defaultImgUrl =
+    'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png';
+
   const handleEditBtnClick = async () => {
+    const profileUrl = profileUpload.getProfileImageKeyForServer();
+
     const myData: SocialworkerMyRequest = {
       realName: name,
       nickName: nickname,
@@ -59,11 +63,7 @@ const SocialworkerEditProfilePage = () => {
       phoneNumber: phoneNumber,
       nursingInstitutionId: institutionId,
       institutionRank: INSTITUTION_RANK_EN_TO_RANK[rank],
-      isAgreedToTerms: agreementStates.isAgreedToTerms,
-      isAgreedToCollectPersonalInfo:
-        agreementStates.isAgreedToCollectPersonalInfo,
-      isAgreedToReceiveMarketingInfo:
-        agreementStates.isAgreedToReceiveMarketingInfo,
+      profileImageTempKey: profileUrl,
     };
     console.log(myData);
     updateSocialMy(myData, {
@@ -79,6 +79,15 @@ const SocialworkerEditProfilePage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={<NavCenter>프로필 수정하기</NavCenter>}
+      />
+
+      <ProfileImgUploader
+        hook={profileUpload}
+        initialImgUrl={data?.profileImageUrl ?? defaultImgUrl}
+        defaultImgUrl={defaultImgUrl}
+        isImgActionSheetOpen={isImgActionSheetOpen}
+        setIsImgActionSheetOpen={setIsImgActionSheetOpen}
+        setIsChanged={setIsChanged}
       />
 
       <InfoWrapper>
@@ -152,17 +161,6 @@ const SocialworkerEditProfilePage = () => {
           />
         ))}
       </CardContainer>
-
-      <AgreeSection
-        initialIsAgreedToTerms={agreementStates.isAgreedToTerms}
-        initialIsAgreedToCollectPersonalInfo={
-          agreementStates.isAgreedToCollectPersonalInfo
-        }
-        initialIsAgreedToReceiveMarketingInfo={
-          agreementStates.isAgreedToReceiveMarketingInfo
-        }
-        onAgreementChange={handleAgreementChange}
-      />
 
       <Bottom>
         <Button
