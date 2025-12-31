@@ -29,11 +29,9 @@ export interface SocialworkerMyEditResponse {
   birthday: string;
   genderCode: number;
   phoneNumber: string;
+  profileImageUrl: string;
   institutionInfo: InstitutionInfo;
   institutionRank: InstitutionRank;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
 }
 
 export interface SocialworkerMyRequest {
@@ -44,9 +42,7 @@ export interface SocialworkerMyRequest {
   phoneNumber: string;
   nursingInstitutionId: number;
   institutionRank: InstitutionRank;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
+  profileImageTempKey: string | null;
 }
 
 export interface NursingAssociationInfoRequest {

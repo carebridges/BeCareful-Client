@@ -69,7 +69,6 @@ const CaregiverEditProfilePage = () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
     const caregiverData: CaregiverMyRequest = {
-      phoneNumber: phoneNumber,
       profileImageTempKey: profileUrl,
       caregiverCertificate: caregiverCert,
       socialWorkerCertificate: socialworkerCert,
