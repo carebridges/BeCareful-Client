@@ -132,13 +132,14 @@ export const usePatchSocialAssociationInfo = () => {
 };
 
 // 사회복지사 마케팅 동의 여부 조회
-export const useGetSocialMarketingInfo = () => {
+export const useGetSocialMarketingInfo = (enabled: boolean) => {
   return useQuery<MarketingAgreeInfo, Error>({
     queryKey: ['socialworkerMarketingInfo'],
     queryFn: async () => {
       const response = await axiosInstance.get('/social-worker/my/setting');
       return response.data;
     },
+    enabled: enabled,
   });
 };
 

@@ -13,8 +13,12 @@ export const useMarketingAgreement = (role: UserRole) => {
   const [isMarketingAgree, setIsMarketingAgree] = useState(false);
   const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
 
-  const { data: caregiverData } = useGetCaregiverMarketingInfo();
-  const { data: socialworkerData } = useGetSocialMarketingInfo();
+  const { data: caregiverData } = useGetCaregiverMarketingInfo(
+    role === 'CAREGIVER',
+  );
+  const { data: socialworkerData } = useGetSocialMarketingInfo(
+    role === 'SOCIAL_WORKER',
+  );
 
   const data = role === 'CAREGIVER' ? caregiverData : socialworkerData;
 

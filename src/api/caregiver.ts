@@ -134,13 +134,14 @@ export const workApplicationInactive = async () => {
 };
 
 // 요양보호사 마케팅 동의 여부 조회
-export const useGetCaregiverMarketingInfo = () => {
+export const useGetCaregiverMarketingInfo = (enabled: boolean) => {
   return useQuery<MarketingAgreeInfo, Error>({
     queryKey: ['caregiverMarketingInfo'],
     queryFn: async () => {
       const response = await axiosInstance.get('/caregiver/my/setting');
       return response.data;
     },
+    enabled: enabled,
   });
 };
 

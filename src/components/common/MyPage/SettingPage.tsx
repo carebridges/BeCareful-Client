@@ -26,8 +26,14 @@ const SettingPage = ({ role }: SettingPageProps) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
 
-  const { handleService, handlePrivacy, handlePasswordChange } =
-    useNavigationActions(role);
+  const {
+    handleServiceTerms,
+    handlePrivacyPolicy,
+    handleThirdPartyConsent,
+    handleMarketingAgree,
+    // handleBlock,
+    handlePasswordChange,
+  } = useNavigationActions(role);
 
   const {
     isMarketingAgree,
@@ -47,12 +53,20 @@ const SettingPage = ({ role }: SettingPageProps) => {
 
       <MenuWrapper>
         <div className="title">이용약관</div>
-        <Menu onClick={handleService}>
+        <Menu onClick={handleServiceTerms}>
           <div className="menu">서비스 이용약관</div>
           <Chevron />
         </Menu>
-        <Menu onClick={handlePrivacy}>
-          <div className="menu">개인정보 처리방침</div>
+        <Menu onClick={handlePrivacyPolicy}>
+          <div className="menu">개인정보 수집 및 이용 동의</div>
+          <Chevron />
+        </Menu>
+        <Menu onClick={handleThirdPartyConsent}>
+          <div className="menu">개인정보 제3자 제공 동의</div>
+          <Chevron />
+        </Menu>
+        <Menu onClick={handleMarketingAgree}>
+          <div className="menu">마케팅 정보 수신 동의</div>
           <Chevron />
         </Menu>
       </MenuWrapper>
