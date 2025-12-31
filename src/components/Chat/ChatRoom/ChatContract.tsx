@@ -6,12 +6,11 @@ import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
 
 interface ChatContractProps {
   contract: ContractChatResponse;
-  role: string;
 }
 
-const ChatContract = ({ contract, role }: ChatContractProps) => {
+const ChatContract = ({ contract }: ChatContractProps) => {
   const contractInfo =
-    role === 'CAREGIVER'
+    contract.senderType === 'CAREGIVER'
       ? [
           {
             title: '인적사항',
