@@ -8,7 +8,8 @@ type ButtonVariant =
   | 'white'
   | 'mainBlue'
   | 'subBlue'
-  | 'mainOrange';
+  | 'mainOrange'
+  | 'subOrange';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -101,6 +102,11 @@ const getVariantStyle = (variant: ButtonVariant) => {
       return css`
         background-color: ${({ theme }) => theme.colors.mainOrange};
         color: ${({ theme }) => theme.colors.white};
+      `;
+    case 'subOrange':
+      return css`
+        background-color: ${({ theme }) => theme.colors.subOrange};
+        color: ${({ theme }) => theme.colors.mainOrange};
       `;
   }
 };
