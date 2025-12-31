@@ -225,14 +225,6 @@ export const useRecruitmentDetailQuery = (recruitmentId: number) => {
   });
 };
 
-// 매칭 공고 거절
-export const postReject = async (recruitmentId: number) => {
-  const response = await axiosInstance.post(
-    `/matching/caregiver/recruitment/${recruitmentId}/reject`,
-  );
-  return response;
-};
-
 // 매칭 공고 지원
 export const postApply = async (recruitmentId: number) => {
   const response = await axiosInstance.post(
