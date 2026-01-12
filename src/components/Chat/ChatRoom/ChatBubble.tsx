@@ -22,7 +22,9 @@ const ChatBubble = ({ chat, other, role, children }: ChatBubbleProps) => {
             {chat.chatType === 'TEXT' && (
               <div className="text">{chat.text}</div>
             )}
-            {chat.chatType === 'CONTRACT' && <ChatContract contract={chat} />}
+            {chat.chatType === 'CONTRACT' && (
+              <ChatContract contract={chat} role={role} />
+            )}
             {children}
           </Content>
           <div className="time">
@@ -44,7 +46,7 @@ const ChatBubble = ({ chat, other, role, children }: ChatBubbleProps) => {
                 )}
 
                 {chat.chatType === 'CONTRACT' && (
-                  <ChatContract contract={chat} />
+                  <ChatContract contract={chat} role={role} />
                 )}
                 {children}
               </Content>
