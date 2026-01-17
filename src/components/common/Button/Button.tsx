@@ -4,8 +4,10 @@ type ButtonVariant =
   | 'blue'
   | 'blue2'
   | 'gray'
+  | 'gray50'
   | 'disabled'
   | 'white'
+  | 'mainOrange'
   | 'mainBlue'
   | 'subBlue';
 
@@ -75,6 +77,11 @@ const getVariantStyle = (variant: ButtonVariant) => {
         background-color: ${({ theme }) => theme.colors.gray300};
         color: ${({ theme }) => theme.colors.white};
       `;
+    case 'gray50':
+      return css`
+        background-color: ${({ theme }) => theme.colors.gray50};
+        color: ${({ theme }) => theme.colors.gray900};
+      `;
     case 'disabled':
       return css`
         background-color: ${({ theme }) => theme.colors.gray300};
@@ -85,6 +92,11 @@ const getVariantStyle = (variant: ButtonVariant) => {
         background-color: ${({ theme }) => theme.colors.white};
         color: ${({ theme }) => theme.colors.gray900};
         border: 1px solid ${({ theme }) => theme.colors.gray100};
+      `;
+    case 'mainOrange':
+      return css`
+        background-color: ${({ theme }) => theme.colors.mainOrange};
+        color: ${({ theme }) => theme.colors.white};
       `;
     case 'mainBlue':
       return css`

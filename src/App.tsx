@@ -14,6 +14,7 @@ import { KakaoSignUpPage } from '@/page/SignUp/KakaoSignUpPage';
 import { CommonSignUpPage } from '@/page/SignUp/CommonSignUpPage';
 import { CommonInstitutionSignUpPage } from '@/page/SignUp/CommonInstitutionSignUpPage';
 import { CommonCareGiverSignUpPage } from '@/page/SignUp/CommonCaregiverSignUpPage';
+import { ProfileViewPage } from '@/page/Common/ProfileViewPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/" element={<SplashPage />} />
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/login" element={<LoginPage />} />
+
       {/*api 변경 후 삭제*/}
       <Route path="/signup" element={<KakaoSignUpPage />} />
 
@@ -61,13 +63,16 @@ function App() {
       <Route path="/community/*" element={<CommunityRoute />} />
       {/*기관 관리자 */}
       <Route path="/socialworker/*" element={<SocialworkerRoute />} />
-      {/*<Route path="/matching/caregiver" element={<CareGiverDetailInfoPage />} />*/}
+
       {/* 협회 랜딩페이지 */}
       <Route path="/landing" element={<LandingPage />} />
       {/* 테스트, 에러 페이지 */}
       <Route path="/test" element={<TestPage />} />
       <Route path="/error" element={<ErrorPage />} />
       <Route path="*" element={<ErrorPage />} />
+
+      {/* 임시 - 프로필 보기 페이지 */}
+      <Route path="/profile/view" element={<ProfileViewPage />} />
     </Routes>
   );
 }

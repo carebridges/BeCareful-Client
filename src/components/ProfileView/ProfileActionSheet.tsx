@@ -1,68 +1,53 @@
 import { Button } from '@/components/common/Button/Button';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import { RecruitmentManageCheckCard } from '@/components/SocialWorker/RecruitmentDetail/RecruitmentManageCheckCard';
+import { ProfileActionOption } from '@/types/common/profileReport';
 import styled from 'styled-components';
 
-type SheetOption = 'edit' | 'close' | 'delete';
-
-type RecruitmentManageSheetProps = {
+type ProfileActionSheetProps = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  selectedOption: SheetOption | null;
-  onSelectOption: (option: SheetOption) => void;
+  selectedOption: ProfileActionOption | null;
+  onSelectOption: (option: ProfileActionOption) => void;
   onConfirm: () => void;
-  isEditDisabled: boolean;
 };
 
-export const RecruitmentManageSheet = ({
+export const ProfileActionSheet = ({
   isOpen,
   setIsOpen,
   selectedOption,
   onSelectOption,
   onConfirm,
-  isEditDisabled,
-}: RecruitmentManageSheetProps) => {
+}: ProfileActionSheetProps) => {
   return (
     <BottomSheet
       isOpen={isOpen}
       setIsOpen={setIsOpen}
-      title="공고 관리 옵션을 선택해 주세요."
+      title="프로필 관리 옵션을 선택해 주세요."
       titleStar={false}
     >
       <OptionList>
         <RecruitmentManageCheckCard
-          tone="blue"
-          pressed={selectedOption === 'edit'}
-          text="공고 수정"
-          disabled={isEditDisabled}
+          tone="orange"
+          pressed={selectedOption === 'report'}
+          text="신고하기"
           onClick={() => {
-            if (isEditDisabled) return;
-            onSelectOption('edit');
+            onSelectOption('report');
           }}
         />
         <RecruitmentManageCheckCard
           tone="orange"
-          pressed={selectedOption === 'close'}
-          text="공고 마감"
-          onClick={() => onSelectOption('close')}
-        />
-        <RecruitmentManageCheckCard
-          tone="orange"
-          pressed={selectedOption === 'delete'}
-          text="공고 삭제"
-          onClick={() => onSelectOption('delete')}
+          pressed={selectedOption === 'block'}
+          text="차단하기"
+          onClick={() => onSelectOption('block')}
         />
       </OptionList>
-
+      <GapLine />
       <SheetButtonRow>
-        <Button
-          height="52px"
-          variant="subBlue"
-          onClick={() => setIsOpen(false)}
-        >
+        <Button height="52px" variant="gray50" onClick={() => setIsOpen(false)}>
           취소
         </Button>
-        <Button height="52px" variant="blue" onClick={onConfirm}>
+        <Button height="52px" variant="mainOrange" onClick={onConfirm}>
           확인
         </Button>
       </SheetButtonRow>
@@ -83,10 +68,18 @@ const SheetButtonRow = styled.div`
   align-items: center;
 
   bottom: 0;
-
   gap: 8px;
-  border-top: 1px solid ${({ theme }) => theme.colors.gray50};
+  padding-top: 12px;
+
   box-sizing: border-box;
   width: 100%;
   background: ${({ theme }) => theme.colors.white};
+`;
+
+const GapLine = styled.div`
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors.gray50};
+
+  margin-left: -20px;
+  margin-right: -20px;
 `;
