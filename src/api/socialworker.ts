@@ -8,6 +8,7 @@ import {
   SocialworkerMyEditResponse,
   SocialworkerMyRequest,
   SocialworkerMyResponse,
+  BlockCaregiverInfo,
 } from '@/types/Socialworker/mypage';
 
 /* 사회복지사 홈화면 */
@@ -162,6 +163,41 @@ export const usePatchSocialMarketingInfo = () => {
     },
     onError: (error) => {
       console.error('사회복지사 마케팅 동의 여부 변경 실패', error);
+    },
+  });
+};
+
+// 사회복지사 차단 기관 리스트 조회
+export const useGetSocialBlock = () => {
+  return useQuery<BlockCaregiverInfo[]>({
+    queryKey: ['socialBlockInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        '/social-worker/my/blocked-caregiver',
+      );
+      return response.data;
+    },
+  });
+};
+
+// 사회복지사 기관 차단 해제
+export const useDeleteSocialBlock = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (caregiverId: number) => {
+      await axiosInstance.delete(
+        `/social-worker/my/blocked-caregiver/${caregiverId}`,
+      );
+    },
+    onSuccess: () => {
+      console.log('사회복지사 기관 차단 해제 성공');
+      queryClient.invalidateQueries({
+        queryKey: ['socialBlockInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('사회복지사 기관 차단 해제 실패:', error);
     },
   });
 };

@@ -17,6 +17,14 @@ export interface AssociationInfo {
   associationName: string;
 }
 
+export interface BlockCaregiverInfo {
+  caregiverId: number;
+  name: string;
+  gender: 'FEMALE' | 'MALE';
+  age: number;
+  profileImageUrl: string;
+}
+
 export interface SocialworkerMyResponse {
   socialWorkerInfo: SocialWorkerInfo;
   institutionInfo: SocialMyInstitutionInfo;

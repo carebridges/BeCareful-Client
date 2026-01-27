@@ -23,6 +23,7 @@ import {
   WorkApplicationResponse,
 } from '@/types/Caregiver/work';
 import { MarketingAgreeInfo } from '@/types/Socialworker/mypage';
+import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 /* 홈화면 */
 // 요양보호사 홈 화면 구성 데이터 조회
@@ -164,6 +165,41 @@ export const usePatchCaregiverMarketingInfo = () => {
     },
     onError: (error) => {
       console.error('요양보호사 마케팅 동의 여부 변경 실패', error);
+    },
+  });
+};
+
+// 요양보호사 차단 기관 리스트 조회
+export const useGetCaregiverBlock = () => {
+  return useQuery<InstitutionInfo[]>({
+    queryKey: ['caregiverBlockInfo'],
+    queryFn: async () => {
+      const response = await axiosInstance.get(
+        '/caregiver/my/blocked-institution',
+      );
+      return response.data;
+    },
+  });
+};
+
+// 요양보호사 기관 차단 해제
+export const useDeleteCaregiverBlock = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (institutionId: number) => {
+      await axiosInstance.delete(
+        `/caregiver/my/blocked-institution/${institutionId}`,
+      );
+    },
+    onSuccess: () => {
+      console.log('요양보호사 기관 차단 해제 성공');
+      queryClient.invalidateQueries({
+        queryKey: ['caregiverBlockInfo'],
+      });
+    },
+    onError: (error) => {
+      console.error('요양보호사 기관 차단 해제 실패:', error);
     },
   });
 };

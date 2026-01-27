@@ -31,7 +31,7 @@ const SettingPage = ({ role }: SettingPageProps) => {
     handlePrivacyPolicy,
     handleThirdPartyConsent,
     handleMarketingAgree,
-    // handleBlock,
+    handleBlock,
     handlePasswordChange,
   } = useNavigationActions(role);
 
@@ -83,17 +83,15 @@ const SettingPage = ({ role }: SettingPageProps) => {
 
       <Border />
 
-      {/* 
       <MenuWrapper>
         <div className="title">사용자 설정</div>
         <Menu onClick={handleBlock}>
           <div className="menu">차단 사용자 관리</div>
           <Chevron />
         </Menu>
-      </MenuWrapper> 
+      </MenuWrapper>
 
       <Border />
-      */}
 
       <MenuWrapper>
         <div className="title">계정</div>

@@ -23,6 +23,7 @@ const CaregiverRoute = () => {
     '/caregiver/my/profile',
     '/caregiver/my/career',
     '/caregiver/my/application',
+    '/caregiver/my/block',
     '/caregiver/chat',
     '/caregiver/chat/:chatRoomId',
   ];
