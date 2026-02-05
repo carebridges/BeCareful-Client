@@ -10,6 +10,7 @@ import App from '@/App';
 import { ErrorPage } from '@/page/Error/ErrorPage';
 import { theme } from '@/style/theme/index';
 import { NetworkGuardModal } from '@/components/common/NetworkGuard/NetworkGuardModal';
+import { ChatWebSocketProvider } from '@/contexts/ChatWebSocketContext';
 
 const queryClient = new QueryClient();
 
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
         <BrowserRouter>
           <NetworkGuardModal />
           <ErrorBoundary fallback={<ErrorPage />}>
-            <App />
+            <ChatWebSocketProvider>
+              <App />
+            </ChatWebSocketProvider>
           </ErrorBoundary>
         </BrowserRouter>
       </ThemeProvider>
