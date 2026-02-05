@@ -5,7 +5,7 @@ import {
 import { Button } from '@/components/common/Button/Button';
 import { CaregiverProfileImageUploader } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto/CaregiverProfileImageUploader';
 
-import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 

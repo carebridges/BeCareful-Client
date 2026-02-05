@@ -13,6 +13,7 @@ import { CheckBox } from '../components/common/CheckBox/CheckBox';
 import { CareGiverCard } from '@/components/SignUp/common/CareGiverCard';
 import { InstitutionCard } from '@/components/SignUp/common/InstitutionCard';
 import { Pagination } from '@/components/common/Pagination/Pagination';
+import { RadioButton } from '@/components/common/Button/RadioButton';
 
 export const TestPage = () => {
   const [selectedDropContents, setSelectedDropContents] = useState<string[]>(
@@ -40,6 +41,7 @@ export const TestPage = () => {
   };
 
   const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<'SPAM' | 'INAPPROPRIATE'>('SPAM');
 
   return (
     <div>
@@ -53,7 +55,13 @@ export const TestPage = () => {
         <CareGiverCard pressed={pressed} />
         <InstitutionCard pressed={pressed} />
       </div>
-
+      <br />
+      <RadioButton
+        label="스팸 / 부적절한 홍보"
+        checked={selected === 'SPAM'}
+        onClick={() => setSelected('SPAM')}
+      />
+      <br />
       <Button variant="blue" width="320px" height="52px">
         다음 단계로 이동
       </Button>
