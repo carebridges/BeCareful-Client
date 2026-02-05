@@ -37,19 +37,7 @@ function App() {
         }
       />
       {/* 요양보호사 */}
-      <Route
-        path="/caregiver/*"
-        // element={(() => {
-        // const user = useRecoilValue(currenUserInfo);
-        // if (user.userType === "caregiver") {
-        //    return <CaregiverLayout />;
-        // }
-        // // else if (user.userType === "socialworker") {
-        // // return <SocialworkerLayout />;
-        // // }
-        // })()}
-        element={<CaregiverRoute />}
-      />
+      <Route path="/caregiver/*" element={<CaregiverRoute />} />
 
       {/* 커뮤니티 */}
       <Route path="/community/*" element={<CommunityRoute />} />
