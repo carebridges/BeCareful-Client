@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
 import { ReactComponent as Chevron } from '@/assets/icons/ChevronUp.svg';
+import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
@@ -11,11 +12,10 @@ import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilte
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
 import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';
-import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
-  const { data: hasNewChat } = useGetCaregiverHasNewChat();
+  const { hasNewChat } = useChatWebSocket();
 
   // 상단 부분(신청서 조회)
   const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =

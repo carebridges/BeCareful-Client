@@ -5,6 +5,7 @@ import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Plus } from '@/assets/icons/socialworker/home/Plus.svg';
+import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import RankCard from '@/components/SocialWorker/Home/RankCard';
@@ -15,12 +16,11 @@ import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useGetSocialWorkerHome } from '@/api/socialworker';
-import { useGetSocialworkerHasNewChat } from '@/api/chat';
 
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
   const [isNew, setIsNew] = useState(false);
-  const { data: hasNewChat } = useGetSocialworkerHasNewChat();
+  const { hasNewChat } = useChatWebSocket();
   const { data } = useGetSocialWorkerHome();
 
   return (
