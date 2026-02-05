@@ -15,7 +15,7 @@ export const SignUpModal = ({
 }: SignUpModalProps & { recruitmentId: string | null }) => {
   const navigate = useNavigate();
   const handleCancel = () => {
-    navigate('/signup');
+    navigate(-1);
   };
 
   const handleApply = () => {

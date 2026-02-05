@@ -1,4 +1,4 @@
-import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 import { useGetGuestInfoBase } from '@/hooks/SignUp/useGetGuestInfoBase';
 
 const getGenderCode = (char: string): number => {

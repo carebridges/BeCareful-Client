@@ -4,7 +4,7 @@ import { Step3InstitutionName } from '@/components/SignUp/SocialWorkerSignUpFunn
 import { Step4BasicInfo } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo';
 import { Step5AcceptTerms } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step5AcceptTerms';
 import { Step6SignUpComplete } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step6SignUpComplete';
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 
 import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
@@ -22,7 +22,7 @@ const steps = [
 ];
 const stepPercents = [25, 50, 75, 100, 100];
 
-export const SignUpFunnel = () => {
+export const KakaoSocialworkerSignUpFunnel = () => {
   const { currentStep, isInstitutionFunnel } = useSignUpContext();
   const StepComponent = steps[currentStep];
   const percent = stepPercents[currentStep];

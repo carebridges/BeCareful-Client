@@ -32,6 +32,25 @@ export type CertificateFormInput = {
   certificateNumber: string;
 };
 
+export interface CommonCaregiverSignUpFormData {
+  realName: string;
+  birthYymmdd: string;
+  genderCode: number;
+  phoneNumber: string;
+  password: string;
+  streetAddress: string;
+  detailAddress: string;
+  caregiverCertificate: Certificate;
+  socialWorkerCertificate: Certificate;
+  nursingCareCertificate: Certificate;
+  isHavingCar: boolean;
+  isCompleteDementiaEducation: boolean;
+  isAgreedToTerms: boolean;
+  isAgreedToCollectPersonalInfo: boolean;
+  isAgreedToReceiveMarketingInfo: boolean;
+  profileImageTempKey: string;
+}
+
 export type CaregiverSignUpRequest = Omit<
   CaregiverSignUpFormData,
   'caregiverCertificate' | 'socialWorkerCertificate' | 'nursingCareCertificate'

@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { CertificateSelectModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateSelectModal';
 import { ReactComponent as Plus } from '@/assets/icons/signup/Plus.svg';
-import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 import { useCertificateManager } from '@/hooks/SignUp/useCertificateManager';
 import { CertificateCardList } from '@/components/SignUp/CareGiverSignUpFunnel/Step2AddCertificate/CertificateCardList';
 

@@ -16,6 +16,10 @@ export interface SignUpFormData {
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;
   isAgreedToReceiveMarketingInfo: boolean;
+
+  //api 나오면 수정 예정
+  password: string;
+  profileImgeTempKey?: string;
 }
 
 interface SignUpContextType extends ReturnType<typeof useFunnel> {
@@ -27,7 +31,11 @@ interface SignUpContextType extends ReturnType<typeof useFunnel> {
 
 const SignUpContext = createContext<SignUpContextType | null>(null);
 
-export const SignUpProvider = ({ children }: { children: React.ReactNode }) => {
+export const CommonSocialworkerSignUpProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const funnel = useFunnel(0);
 
   const [formData, setFormData] = useState<SignUpFormData>({
@@ -41,6 +49,8 @@ export const SignUpProvider = ({ children }: { children: React.ReactNode }) => {
     isAgreedToTerms: false,
     isAgreedToCollectPersonalInfo: false,
     isAgreedToReceiveMarketingInfo: false,
+    password: '',
+    profileImgeTempKey: 'default',
   });
 
   const [isInstitutionFunnel, setIsInstitutionFunnel] = useState(false);
@@ -60,10 +70,10 @@ export const SignUpProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export const useSignUpContext = () => {
+export const useCommonSignUpContext = () => {
   const context = useContext(SignUpContext);
   if (!context) {
-    throw new Error('signupcontext.tsx error');
+    throw new Error('commonsignupcontext.tsx error');
   }
   return context;
 };

@@ -2,7 +2,7 @@ import { Button } from '@/components/common/Button/Button';
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
 import { SearchInput } from '@/components/SignUp/CareGiverSignUpFunnel/common/SearchInput';
 import { PostcodeModal } from '@/components/SignUp/CareGiverSignUpFunnel/Step5CurrentAddress/PostcodeEmbed';
-import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 import { PostcodeData } from '@/types/daum-postcode';
 import { useCallback, useState } from 'react';
 import { styled } from 'styled-components';
