@@ -105,3 +105,10 @@ export type ChatResponse =
   | ContractChatResponse
   | ChatRoomContractStatusUpdatedChatResponse
   | ChatRoomActiveStatusUpdatedChatResponse;
+
+export interface NewChat {
+  chatRoomId: number;
+  lastChat: string;
+  lastSendTime: string;
+  unreadCount: number;
+}
