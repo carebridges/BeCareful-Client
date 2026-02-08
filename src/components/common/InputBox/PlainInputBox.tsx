@@ -11,6 +11,7 @@ interface PlainInputBoxProps {
   suffix?: React.ReactNode;
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode'];
   maxLength?: number;
+  type?: string;
 }
 
 export const PlainInputBox = ({
@@ -24,11 +25,12 @@ export const PlainInputBox = ({
   suffix,
   inputMode,
   maxLength,
+  type = 'text',
 }: PlainInputBoxProps) => {
   return (
     <InputWrapper width={width}>
       <InputDefault
-        type="text"
+        type={type}
         placeholder={placeholder}
         state={state}
         value={value}

@@ -25,8 +25,11 @@ export const NavBar = ({
 };
 
 const NavbarWrapper = styled.div<{ color: string; fix?: boolean }>`
-  background: ${({ theme, color }) =>
-    color === 'blue' ? theme.colors.mainBlue : theme.colors.white};
+  background: ${({ theme, color }) => {
+    if (color === 'blue') return theme.colors.mainBlue;
+    if (color === 'gray') return '#f2f4f6';
+    return theme.colors.white;
+  }};
   width: 100%;
   height: 56px;
   display: flex;

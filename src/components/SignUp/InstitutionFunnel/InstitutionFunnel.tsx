@@ -6,7 +6,7 @@ import { Step5UploadPhoto } from '@/components/SignUp/InstitutionFunnel/Step5Upl
 import { Step6InstitutionRegister } from '@/components/SignUp/InstitutionFunnel/Step6InstitutionRegister';
 import { useEffect, useState } from 'react';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step3InstitutionType } from '@/components/SignUp/InstitutionFunnel/Step3InstitutionType';
 import { getRandomAddress } from '@/utils/randomAddress';
