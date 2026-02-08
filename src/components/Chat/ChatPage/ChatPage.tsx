@@ -6,6 +6,7 @@ import { ReactComponent as Delete } from '@/assets/icons/CloseCircle.svg';
 import { ReactComponent as Send } from '@/assets/icons/community/ReplySend.svg';
 import { ReactComponent as SendDefault } from '@/assets/icons/community/ReplySendDefault.svg';
 import { ReactComponent as KakaoChannelIcon } from '@/assets/icons/KakaoChannel.svg';
+import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import ChatGuide from '@/components/Chat/ChatRoom/ChatGuide';
 import ChatRoom from '@/components/Chat/ChatRoom/ChatRoom';
@@ -39,6 +40,7 @@ const ChatPage = ({
   placeholder,
 }: ChatPageProps) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
+  const { setHasNewChat } = useChatWebSocket();
 
   const [isKakaoSheetOpen, setIsKakaoSheetOpen] = useState(false);
   const [newChat, setNewChat] = useState('');
@@ -58,6 +60,10 @@ const ChatPage = ({
     });
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setHasNewChat(false);
+  }, [setHasNewChat]);
 
   useEffect(() => {
     let statusTitle = '';

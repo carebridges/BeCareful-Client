@@ -1,4 +1,4 @@
-import { postApply, postMediate, postReject } from '@/api/caregiver';
+import { postApply, postMediate } from '@/api/caregiver';
 import { MatchingRecruitmentMediateRequest } from '@/types/Caregiver/work';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -28,29 +28,6 @@ export const usePostApplyMutation = (
     },
     onError: (error) => {
       console.log('매칭 공고 지원 실패', error);
-    },
-  });
-};
-
-export const usePostRejectMutation = (
-  recruitmentId: number,
-  options?: UseApplyOptions,
-) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: () => postReject(recruitmentId),
-    onSuccess: () => {
-      console.log('매칭 공고 거절 성공');
-      queryClient.invalidateQueries({
-        queryKey: ['caregiverRecruitmentDetail', recruitmentId],
-      });
-      queryClient.invalidateQueries({ queryKey: ['caregiverWorkList'] });
-      queryClient.invalidateQueries({ queryKey: ['caregiverApplicationList'] });
-      options?.onSuccessCallback?.();
-    },
-    onError: (error) => {
-      console.log('매칭 공고 거절 실패', error);
     },
   });
 };

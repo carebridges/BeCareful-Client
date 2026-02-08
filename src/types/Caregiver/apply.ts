@@ -11,4 +11,5 @@ export type MatchingMyRecruitmentResponse = {
 export interface MatchingMyRecruitmentDetailResponse {
   recruitmentDetailInfo: MatchingRecruitmentResponse;
   applyDate: string;
+  chatRoomId: number;
 }

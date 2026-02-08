@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
+import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/constants/caregiver/matchingStatus';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationListQuery } from '@/api/caregiver';
-import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverApplyPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -21,7 +21,7 @@ const CaregiverApplyPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const { data: hasNewChat } = useGetCaregiverHasNewChat();
+  const { hasNewChat } = useChatWebSocket();
 
   const { data, error } = useApplicationListQuery(activeTab);
   if (error) {

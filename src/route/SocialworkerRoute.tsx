@@ -27,6 +27,7 @@ const SocialworkerRoute = () => {
     '/socialworker/my/profile',
     '/socialworker/my/institution',
     '/socialworker/my/association',
+    '/socialworker/my/block',
     '/socialworker/elderly/new',
     '/socialworker/elderly/:elderlyId',
     '/socialworker/elderly/:elderlyId/edit',

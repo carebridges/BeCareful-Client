@@ -9,18 +9,18 @@ import { ReactComponent as ArrowRight } from '@/assets/icons/ArrowRight.svg';
 import { ReactComponent as ArrowRightCircle } from '@/assets/icons/caregiver/home/ArrowRightCircle.svg';
 import { ReactComponent as Notice } from '@/assets/icons/caregiver/home/Notice.svg';
 import { ReactComponent as Status } from '@/assets/icons/caregiver/home/Status.svg';
+import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
-import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   const { data, error } = useCaregiverHomeInfoQuery();
 
-  const { data: hasNewChat } = useGetCaregiverHasNewChat();
+  const { hasNewChat } = useChatWebSocket();
 
   if (error) {
     console.log('getCaregiverHomeInfo 에러: ', error);

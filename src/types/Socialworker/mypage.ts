@@ -17,6 +17,14 @@ export interface AssociationInfo {
   associationName: string;
 }
 
+export interface BlockCaregiverInfo {
+  caregiverId: number;
+  name: string;
+  gender: 'FEMALE' | 'MALE';
+  age: number;
+  profileImageUrl: string;
+}
+
 export interface SocialworkerMyResponse {
   socialWorkerInfo: SocialWorkerInfo;
   institutionInfo: SocialMyInstitutionInfo;
@@ -29,11 +37,9 @@ export interface SocialworkerMyEditResponse {
   birthday: string;
   genderCode: number;
   phoneNumber: string;
+  profileImageUrl: string;
   institutionInfo: InstitutionInfo;
   institutionRank: InstitutionRank;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
 }
 
 export interface SocialworkerMyRequest {
@@ -44,9 +50,7 @@ export interface SocialworkerMyRequest {
   phoneNumber: string;
   nursingInstitutionId: number;
   institutionRank: InstitutionRank;
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
+  profileImageTempKey: string | null;
 }
 
 export interface NursingAssociationInfoRequest {

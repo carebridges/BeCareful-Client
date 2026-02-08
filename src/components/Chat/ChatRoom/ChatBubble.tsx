@@ -107,7 +107,7 @@ const Container = styled.div<{ isMyChat: boolean }>`
 `;
 
 const Content = styled.div<{ sender: string; isMyChat: boolean }>`
-  padding: 12px;
+  padding: 16px;
   border-radius: ${({ isMyChat }) =>
     isMyChat ? '12px 0 12px 12px' : '0 12px 12px 12px'};
   background: ${({ theme, sender }) =>
@@ -117,7 +117,6 @@ const Content = styled.div<{ sender: string; isMyChat: boolean }>`
   gap: 8px;
 
   .text {
-    max-width: 196px;
     word-break: break-all;
 
     color: ${({ theme, sender }) =>
@@ -126,41 +125,33 @@ const Content = styled.div<{ sender: string; isMyChat: boolean }>`
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 479px) {
     padding: 12px;
-  }
 
-  @media (max-width: 390px) {
     .text {
       max-width: 196px;
     }
   }
 
-  @media (min-width: 391px) and (max-width: 495px) {
-    .text {
-      max-width: 260px;
-    }
-  }
-
-  @media (min-width: 495px) and (max-width: 768px) {
+  @media (min-width: 480px) and (max-width: 767px) {
     .text {
       max-width: 360px;
     }
   }
 
-  @media (min-width: 769px) and (max-width: 992px) {
+  @media (min-width: 768px) and (max-width: 1023px) {
     .text {
       max-width: 420px;
     }
   }
 
-  @media (min-width: 993px) and (max-width: 1200px) {
+  @media (min-width: 1024px) and (max-width: 1279px) {
     .text {
       max-width: 520px;
     }
   }
 
-  @media (min-width: 1201px) {
+  @media (min-width: 1280px) {
     .text {
       max-width: 640px;
     }
