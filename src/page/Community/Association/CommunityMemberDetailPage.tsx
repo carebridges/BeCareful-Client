@@ -24,9 +24,9 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { AxiosError } from 'axios';
 import {
   useMemberExpel,
-  useMembersDetail,
-  usePutMembersRank,
-} from '@/api/communityAssociation';
+  useMemberDetail,
+  useUpdateMemberRank,
+} from '@/api/community/association';
 import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const CommunityMemberDetailPage = () => {
@@ -35,7 +35,7 @@ const CommunityMemberDetailPage = () => {
   const { data: myData } = useGetSocialWorkerMy();
   const isChairman = myData?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
-  const { data } = useMembersDetail(Number(memberId));
+  const { data } = useMemberDetail(Number(memberId));
 
   const { handleGoBack } = useHandleNavigate();
 
@@ -57,7 +57,7 @@ const CommunityMemberDetailPage = () => {
     setIsChanged(true);
   };
 
-  const { mutate: updateRank } = usePutMembersRank();
+  const { mutate: updateRank } = useUpdateMemberRank();
 
   const handleMemberModalBtn = () => {
     const memberInfo: MemberRankRequest = {

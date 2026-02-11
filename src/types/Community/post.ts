@@ -18,7 +18,7 @@ export interface PostDetailResponse {
 }
 
 // 게시글 작성
-export interface PostPostRequest {
+export interface PostCreateRequest {
   title: string;
   content: string;
   isImportant: boolean;
@@ -29,7 +29,7 @@ export interface PostPostRequest {
 }
 
 // 게시글 수정
-export interface PostPutRequest {
+export interface PostUpdateRequest {
   title: string;
   content: string;
   deleteMediaIdList: number[];

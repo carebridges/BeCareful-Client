@@ -28,9 +28,9 @@ import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
 import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
-import { PostPostRequest, PostPutRequest } from '@/types/Community/post';
+import { PostCreateRequest, PostUpdateRequest } from '@/types/Community/post';
 import { MediaItem, MediaItemRequest } from '@/types/Community/common';
-import { usePostDetail } from '@/api/community';
+import { usePostDetail } from '@/api/community/community';
 
 const CommunityWritePage = () => {
   const [searchParams] = useSearchParams();
@@ -187,7 +187,7 @@ const CommunityWritePage = () => {
   );
   const handlePostModalBtnClick = async () => {
     if (isEditMode) {
-      const postData: PostPutRequest = {
+      const postData: PostUpdateRequest = {
         title,
         content,
         deleteMediaIdList,
@@ -200,7 +200,7 @@ const CommunityWritePage = () => {
       console.log(postData);
       await handleEditSubmit(postData);
     } else {
-      const postData: PostPostRequest = {
+      const postData: PostCreateRequest = {
         title,
         content,
         isImportant,

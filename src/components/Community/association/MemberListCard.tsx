@@ -4,10 +4,10 @@ import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { Member } from '@/types/Community/association';
+import { AssociationMember } from '@/types/Community/association';
 
 interface MemberListCardProps {
-  member: Member;
+  member: AssociationMember;
   onClick?: () => void;
 }
 

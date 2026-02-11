@@ -1,4 +1,4 @@
-import { useJoinAssociation } from '@/api/communityAssociation';
+import { useJoinAssociation } from '@/api/community/association';
 import { Button } from '@/components/common/Button/Button';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';

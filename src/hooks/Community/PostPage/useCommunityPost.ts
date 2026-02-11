@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BOARD_PARAM_TO_EN } from '@/constants/community/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useDeletePost, usePostDetail } from '@/api/community';
+import { useDeletePost, usePostDetail } from '@/api/community/community';
 
 export const useCommunityPost = () => {
   const { handleNavigate } = useHandleNavigate();

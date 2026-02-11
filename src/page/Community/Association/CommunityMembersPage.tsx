@@ -11,7 +11,7 @@ import {
   useJoinRequest,
   useMembers,
   useMembersOverview,
-} from '@/api/communityAssociation';
+} from '@/api/community/association';
 import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const CommunityMembersPage = () => {

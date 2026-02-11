@@ -11,8 +11,8 @@ import {
   ASSOCIATION_RANK_KR_TO_EN,
 } from '@/constants/common/associationRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useChangeChairman } from '@/api/communityAssociation';
-import { AssociationChairmanRequest } from '@/types/Community/association';
+import { useDelegateChairman } from '@/api/community/association';
+import { ChairmanDelegateRequest } from '@/types/Community/association';
 
 interface NewChairman {
   memberId: number;
@@ -22,7 +22,7 @@ interface NewChairman {
 const CommunityEditChairmanPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
-  const { mutate: changeChairman } = useChangeChairman();
+  const { mutate: changeChairman } = useDelegateChairman();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [newChairman, setNewChairman] = useState<NewChairman | null>(null);
@@ -47,7 +47,7 @@ const CommunityEditChairmanPage = () => {
       return;
     }
 
-    const chairman: AssociationChairmanRequest = {
+    const chairman: ChairmanDelegateRequest = {
       newChairmanId: newChairman.memberId,
       newChairmanName: newChairman.name,
       nextRankOfCurrentChairman:

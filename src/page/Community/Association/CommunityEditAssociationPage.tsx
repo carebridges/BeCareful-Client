@@ -12,7 +12,7 @@ import { AssociationInfoRequest } from '@/types/Community/association';
 import {
   useAssociationInfo,
   usePutAssociationInfo,
-} from '@/api/communityAssociation';
+} from '@/api/community/association';
 
 const CommunityEditAssociationPage = () => {
   const { handleGoBack } = useHandleNavigate();

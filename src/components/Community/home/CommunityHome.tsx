@@ -10,8 +10,8 @@ import PostOverview from '@/components/Community/common/PostOverview';
 import { BOARD_LIST } from '@/constants/community/communityBoard';
 import { PageableRequest } from '@/types/Community/common';
 import { BoardPostListResponse, PostListItem } from '@/types/Community/post';
-import { useImportantPostings } from '@/api/community';
-import { useBoardPostings } from '@/hooks/Community/api/useBoardPostings';
+import { useImportantPosts } from '@/api/community/community';
+import { useMultipleBoardPosts } from '@/hooks/Community/api/usePostLists';
 
 interface CommunityHomeProps {
   onTabChange: (tabName: string) => void;
@@ -25,13 +25,13 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
   };
 
   const { data: importantPostings, error: importantError } =
-    useImportantPostings(importantPageable);
+    useImportantPosts(importantPageable);
   if (importantError) {
     console.log('getImportantPosting 에러: ', importantError);
   }
 
   const boardPageable: PageableRequest = { page: 0, size: 5, sort: [] };
-  const boardPostings = useBoardPostings(boardPageable);
+  const boardPostings = useMultipleBoardPosts(boardPageable);
 
   const getContent = (
     data: BoardPostListResponse | undefined,

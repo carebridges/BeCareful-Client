@@ -20,8 +20,8 @@ import {
 } from '@/constants/community/communityBoard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useJoinStatusModal } from '@/hooks/Community/CommunityJoin/useJoinStatusModal';
-import { useGetCommunityHome } from '@/api/community';
-import { useCancelJoinAssociation } from '@/api/communityAssociation';
+import { useCommunityHome } from '@/api/community/community';
+import { useCancelJoinAssociation } from '@/api/community/association';
 
 const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
@@ -52,7 +52,7 @@ const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
 
   const { hasNewChat } = useChatWebSocket();
 
-  const { data } = useGetCommunityHome(!previewMode);
+  const { data } = useCommunityHome(!previewMode);
   const {
     isPendingModalOpen,
     isApprovedModalOpen,

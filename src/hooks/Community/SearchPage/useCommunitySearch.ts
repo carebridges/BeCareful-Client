@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
 import { useRecentSearches } from '@/hooks/Community/SearchPage/useRecentSearches';
-import { useBoardPostings } from '@/hooks/Community/api/useBoardPostings';
-import { useBoardPostList } from '@/hooks/Community/api/useBoardPostList';
+import {
+  useBoardPosts,
+  useMultipleBoardPosts,
+} from '@/hooks/Community/api/usePostLists';
 import { searchPost } from '@/utils/searchPosts';
 import { PageableRequest } from '@/types/Community/common';
 
@@ -26,8 +28,8 @@ export const useCommunitySearch = () => {
 
   // 게시판 데이터
   const pageable: PageableRequest = { page: 0, size: 50, sort: [] };
-  const allBoardData = useBoardPostings(pageable);
-  const { data: boardData } = useBoardPostList(
+  const allBoardData = useMultipleBoardPosts(pageable);
+  const { data: boardData } = useBoardPosts(
     BOARD_KR_TO_EN[selectedBoard],
     pageable,
   );

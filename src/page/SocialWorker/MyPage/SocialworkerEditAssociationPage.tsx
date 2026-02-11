@@ -11,7 +11,7 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { CommunityAgreementValues } from '@/types/Socialworker/common';
-import { usePutAssociationLeave } from '@/api/communityAssociation';
+import { useLeaveAssociation } from '@/api/community/association';
 import {
   usePatchSocialAssociationInfo,
   useSocialAssociationInfo,
@@ -40,7 +40,7 @@ const SocialworkerEditAssociationPage = () => {
     setAgreementStates(updatedAgreements);
   };
 
-  const { mutate: leaveAssociation } = usePutAssociationLeave();
+  const { mutate: leaveAssociation } = useLeaveAssociation();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const handleWithdraw = () => {
     console.log('협회탈퇴');

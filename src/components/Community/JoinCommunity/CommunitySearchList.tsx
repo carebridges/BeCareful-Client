@@ -1,4 +1,4 @@
-import { useGetAssociationList } from '@/api/communityAssociation';
+import { useGetAssociationList } from '@/api/community/association';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { AssociationListCard } from '@/components/Community/JoinCommunity/AssociationListCard';

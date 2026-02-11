@@ -4,7 +4,7 @@ import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useAssociationInfo } from '@/api/communityAssociation';
+import { useAssociationInfo } from '@/api/community/association';
 import { useGetSocialWorkerMy } from '@/api/socialworker';
 
 const CommunityAssociationInfoPage = () => {

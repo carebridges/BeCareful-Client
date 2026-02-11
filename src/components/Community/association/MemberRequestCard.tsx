@@ -3,14 +3,14 @@ import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
-import { Application } from '@/types/Community/association';
+import { JoinApplication } from '@/types/Community/association';
 import {
-  useJoinRequestAccept,
-  useJoinRequestReject,
-} from '@/api/communityAssociation';
+  useAcceptJoinRequest,
+  useRejectJoinRequest,
+} from '@/api/community/association';
 
 interface MemberRequestCardProps {
-  request: Application;
+  request: JoinApplication;
 }
 
 const MemberRequestCard = ({ request }: MemberRequestCardProps) => {
@@ -22,10 +22,10 @@ const MemberRequestCard = ({ request }: MemberRequestCardProps) => {
     },
   ];
 
-  const { mutate: acceptRequest } = useJoinRequestAccept(
+  const { mutate: acceptRequest } = useAcceptJoinRequest(
     request.joinApplicationId,
   );
-  const { mutate: rejectRequest } = useJoinRequestReject(
+  const { mutate: rejectRequest } = useRejectJoinRequest(
     request.joinApplicationId,
   );
 

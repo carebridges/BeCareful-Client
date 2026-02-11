@@ -4,7 +4,7 @@ import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 // import { ReactComponent as SearchIcon } from '@/assets/icons/Search.svg';
 import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { useMembers } from '@/api/communityAssociation';
+import { useMembers } from '@/api/community/association';
 import MemberListCard from '@/components/Community/association/MemberListCard';
 
 interface CommunityMemberSearchProps {

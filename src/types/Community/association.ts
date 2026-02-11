@@ -19,14 +19,14 @@ export interface AssociationInfoRequest {
 }
 
 /* 회장 정보 수정 */
-export interface AssociationChairmanRequest {
+export interface ChairmanDelegateRequest {
   newChairmanId: number;
   newChairmanName: string;
   nextRankOfCurrentChairman: AssociationRank;
 }
 
 /* 회원 관리 - 회원 */
-export interface Member {
+export interface AssociationMember {
   memberId: number;
   name: string;
   phoneNumber: string;
@@ -45,27 +45,20 @@ export interface MembersOverviewResponse {
 // 협회 회원 목록 조회
 export interface MembersResponse {
   count: number;
-  members: Member[];
+  members: AssociationMember[];
 }
 
 /* 회원 관리 - 상세 */
 // 협회 회원 상세 정보 조회
-export interface MemberDetailResponse {
-  memberId: number;
-  name: string;
+export interface MemberDetailResponse extends AssociationMember {
   nickName: string;
-  phoneNumber: string;
   age: number;
   gender: 'MALE' | 'FEMALE';
-  institutionImageUrl: string;
-  institutionName: string;
   institutionOpenYear: number;
   institutionLastUpdate: string;
   facilityTypes: string[];
   institutionPhoneNumber: string;
   associationName: string;
-  associationRank: AssociationRank;
-  institutionRank: InstitutionRank;
 }
 
 // 회원 등급 변경
@@ -75,7 +68,7 @@ export interface MemberRankRequest {
 }
 
 /* 회원 관리 - 가입 신청 */
-export interface Application {
+export interface JoinApplication {
   joinApplicationId: number;
   name: string;
   associationRank: AssociationRank;
@@ -87,5 +80,5 @@ export interface Application {
 // 협회 가입 신청 목록 보기
 export interface JoinRequestsResponse {
   count: number;
-  applications: Application[];
+  applications: JoinApplication[];
 }

@@ -3,9 +3,9 @@ import { CommentRequest } from '@/types/Community/comment';
 import {
   useComments,
   useDeleteComment,
-  usePostCommentMutation,
-  usePutCommentMutation,
-} from '@/api/community';
+  useCreateComment,
+  useUpdateComment,
+} from '@/api/community/community';
 
 export const useCommunityComments = (apiBoardType: string, postId: number) => {
   // 댓글 조회
@@ -16,10 +16,7 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   };
-  const { mutate: postCommentMutate } = usePostCommentMutation(
-    apiBoardType,
-    postId,
-  );
+  const { mutate: postCommentMutate } = useCreateComment(apiBoardType, postId);
 
   // 댓글 action sheet
   const [isCommentActionSheetOpen, setIsCommentActionSheetOpen] =
@@ -35,7 +32,7 @@ export const useCommunityComments = (apiBoardType: string, postId: number) => {
   const [isEditingComment, setIsEditingComment] = useState(false);
 
   // 댓글 수정하기
-  const { mutate: updateComment } = usePutCommentMutation(apiBoardType, postId);
+  const { mutate: updateComment } = useUpdateComment(apiBoardType, postId);
   const handleEditComment = useCallback(() => {
     if (selectedCommentId === null || !comments) return;
 
