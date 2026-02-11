@@ -1,4 +1,4 @@
-import { useGuestInfoQuery } from '@/api/guestInfo';
+import { useGuestInfoQuery } from '@/api/info';
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
