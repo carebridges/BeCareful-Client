@@ -4,7 +4,7 @@ import { SI_DO_MAP } from '@/constants/sidogungu';
 import {
   fetchInstitutionsBySiDo,
   mapPublicApiDtoToInstitution,
-} from '@/api/institutionFunnel';
+} from '@/api/signup/institution';
 import { removeDuplicateInstitutions } from '@/utils/removeDuplicateInstitutions';
 
 export const useAllInstitutions = () => {

@@ -15,6 +15,7 @@ type UploadResult = {
   previewUrl: string;
 };
 
+/* 요양보호사 회원가입 */
 export const useUploadCareGiverProfileImage = () =>
   useMutation<UploadResult, Error, File>({
     mutationFn: async (file) => {
@@ -53,6 +54,7 @@ export const useUploadCareGiverProfileImage = () =>
       };
     },
   });
+
 export const useRegisterCaregiver = () =>
   useMutation({
     mutationFn: async (formData: CaregiverSignUpFormData) => {

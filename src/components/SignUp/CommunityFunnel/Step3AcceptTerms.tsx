@@ -1,4 +1,4 @@
-import { useRegisterAssociation } from '@/api/communityFunnel';
+import { useRegisterAssociation } from '@/api/signup/association';
 import { Button } from '@/components/common/Button/Button';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
 import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';

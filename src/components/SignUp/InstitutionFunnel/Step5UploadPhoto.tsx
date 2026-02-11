@@ -4,7 +4,7 @@ import { Button } from '@/components/common/Button/Button';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
 
 import { ProfileImageUploader } from '@/components/SignUp/InstitutionFunnel/Step5UploadPhoto/ProfileImageUploader';
-import { useUploadInstitutionProfileImage } from '@/api/institutionFunnel';
+import { useUploadInstitutionProfileImage } from '@/api/signup/institution';
 import { useState } from 'react';
 
 interface StepProps {

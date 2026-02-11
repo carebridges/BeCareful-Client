@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useCheckInstitutionCode } from '@/api/institutionFunnel';
+import { useCheckInstitutionCode } from '@/api/signup/institution';
 
 export const useInstitutionCodeInput = (
   onDuplicateCheck?: (isDuplicate: boolean) => void,

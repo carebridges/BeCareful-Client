@@ -4,6 +4,7 @@ import { UploadResult } from '@/hooks/useProfileImageUpload';
 import { Presigned } from '@/types/common/image';
 import { useMutation } from '@tanstack/react-query';
 
+/* 협회 프로필 이미지 업로드 */
 export const useUploadAssociationProfileImage = () =>
   useMutation<UploadResult, Error, File>({
     mutationFn: async (file) => {

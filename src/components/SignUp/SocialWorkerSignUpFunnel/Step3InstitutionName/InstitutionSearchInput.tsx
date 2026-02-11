@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
 import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { styled } from 'styled-components';
-import { useSearchInstitution } from '@/api/signupFunnel';
+import { useSearchInstitution } from '@/api/signup/socialworker';
 import { SearchInstitution } from '@/types/SocialSignUp';
 import { FindNewInstitutionModal } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/FindNewInstitutionModal';
 import { theme } from '@/style/theme';

@@ -15,6 +15,7 @@ type UploadResult = {
   previewUrl: string;
 };
 
+/* 기관 프로필 이미지 업로드 */
 export const useUploadInstitutionProfileImage = () =>
   useMutation<UploadResult, Error, File>({
     mutationFn: async (file) => {

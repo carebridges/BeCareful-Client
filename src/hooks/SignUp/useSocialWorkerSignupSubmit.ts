@@ -1,4 +1,4 @@
-import { useSignUpMember } from '@/api/signupFunnel';
+import { useSignUpMember } from '@/api/signup/socialworker';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
 import { SignUpPayload } from '@/types/SocialSignUp';
 import { useCallback } from 'react';
