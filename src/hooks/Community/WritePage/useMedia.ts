@@ -5,7 +5,7 @@ import {
   validateVideoFile,
   ValidationResult,
 } from '@/utils/fileValidation';
-import { usePostMediaMutation } from '@/api/presignedUrl';
+import { useUploadMedia } from '@/api/presignedUrl';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
 import { MediaItem, MediaItemRequest } from '@/types/Community/common';
 import { PostDetailResponse } from '@/types/Community/post';
@@ -15,7 +15,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
   const { handleOpenLimitModal } = useModals();
 
   // 미디어 등록 api mutation
-  const { mutateAsync: postMediaMutate } = usePostMediaMutation();
+  const { mutateAsync: uploadMutate } = useUploadMedia();
 
   const photoRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -47,7 +47,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     file: File,
     fileTypeParam: 'IMAGE' | 'VIDEO' | 'FILE',
   ): Promise<MediaItemRequest & { mediaUrl: string }> => {
-    const uploaded = await postMediaMutate({
+    const uploaded = await uploadMutate({
       file,
       fileTypeParam,
     });
