@@ -1,4 +1,7 @@
-import { useUploadElderlyProfileImage } from '@/api/elderly';
+import {
+  useElderDetail,
+  useUploadElderlyProfileImage,
+} from '@/api/matching/elderly';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ProfileImageUploader } from '@/components/SocialWorker/common/ProfileImageUploader';
 import { AddressSelectSection } from '@/components/SocialWorker/ElderyRegister/AddressSelectSection';
@@ -16,7 +19,6 @@ import { AreaSelectData } from '@/types/common/matching';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import styled from 'styled-components';
-import { useElderDetail } from '@/api/matching.socialWorker';
 import { useElderlyEditForm } from '@/hooks/Elderly/useElderlyEditForm';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';

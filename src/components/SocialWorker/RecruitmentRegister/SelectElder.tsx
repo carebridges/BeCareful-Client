@@ -1,4 +1,4 @@
-import { useWaitingElderly } from '@/api/elderly';
+import { useWaitingElderly } from '@/api/matching/elderly';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';

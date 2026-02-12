@@ -1,4 +1,4 @@
-import { useElderDetail } from '@/api/matching.socialWorker';
+import { useElderDetail } from '@/api/matching/elderly';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ElderMatchingCard } from '@/components/SocialWorker/MatchingStatus/ElderMatchingCard';

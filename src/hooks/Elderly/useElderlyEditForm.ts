@@ -9,7 +9,7 @@ import {
   Gender,
 } from '@/types/Elderly';
 
-import { useUpdateElderly } from '@/api/elderly';
+import { useUpdateElderly } from '@/api/matching/elderly';
 
 const parseAddress = (address: string) => {
   const parts = address.split(' ');

@@ -1,4 +1,4 @@
-import { useRegisterElderly } from '@/api/elderly';
+import { useRegisterElderly } from '@/api/matching/elderly';
 import { AreaSocial } from '@/types/common/matching';
 import {
   CareLevel,

@@ -1,11 +1,9 @@
 import { axiosInstance } from '@/api/axiosInstance';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { UploadResult } from '@/hooks/useProfileImageUpload';
 import { Presigned } from '@/types/common/image';
-import { ElderlyRegisterPayload } from '@/types/Elderly';
+import { ElderDetailResponse, ElderlyRegisterPayload } from '@/types/Elderly';
 import { ElderListResponse } from '@/types/Matching';
-import { RecruitmentSearchResponse } from '@/types/Socialworker/matching';
-
-import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useRegisterElderly = () =>
   useMutation({
@@ -76,6 +74,18 @@ export const useElderlyList = (
     },
   });
 
+export const useElderDetail = (elderlyId: number | null) =>
+  useQuery<ElderDetailResponse>({
+    queryKey: ['elderlyDetail', elderlyId],
+    enabled: !!elderlyId,
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<ElderDetailResponse>(
+        `/elderly/${elderlyId}`,
+      );
+      return data;
+    },
+  });
+
 export const useWaitingElderly = (
   page: number,
   size = 10,
@@ -106,45 +116,5 @@ export const useWaitingElderly = (
         );
         return data;
       }
-    },
-  });
-
-const createRecruitmentQueryParams = (
-  status: '매칭중' | '매칭완료',
-  page: number,
-  size: number,
-) => ({
-  elderlyMatchingStatusFilter: status,
-  page: Math.max(page - 1, 0),
-  size,
-});
-
-export const useRecruitment = (
-  status: '매칭중' | '매칭완료' | null,
-  page: number,
-  size: number,
-  keyword?: string,
-) =>
-  useQuery({
-    enabled: !!status,
-    queryKey: ['recruitment', status, page, size, keyword?.trim() || ''],
-    queryFn: async (): Promise<RecruitmentSearchResponse> => {
-      const params = createRecruitmentQueryParams(status!, page, size);
-      const kw = keyword?.trim();
-
-      if (kw) {
-        const { data } = await axiosInstance.post<RecruitmentSearchResponse>(
-          '/matching/social-worker/recruitment/search',
-          { keyword: kw },
-          { params },
-        );
-        return data;
-      }
-
-      const { data } = await axiosInstance.get<RecruitmentSearchResponse>(
-        '/matching/social-worker/recruitment',
-        { params },
-      );
-      return data;
     },
   });

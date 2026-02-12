@@ -9,7 +9,7 @@ import { RecruitmentWrite } from '@/components/SocialWorker/RecruitmentRegister/
 import { RecruitmentForm } from '@/types/Matching.socialWorker';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { useState } from 'react';
-import { useRegisterMatchingRecruitment } from '@/api/matching.socialWorker';
+import { useRegisterRecruitment } from '@/api/matching/socialworker';
 import { RegisterMatchingElderModal } from '@/components/SocialWorker/RegisterMatchingElder/RegisterMatchingElderModal';
 import { MIN_WAGE } from '@/constants/socialworker/payType.socialWorker';
 
@@ -48,7 +48,7 @@ export const RecruitmentRegisterPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { mutateAsync: registerRecruitment, isPending } =
-    useRegisterMatchingRecruitment();
+    useRegisterRecruitment();
 
   const percent = stepPercents[step];
   const isFinalStepValid =

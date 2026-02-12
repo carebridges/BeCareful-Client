@@ -2,7 +2,7 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
-import { useElderlyList } from '@/api/elderly';
+import { useElderlyList } from '@/api/matching/elderly';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';

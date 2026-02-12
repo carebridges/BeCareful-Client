@@ -4,7 +4,7 @@ import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
-import { usePutMemoMutation } from '@/hooks/Caregiver/mutation/usePutMemoMutation';
+import { useUpdateMatchingMemo } from '@/api/matching/caregiver';
 
 interface CaregiverMyworkCardProps {
   workInfo: CaregiverCompletedMatching;
@@ -26,14 +26,17 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
   const [memo, setMemo] = useState(workInfo.note);
   const [isMemoChange, setIsMemoChange] = useState(false);
 
-  const { mutate: updateMemo } = usePutMemoMutation(workInfo.id, {
-    onSuccessCallback: () => {
-      setIsMemoChange(false);
-    },
-  });
+  const { mutate: updateMemo } = useUpdateMatchingMemo();
 
   const handleMemoBtnClick = () => {
-    updateMemo({ note: memo });
+    updateMemo(
+      { completedMatchingId: workInfo.id, memo: { note: memo } },
+      {
+        onSuccess: () => {
+          setIsMemoChange(false);
+        },
+      },
+    );
   };
 
   return (

@@ -10,7 +10,7 @@ import {
   MATCHING_STATUS,
 } from '@/constants/caregiver/matchingStatus';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useApplicationListQuery } from '@/api/caregiver';
+import { useMyApplicationList } from '@/api/matching/caregiver';
 
 const CaregiverApplyPage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -23,7 +23,7 @@ const CaregiverApplyPage = () => {
 
   const { hasNewChat } = useChatWebSocket();
 
-  const { data, error } = useApplicationListQuery(activeTab);
+  const { data, error } = useMyApplicationList(activeTab);
   if (error) {
     console.log('getApplicationList 에러: ', error);
   }

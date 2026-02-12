@@ -1,10 +1,10 @@
+import { useRecruitmentList } from '@/api/matching/caregiver';
 import { useMemo, useState } from 'react';
-import { useRecruitmentListQuery } from '@/api/caregiver';
 
 export const useMatchingList = () => {
   // 매칭 공고 리스트 조회
   const { data: matchingListData, error: matchingListError } =
-    useRecruitmentListQuery();
+    useRecruitmentList();
   if (matchingListError) {
     console.log('getMatchingList 에러: ', matchingListError);
   }

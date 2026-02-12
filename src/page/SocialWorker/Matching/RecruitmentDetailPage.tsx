@@ -9,7 +9,7 @@ import {
   useCloseRecruitment,
   useDeleteRecruitment,
   useRecruitmentDetail,
-} from '@/api/matching.socialWorker';
+} from '@/api/matching/socialworker';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { formatDateTime } from '@/utils/formatTime';
 import { translateWorkDaysToKo, sortWorkDays } from '@/utils/formatWorkDays';

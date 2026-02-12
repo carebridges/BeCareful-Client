@@ -3,7 +3,7 @@ import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.sv
 import { MatchingElderInfo } from '@/components/Matching/MatchingElderInfo';
 import { styled } from 'styled-components';
 import { MatchingTab } from '@/components/Matching/Modal/MatchingTab';
-import { useMatchingRecruitment } from '@/api/matching.socialWorker';
+import { useMatchingRecruitment } from '@/api/matching/socialworker';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';

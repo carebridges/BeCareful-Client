@@ -7,8 +7,8 @@ import { RecruitmentWrite } from '@/components/SocialWorker/RecruitmentRegister/
 import { useEffect, useState } from 'react';
 import {
   useRecruitmentDetail,
-  useEditMatchingRecruitment,
-} from '@/api/matching.socialWorker';
+  useEditRecruitment,
+} from '@/api/matching/socialworker';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { RecruitmentForm } from '@/types/Matching.socialWorker';
@@ -24,8 +24,7 @@ export const RecruitmentEditPage = () => {
   const [recruitmentForm, setRecruitmentForm] =
     useState<RecruitmentForm | null>(null);
 
-  const { mutateAsync: editRecruitment, isPending } =
-    useEditMatchingRecruitment(id);
+  const { mutateAsync: editRecruitment, isPending } = useEditRecruitment(id);
 
   useEffect(() => {
     if (!data) return;
