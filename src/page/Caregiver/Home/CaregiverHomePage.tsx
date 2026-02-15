@@ -13,12 +13,12 @@ import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
+import { useCaregiverHome } from '@/api/user/caregiver';
 
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const { data, error } = useCaregiverHomeInfoQuery();
+  const { data, error } = useCaregiverHome();
 
   const { hasNewChat } = useChatWebSocket();
 

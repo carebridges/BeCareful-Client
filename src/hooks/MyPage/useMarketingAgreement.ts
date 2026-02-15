@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { UserRole } from '@/types/common/chat';
 import {
-  useGetCaregiverMarketingInfo,
-  usePatchCaregiverMarketingInfo,
-} from '@/api/caregiver';
+  useCaregiverMarketing,
+  useUpdateCaregiverMarketing,
+} from '@/api/user/caregiver';
 import {
-  useGetSocialMarketingInfo,
-  usePatchSocialMarketingInfo,
-} from '@/api/socialworker';
+  useSocialworkerMarketing,
+  useUpdateSocialMarketing,
+} from '@/api/user/socialworker';
 
 export const useMarketingAgreement = (role: UserRole) => {
   const [isMarketingAgree, setIsMarketingAgree] = useState(false);
   const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
 
-  const { data: caregiverData } = useGetCaregiverMarketingInfo(
-    role === 'CAREGIVER',
-  );
-  const { data: socialworkerData } = useGetSocialMarketingInfo(
+  const { data: caregiverData } = useCaregiverMarketing(role === 'CAREGIVER');
+  const { data: socialworkerData } = useSocialworkerMarketing(
     role === 'SOCIAL_WORKER',
   );
 
@@ -26,8 +24,8 @@ export const useMarketingAgreement = (role: UserRole) => {
     if (data) setIsMarketingAgree(data.isAgreedToReceiveMarketingInfo);
   }, [data]);
 
-  const { mutate: caregiverMarketingAgree } = usePatchCaregiverMarketingInfo();
-  const { mutate: socialMarketingAgree } = usePatchSocialMarketingInfo();
+  const { mutate: caregiverMarketingAgree } = useUpdateCaregiverMarketing();
+  const { mutate: socialMarketingAgree } = useUpdateSocialMarketing();
 
   const handleMarketingClick = useCallback(async () => {
     const nextAgreementStatus = !isMarketingAgree;

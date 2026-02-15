@@ -13,9 +13,9 @@ import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { CommunityAgreementValues } from '@/types/Socialworker/common';
 import { useLeaveAssociation } from '@/api/community/association';
 import {
-  usePatchSocialAssociationInfo,
-  useSocialAssociationInfo,
-} from '@/api/socialworker';
+  useUpdateSocialAssociation,
+  useSocialAssociation,
+} from '@/api/user/socialworker';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { getTodayDateTime } from '@/utils/getTodayDate';
 
@@ -23,7 +23,7 @@ const SocialworkerEditAssociationPage = () => {
   const { handleGoBack } = useHandleNavigate();
   // const [isChanged, setIsChanged] = useState(false);
 
-  const { data } = useSocialAssociationInfo();
+  const { data } = useSocialAssociation();
 
   const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
 
@@ -52,7 +52,7 @@ const SocialworkerEditAssociationPage = () => {
     });
   };
 
-  const { mutate: updateAssociation } = usePatchSocialAssociationInfo();
+  const { mutate: updateAssociation } = useUpdateSocialAssociation();
   const handleMarketingClick = async () => {
     updateAssociation(
       {

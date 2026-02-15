@@ -25,7 +25,7 @@ export interface BlockCaregiverInfo {
   profileImageUrl: string;
 }
 
-export interface SocialworkerMyResponse {
+export interface SocialworkerProfileResponse {
   socialWorkerInfo: SocialWorkerInfo;
   institutionInfo: SocialMyInstitutionInfo;
   associationInfo: AssociationInfo;

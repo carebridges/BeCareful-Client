@@ -27,12 +27,12 @@ import {
   useMemberDetail,
   useUpdateMemberRank,
 } from '@/api/community/association';
-import { useGetSocialWorkerMy } from '@/api/socialworker';
+import { useSocialworkerProfile } from '@/api/user/socialworker';
 
 const CommunityMemberDetailPage = () => {
   const { memberId } = useParams<{ memberId: string }>();
 
-  const { data: myData } = useGetSocialWorkerMy();
+  const { data: myData } = useSocialworkerProfile();
   const isChairman = myData?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const { data } = useMemberDetail(Number(memberId));

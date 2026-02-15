@@ -9,12 +9,12 @@ import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
 import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useGetSocialWorkerMy } from '@/api/socialworker';
+import { useSocialworkerProfile } from '@/api/user/socialworker';
 
 const SocialworkerMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const { data } = useGetSocialWorkerMy();
+  const { data } = useSocialworkerProfile();
   const isNone = data?.socialWorkerInfo.associationRank === 'NONE';
 
   return (

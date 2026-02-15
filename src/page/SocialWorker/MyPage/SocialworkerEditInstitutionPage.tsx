@@ -12,14 +12,14 @@ import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';
 import { useProfileImg } from '@/hooks/useProfileImg';
 import { NursingAssociationInfoRequest } from '@/types/Socialworker/mypage';
 import {
-  useGetSocialWorkerMy,
-  usePutInstitutionInfo,
-} from '@/api/socialworker';
+  useSocialworkerProfile,
+  useUpdateInstitution,
+} from '@/api/user/socialworker';
 
 const SocialworkerEditInstitutionPage = () => {
   const { handleGoBack } = useHandleNavigate();
   const [isChanged, setIsChanged] = useState(false);
-  const { data } = useGetSocialWorkerMy();
+  const { data } = useSocialworkerProfile();
 
   const profileUpload = useProfileImg(
     '/nursingInstitution/profile-img/presigned-url',
@@ -39,7 +39,7 @@ const SocialworkerEditInstitutionPage = () => {
     handleTypesChange,
   } = useInstitutionForm(data?.institutionInfo, setIsChanged);
 
-  const { mutate: updateInstitution } = usePutInstitutionInfo();
+  const { mutate: updateInstitution } = useUpdateInstitution();
   const handleEditBtnClick = async () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 

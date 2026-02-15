@@ -12,7 +12,7 @@ import {
   useMembers,
   useMembersOverview,
 } from '@/api/community/association';
-import { useGetSocialWorkerMy } from '@/api/socialworker';
+import { useSocialworkerProfile } from '@/api/user/socialworker';
 
 const CommunityMembersPage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -30,7 +30,7 @@ const CommunityMembersPage = () => {
   const { data: members } = useMembers();
   const { data: requests } = useJoinRequest();
 
-  const { data } = useGetSocialWorkerMy();
+  const { data } = useSocialworkerProfile();
   const isChairman = data?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const tabs = isChairman

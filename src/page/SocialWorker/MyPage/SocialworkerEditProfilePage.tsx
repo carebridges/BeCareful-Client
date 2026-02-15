@@ -17,14 +17,14 @@ import { useProfileImg } from '@/hooks/useProfileImg';
 import { useSocialworkerBasicForm } from '@/hooks/Socialworker/useSocialworkerBasicForm';
 import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
 import {
-  useGetSocialWorkerMyEdit,
-  usePutSocialworkerMy,
-} from '@/api/socialworker';
+  useSocialworkerProfileEdit,
+  useUpdateSocialworkerProfile,
+} from '@/api/user/socialworker';
 
 const SocialworkerEditProfilePage = () => {
   const { handleGoBack } = useHandleNavigate();
   const [isChanged, setIsChanged] = useState(false);
-  const { data } = useGetSocialWorkerMyEdit();
+  const { data } = useSocialworkerProfileEdit();
 
   const {
     name,
@@ -43,7 +43,7 @@ const SocialworkerEditProfilePage = () => {
     handleCheckDuplicate,
   } = useSocialworkerBasicForm(data, setIsChanged);
 
-  const { mutate: updateSocialMy } = usePutSocialworkerMy();
+  const { mutate: updateProfile } = useUpdateSocialworkerProfile();
 
   const profileUpload = useProfileImg(
     '/social-worker/profile-img/presigned-url',
@@ -55,7 +55,7 @@ const SocialworkerEditProfilePage = () => {
   const handleEditBtnClick = async () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
-    const myData: SocialworkerMyRequest = {
+    const profileData: SocialworkerMyRequest = {
       realName: name,
       nickName: nickname,
       birthYymmdd: birth,
@@ -65,8 +65,8 @@ const SocialworkerEditProfilePage = () => {
       institutionRank: INSTITUTION_RANK_EN_TO_RANK[rank],
       profileImageTempKey: profileUrl,
     };
-    console.log(myData);
-    updateSocialMy(myData, {
+    // console.log(profileData);
+    updateProfile(profileData, {
       onSuccess: () => {
         handleGoBack();
         setIsChanged(false);

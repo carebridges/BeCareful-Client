@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { UserRole } from '@/types/common/chat';
 import { useDeleteUserInfo } from '@/hooks/useDeleteUserInfo';
-import { useCaregiverLogout, useDeleteCaregiver } from '@/api/caregiver';
+import { useCaregiverLogout, useDeleteCaregiver } from '@/api/user/caregiver';
 import {
   useDeleteSocialworker,
   useSocialworkerLogout,
-} from '@/api/socialworker';
+} from '@/api/user/socialworker';
 
 export const useUserAuthActions = (role: UserRole) => {
   const { mutate: caregiverLogout } = useCaregiverLogout();

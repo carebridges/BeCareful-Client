@@ -5,7 +5,7 @@ import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useAssociationInfo } from '@/api/community/association';
-import { useGetSocialWorkerMy } from '@/api/socialworker';
+import { useSocialworkerProfile } from '@/api/user/socialworker';
 
 const CommunityAssociationInfoPage = () => {
   const { associationId } = useParams<{ associationId: string }>();
@@ -14,7 +14,7 @@ const CommunityAssociationInfoPage = () => {
 
   const { data } = useAssociationInfo();
 
-  const { data: myData } = useGetSocialWorkerMy();
+  const { data: myData } = useSocialworkerProfile();
   const isChairman = myData?.socialWorkerInfo.associationRank === 'CHAIRMAN';
 
   const associationInfo = [

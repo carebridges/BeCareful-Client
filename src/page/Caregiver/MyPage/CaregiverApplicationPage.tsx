@@ -17,14 +17,16 @@ import { WorkApplicationRequest } from '@/types/Caregiver/work';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useLocationSelection } from '@/hooks/Caregiver/apply/useLocationSelection';
 import { useApplicationForm } from '@/hooks/Caregiver/apply/useApplicationForm';
-import { usePutApplicationMutation } from '@/hooks/Caregiver/mutation/usePutApplicationMutation';
 import { formatDaysToEN, formatTimeToEN } from '@/utils/caregiverFormatter';
-import { useApplicationQuery } from '@/api/caregiver';
+import {
+  useWorkApplication,
+  useUpdateWorkApplication,
+} from '@/api/user/caregiver';
 
 const CaregiverApplicationPage = () => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
-  const { data, error } = useApplicationQuery();
+  const { data, error } = useWorkApplication();
   if (error) {
     console.log('getApplication 에러: ', error);
   }
@@ -76,7 +78,7 @@ const CaregiverApplicationPage = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { mutate: updateApplication } = usePutApplicationMutation({
+  const { mutate: updateApplication } = useUpdateWorkApplication({
     onSuccessCallback: (dataExists) => {
       if (dataExists) {
         setIsEditModalOpen(true);

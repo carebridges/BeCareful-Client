@@ -40,14 +40,14 @@ export interface CareerInfo {
 }
 
 // 요양보호사 마이페이지 데이터 조회 응답
-export interface CaregiverMyResponse {
+export interface CaregiverProfileResponse {
   caregiverInfo: CaregiverInfo;
   careerInfo: CareerInfo;
   workApplicationInfo: WorkApplication;
 }
 
 // 요양보호사 마이페이지 수정
-export interface CaregiverMyRequest {
+export interface CaregiverProfileRequest {
   profileImageTempKey: string | null;
   caregiverCertificate: CertificateInfo | null;
   socialWorkerCertificate: CertificateInfo | null;

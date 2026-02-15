@@ -5,17 +5,16 @@ import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverCareerExperience from '@/components/Caregiver/Mypage/CaregiverCareerExperience';
 import CaregiverCareerNew from '@/components/Caregiver/Mypage/CaregiverCareerNew';
-import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { usePutCareerMutation } from '@/hooks/Caregiver/mutation/usePutCareerMutation';
-import { useCareerQuery } from '@/api/caregiver';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
+import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useCareer, useUpdateCareer } from '@/api/user/caregiver';
 
 const CaregiverCareerPage = () => {
   const { handleNavigate, handleGoBack } = useHandleNavigate();
 
-  const { data } = useCareerQuery();
+  const { data } = useCareer();
 
   const [isChanged, setIsChanged] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,7 +55,7 @@ const CaregiverCareerPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const { mutate: updateCareer } = usePutCareerMutation();
+  const { mutate: updateCareer } = useUpdateCareer();
   const handleBtnClick = () => {
     const careerData: CareerRequest = {
       title: title,

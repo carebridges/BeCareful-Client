@@ -7,7 +7,10 @@ import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ErrorToast } from '@/components/SocialWorker/RecruitmentDetail/ErrorToast';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useDeleteCaregiverBlock, useGetCaregiverBlock } from '@/api/caregiver';
+import {
+  useCaregiverBlockedInstitution,
+  useUnblockInstitution,
+} from '@/api/user/caregiver';
 import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 const CaregiverBlockPage = () => {
@@ -17,14 +20,14 @@ const CaregiverBlockPage = () => {
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const { data } = useGetCaregiverBlock();
+  const { data } = useCaregiverBlockedInstitution();
 
   const handleBlockCancleClick = (user: InstitutionInfo) => {
     setSelectedUser(user);
     setIsBlockModalOpen(true);
   };
 
-  const { mutate: blockCancle } = useDeleteCaregiverBlock();
+  const { mutate: blockCancle } = useUnblockInstitution();
 
   const handleBlockCancle = () => {
     if (selectedUser && selectedUser.institutionId) {

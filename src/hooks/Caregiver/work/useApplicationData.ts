@@ -6,11 +6,11 @@ import {
   formatLocation,
   formatTimeToKR,
 } from '@/utils/caregiverFormatter';
-import { useApplicationQuery } from '@/api/caregiver';
+import { useWorkApplication } from '@/api/user/caregiver';
 
 export const useApplicationData = () => {
   // 신청서 조회
-  const { data: applicationData } = useApplicationQuery();
+  const { data: applicationData } = useWorkApplication();
   const [isToggleChecked, setIsToggleChecked] = useState(false);
 
   useEffect(() => {
