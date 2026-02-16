@@ -1,7 +1,6 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
-import { UploadResult } from '@/hooks/useProfileImageUpload';
-import { Presigned } from '@/types/common/image';
+import { Presigned, UploadResult } from '@/types/common/image';
 import { useMutation } from '@tanstack/react-query';
 
 /* 협회 프로필 이미지 업로드 */

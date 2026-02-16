@@ -1,7 +1,6 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { UploadResult } from '@/hooks/useProfileImageUpload';
-import { Presigned } from '@/types/common/image';
+import { Presigned, UploadResult } from '@/types/common/image';
 import { ElderDetailResponse, ElderlyRegisterPayload } from '@/types/Elderly';
 import { ElderListResponse } from '@/types/Matching';
 
