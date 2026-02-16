@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ColorTypes } from '@/style/theme/color';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
+import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { InstitutionRank } from '@/types/Community/common';
 
 interface RankStyleProps {
@@ -25,7 +25,7 @@ const RankCard = ({ rank }: RankCardProps) => {
   const { color, background } = RankStyles[rank ?? 'SOCIAL_WORKER'];
   return (
     <Rank color={color} background={background}>
-      {INSTITUTION_RANK_EN_TO_KR[rank ?? 'SOCIAL_WORKER']}
+      {INSTITUTION_RANK_MAP.EN_TO_KR[rank ?? 'SOCIAL_WORKER']}
     </Rank>
   );
 };

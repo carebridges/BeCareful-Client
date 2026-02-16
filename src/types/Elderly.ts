@@ -1,5 +1,4 @@
-import { CARE_LEVELS } from '@/constants/socialworker/careLevels.socialWorker';
-import { CARE_TYPES } from '@/constants/socialworker/careTypes.socialWorker';
+import { CARE_LEVELS, CARE_TYPES } from '@/constants/domain/care';
 import { AreaSocial } from '@/types/common/matching';
 import { RecruitmentItem } from '@/types/Socialworker/matching';
 

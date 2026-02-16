@@ -12,7 +12,7 @@ import {
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { RecruitmentForm } from '@/types/Matching.socialWorker';
-import { MIN_WAGE } from '@/constants/socialworker/payType.socialWorker';
+import { MIN_WAGE } from '@/constants/common/maps';
 
 export const RecruitmentEditPage = () => {
   const navigate = useNavigate();

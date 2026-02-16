@@ -7,11 +7,11 @@ import { Pagination } from 'swiper/modules';
 import 'swiper/css/pagination';
 import { Button } from '@/components/common/Button/Button';
 import PostOverview from '@/components/Community/common/PostOverview';
-import { BOARD_LIST } from '@/constants/community/communityBoard';
+import { BOARD_LIST } from '@/constants/domain/community';
 import { PageableRequest } from '@/types/Community/common';
 import { BoardPostListResponse, PostListItem } from '@/types/Community/post';
-import { useImportantPosts } from '@/api/community/community';
 import { useMultipleBoardPosts } from '@/hooks/Community/api/usePostLists';
+import { useImportantPosts } from '@/api/community/community';
 
 interface CommunityHomeProps {
   onTabChange: (tabName: string) => void;

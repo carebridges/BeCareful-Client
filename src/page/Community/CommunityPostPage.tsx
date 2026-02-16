@@ -15,7 +15,7 @@ import TitleSection from '@/components/Community/post/TitleSection';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { BOARD_PARAM_TO_KR } from '@/constants/community/communityBoard';
+import { BOARD_MAP } from '@/constants/domain/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCommunityPost } from '@/hooks/Community/PostPage/useCommunityPost';
 import { useCommunityPostInteractions } from '@/hooks/Community/PostPage/useCommunityPostInteractions';
@@ -63,7 +63,14 @@ const CommunityPostPage = () => {
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
         center={
-          <NavCenter>{BOARD_PARAM_TO_KR[boardType ?? 'association']}</NavCenter>
+          <NavCenter>
+            {
+              BOARD_MAP.PARAM_TO_KR[
+                (boardType ??
+                  'association') as keyof typeof BOARD_MAP.PARAM_TO_KR
+              ]
+            }
+          </NavCenter>
         }
       />
 

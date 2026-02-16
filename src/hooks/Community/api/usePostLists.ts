@@ -1,6 +1,6 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { getPostList } from '@/api/community/community';
-import { BOARD_LIST } from '@/constants/community/communityBoard';
+import { BOARD_LIST } from '@/constants/domain/community';
 import { PageableRequest } from '@/types/Community/common';
 import { PostListItem } from '@/types/Community/post';
 

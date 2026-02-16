@@ -1,8 +1,8 @@
-import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { CERTIFICATE_LABEL } from '@/constants/domain/caregiver';
 import { CertificateInfo } from '@/types/Caregiver/common';
 import { CaregiverDetailInfo } from '@/types/Caregiver/mypage';
 import { CertificateFormInput, CertificateKey } from '@/types/CareGiverSignUp';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 export const useCaregiverCertForm = (
   data: CaregiverDetailInfo | undefined,

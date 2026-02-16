@@ -5,10 +5,7 @@ import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
 import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
-import {
-  APPLY_TABS,
-  MATCHING_STATUS,
-} from '@/constants/caregiver/matchingStatus';
+import { APPLY_TABS, MATCHING_STATUS } from '@/constants/domain/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useMyApplicationList } from '@/api/matching/caregiver';
 

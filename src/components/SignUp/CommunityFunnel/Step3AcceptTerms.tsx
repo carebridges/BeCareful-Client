@@ -8,7 +8,7 @@ import {
   CENTER_TERMS,
   PRIVACY_TERMS,
   MARKETING_TERMS,
-} from '@/constants/termText';
+} from '@/constants/common/termText';
 import { useMemo, useCallback, useState } from 'react';
 import styled from 'styled-components';
 

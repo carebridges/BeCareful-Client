@@ -7,6 +7,18 @@ import { ReactComponent as Medicine } from '@/assets/icons/matching/IconMedicine
 import { ReactComponent as Spoon } from '@/assets/icons/matching/IconSpoon.svg';
 import { ReactComponent as WheelChair } from '@/assets/icons/matching/IconWheelchair.svg';
 
+// 케어 레벨
+export const CARE_LEVELS = [
+  '1등급',
+  '2등급',
+  '3등급',
+  '4등급',
+  '5등급',
+  '인지지원등급',
+  '등급없음',
+] as const;
+
+// 케어 타입
 export const CARE_TYPES = [
   '식사보조',
   '이동보조',
@@ -49,3 +61,26 @@ export const MATCHING_CARE_TYPE_OPTIONS: MatchingCareTypeOption[] = [
   { key: '목욕보조', title: '목욕보조', icon: Bath },
   { key: '질병보조', title: '질병보조', icon: Medicine },
 ];
+
+// 시설 유형
+export const FACILITY_TYPES = [
+  '방문 요양',
+  '방문 목욕',
+  '방문 간호',
+  '주야간 보호',
+  '단기 보호',
+  '복지 용구',
+] as const;
+
+// 매칭 사유
+export const MATCH_REASON_KEYS = {
+  LOCATION: 'workLocationMatchingResultReason',
+  DAYS: 'workDaysMatchingResultReason',
+  TIME: 'workTimeMatchingResultReason',
+} as const;
+
+export const MATCH_REASON_TEXT = {
+  [MATCH_REASON_KEYS.LOCATION]: '근무지역이 일부 일치해요',
+  [MATCH_REASON_KEYS.DAYS]: '근무요일이 모두 일치해요',
+  [MATCH_REASON_KEYS.TIME]: '근무시간이 일부 일치해요',
+} as const;

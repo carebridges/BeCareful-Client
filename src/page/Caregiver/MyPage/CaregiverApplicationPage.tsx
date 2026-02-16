@@ -9,19 +9,23 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import WorkLocationModal from '@/components/Caregiver/Apply/WorkLocationModal';
-import { caretypes } from '@/constants/common/caretypes';
-import { DAYS } from '@/constants/common/day';
-import { TIMES_LONG, TIMES_LONG_TO_SHORT } from '@/constants/common/time';
-import { SALARY_KR_TO_EN, salaryTypes } from '@/constants/common/salary';
+import {
+  DAYS,
+  SALARY,
+  SALARY_MAP,
+  TIMES_LONG,
+  TIME_MAP,
+} from '@/constants/common/maps';
 import { WorkApplicationRequest } from '@/types/Caregiver/work';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useLocationSelection } from '@/hooks/Caregiver/apply/useLocationSelection';
 import { useApplicationForm } from '@/hooks/Caregiver/apply/useApplicationForm';
-import { formatDaysToEN, formatTimeToEN } from '@/utils/caregiverFormatter';
+import { formatDaysToEN } from '@/utils/caregiverFormatter';
 import {
   useWorkApplication,
   useUpdateWorkApplication,
 } from '@/api/user/caregiver';
+import { CARE_TYPES } from '@/constants/domain/care';
 
 const CaregiverApplicationPage = () => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
@@ -89,12 +93,10 @@ const CaregiverApplicationPage = () => {
   });
 
   const handleBtnClick = () => {
-    const convertedTime = selectTime.map((time) => TIMES_LONG_TO_SHORT[time]);
-
     const applicationData: WorkApplicationRequest = {
-      workSalaryUnitType: SALARY_KR_TO_EN[payType],
+      workSalaryUnitType: SALARY_MAP.KR_TO_EN[payType],
       workSalaryAmount: Number(pay.replaceAll(',', '')),
-      workTimes: formatTimeToEN(convertedTime),
+      workTimes: selectTime.map((time) => TIME_MAP.LONG_TO_EN[time]),
       workDays: formatDaysToEN(selectDay),
       workLocations: selectedArea,
       careTypes: selectCaretype,
@@ -192,7 +194,7 @@ const CaregiverApplicationPage = () => {
         <PayWrapper>
           <ApplicationDropdown
             title={payType || '시급'}
-            contents={salaryTypes}
+            contents={SALARY}
             selectedContents={[payType]}
             setSelectedContents={(values) => setPayType(values[0] || '')}
           />
@@ -214,7 +216,7 @@ const CaregiverApplicationPage = () => {
         </label>
         <label className="guide">중복선택 가능</label>
         <SelectWrapper gap="">
-          {caretypes.slice(0, 3).map((careType) => (
+          {CARE_TYPES.slice(0, 3).map((careType) => (
             <CheckBoxSelect
               key={careType}
               id={careType}
@@ -226,31 +228,30 @@ const CaregiverApplicationPage = () => {
             />
           ))}
         </SelectWrapper>
+        {/* TODO : 지원서 케어타입 관련 확인 필요 */}
         <SelectWrapper gap="">
-          {caretypes
-            .slice(3)
-            .map((careType, index) =>
-              index === 2 ? (
-                <CheckBoxSelect
-                  key={careType}
-                  id={careType}
-                  label={careType}
-                  width="100%"
-                  height="48px"
-                  border={false}
-                />
-              ) : (
-                <CheckBoxSelect
-                  key={careType}
-                  id={careType}
-                  label={careType}
-                  checked={selectCaretype.includes(careType)}
-                  onChange={handleSelectCaretype}
-                  width="100%"
-                  height="48px"
-                />
-              ),
-            )}
+          {CARE_TYPES.slice(3).map((careType, index) =>
+            index === 2 ? (
+              <CheckBoxSelect
+                key={careType}
+                id={careType}
+                label={careType}
+                width="100%"
+                height="48px"
+                border={false}
+              />
+            ) : (
+              <CheckBoxSelect
+                key={careType}
+                id={careType}
+                label={careType}
+                checked={selectCaretype.includes(careType)}
+                onChange={handleSelectCaretype}
+                width="100%"
+                height="48px"
+              />
+            ),
+          )}
         </SelectWrapper>
       </SectionWrapper>
 

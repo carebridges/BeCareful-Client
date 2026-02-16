@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { GENDER_MAP } from '@/constants/common/maps';
 import { SocialworkerChatList } from '@/types/Socialworker/chat';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { textTruncateFormat } from '@/utils/formatText';
 
 interface ChatListCardProps {
@@ -27,7 +27,7 @@ const ChatListCardSocialworker = ({ chat }: ChatListCardProps) => {
           <label className="elder">{chat.elderlyAge}세</label>
           <span className="border">|</span>
           <label className="elder">
-            {GENDER_EN_TO_KR_2[chat.elderlyGender]}
+            {GENDER_MAP.EN_TO_KR_FULL[chat.elderlyGender]}
           </label>
         </div>
       </div>

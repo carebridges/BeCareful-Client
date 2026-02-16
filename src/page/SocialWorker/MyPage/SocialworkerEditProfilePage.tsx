@@ -8,10 +8,7 @@ import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
-import {
-  INSTITUTION_RANK_EN_TO_RANK,
-  INSTITUTION_RANK_LIST,
-} from '@/constants/common/institutionRank';
+
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useProfileImg } from '@/hooks/useProfileImg';
 import { useSocialworkerBasicForm } from '@/hooks/Socialworker/useSocialworkerBasicForm';
@@ -20,6 +17,7 @@ import {
   useSocialworkerProfileEdit,
   useUpdateSocialworkerProfile,
 } from '@/api/user/socialworker';
+import { INSTITUTION_RANK_LIST } from '@/constants/common/maps';
 
 const SocialworkerEditProfilePage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -40,6 +38,7 @@ const SocialworkerEditProfilePage = () => {
     nicknameValidation,
     isDuplicateCheckButtonEnabled,
     handleChange,
+    handleChangeRank,
     handleCheckDuplicate,
   } = useSocialworkerBasicForm(data, setIsChanged);
 
@@ -62,7 +61,7 @@ const SocialworkerEditProfilePage = () => {
       genderCode: genderCode,
       phoneNumber: phoneNumber,
       nursingInstitutionId: institutionId,
-      institutionRank: INSTITUTION_RANK_EN_TO_RANK[rank],
+      institutionRank: rank,
       profileImageTempKey: profileUrl,
     };
     // console.log(profileData);
@@ -157,7 +156,7 @@ const SocialworkerEditProfilePage = () => {
             key={option.value}
             pressed={rank === option.value}
             text={option.text}
-            onClick={() => handleChange('rank', option.value)}
+            onClick={() => handleChangeRank(option.value)}
           />
         ))}
       </CardContainer>

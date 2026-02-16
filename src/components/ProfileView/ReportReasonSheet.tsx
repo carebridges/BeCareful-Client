@@ -5,7 +5,7 @@ import { Button } from '@/components/common/Button/Button';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import { RadioButton } from '@/components/common/Button/RadioButton';
 import { ReportReason } from '@/types/common/profileReport';
-import { REPORT_REASON_OPTIONS } from '@/constants/common/profileReport';
+import { REPORT_REASON_OPTIONS } from '@/constants/common/system';
 
 type ReportReasonSheetProps = {
   isOpen: boolean;

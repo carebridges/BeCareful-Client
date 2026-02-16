@@ -6,7 +6,7 @@ import { ReactComponent as SearchIcon } from '@/assets/icons/Search.svg';
 import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import PostOverview from '@/components/Community/common/PostOverview';
-import { COMMUNITY_BOARDS_TAB } from '@/constants/community/communityBoard';
+import { COMMUNITY_BOARDS_TAB } from '@/constants/domain/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCommunitySearch } from '@/hooks/Community/SearchPage/useCommunitySearch';
 

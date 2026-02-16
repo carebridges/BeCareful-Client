@@ -13,7 +13,7 @@ import { CAREGIVER_CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSig
 import InputBox from '@/components/common/InputBox/InputBox';
 import BirthInputBox from '@/components/common/InputBox/BirthInputBox';
 import ProfileImgUploader from '@/components/common/ProfileImgUploader';
-import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
+import { CERTIFICATE_LABEL } from '@/constants/domain/caregiver';
 import { CaregiverProfileRequest } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverBasicForm } from '@/hooks/Caregiver/mypage/useCaregiverBasicForm';

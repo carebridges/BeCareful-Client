@@ -4,7 +4,7 @@ import {
   CareWrapper,
   CareButton,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
-import { CARE_TYPES } from '@/constants/socialworker/careTypes.socialWorker';
+import { CARE_TYPES } from '@/constants/domain/care';
 import { CareType } from '@/types/Elderly';
 import styled from 'styled-components';
 import { ReactComponent as ButtonLeft } from '@/assets/icons/elderly/ButtonLeft.svg';

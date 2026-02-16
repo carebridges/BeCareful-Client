@@ -1,4 +1,17 @@
 import { colors } from '@/style/theme/color';
+import { CertificateKey } from '@/types/CareGiverSignUp';
+
+export const CAREGIVER_WORK_FILTERS = [
+  { icon: '', name: '전체' },
+  { icon: '🔥', name: '모집중' },
+  { icon: '✅', name: '시간일치' },
+] as const;
+
+export const CERTIFICATE_LABEL: Record<CertificateKey, string> = {
+  caregiverCertificate: '요양보호사',
+  nursingCareCertificate: '간호지원사',
+  socialWorkerCertificate: '사회복지사',
+};
 
 export const APPLY_TABS = ['검토중', '합격', '마감'];
 

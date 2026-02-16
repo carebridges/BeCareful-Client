@@ -9,7 +9,7 @@ import InputBox from '@/components/common/InputBox/InputBox';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
+
 import { CommunityAgreementValues } from '@/types/Socialworker/common';
 import { useLeaveAssociation } from '@/api/community/association';
 import {
@@ -18,6 +18,7 @@ import {
 } from '@/api/user/socialworker';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { getTodayDateTime } from '@/utils/getTodayDate';
+import { ASSOCIATION_RANK_MAP } from '@/constants/common/maps';
 
 const SocialworkerEditAssociationPage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -92,8 +93,9 @@ const SocialworkerEditAssociationPage = () => {
           <CheckButton
             key={type}
             active={
-              ASSOCIATION_RANK_EN_TO_KR[data?.associationRank ?? 'MEMBER'] ===
-              type
+              ASSOCIATION_RANK_MAP.EN_TO_KR[
+                data?.associationRank ?? 'MEMBER'
+              ] === type
             }
           >
             <Check />

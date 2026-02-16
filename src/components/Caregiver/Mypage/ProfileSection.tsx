@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import ProfileCard from '@/components/common/card/ProfileCard';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
+import { GENDER_MAP } from '@/constants/common/maps';
 import { CaregiverInfo } from '@/types/Caregiver/mypage';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
@@ -19,7 +19,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
         chevronClick={() => handleNavigate('/caregiver/my/profile')}
         phoneNumber={data?.phoneNumber ?? ''}
         age={data?.age ?? 0}
-        gender={GENDER_EN_TO_KR_2[data?.gender ?? 'FEMALE']}
+        gender={GENDER_MAP.EN_TO_KR_FULL[data?.gender ?? 'FEMALE']}
       />
 
       <Bottom>

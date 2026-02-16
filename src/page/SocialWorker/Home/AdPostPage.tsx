@@ -15,7 +15,7 @@ import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCommunityPost } from '@/hooks/Community/PostPage/useCommunityPost';
 import { useCommunityPostInteractions } from '@/hooks/Community/PostPage/useCommunityPostInteractions';
-import { adDetail } from '@/constants/Ad';
+import { adDetail } from '@/constants/domain/ad';
 import { useParams } from 'react-router-dom';
 
 const AdPostPage = () => {

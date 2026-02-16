@@ -1,4 +1,4 @@
-import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
+import { FACILITY_TYPES } from '@/constants/domain/care';
 
 export type Gender = 'MALE' | 'FEMALE' | '';
 

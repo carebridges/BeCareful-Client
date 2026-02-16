@@ -11,6 +11,7 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApply } from '@/hooks/Caregiver/work/useApply';
 import { useMediate } from '@/hooks/Caregiver/work/useMediate';
 import { useRecruitmentDetail } from '@/api/matching/caregiver';
+import { MEDIATION } from '@/constants/common/maps';
 
 const CaregiverWorkDetailPage = () => {
   const { recruitmentId: recruitmentIdParam } = useParams<{
@@ -142,7 +143,7 @@ const CaregiverWorkDetailPage = () => {
 
           <MediateContent>
             <div className="filters">
-              {['시간 조율', '급여 조율', '요일 조율'].map((filter) => (
+              {MEDIATION.map((filter) => (
                 <Filter
                   key={filter}
                   active={mediationTypes.includes(filter)}

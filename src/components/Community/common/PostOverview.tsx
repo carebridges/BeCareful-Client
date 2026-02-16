@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
-import { BOARD_EN_TO_PARAM } from '@/constants/community/communityBoard';
+import { BOARD_MAP } from '@/constants/domain/community';
+import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { PostListItem } from '@/types/Community/post';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
@@ -22,7 +22,7 @@ const PostOverview = ({ post }: PostOverviewProps) => {
     <Container
       onClick={() => {
         handleNavigate(
-          `/community/${BOARD_EN_TO_PARAM[post.boardType]}/${post.postId}`,
+          `/community/${BOARD_MAP.EN_TO_PARAM[post.boardType as keyof typeof BOARD_MAP.EN_TO_PARAM]}/${post.postId}`,
         );
       }}
     >
@@ -32,7 +32,7 @@ const PostOverview = ({ post }: PostOverviewProps) => {
           <label>{post.author.authorName}</label>
           <label>·</label>
           <label>
-            {INSTITUTION_RANK_EN_TO_KR[post.author.authorInstitutionRank]}
+            {INSTITUTION_RANK_MAP.EN_TO_KR[post.author.authorInstitutionRank]}
           </label>
         </Writer>
         <Title isRead={isRead}>

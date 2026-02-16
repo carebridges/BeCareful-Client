@@ -6,13 +6,13 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ErrorToast } from '@/components/SocialWorker/RecruitmentDetail/ErrorToast';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { GENDER_MAP } from '@/constants/common/maps';
 import {
   useUnblockCaregiver,
   useSocialBlockedCaregiver,
 } from '@/api/user/socialworker';
 import { BlockCaregiverInfo } from '@/types/Socialworker/mypage';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 const SocialworkerBlockPage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -71,7 +71,7 @@ const SocialworkerBlockPage = () => {
                 <div className="info">
                   <div>{user.age}세</div>
                   <div>·</div>
-                  <div>{GENDER_EN_TO_KR_2[user.gender]}</div>
+                  <div>{GENDER_MAP.EN_TO_KR_FULL[user.gender]}</div>
                 </div>
               </div>
             </div>

@@ -1,7 +1,10 @@
-import { DAY_EN_TO_KR, DAY_KR_TO_EN } from '@/constants/common/day';
-import { MEDIATION_KR_TO_EN } from '@/constants/common/mediation';
-import { TIME_EN_TO_KR, TIME_KR_TO_EN } from '@/constants/common/time';
-import { CareType, WorkLocation } from '@/types/Caregiver/common';
+import { DAY_MAP, MEDIATION_MAP, TIME_MAP } from '@/constants/common/maps';
+import {
+  CareType,
+  WorkDay,
+  WorkLocation,
+  WorkTime,
+} from '@/types/Caregiver/common';
 
 /* 요양보호사 관련 format 함수들 */
 // caretype
@@ -18,21 +21,21 @@ export const formatCaretype = (
 };
 
 // workday
-export const formatDaysToKR = (days: string[]) => {
-  return days.map((day) => DAY_EN_TO_KR[day]).join(', ');
+export const formatDaysToKR = (days: WorkDay[]) => {
+  return days.map((day) => DAY_MAP.EN_TO_KR[day]).join(', ');
 };
 
 export const formatDaysToEN = (days: string[]) => {
-  return days.map((day) => DAY_KR_TO_EN[day]);
+  return days.map((day) => DAY_MAP.KR_TO_EN[day]);
 };
 
 // worktime
-export const formatTimeToKR = (times: string[]) => {
-  return times.map((time) => TIME_EN_TO_KR[time]).join(', ');
+export const formatTimeToKR = (times: WorkTime[]) => {
+  return times.map((time) => TIME_MAP.EN_TO_KR[time]).join(', ');
 };
 
 export const formatTimeToEN = (times: string[]) => {
-  return times.map((time) => TIME_KR_TO_EN[time]);
+  return times.map((time) => TIME_MAP.KR_TO_EN[time]);
 };
 
 // location
@@ -57,6 +60,6 @@ export const formatLocation = (
 // mediation type
 export const formatMediationTypeToEN = (mediationTypes: string[]) => {
   return mediationTypes.map(
-    (mediationType) => MEDIATION_KR_TO_EN[mediationType],
+    (mediationType) => MEDIATION_MAP.KR_TO_EN[mediationType],
   );
 };

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { MatchingCareCard } from '@/page/Matching/MatchingCareCard';
-import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/socialworker/careTypes.socialWorker';
+import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/domain/care';
 
 interface Props {
   selectedCareTypes: string[];

@@ -1,12 +1,4 @@
-import {
-  DAY_EN_TO_KO,
-  DAY_LABELS,
-  TIME_EN_TO_KO,
-} from '@/constants/socialworker/day.socialWorker';
-import {
-  PAY_CODE_TO_LABEL,
-  PAY_LABEL_TO_CODE,
-} from '@/constants/socialworker/payType.socialWorker';
+import { DAY_MAP, DAYS, SALARY_MAP, TIME_MAP } from '@/constants/common/maps';
 import { WorkDay } from '@/types/Caregiver/common';
 import { SalaryUnit } from '@/types/common/matching';
 import { Gender } from '@/types/Elderly';
@@ -79,8 +71,8 @@ export interface MatchingCaregiver {
   matchingResultStatus: string;
 }
 
-export type PayLabel = keyof typeof PAY_LABEL_TO_CODE;
-export type PayCode = keyof typeof PAY_CODE_TO_LABEL;
+export type PayLabel = keyof typeof SALARY_MAP.KR_TO_EN;
+export type PayCode = keyof typeof SALARY_MAP.EN_TO_KR;
 
 export interface MatchingCareTypeOption {
   key: string;
@@ -88,7 +80,7 @@ export interface MatchingCareTypeOption {
   icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
-export type DayLabel = (typeof DAY_LABELS)[number];
+export type DayLabel = (typeof DAYS)[number];
 
 export interface CaregiverDetailData {
   matchingId: number;
@@ -126,8 +118,8 @@ export interface CaregiverDetailData {
     workApplicationId: number;
     isActive: boolean;
     careTypes: string[];
-    workDays: (keyof typeof DAY_EN_TO_KO)[];
-    workTimes: (keyof typeof TIME_EN_TO_KO)[];
+    workDays: (keyof typeof DAY_MAP.EN_TO_KR)[];
+    workTimes: (keyof typeof TIME_MAP.EN_TO_KR)[];
     workSalaryAmount: number;
     workSalaryUnitType: string;
     lastModifiedDate: string;

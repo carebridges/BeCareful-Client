@@ -16,11 +16,7 @@ import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import {
-  BOARD_PARAM_TO_EN,
-  BOARD_PARAM_TO_KR,
-  COMMUNITY_BOARDS_LIST,
-} from '@/constants/community/communityBoard';
+import { BOARD_MAP, COMMUNITY_BOARDS_LIST } from '@/constants/domain/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useBoardSelection } from '@/hooks/Community/WritePage/useBoardSelection';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
@@ -41,10 +37,14 @@ const CommunityWritePage = () => {
   const postId = postIdParam ? parseInt(postIdParam, 10) : 0;
   const isEditMode = !!postId;
   const boardType = isEditMode
-    ? BOARD_PARAM_TO_KR[boardTypeParam || '']
-    : BOARD_PARAM_TO_KR[searchParams.get('boardType') || ''];
+    ? BOARD_MAP.PARAM_TO_KR[
+        boardTypeParam as keyof typeof BOARD_MAP.PARAM_TO_KR
+      ]
+    : BOARD_MAP.PARAM_TO_KR[
+        searchParams.get('boardType') as keyof typeof BOARD_MAP.PARAM_TO_KR
+      ];
   const { data: initialData } = usePostDetail(
-    BOARD_PARAM_TO_EN[boardTypeParam || ''],
+    BOARD_MAP.PARAM_TO_EN[boardTypeParam as keyof typeof BOARD_MAP.PARAM_TO_EN],
     postId,
   );
 

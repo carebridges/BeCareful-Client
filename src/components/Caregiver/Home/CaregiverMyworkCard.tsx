@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
+import { GENDER_MAP } from '@/constants/common/maps';
 import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { useUpdateMatchingMemo } from '@/api/matching/caregiver';
@@ -49,7 +49,7 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
               <label className="extra">{workInfo.elderlyInfo.age}세</label>
               <Border />
               <label className="extra">
-                {GENDER_EN_TO_KR_2[workInfo.elderlyInfo.gender]}
+                {GENDER_MAP.EN_TO_KR_FULL[workInfo.elderlyInfo.gender]}
               </label>
             </div>
           </div>

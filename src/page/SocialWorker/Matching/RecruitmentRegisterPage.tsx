@@ -11,7 +11,7 @@ import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { useState } from 'react';
 import { useRegisterRecruitment } from '@/api/matching/socialworker';
 import { RegisterMatchingElderModal } from '@/components/SocialWorker/RegisterMatchingElder/RegisterMatchingElderModal';
-import { MIN_WAGE } from '@/constants/socialworker/payType.socialWorker';
+import { MIN_WAGE } from '@/constants/common/maps';
 
 type RecruitmentRegisterLocationState = {
   elderlyId?: number;

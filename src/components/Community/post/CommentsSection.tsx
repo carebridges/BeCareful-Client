@@ -8,7 +8,7 @@ import { ReactComponent as DotIcon } from '@/assets/icons/community/Dots.svg';
 import { ReactComponent as Delete } from '@/assets/icons/CloseCircle.svg';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import { Button } from '@/components/common/Button/Button';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
+import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { useCommunityComments } from '@/hooks/Community/PostPage/useCommunityComment';
 import { formatDateTime } from '@/utils/formatTime';
 
@@ -60,7 +60,7 @@ const CommentsSection = ({ apiBoardType, postId }: CommentsSectionProps) => {
                       <label className="writer">·</label>
                       <label className="writer">
                         {
-                          INSTITUTION_RANK_EN_TO_KR[
+                          INSTITUTION_RANK_MAP.EN_TO_KR[
                             comment.author.authorInstitutionRank
                           ]
                         }

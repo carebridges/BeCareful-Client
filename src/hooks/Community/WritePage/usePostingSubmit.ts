@@ -1,5 +1,5 @@
 import { PostCreateRequest, PostUpdateRequest } from '@/types/Community/post';
-import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
+import { BOARD_MAP } from '@/constants/domain/community';
 import { getDraftStorageKey } from '@/utils/getDraftStorageKey';
 import { useCreatePost, useUpdatePost } from '@/api/community/community';
 
@@ -14,7 +14,8 @@ export const usePostingSubmit = (
     throw new Error('글쓰기 수정하기 - postId가 필요합니다.');
   }
 
-  const requestBoard = BOARD_KR_TO_EN[board];
+  const requestBoard =
+    BOARD_MAP.KR_TO_EN[board as keyof typeof BOARD_MAP.KR_TO_EN];
 
   // 게시글 작성 api mutation
   const { mutateAsync: postPostingMutate } = useCreatePost(requestBoard);

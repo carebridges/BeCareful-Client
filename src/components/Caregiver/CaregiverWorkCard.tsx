@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { SALARY_EN_TO_KR } from '@/constants/common/salary';
+
 import { useRecruitmentReadStatus } from '@/contexts/RecruitmentReadStatusContext';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { Recruitment } from '@/types/Caregiver/common';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
 import { formatDateTime } from '@/utils/formatTime';
+import { SALARY_MAP } from '@/constants/common/maps';
 
 type ColorKey = keyof typeof colors;
 interface CaregiverWorkCardProps {
@@ -86,7 +87,11 @@ const CaregiverWorkCard = ({
       <Bottom>
         <Salary>
           <label className="type">
-            {SALARY_EN_TO_KR[recruitment.recruitmentInfo.workSalaryUnitType]}
+            {
+              SALARY_MAP.EN_TO_KR[
+                recruitment.recruitmentInfo.workSalaryUnitType
+              ]
+            }
           </label>
           <label className="amount">
             {recruitment.recruitmentInfo.workSalaryAmount.toLocaleString(

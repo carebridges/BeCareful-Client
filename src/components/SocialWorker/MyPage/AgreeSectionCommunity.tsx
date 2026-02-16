@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
-import { COMMUNITY_AGREE_ITEMS } from '@/constants/signUpAgreeItems';
+import { COMMUNITY_AGREE_ITEMS } from '@/constants/common/agreeItems';
 import { CommunityAgreeField } from '@/types/Socialworker/common';
 import { CommunityAgreement } from '@/types/Socialworker/mypage';
 

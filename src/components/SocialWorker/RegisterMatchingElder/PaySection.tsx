@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { MatchingApplicationDropdown } from '@/components/Matching/MatchingApplicationDropdown';
-import {
-  PAY_CODE_TO_LABEL,
-  PAY_LABEL_TO_CODE,
-} from '@/constants/socialworker/payType.socialWorker';
+import { SALARY_MAP } from '@/constants/common/maps';
 import { PayCode, PayLabel } from '@/types/Matching.socialWorker';
 
 interface Props {
@@ -31,10 +28,10 @@ export const PaySection = ({
         <MatchingApplicationDropdown
           title="시급"
           contents={payLabels}
-          selectedContents={PAY_CODE_TO_LABEL[selectedPayType]}
+          selectedContents={SALARY_MAP.EN_TO_KR[selectedPayType]}
           setSelectedContents={(label: string) => {
-            if (label in PAY_LABEL_TO_CODE) {
-              onPayTypeChange(PAY_LABEL_TO_CODE[label as PayLabel]);
+            if (label in SALARY_MAP.KR_TO_EN) {
+              onPayTypeChange(SALARY_MAP.KR_TO_EN[label as PayLabel]);
             }
           }}
         />

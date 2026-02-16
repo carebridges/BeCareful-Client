@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
+import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { PostListItem } from '@/types/Community/post';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
@@ -25,7 +25,7 @@ const PostOverviewAd = ({ post }: PostOverviewAdProps) => {
           <label>{post.author.authorName}</label>
           <label>·</label>
           <label>
-            {INSTITUTION_RANK_EN_TO_KR[post.author.authorInstitutionRank]}
+            {INSTITUTION_RANK_MAP.EN_TO_KR[post.author.authorInstitutionRank]}
           </label>
         </Writer>
         <Title>

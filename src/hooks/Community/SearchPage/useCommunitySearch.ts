@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
-import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
+import { BOARD_MAP } from '@/constants/domain/community';
 import { useRecentSearches } from '@/hooks/Community/SearchPage/useRecentSearches';
 import {
   useBoardPosts,
   useMultipleBoardPosts,
 } from '@/hooks/Community/api/usePostLists';
-import { searchPost } from '@/utils/searchPosts';
 import { PageableRequest } from '@/types/Community/common';
+import { searchPost } from '@/utils/searchPosts';
 
 export const useCommunitySearch = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -30,7 +30,7 @@ export const useCommunitySearch = () => {
   const pageable: PageableRequest = { page: 0, size: 50, sort: [] };
   const allBoardData = useMultipleBoardPosts(pageable);
   const { data: boardData } = useBoardPosts(
-    BOARD_KR_TO_EN[selectedBoard],
+    BOARD_MAP.KR_TO_EN[selectedBoard as keyof typeof BOARD_MAP.KR_TO_EN],
     pageable,
   );
 

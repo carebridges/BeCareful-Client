@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import React from 'react';
 import { ReactComponent as NoticeIcon } from '@/assets/icons/community/Notice.svg';
 import PostOverview from '@/components/Community/common/PostOverview';
-import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
+
 import { PostListItem } from '@/types/Community/post';
 import { PageableRequest } from '@/types/Community/common';
 import { useBoardPosts } from '@/hooks/Community/api/usePostLists';
+import { BOARD_MAP } from '@/constants/domain/community';
 
 interface CommunityDetailProps {
   boardType: string;
@@ -18,7 +19,10 @@ const CommunityDetail = ({ boardType }: CommunityDetailProps) => {
     sort: [],
   };
 
-  const { data, error } = useBoardPosts(BOARD_KR_TO_EN[boardType], pageable);
+  const { data, error } = useBoardPosts(
+    BOARD_MAP.KR_TO_EN[boardType as keyof typeof BOARD_MAP.KR_TO_EN],
+    pageable,
+  );
   if (error) {
     console.log('getPostList 에러: ', error);
   }

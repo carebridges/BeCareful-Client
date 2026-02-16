@@ -8,11 +8,11 @@ import { Button } from '@/components/common/Button/Button';
 import CommunityMemberSearch from '@/page/Community/Association/CommunityMemberSearch';
 import {
   ASSOCIATION_MEMBER_TYPES,
-  ASSOCIATION_RANK_KR_TO_EN,
-} from '@/constants/common/associationRank';
+  ASSOCIATION_RANK_MAP,
+} from '@/constants/common/maps';
+import { ChairmanDelegateRequest } from '@/types/Community/association';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useDelegateChairman } from '@/api/community/association';
-import { ChairmanDelegateRequest } from '@/types/Community/association';
 
 interface NewChairman {
   memberId: number;
@@ -41,7 +41,7 @@ const CommunityEditChairmanPage = () => {
     }
     if (
       !nextRankOfCurrentChairman ||
-      !ASSOCIATION_RANK_KR_TO_EN[nextRankOfCurrentChairman]
+      !ASSOCIATION_RANK_MAP.KR_TO_EN[nextRankOfCurrentChairman]
     ) {
       console.error('현재 회장의 변경될 직급을 선택해주세요.');
       return;
@@ -51,7 +51,7 @@ const CommunityEditChairmanPage = () => {
       newChairmanId: newChairman.memberId,
       newChairmanName: newChairman.name,
       nextRankOfCurrentChairman:
-        ASSOCIATION_RANK_KR_TO_EN[nextRankOfCurrentChairman],
+        ASSOCIATION_RANK_MAP.KR_TO_EN[nextRankOfCurrentChairman],
     };
     console.log(chairman);
     changeChairman(chairman, {

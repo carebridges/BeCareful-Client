@@ -6,7 +6,7 @@ import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/C
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import ProfileImgUploader from '@/components/common/ProfileImgUploader';
-import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
+
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';
 import { useProfileImg } from '@/hooks/useProfileImg';
@@ -15,6 +15,7 @@ import {
   useSocialworkerProfile,
   useUpdateInstitution,
 } from '@/api/user/socialworker';
+import { FACILITY_TYPES } from '@/constants/domain/care';
 
 const SocialworkerEditInstitutionPage = () => {
   const { handleGoBack } = useHandleNavigate();

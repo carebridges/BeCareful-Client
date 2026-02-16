@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
+import { GENDER_MAP } from '@/constants/common/maps';
 import { MatchingElderlyList } from '@/types/Socialworker/home';
 import { Button } from '@/components/common/Button/Button';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -43,7 +43,11 @@ const ElderSection = ({ data }: ElderSectionProps) => {
                 </label>
                 <label className="info">·</label>
                 <label className="info">
-                  {GENDER_EN_TO_KR_1[elderly.elderlyDetail.elderlyGender]}
+                  {
+                    GENDER_MAP.EN_TO_KR_SHORT[
+                      elderly.elderlyDetail.elderlyGender
+                    ]
+                  }
                 </label>
                 <label className="info">·</label>
                 <label className="info">

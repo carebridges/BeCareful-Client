@@ -40,7 +40,7 @@ export interface PostUpdateRequest {
   fileList: MediaItemRequest[];
 }
 
-export type BoardList =
+export type BoardType =
   | 'association-notice'
   | 'service-notice'
   | 'information-sharing';
@@ -49,7 +49,7 @@ export type BoardList =
 export interface PostListItem {
   postId: number;
   title: string;
-  boardType: BoardList;
+  boardType: BoardType;
   isImportant: boolean;
   thumbnailUrl: string;
   createdAt: string;

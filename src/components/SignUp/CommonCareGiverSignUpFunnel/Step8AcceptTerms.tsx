@@ -7,7 +7,7 @@ import {
   CENTER_TERMS,
   MARKETING_TERMS,
   PRIVACY_TERMS,
-} from '@/constants/termText';
+} from '@/constants/common/termText';
 
 import { useCommonCaregiverSignUpContext } from '@/contexts/CommonCaregiverSignUpContext';
 

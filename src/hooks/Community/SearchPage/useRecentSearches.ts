@@ -1,5 +1,5 @@
-import { MAX_RECENT_SEARCHES } from '@/constants/community/communitySearch';
 import { useCallback, useEffect, useState } from 'react';
+import { MAX_RECENT_SEARCHES } from '@/constants/common/system';
 
 /* CommunitySearchPage */
 export const useRecentSearches = () => {

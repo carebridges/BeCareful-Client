@@ -1,5 +1,4 @@
-import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
-import { DAY_EN_TO_KO } from '@/constants/socialworker/day.socialWorker';
+import { DAY_MAP, GENDER_MAP } from '@/constants/common/maps';
 import { ElderMatchingCardDto } from '@/types/Elderly';
 import { RecruitmentItem } from '@/types/Socialworker/matching';
 import { formatDateTime } from '@/utils/formatTime';
@@ -10,8 +9,11 @@ export const mapRecruitmentItemToCardDto = (
   const r = it.recruitmentInfo;
   const e = it.elderlyInfo;
 
-  const daysText = r.workDays.map((d) => DAY_EN_TO_KO[d]).join(', ');
-  const gender = GENDER_EN_TO_KR_1[e.elderlyGender];
+  const daysText = r.workDays.map((d) => DAY_MAP.EN_TO_KR[d]).join(', ');
+  const gender =
+    GENDER_MAP.EN_TO_KR_SHORT[
+      e.elderlyGender as keyof typeof GENDER_MAP.EN_TO_KR_SHORT
+    ];
 
   const careTags = r.careTypes ?? [];
   const careDetailMap: Record<string, string[]> = {};

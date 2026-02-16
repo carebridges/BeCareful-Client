@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CERTIFICATE_LABEL } from '@/constants/domain/caregiver';
 import {
   Certificate,
   CertificateFormInput,
@@ -6,7 +7,6 @@ import {
   CaregiverSignUpFormData,
   CommonCaregiverSignUpFormData,
 } from '@/types/CareGiverSignUp';
-import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
 
 export const useCertificateManager = (
   setFormData: (

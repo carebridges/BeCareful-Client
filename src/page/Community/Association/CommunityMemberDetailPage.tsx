@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import { ReactComponent as Check } from '@/assets/icons/matching/CircleCheck.svg';
@@ -12,16 +13,15 @@ import InstitutionCard from '@/components/common/card/InstitutionCard';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ProfileCard from '@/components/common/card/ProfileCard';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
 import {
-  ASSOCIATION_RANK_KR_TO_EN,
-  ASSOCIATION_RANK_EN_TO_KR,
   ASSOCIATION_MEMBER_TYPES,
-} from '@/constants/common/associationRank';
+  ASSOCIATION_RANK_MAP,
+  GENDER_MAP,
+} from '@/constants/common/maps';
+import { AssociationRankKR } from '@/types/Community/common';
 import { MemberRankRequest } from '@/types/Community/association';
 import { ServerErrorResponse } from '@/types/common/ServerError';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { AxiosError } from 'axios';
 import {
   useMemberExpel,
   useMemberDetail,
@@ -40,19 +40,23 @@ const CommunityMemberDetailPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
   const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
-  const [memberType, setMemberType] = useState(
-    ASSOCIATION_RANK_EN_TO_KR[data?.associationRank ?? 'MEMBER'],
+  const [memberType, setMemberType] = useState<AssociationRankKR>(
+    ASSOCIATION_RANK_MAP.EN_TO_KR[data?.associationRank ?? 'MEMBER'],
   );
   const [isChanged, setIsChanged] = useState(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     if (data) {
-      setMemberType(ASSOCIATION_RANK_EN_TO_KR[data.associationRank]);
+      setMemberType(
+        ASSOCIATION_RANK_MAP.EN_TO_KR[
+          data.associationRank
+        ] as AssociationRankKR,
+      );
     }
   }, [data]);
 
-  const handleMemberTypeChange = (type: string) => {
+  const handleMemberTypeChange = (type: AssociationRankKR) => {
     setMemberType(type);
     setIsChanged(true);
   };
@@ -62,7 +66,7 @@ const CommunityMemberDetailPage = () => {
   const handleMemberModalBtn = () => {
     const memberInfo: MemberRankRequest = {
       memberId: Number(memberId),
-      associationRank: ASSOCIATION_RANK_KR_TO_EN[memberType],
+      associationRank: ASSOCIATION_RANK_MAP.KR_TO_EN[memberType],
     };
     updateRank(memberInfo, {
       onSuccess: () => {
@@ -104,7 +108,7 @@ const CommunityMemberDetailPage = () => {
         nickname={data.nickName}
         phoneNumber={data.phoneNumber}
         age={data.age}
-        gender={GENDER_EN_TO_KR_2[data.gender]}
+        gender={GENDER_MAP.EN_TO_KR_FULL[data.gender]}
       />
 
       <SectionWrapper>
@@ -123,7 +127,7 @@ const CommunityMemberDetailPage = () => {
         <label className="title">협회 정보</label>
         <AssociationCard
           association={data?.associationName}
-          type={ASSOCIATION_RANK_EN_TO_KR[data?.associationRank]}
+          type={ASSOCIATION_RANK_MAP.EN_TO_KR[data?.associationRank]}
         />
         {isChairman && (
           <Button
