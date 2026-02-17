@@ -15,34 +15,15 @@ export const useUserAuthActions = (role: UserRole) => {
 
   const deleteUserInfo = useDeleteUserInfo();
 
-  const logout = useCallback(() => {
-    if (role === 'CAREGIVER') {
-      return caregiverLogout;
-    } else {
-      return socialworkerLogout;
-    }
-  }, [role, caregiverLogout, socialworkerLogout]);
-
-  // role에 따라 적절한 탈퇴 mutate 함수 선택
-  const leave = useCallback(() => {
-    if (role === 'CAREGIVER') {
-      return caregiverLeave;
-    } else {
-      return socialworkerLeave;
-    }
-  }, [role, caregiverLeave, socialworkerLeave]);
-
   const handleLogout = useCallback(() => {
-    logout()(undefined, {
-      onSuccess: deleteUserInfo,
-    });
-  }, [logout, deleteUserInfo]);
+    const logout = role === 'CAREGIVER' ? caregiverLogout : socialworkerLogout;
+    logout(undefined, { onSuccess: deleteUserInfo });
+  }, [role, caregiverLogout, socialworkerLogout, deleteUserInfo]);
 
   const handleLeave = useCallback(() => {
-    leave()(undefined, {
-      onSuccess: deleteUserInfo,
-    });
-  }, [leave, deleteUserInfo]);
+    const leave = role === 'CAREGIVER' ? caregiverLeave : socialworkerLeave;
+    leave(undefined, { onSuccess: deleteUserInfo });
+  }, [role, caregiverLeave, socialworkerLeave, deleteUserInfo]);
 
   return { handleLogout, handleLeave };
 };

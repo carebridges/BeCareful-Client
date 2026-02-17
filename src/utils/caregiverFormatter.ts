@@ -1,4 +1,4 @@
-import { DAY_MAP, MEDIATION_MAP, TIME_MAP } from '@/constants/common/maps';
+import { DAY_MAP, TIME_MAP } from '@/constants/common/maps';
 import {
   CareType,
   WorkDay,
@@ -55,11 +55,4 @@ export const formatLocation = (
     const count = locations.length - length;
     return `${locations.slice(0, length).join(', ')} 외 ${count}`;
   }
-};
-
-// mediation type
-export const formatMediationTypeToEN = (mediationTypes: string[]) => {
-  return mediationTypes.map(
-    (mediationType) => MEDIATION_MAP.KR_TO_EN[mediationType],
-  );
 };
