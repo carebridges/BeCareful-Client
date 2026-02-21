@@ -16,16 +16,16 @@ import {
   TIMES_LONG,
   TIME_MAP,
 } from '@/constants/common/maps';
+import { CARE_TYPES } from '@/constants/domain/care';
 import { WorkApplicationRequest } from '@/types/Caregiver/work';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useLocationSelection } from '@/hooks/Caregiver/apply/useLocationSelection';
 import { useApplicationForm } from '@/hooks/Caregiver/apply/useApplicationForm';
-import { formatDaysToEN } from '@/utils/caregiverFormatter';
+import { formatDaysToEN } from '@/utils/format/domain';
 import {
   useWorkApplication,
   useUpdateWorkApplication,
 } from '@/api/user/caregiver';
-import { CARE_TYPES } from '@/constants/domain/care';
 
 const CaregiverApplicationPage = () => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();

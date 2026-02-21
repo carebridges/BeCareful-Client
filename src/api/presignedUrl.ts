@@ -6,7 +6,7 @@ import {
   PresignedUrlResponse,
 } from '@/types/common/presignedUrl';
 import { MediaItemRequest } from '@/types/Community/common';
-import { getVideoDuration } from '@/utils/communityMedia';
+import { getVideoDuration } from '@/utils/community/media';
 
 // ==================== 파일 업로드 ====================
 /* Presigned URL 발급 */

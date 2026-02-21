@@ -4,7 +4,7 @@ import {
   ContractChatResponse,
   EditContractChatRequest,
 } from '@/types/common/chat';
-import { formatDaysToEN } from '@/utils/caregiverFormatter';
+import { formatDaysToEN } from '@/utils/format/domain';
 
 export const useEditContractForm = (contract: ContractChatResponse | null) => {
   const [workday, setWorkday] = useState<string[]>([]);

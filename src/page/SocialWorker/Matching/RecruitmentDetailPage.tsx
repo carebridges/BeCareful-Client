@@ -11,8 +11,8 @@ import {
   useRecruitmentDetail,
 } from '@/api/matching/socialworker';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
-import { formatDateTime } from '@/utils/formatTime';
-import { translateWorkDaysToKo, sortWorkDays } from '@/utils/formatWorkDays';
+import { formatDateTime } from '@/utils/format/date';
+import { formatDaysToKR } from '@/utils/format/domain';
 import { useState } from 'react';
 import { RecruitmentSummarySection } from '@/components/SocialWorker/RecruitmentDetail/RecruitmentSummarySection';
 import { ElderInfoSection } from '@/components/SocialWorker/RecruitmentDetail/ElderInfoSection';
@@ -80,7 +80,7 @@ export const RecruitmentDetailPage = () => {
   const isEditDisabled =
     recruitmentStatus === '모집완료' || recruitmentStatus === '공고마감';
 
-  const workDayLabel = translateWorkDaysToKo(sortWorkDays(workDays));
+  const workDayLabel = formatDaysToKR(workDays);
 
   const salaryUnitLabel = (() => {
     switch (workSalaryUnitType) {

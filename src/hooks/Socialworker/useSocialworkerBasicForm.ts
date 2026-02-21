@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { SocialworkerMyEditResponse } from '@/types/Socialworker/mypage';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
-import { getGenderCode } from '@/utils/getGenderCode';
+import { SocialworkerMyEditResponse } from '@/types/Socialworker/mypage';
 import { InstitutionRank } from '@/types/Community/common';
+import { getGenderCode } from '@/utils/format/text';
 
 export const useSocialworkerBasicForm = (
   data: SocialworkerMyEditResponse | undefined,

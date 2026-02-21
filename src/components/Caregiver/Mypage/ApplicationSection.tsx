@@ -11,7 +11,7 @@ import {
   formatDaysToKR,
   formatLocation,
   formatTimeToKR,
-} from '@/utils/caregiverFormatter';
+} from '@/utils/format/domain';
 
 interface ApplySectionProps {
   data: WorkApplication | undefined;

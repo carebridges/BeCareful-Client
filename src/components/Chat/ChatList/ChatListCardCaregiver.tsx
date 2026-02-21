@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { CaregiverChatList } from '@/types/Caregiver/chat';
-import { textTruncateFormat } from '@/utils/formatText';
+import { formatTextTruncate } from '@/utils/format/text';
 
 interface ChatListCardProps {
   chat: CaregiverChatList;
@@ -18,7 +18,7 @@ const ChatListCardCaregiver = ({ chat }: ChatListCardProps) => {
       <div className="left">
         <label className="institution">{chat.nursingInstitutionName}</label>
         <label className="recent">
-          {textTruncateFormat(chat.recentChat, 30)}
+          {formatTextTruncate(chat.recentChat, 30)}
         </label>
       </div>
       <div className="right">

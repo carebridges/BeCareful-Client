@@ -1,7 +1,8 @@
 import { PostCreateRequest, PostUpdateRequest } from '@/types/Community/post';
 import { BOARD_MAP } from '@/constants/domain/community';
-import { getDraftStorageKey } from '@/utils/getDraftStorageKey';
+
 import { useCreatePost, useUpdatePost } from '@/api/community/community';
+import { getDraftStorageKey } from '@/utils/community/storage';
 
 /* CommunityWritePage */
 export const usePostingSubmit = (

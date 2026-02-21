@@ -6,7 +6,7 @@ import {
   useMultipleBoardPosts,
 } from '@/hooks/Community/api/usePostLists';
 import { PageableRequest } from '@/types/Community/common';
-import { searchPost } from '@/utils/searchPosts';
+import { searchPost } from '@/utils/community/search';
 
 export const useCommunitySearch = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');

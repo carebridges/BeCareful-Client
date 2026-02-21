@@ -3,7 +3,7 @@ import { ReactComponent as DotIcon } from '@/assets/icons/community/Dots.svg';
 import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { PostDetailResponse } from '@/types/Community/post';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
-import { formatDateTime } from '@/utils/formatTime';
+import { formatDateTime } from '@/utils/format/date';
 
 interface TitleSectionProps {
   post: PostDetailResponse | undefined;

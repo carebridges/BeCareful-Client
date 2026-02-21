@@ -3,7 +3,7 @@ import { useState } from 'react';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { GENDER_MAP } from '@/constants/common/maps';
 import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
-import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
+import { formatCaretype, formatDaysToKR } from '@/utils/format/domain';
 import { useUpdateMatchingMemo } from '@/api/matching/caregiver';
 
 interface CaregiverMyworkCardProps {

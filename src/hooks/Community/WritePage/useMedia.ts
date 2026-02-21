@@ -1,14 +1,14 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
-  validateAttachedFile,
-  validateImageFile,
-  validateVideoFile,
+  validateFile,
+  validateImage,
+  validateVideo,
   ValidationResult,
-} from '@/utils/fileValidation';
-import { useUploadMedia } from '@/api/presignedUrl';
-import { useModals } from '@/hooks/Community/WritePage/useModals';
+} from '@/utils/community/media';
 import { MediaItem, MediaItemRequest } from '@/types/Community/common';
 import { PostDetailResponse } from '@/types/Community/post';
+import { useModals } from '@/hooks/Community/WritePage/useModals';
+import { useUploadMedia } from '@/api/presignedUrl';
 
 /* CommunityWritePage */
 export const useMedia = (initialData?: PostDetailResponse) => {
@@ -67,10 +67,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     setter: React.Dispatch<
       React.SetStateAction<(MediaItem | MediaItemRequest)[]>
     >,
-    validationFn: (
-      file: File,
-      ...args: number[]
-    ) => { isValid: boolean; title: string; message: string },
+    validationFn: (file: File, ...args: number[]) => ValidationResult,
   ) => {
     const filesToUpload: File[] = []; // 업로드할 파일
 
@@ -141,20 +138,8 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     const imageFiles = files.filter((f) => f.type.startsWith('image/'));
     const videoFiles = files.filter((f) => f.type.startsWith('video/'));
 
-    await contentUpload(
-      imageFiles,
-      'IMAGE',
-      photos,
-      setPhotos,
-      validateImageFile,
-    );
-    await contentUpload(
-      videoFiles,
-      'VIDEO',
-      videos,
-      setVideos,
-      validateVideoFile,
-    );
+    await contentUpload(imageFiles, 'IMAGE', photos, setPhotos, validateImage);
+    await contentUpload(videoFiles, 'VIDEO', videos, setVideos, validateVideo);
   };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -166,7 +151,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
       'FILE',
       attachedFiles,
       setAttachedFiles,
-      validateAttachedFile,
+      validateFile,
     );
   };
 

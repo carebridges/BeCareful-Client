@@ -58,7 +58,7 @@ export interface WorkApplication {
 export interface RecruitmentInfo {
   recruitmentId: number;
   title: string;
-  careTypes: CareType[];
+  careTypes: string[];
   workDays: WorkDay[];
   workStartTime: string;
   workEndTime: string;

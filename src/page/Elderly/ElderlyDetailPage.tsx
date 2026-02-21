@@ -2,7 +2,7 @@ import { useElderDetail } from '@/api/matching/elderly';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ElderMatchingCard } from '@/components/SocialWorker/MatchingStatus/ElderMatchingCard';
-import { fromBackendDate } from '@/utils/formatDate';
+import { fromBackendDate } from '@/utils/format/date';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as ElderIcon } from '@/assets/icons/socialworker/matching/BiggerElderDefault.svg';

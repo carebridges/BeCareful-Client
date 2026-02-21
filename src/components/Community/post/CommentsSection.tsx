@@ -10,7 +10,7 @@ import BottomSheet from '@/components/Community/common/BottomSheet';
 import { Button } from '@/components/common/Button/Button';
 import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { useCommunityComments } from '@/hooks/Community/PostPage/useCommunityComment';
-import { formatDateTime } from '@/utils/formatTime';
+import { formatDateTime } from '@/utils/format/date';
 
 interface CommentsSectionProps {
   apiBoardType: string;

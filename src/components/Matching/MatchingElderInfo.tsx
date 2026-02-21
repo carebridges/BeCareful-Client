@@ -1,6 +1,6 @@
 import { MatchingElderData } from '@/types/Matching.socialWorker';
-import { formatHHMM } from '@/utils/formatTime';
-import { translateWorkDaysToKo } from '@/utils/formatWorkDays';
+import { formatHHMM } from '@/utils/format/date';
+import { translateWorkDaysToKR } from '@/utils/format/domain';
 import { styled } from 'styled-components';
 
 interface MatchingElderInfoProps {
@@ -11,7 +11,7 @@ export const MatchingElderInfo = ({ data }: MatchingElderInfoProps) => {
   const { careType, workDays, workStartTime, workEndTime, elderlyInfo } =
     data.recruitmentInfo;
   const { name, address, gender, age, profileImageUrl } = elderlyInfo;
-  const translatedWorkDays = translateWorkDaysToKo(workDays);
+  const translatedWorkDays = translateWorkDaysToKR(workDays);
 
   const infoItems = [
     { label: '케어 항목', value: careType.join(', ') },

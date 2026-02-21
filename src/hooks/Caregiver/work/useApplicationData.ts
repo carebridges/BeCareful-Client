@@ -5,7 +5,7 @@ import {
   formatDaysToKR,
   formatLocation,
   formatTimeToKR,
-} from '@/utils/caregiverFormatter';
+} from '@/utils/format/domain';
 import { useWorkApplication } from '@/api/user/caregiver';
 
 export const useApplicationData = () => {

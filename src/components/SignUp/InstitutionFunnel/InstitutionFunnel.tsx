@@ -9,7 +9,7 @@ import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step3InstitutionType } from '@/components/SignUp/InstitutionFunnel/Step3InstitutionType';
-import { getRandomAddress } from '@/utils/randomAddress';
+import { getRandomAddress } from '@/utils/format/text';
 
 interface InstitutionFunnelProps {
   onDone: (newInstitutionId: number) => void;

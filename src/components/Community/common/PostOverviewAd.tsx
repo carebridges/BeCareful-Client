@@ -3,8 +3,8 @@ import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
 import { PostListItem } from '@/types/Community/post';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
-import { textTruncateFormat } from '@/utils/formatText';
-import { formatDateTime } from '@/utils/formatTime';
+import { formatDateTime } from '@/utils/format/date';
+import { formatTextTruncate } from '@/utils/format/text';
 
 interface PostOverviewAdProps {
   post: PostListItem;
@@ -31,7 +31,7 @@ const PostOverviewAd = ({ post }: PostOverviewAdProps) => {
         <Title>
           <label>
             {post.isImportant && <IsMustTag>필독</IsMustTag>}{' '}
-            {textTruncateFormat(post.title, 33)}
+            {formatTextTruncate(post.title, 33)}
           </label>
         </Title>
         <Day>

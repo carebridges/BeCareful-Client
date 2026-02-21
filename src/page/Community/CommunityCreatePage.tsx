@@ -5,7 +5,7 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { getTodayDate } from '@/utils/getTodayDate';
+import { getTodayDate } from '@/utils/format/date';
 import { HomeMainContent } from '@/components/Home/HomeMainContent';
 import { useRecoilValue } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';

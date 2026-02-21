@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import InfoDisplayChat from '@/components/common/InfoDisplay/InfoDisplayChat';
 import { GENDER_MAP } from '@/constants/common/maps';
-import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
+
 import { ContractChatResponse, UserRole } from '@/types/common/chat';
+import { formatCaretype, formatDaysToKR } from '@/utils/format/domain';
 
 interface ChatContractProps {
   role: UserRole;

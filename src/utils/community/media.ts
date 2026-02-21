@@ -7,7 +7,8 @@ export interface ValidationResult {
   message: string;
 }
 
-export const validateImageFile = (
+// 이미지 검증
+export const validateImage = (
   file: File,
   currentPhotosCount: number,
   newPhotosCount: number,
@@ -29,7 +30,8 @@ export const validateImageFile = (
   return { isValid: true, title: '', message: '' };
 };
 
-export const validateVideoFile = (
+// 비디오 검증
+export const validateVideo = (
   file: File,
   currentVideosCount: number,
   newVideosCount: number,
@@ -51,7 +53,8 @@ export const validateVideoFile = (
   return { isValid: true, title: '', message: '' };
 };
 
-export const validateAttachedFile = (
+// 파일 검증
+export const validateFile = (
   file: File,
   currentFilesCount: number,
   newFilesCount: number,
@@ -83,4 +86,27 @@ export const validateAttachedFile = (
     };
   }
   return { isValid: true, title: '', message: '' };
+};
+
+// 영상 길이 가져오기
+export const getVideoDuration = (file: File): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.muted = true;
+
+    const fileURL = URL.createObjectURL(file);
+
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(fileURL);
+      resolve(video.duration);
+    };
+
+    video.onerror = () => {
+      URL.revokeObjectURL(fileURL);
+      reject(new Error('Failed to load video metadata.'));
+    };
+
+    video.src = fileURL;
+  });
 };
