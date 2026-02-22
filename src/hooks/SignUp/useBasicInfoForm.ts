@@ -1,9 +1,9 @@
-import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
+import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
 import { getGenderCode } from '@/utils/getGenderCode';
 
 export const useBasicInfoForm = () => {
-  const { formData, setFormData } = useSignUpContext();
+  const { formData, setFormData } = useCommonSignUpContext();
   const { message, state, checkNickname, resetMessage } =
     useNicknameValidation();
 
