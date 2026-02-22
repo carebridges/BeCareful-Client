@@ -7,7 +7,6 @@ type ButtonVariant =
   | 'gray50'
   | 'disabled'
   | 'white'
-  | 'mainOrange'
   | 'mainBlue'
   | 'subBlue'
   | 'mainOrange'
@@ -94,11 +93,6 @@ const getVariantStyle = (variant: ButtonVariant) => {
         background-color: ${({ theme }) => theme.colors.white};
         color: ${({ theme }) => theme.colors.gray900};
         border: 1px solid ${({ theme }) => theme.colors.gray100};
-      `;
-    case 'mainOrange':
-      return css`
-        background-color: ${({ theme }) => theme.colors.mainOrange};
-        color: ${({ theme }) => theme.colors.white};
       `;
     case 'mainBlue':
       return css`
