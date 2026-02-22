@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
+import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { SALARY_EN_TO_KR } from '@/constants/common/salary';
@@ -10,7 +11,6 @@ import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
 import { formatDaysToKR } from '@/utils/caregiverFormatter';
 import { formatDateTime } from '@/utils/formatTime';
-import { useGetCaregiverHasNewChat } from '@/api/chat';
 
 interface CaregiverWorkDetailProps {
   work: MatchingRecruitmentResponse;
@@ -19,7 +19,7 @@ interface CaregiverWorkDetailProps {
 const CaregiverWorkDetail = ({ work }: CaregiverWorkDetailProps) => {
   const { handleGoBack, handleNavigate } = useHandleNavigate();
 
-  const { data: hasNewChat } = useGetCaregiverHasNewChat();
+  const { hasNewChat } = useChatWebSocket();
 
   const workInfo = [
     {

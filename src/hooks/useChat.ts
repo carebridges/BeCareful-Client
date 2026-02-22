@@ -27,25 +27,28 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
   const [lastContractChatId, setLastContractId] = useState<number | null>(null);
 
   // 채팅 수신 처리
-  const handleIncoming = useCallback((c: ChatResponse) => {
-    if (!c) return;
+  const handleIncoming = useCallback(
+    (c: ChatResponse) => {
+      if (!c) return;
 
-    if (c.chatType === 'CONTRACT') {
-      setLastContractId(c.chatId);
-    } else if (c.chatType === 'CHATROOM_CONTRACT_STATUS_UPDATED') {
-      setLastContractId(null);
-      setContractStatus(c.status);
-      return;
-    } else if (c.chatType === 'CHATROOM_ACTIVE_STATUS_UPDATED') {
-      setChatRoomStatus(c.status);
-      return;
-    }
+      if (c.chatType === 'CONTRACT') {
+        setLastContractId(c.chatId);
+      } else if (c.chatType === 'CHATROOM_CONTRACT_STATUS_UPDATED') {
+        setLastContractId(null);
+        setContractStatus(c.status);
+        return;
+      } else if (c.chatType === 'CHATROOM_ACTIVE_STATUS_UPDATED') {
+        setChatRoomStatus(c.status);
+        return;
+      }
 
-    setChat((prev) => [...prev, c]);
+      setChat((prev) => [...prev, c]);
 
-    queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
-    queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
-  }, []);
+      queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
+    },
+    [queryClient],
+  );
 
   useEffect(() => {
     if (initialData?.chatList) {
@@ -113,19 +116,13 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
     };
   }, [chatRoomId, handleIncoming]);
 
-  const send = useCallback(
-    (chatRoomId: number, request: ChatRequest) => {
-      if (!stompRef.current) return;
-      stompRef.current.publish({
-        destination: `/app/chat/send/${chatRoomId}`,
-        body: JSON.stringify(request),
-      });
-
-      queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
-      queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
-    },
-    [queryClient],
-  );
+  const send = useCallback((chatRoomId: number, request: ChatRequest) => {
+    if (!stompRef.current) return;
+    stompRef.current.publish({
+      destination: `/app/chat/send/${chatRoomId}`,
+      body: JSON.stringify(request),
+    });
+  }, []);
 
   return {
     chat,

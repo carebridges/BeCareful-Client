@@ -48,7 +48,6 @@ export interface CaregiverMyResponse {
 
 // 요양보호사 마이페이지 수정
 export interface CaregiverMyRequest {
-  phoneNumber: string;
   profileImageTempKey: string | null;
   caregiverCertificate: CertificateInfo | null;
   socialWorkerCertificate: CertificateInfo | null;
@@ -66,9 +65,11 @@ export interface CareerDetail {
 
 // 경력서 조회 응답
 export interface CareerResponse {
+  careerId: number;
   title: string;
   careerType: '신입' | '경력';
   introduce: string;
+  lastModifiedDate: string;
   careerDetails: CareerDetail[];
 }
 

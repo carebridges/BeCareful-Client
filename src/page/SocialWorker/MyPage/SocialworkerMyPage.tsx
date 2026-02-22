@@ -28,7 +28,7 @@ const SocialworkerMyPage = () => {
 
       <ProfileWrapper>
         <ProfileCard
-          profileImgURL={data?.institutionInfo.institutionImageUrl ?? ''}
+          profileImgURL={data?.socialWorkerInfo.profileImageUrl ?? ''}
           name={data?.socialWorkerInfo.name ?? ''}
           nickname={data?.socialWorkerInfo.nickName ?? ''}
           chevronClick={() => handleNavigate('/socialworker/my/profile')}
@@ -102,6 +102,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+
+  svg {
+    cursor: pointer;
+  }
 `;
 
 const NavLeft = styled.label`

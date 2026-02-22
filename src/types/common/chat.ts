@@ -94,6 +94,56 @@ export interface ChatRoomActiveStatusUpdatedChatResponse {
   senderType?: string;
 }
 
+export interface NewChat {
+  chatRoomId: number;
+  lastChat: string;
+  lastSendTime: string;
+  unreadCount: number;
+}
+
+export interface TextChatResponse {
+  chatId: number;
+  chatType: 'TEXT';
+  senderType: UserRole;
+  text: string;
+  sentTime: string;
+}
+
+export interface ContractChatResponse {
+  chatType: 'CONTRACT';
+  chatId: number;
+  senderType: UserRole;
+  sentTime: string;
+  elderlyName: string;
+  elderlyAge: number;
+  elderlyGender: 'FEMALE' | 'MALE';
+  caregiverName: string;
+  caregiverPhoneNumber: string;
+  careTypes: string[];
+  workDays: WorkDay[];
+  workStartTime: string;
+  workEndTime: string;
+  workSalaryUnitType: WorkSalaryUnitType;
+  workSalaryAmount: number;
+  workStartDate: string;
+}
+
+export interface ChatRoomContractStatusUpdatedChatResponse {
+  chatType: 'CHATROOM_CONTRACT_STATUS_UPDATED';
+  chatId?: number;
+  status: ChatRoomContractStatus;
+  sentTime?: string;
+  senderType?: string;
+}
+
+export interface ChatRoomActiveStatusUpdatedChatResponse {
+  chatType: 'CHATROOM_ACTIVE_STATUS_UPDATED';
+  chatId?: number;
+  status: ChatRoomStatus;
+  sentTime?: string;
+  senderType?: string;
+}
+
 export type ChatRequest =
   | SendTextChatRequest
   | EditContractChatRequest

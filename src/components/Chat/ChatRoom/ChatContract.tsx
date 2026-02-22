@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 import InfoDisplayChat from '@/components/common/InfoDisplay/InfoDisplayChat';
 import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
-import { ContractChatResponse } from '@/types/common/chat';
+import { ContractChatResponse, UserRole } from '@/types/common/chat';
 import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
 
 interface ChatContractProps {
+  role: UserRole;
   contract: ContractChatResponse;
-  role: string;
 }
 
-const ChatContract = ({ contract, role }: ChatContractProps) => {
+const ChatContract = ({ role, contract }: ChatContractProps) => {
   const contractInfo =
     role === 'CAREGIVER'
       ? [

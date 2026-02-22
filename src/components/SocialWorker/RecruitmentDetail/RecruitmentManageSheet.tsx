@@ -31,7 +31,7 @@ export const RecruitmentManageSheet = ({
     >
       <OptionList>
         <RecruitmentManageCheckCard
-          option="edit"
+          tone="blue"
           pressed={selectedOption === 'edit'}
           text="공고 수정"
           disabled={isEditDisabled}
@@ -41,13 +41,13 @@ export const RecruitmentManageSheet = ({
           }}
         />
         <RecruitmentManageCheckCard
-          option="close"
+          tone="orange"
           pressed={selectedOption === 'close'}
           text="공고 마감"
           onClick={() => onSelectOption('close')}
         />
         <RecruitmentManageCheckCard
-          option="delete"
+          tone="orange"
           pressed={selectedOption === 'delete'}
           text="공고 삭제"
           onClick={() => onSelectOption('delete')}

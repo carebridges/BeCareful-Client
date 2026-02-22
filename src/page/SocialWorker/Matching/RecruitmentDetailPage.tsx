@@ -111,7 +111,7 @@ export const RecruitmentDetailPage = () => {
   const hasInmateLabel = elderlyInfo.hasInmate ? '동거중' : '비동거';
   const hasPetLabel = elderlyInfo.hasPet ? '있음' : '없음';
 
-  const createdDateLabel = formatDateTime(createdAt).split(' ')[0];
+  const createdDateLabel = formatDateTime(createdAt, true).replace(/\.$/, '');
   const handleConfirmSheet = () => {
     if (!selectedOption) {
       setIsSheetOpen(false);

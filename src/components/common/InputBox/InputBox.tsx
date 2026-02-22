@@ -6,6 +6,7 @@ interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   gray?: boolean;
   placeholder?: string;
   value?: string;
+  titleVariant?: 'default' | 'small';
 }
 
 const InputBox = ({
@@ -14,10 +15,11 @@ const InputBox = ({
   gray,
   placeholder,
   value,
+  titleVariant = 'default',
   ...props
 }: InputBoxProps) => {
   return (
-    <Container>
+    <Container $titleVariant={titleVariant}>
       <div className="titleWrapper">
         <label className="title">
           {title} <span>*</span>
@@ -35,7 +37,7 @@ const InputBox = ({
 
 export default InputBox;
 
-const Container = styled.div`
+const Container = styled.div<{ $titleVariant: 'default' | 'small' }>`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -48,7 +50,10 @@ const Container = styled.div`
 
   .title {
     color: ${({ theme }) => theme.colors.gray900};
-    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-size: ${({ theme, $titleVariant }) =>
+      $titleVariant === 'default'
+        ? theme.typography.fontSize.title5
+        : theme.typography.fontSize.body2};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
   }
 

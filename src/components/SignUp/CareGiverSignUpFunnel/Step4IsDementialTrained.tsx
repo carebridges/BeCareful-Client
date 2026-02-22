@@ -1,7 +1,7 @@
 import { Button } from '@/components/common/Button/Button';
 import { BooleanNoCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/BooleanNoCard';
 import { BooleanYesCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/BooleanYesCard';
-import { useCaregiverSignUpContext } from '@/contexts/CaregiverSignUpContext';
+import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 

@@ -1,11 +1,11 @@
-import { useSignUpContext } from '@/contexts/SocialWorkerSignUpContext';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { NameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/NameInput';
 import { NicknameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/NicknameInput';
 import { PhoneNumberInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/PhoneNumberInput';
 import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
-import { useBasicInfoForm } from '@/hooks/SignUp/useBasicInfoForm';
+import { useKakaoBasicInfoForm } from '@/hooks/SignUp/useBasicInfoForm';
 
 export const Step4BasicInfo = () => {
   const { goToNext, goToPrev } = useSignUpContext();
@@ -17,7 +17,7 @@ export const Step4BasicInfo = () => {
     handleBirthAndGenderChange,
     message,
     state,
-  } = useBasicInfoForm();
+  } = useKakaoBasicInfoForm();
 
   return (
     <StepWrapper>

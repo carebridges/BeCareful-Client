@@ -3,7 +3,7 @@ import { InstitutionFunnel } from '@/components/SignUp/InstitutionFunnel/Institu
 import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
-import { useInstitutionSearch } from '@/hooks/SignUp/useInstitutionSearch';
+import { useInstitutionSearchForKakao } from '@/hooks/SignUp/useInstitutionSearchForKakao';
 
 export const Step3InstitutionName = () => {
   const {
@@ -15,7 +15,7 @@ export const Step3InstitutionName = () => {
     handleRegisterComplete,
     handleRegisterCancel,
     handleNext,
-  } = useInstitutionSearch();
+  } = useInstitutionSearchForKakao();
 
   if (isRegisteringInstitution) {
     return (

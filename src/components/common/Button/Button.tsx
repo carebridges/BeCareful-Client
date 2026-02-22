@@ -4,11 +4,13 @@ type ButtonVariant =
   | 'blue'
   | 'blue2'
   | 'gray'
+  | 'gray50'
   | 'disabled'
   | 'white'
   | 'mainBlue'
   | 'subBlue'
-  | 'mainOrange';
+  | 'mainOrange'
+  | 'subOrange';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -76,6 +78,11 @@ const getVariantStyle = (variant: ButtonVariant) => {
         background-color: ${({ theme }) => theme.colors.gray300};
         color: ${({ theme }) => theme.colors.white};
       `;
+    case 'gray50':
+      return css`
+        background-color: ${({ theme }) => theme.colors.gray50};
+        color: ${({ theme }) => theme.colors.gray900};
+      `;
     case 'disabled':
       return css`
         background-color: ${({ theme }) => theme.colors.gray300};
@@ -101,6 +108,11 @@ const getVariantStyle = (variant: ButtonVariant) => {
       return css`
         background-color: ${({ theme }) => theme.colors.mainOrange};
         color: ${({ theme }) => theme.colors.white};
+      `;
+    case 'subOrange':
+      return css`
+        background-color: ${({ theme }) => theme.colors.subOrange};
+        color: ${({ theme }) => theme.colors.mainOrange};
       `;
   }
 };

@@ -87,7 +87,7 @@ const CaregiverCareerExperience = ({
           {experiences.length > 1 && (
             <Button
               height="52px"
-              variant="disabled"
+              variant="subOrange"
               onClick={() => deleteExperience(index)}
               style={{
                 display: 'flex',

@@ -72,6 +72,10 @@ const Container = styled.div`
     font-size: ${({ theme }) => theme.typography.fontSize.title5};
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   }
+
+  svg {
+    cursor: pointer;
+  }
 `;
 
 const NavLeft = styled.label`

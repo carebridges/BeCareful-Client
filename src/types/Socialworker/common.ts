@@ -10,12 +10,6 @@ export type CommunityAgreeField =
   | 'agreedToCollectPersonalInfo'
   | 'agreedToReceiveMarketingInfo';
 
-export interface AgreementValues {
-  isAgreedToTerms: boolean;
-  isAgreedToCollectPersonalInfo: boolean;
-  isAgreedToReceiveMarketingInfo: boolean;
-}
-
 export interface CommunityAgreementValues {
   agreedToTerms: boolean;
   agreedToCollectPersonalInfo: boolean;

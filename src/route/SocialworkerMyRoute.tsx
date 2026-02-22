@@ -4,6 +4,7 @@ import SocialworkerEditInstitutionPage from '@/page/SocialWorker/MyPage/Socialwo
 import SocialworkerEditProfilePage from '@/page/SocialWorker/MyPage/SocialworkerEditProfilePage';
 import SocialworkerMyPage from '@/page/SocialWorker/MyPage/SocialworkerMyPage';
 import SocialworkerSettingPage from '@/page/SocialWorker/MyPage/SocialworkerSettingPage';
+import SocialworkerBlockPage from '@/page/SocialWorker/MyPage/SocialworkerBlockPage';
 
 const SocialworkerMyRoute = () => {
   return (
@@ -20,7 +21,7 @@ const SocialworkerMyRoute = () => {
           element={<SocialworkerEditAssociationPage />}
         />
         <Route path="setting" element={<SocialworkerSettingPage />} />
-        {/* <Route path="block" element={<SocialworkerBlockPage />} /> */}
+        <Route path="block" element={<SocialworkerBlockPage />} />
       </Routes>
       <Outlet />
     </div>

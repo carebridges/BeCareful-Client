@@ -36,7 +36,13 @@ const CaregiverApplyDetailPage = () => {
             data.recruitmentDetailInfo.recruitmentInfo.recruitmentStatus ===
             '공고마감'
           }
-          onClick={() => handleNavigate('/caregiver/chat')}
+          onClick={() => {
+            if (data.chatRoomId) {
+              handleNavigate(`/caregiver/chat/${data.chatRoomId}`);
+            } else {
+              handleNavigate('/caregiver/chat');
+            }
+          }}
         >
           {data.recruitmentDetailInfo.recruitmentInfo.recruitmentStatus ===
           '공고마감'
