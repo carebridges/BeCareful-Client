@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as Chevron } from '@/assets/icons/ChevronRightProfile.svg';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { InstitutionRank } from '@/types/Community/common';
+import { InstitutionRank } from '@/types/common';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { formatCaretype } from '@/utils/format/domain';
 

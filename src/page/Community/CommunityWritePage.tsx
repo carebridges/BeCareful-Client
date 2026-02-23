@@ -24,9 +24,13 @@ import { usePostings } from '@/hooks/Community/WritePage/usePostings';
 import { useMedia } from '@/hooks/Community/WritePage/useMedia';
 import { useSave } from '@/hooks/Community/WritePage/useSave';
 import { usePostingSubmit } from '@/hooks/Community/WritePage/usePostingSubmit';
-import { PostCreateRequest, PostUpdateRequest } from '@/types/Community/post';
-import { MediaItem, MediaItemRequest } from '@/types/Community/common';
 import { usePostDetail } from '@/api/community/community';
+import {
+  MediaItem,
+  MediaItemRequest,
+  PostCreateRequest,
+  PostUpdateRequest,
+} from '@/types/community';
 
 const CommunityWritePage = () => {
   const [searchParams] = useSearchParams();

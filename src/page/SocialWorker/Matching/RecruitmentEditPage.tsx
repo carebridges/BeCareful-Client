@@ -11,8 +11,8 @@ import {
 } from '@/api/matching/socialworker';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
 import { MIN_WAGE } from '@/constants/common/maps';
+import { RecruitmentForm } from '@/types/matching';
 
 export const RecruitmentEditPage = () => {
   const navigate = useNavigate();

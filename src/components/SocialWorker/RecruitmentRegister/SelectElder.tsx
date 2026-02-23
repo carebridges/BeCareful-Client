@@ -65,7 +65,7 @@ export const SelectElder = ({
                 age={e.elderlyAge}
                 gender={e.elderlyGender}
                 careLevel={e.elderlyCareLevel}
-                imageUrl={e.elderlyProfileImageUrl}
+                profileImageUrl={e.elderlyProfileImageUrl}
                 selected={value === e.elderlyId}
                 onClick={() => onChange(e.elderlyId)}
               />

@@ -10,7 +10,7 @@ import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDr
 import { MatchingCareCard } from '@/page/Matching/MatchingCareCard';
 import { DAYS, SALARY } from '@/constants/common/maps';
 import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/domain/care';
-import { ContractChatResponse } from '@/types/common/chat';
+import { ContractChat } from '@/types/chat';
 import { useEditContractForm } from '@/hooks/Socialworker/useEditContractForm';
 import { useChat } from '@/hooks/useChat';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
@@ -20,7 +20,7 @@ const SocialworkerEditContractPage = () => {
   const param = useParams<{ chatRoomId: string }>();
   const chatRoomId = Number(param.chatRoomId);
 
-  const state = location.state as { chat?: ContractChatResponse };
+  const state = location.state as { chat?: ContractChat };
   const contract = state?.chat ?? null;
 
   const { handleGoBack } = useHandleNavigate();

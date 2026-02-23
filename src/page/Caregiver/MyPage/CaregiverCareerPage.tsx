@@ -7,7 +7,7 @@ import CaregiverCareerExperience from '@/components/Caregiver/Mypage/CaregiverCa
 import CaregiverCareerNew from '@/components/Caregiver/Mypage/CaregiverCareerNew';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { CareerDetail, CareerRequest } from '@/types/Caregiver/mypage';
+import { CareerDetail, CareerRequest } from '@/types/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCareer, useUpdateCareer } from '@/api/user/caregiver';
 

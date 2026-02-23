@@ -6,7 +6,7 @@ import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { GENDER_MAP, SALARY_MAP } from '@/constants/common/maps';
-import { MatchingRecruitmentResponse } from '@/types/Caregiver/work';
+import { MatchingRecruitmentResponse } from '@/types/matching';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { formatDaysToKR } from '@/utils/format/domain';
 import { formatDateTime } from '@/utils/format/date';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DAY_MAP, SALARY_MAP, TIME_MAP } from '@/constants/common/maps';
-import { WorkApplication } from '@/types/Caregiver/common';
+import { WorkApplication } from '@/types/matching';
 
 export const useApplicationForm = (data: WorkApplication | undefined) => {
   // 희망 급여 관련 상태

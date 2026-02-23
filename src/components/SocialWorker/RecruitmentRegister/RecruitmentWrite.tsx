@@ -1,4 +1,3 @@
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
 import { styled } from 'styled-components';
 import { TitleInputSection } from '@/components/SocialWorker/RegisterMatchingElder/TitleInputSection';
 import { DaySelectSection } from '@/components/SocialWorker/RegisterMatchingElder/DaySelectSection';
@@ -7,6 +6,7 @@ import { CareTypeSection } from '@/components/SocialWorker/RegisterMatchingElder
 import { PaySection } from '@/components/SocialWorker/RegisterMatchingElder/PaySection';
 import { MemoSection } from '@/components/SocialWorker/RegisterMatchingElder/MemoSection';
 import { useRecruitmentWrite } from '@/hooks/Socialworker/useRecruitmentWrite';
+import { RecruitmentForm } from '@/types/matching';
 
 type Props = {
   value: RecruitmentForm;

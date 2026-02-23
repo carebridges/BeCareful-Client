@@ -1,7 +1,7 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
-import { Presigned, UploadResult } from '@/types/common/image';
 import { useMutation } from '@tanstack/react-query';
+import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
+import { PresignedUrlResponse, UploadResult } from '@/types/common';
 
 /* 협회 프로필 이미지 업로드 */
 export const useUploadAssociationProfileImage = () =>
@@ -12,7 +12,7 @@ export const useUploadAssociationProfileImage = () =>
           ? file.type
           : 'application/octet-stream';
 
-      const { data } = await axiosInstance.post<Presigned>(
+      const { data } = await axiosInstance.post<PresignedUrlResponse>(
         '/association/profile-img/presigned-url',
         null,
         { params: { fileName: file.name, contentType: ct } },

@@ -1,7 +1,6 @@
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
-import { CertificateFormInput } from '@/types/CareGiverSignUp';
-import { CertificateInfo } from '@/types/Caregiver/common';
+import { CertificateFormInput, CertificateInfo } from '@/types/caregiver';
 
 interface CareGiverQualificationCardProps {
   initialType: string;

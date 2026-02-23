@@ -6,7 +6,7 @@ import { SelectElder } from '@/components/SocialWorker/RecruitmentRegister/Selec
 import { Button } from '@/components/common/Button/Button';
 import { CheckElderInfo } from '@/components/SocialWorker/RecruitmentRegister/CheckElderInfo';
 import { RecruitmentWrite } from '@/components/SocialWorker/RecruitmentRegister/RecruitmentWrite';
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
+import { RecruitmentForm } from '@/types/matching';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { useState } from 'react';
 import { useRegisterRecruitment } from '@/api/matching/socialworker';

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
-import { PostListItem } from '@/types/Community/post';
+import { PostListItem } from '@/types/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
 import { formatDateTime } from '@/utils/format/date';

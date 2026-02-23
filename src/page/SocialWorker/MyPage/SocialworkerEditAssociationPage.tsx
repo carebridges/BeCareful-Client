@@ -11,9 +11,10 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import { ASSOCIATION_RANK_MAP } from '@/constants/common/maps';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { CommunityAgreementValues } from '@/types/Socialworker/common';
-import { useLeaveAssociation } from '@/api/community/association';
+import { CommunityAgreement } from '@/types/user';
 import { getTodayDateTime } from '@/utils/format/date';
+import { useLeaveAssociation } from '@/api/community/association';
+
 import {
   useUpdateSocialAssociation,
   useSocialAssociation,
@@ -33,10 +34,8 @@ const SocialworkerEditAssociationPage = () => {
     agreedToReceiveMarketingInfo: true,
   };
   const [agreementStates, setAgreementStates] =
-    useState<CommunityAgreementValues>(defalutAgreemet);
-  const handleAgreementChange = (
-    updatedAgreements: CommunityAgreementValues,
-  ) => {
+    useState<CommunityAgreement>(defalutAgreemet);
+  const handleAgreementChange = (updatedAgreements: CommunityAgreement) => {
     setAgreementStates(updatedAgreements);
   };
 

@@ -34,7 +34,7 @@ const ElderlyListPage = () => {
       age={e.elderlyAge}
       gender={e.elderlyGender}
       careLevel={e.elderlyCareLevel}
-      imageUrl={e.elderlyProfileImageUrl}
+      profileImageUrl={e.elderlyProfileImageUrl}
       onClick={() => navigate(`/socialworker/elderly/${e.elderlyId}`)}
     />
   ));

@@ -4,11 +4,12 @@ import ChatContractButton from '@/components/Chat/ChatRoom/ChatContractButton';
 import ChatGuide from '@/components/Chat/ChatRoom/ChatGuide';
 import {
   ChatResponse,
-  UserRole,
-  StatusMessage,
+  ChatRoomContractStatus,
+  ChatRoomStatus,
   OtherUserProfile,
-} from '@/types/common/chat';
-import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
+  StatusMessage,
+} from '@/types/chat';
+import { UserRole } from '@/types/common';
 import { formatDateLabel, groupByDate } from '@/utils/format/date';
 
 interface ChatRoomProps {

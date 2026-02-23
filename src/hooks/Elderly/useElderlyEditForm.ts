@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AreaSocial } from '@/types/common/matching';
-import {
-  CareLevel,
-  CareType,
-  ElderDetailResponse,
-  ElderlyRegisterPayload,
-  Gender,
-} from '@/types/Elderly';
-
 import { useUpdateElderly } from '@/api/matching/elderly';
+import { ElderDetailResponse, ElderlyRegisterPayload } from '@/types/elderly';
+import { CareLevel, CareTypeKey, Gender, WorkLocation } from '@/types/common';
 
 const parseAddress = (address: string) => {
   const parts = address.split(' ');
@@ -46,12 +39,12 @@ export const useElderlyEditForm = ({
 
   const [selectedGrade, setSelectedGrade] = useState<CareLevel | ''>('');
 
-  const [selectedArea, setSelectedArea] = useState<AreaSocial | null>(null);
+  const [selectedArea, setSelectedArea] = useState<WorkLocation | null>(null);
   const [detailAddress, setDetailAddress] = useState('');
 
   const [healthCondition, setHealthCondition] = useState('');
 
-  const [selectedCare, setSelectedCare] = useState<CareType | null>(null);
+  const [selectedCare, setSelectedCare] = useState<CareTypeKey | null>(null);
   const [selectedDetails, setSelectedDetails] = useState<string[]>([]);
 
   const { mutate: updateElderly } = useUpdateElderly(elderlyId);
@@ -79,7 +72,7 @@ export const useElderlyEditForm = ({
 
     const firstCareType = elderlyInfo.detailCareTypes?.[0]?.careType;
     if (firstCareType) {
-      setSelectedCare(firstCareType as CareType);
+      setSelectedCare(firstCareType as CareTypeKey);
     }
 
     if (elderlyInfo.address) {
@@ -87,11 +80,11 @@ export const useElderlyEditForm = ({
         elderlyInfo.address,
       );
 
-      const area: AreaSocial = {
+      const area: WorkLocation = {
         siDo,
         siGuGun,
         eupMyeonDong,
-      } as AreaSocial;
+      } as WorkLocation;
 
       setSelectedArea(area);
       setDetailAddress(detailAddress);
@@ -131,7 +124,7 @@ export const useElderlyEditForm = ({
       detailAddress,
       profileImageTempKey,
       healthCondition,
-      detailCareTypeList: selectedDetails as CareType[],
+      detailCareTypeList: selectedDetails as CareTypeKey[],
     };
 
     updateElderly(payload, {

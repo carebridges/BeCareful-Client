@@ -1,7 +1,7 @@
 import { Button } from '@/components/common/Button/Button';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import { RecruitmentManageCheckCard } from '@/components/SocialWorker/RecruitmentDetail/RecruitmentManageCheckCard';
-import { ProfileActionOption } from '@/types/common/profileReport';
+import { ProfileActionOption } from '@/types/common';
 import styled from 'styled-components';
 
 type ProfileActionSheetProps = {

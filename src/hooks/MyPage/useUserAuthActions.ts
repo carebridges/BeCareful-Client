@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { UserRole } from '@/types/common/chat';
+import { UserRole } from '@/types/common';
 import { useDeleteUserInfo } from '@/hooks/useDeleteUserInfo';
 import { useCaregiverLogout, useDeleteCaregiver } from '@/api/user/caregiver';
 import {

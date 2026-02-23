@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ReactComponent as CareerIcon } from '@/assets/icons/caregiver/my/Career.svg';
 import { Button } from '@/components/common/Button/Button';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { CareerInfo } from '@/types/Caregiver/mypage';
+import { CareerInfo } from '@/types/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import CareerDetailItem from './CareerDetailItem';
 

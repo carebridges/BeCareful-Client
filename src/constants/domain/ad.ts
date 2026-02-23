@@ -1,5 +1,4 @@
-import { MediaItem } from '@/types/Community/common';
-import { PostDetailResponse, PostListItem } from '@/types/Community/post';
+import { MediaItem, PostDetailResponse, PostListItem } from '@/types/community';
 
 import p11 from '@/assets/icons/ad/1_1P.png';
 import p12 from '@/assets/icons/ad/1_2P.png';

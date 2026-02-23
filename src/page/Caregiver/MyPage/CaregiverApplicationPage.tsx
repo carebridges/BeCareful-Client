@@ -17,7 +17,7 @@ import {
   TIME_MAP,
 } from '@/constants/common/maps';
 import { CARE_TYPES } from '@/constants/domain/care';
-import { WorkApplicationRequest } from '@/types/Caregiver/work';
+import { WorkApplicationRequest } from '@/types/matching';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useLocationSelection } from '@/hooks/Caregiver/apply/useLocationSelection';
 import { useApplicationForm } from '@/hooks/Caregiver/apply/useApplicationForm';

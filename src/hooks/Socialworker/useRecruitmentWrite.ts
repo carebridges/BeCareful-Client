@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
 import { DAY_MAP } from '@/constants/common/maps';
+import { RecruitmentForm } from '@/types/matching';
 
 type WorkDayEnum = RecruitmentForm['workDays'][number];
 

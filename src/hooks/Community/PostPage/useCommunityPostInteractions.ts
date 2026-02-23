@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { PostDetailResponse } from '@/types/Community/post';
+import { PostDetailResponse } from '@/types/community';
 
 /**
  * 게시글 상세 페이지의 공유, 링크 복사, 파일 처리 관련 로직과 UI 상태를 관리하는 커스텀 훅.

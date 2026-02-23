@@ -5,8 +5,11 @@ import {
   validateVideo,
   ValidationResult,
 } from '@/utils/community/media';
-import { MediaItem, MediaItemRequest } from '@/types/Community/common';
-import { PostDetailResponse } from '@/types/Community/post';
+import {
+  MediaItem,
+  MediaItemRequest,
+  PostDetailResponse,
+} from '@/types/community';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
 import { useUploadMedia } from '@/api/presignedUrl';
 

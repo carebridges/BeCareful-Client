@@ -1,4 +1,4 @@
-import { ChatResponse } from '@/types/common/chat';
+import { ChatResponse } from '@/types/chat';
 
 // 유효한 날짜인지 검증
 export const isRealDate = (isoDateString: string | null): boolean => {

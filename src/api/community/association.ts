@@ -1,25 +1,23 @@
+import { AxiosError } from 'axios';
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  ChairmanDelegateRequest,
-  AssociationInfoRequest,
   AssociationInfoResponse,
+  AssociationListResponse,
+  AssociationUpdateRequest,
+  ChairmanDelegateRequest,
+  JoinAssociationRequest,
   JoinRequestsResponse,
   MemberDetailResponse,
   MemberRankRequest,
   MembersOverviewResponse,
   MembersResponse,
-} from '@/types/Community/association';
-import {
-  GetAssociationListResponse,
-  JoinAssociationRequest,
-} from '@/types/CommunityAssociation';
-import { AxiosError } from 'axios';
-import { ServerErrorResponse } from '@/types/common/ServerError';
+} from '@/types/association';
+import { ServerErrorResponse } from '@/types/common';
 
 // ==================== 협회 목록 및 가입 ====================
 export const useGetAssociationList = () =>
-  useQuery<GetAssociationListResponse>({
+  useQuery<AssociationListResponse>({
     queryKey: ['associationList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get('/association/list');
@@ -58,7 +56,7 @@ export const usePutAssociationInfo = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (associationInfo: AssociationInfoRequest) => {
+    mutationFn: async (associationInfo: AssociationUpdateRequest) => {
       const response = await axiosInstance.put(
         '/association/info',
         associationInfo,

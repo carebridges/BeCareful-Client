@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import InfoDisplayChat from '@/components/common/InfoDisplay/InfoDisplayChat';
 import { GENDER_MAP } from '@/constants/common/maps';
-
-import { ContractChatResponse, UserRole } from '@/types/common/chat';
+import { UserRole } from '@/types/common';
+import { ContractChat } from '@/types/chat';
 import { formatCaretype, formatDaysToKR } from '@/utils/format/domain';
 
 interface ChatContractProps {
   role: UserRole;
-  contract: ContractChatResponse;
+  contract: ContractChat;
 }
 
 const ChatContract = ({ role, contract }: ChatContractProps) => {

@@ -4,7 +4,7 @@ import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.sv
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { ASSOCIATION_JOIN_RANKS_LABELS } from '@/constants/common/maps';
-import { AssociationRank } from '@/types/CommunityAssociation';
+import { AssociationRank } from '@/types/common';
 
 interface CommunityJoinSelectRoleProps {
   selectedRank: AssociationRank | null;

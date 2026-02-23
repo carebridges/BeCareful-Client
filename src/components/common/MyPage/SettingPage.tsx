@@ -8,7 +8,7 @@ import { Toggle } from '@/components/common/Toggle/Toggle';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { UserRole } from '@/types/common/chat';
+import { UserRole } from '@/types/common';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useNavigationActions } from '@/hooks/MyPage/useNavigationActions';
 import { useMarketingAgreement } from '@/hooks/MyPage/useMarketingAgreement';

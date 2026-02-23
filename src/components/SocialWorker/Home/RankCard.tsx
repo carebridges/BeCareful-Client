@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ColorTypes } from '@/style/theme/color';
 import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
-import { InstitutionRank } from '@/types/Community/common';
+import { InstitutionRank } from '@/types/common';
 
 interface RankStyleProps {
   color: keyof ColorTypes;
@@ -12,6 +12,10 @@ export const RankStyles: Record<InstitutionRank, RankStyleProps> = {
   CENTER_DIRECTOR: { color: 'mainBlue', background: 'subBlue' },
   REPRESENTATIVE: { color: 'mainBlue', background: 'subBlue' },
   SOCIAL_WORKER: {
+    color: 'mainGreen',
+    background: 'subGreen',
+  },
+  NONE: {
     color: 'mainGreen',
     background: 'subGreen',
   },

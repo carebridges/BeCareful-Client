@@ -1,8 +1,7 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { getPostList } from '@/api/community/community';
 import { BOARD_LIST } from '@/constants/domain/community';
-import { PageableRequest } from '@/types/Community/common';
-import { PostListItem } from '@/types/Community/post';
+import { PageableRequest, PostListItem } from '@/types/community';
 
 // 특정 게시판의 모든 게시글 리스트 조회
 export const useBoardPosts = (boardType: string, pageable: PageableRequest) => {

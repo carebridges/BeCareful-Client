@@ -1,11 +1,6 @@
 import { useRegisterElderly } from '@/api/matching/elderly';
-import { AreaSocial } from '@/types/common/matching';
-import {
-  CareLevel,
-  CareType,
-  ElderlyRegisterPayload,
-  Gender,
-} from '@/types/Elderly';
+import { CareLevel, CareTypeKey, Gender, WorkLocation } from '@/types/common';
+import { ElderlyRegisterPayload } from '@/types/elderly';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,12 +18,12 @@ export const useElderlyRegisterForm = () => {
 
   const [selectedGrade, setSelectedGrade] = useState<CareLevel | ''>('');
 
-  const [selectedArea, setSelectedArea] = useState<AreaSocial | null>(null);
+  const [selectedArea, setSelectedArea] = useState<WorkLocation | null>(null);
   const [detailAddress, setDetailAddress] = useState('');
 
   const [healthCondition, setHealthCondition] = useState('');
 
-  const [selectedCare, setSelectedCare] = useState<CareType | null>(null);
+  const [selectedCare, setSelectedCare] = useState<CareTypeKey | null>(null);
   const [selectedDetails, setSelectedDetails] = useState<string[]>([]);
 
   const { mutate: registerElderly } = useRegisterElderly();
@@ -66,7 +61,7 @@ export const useElderlyRegisterForm = () => {
       detailAddress,
       profileImageTempKey,
       healthCondition,
-      detailCareTypeList: selectedDetails as CareType[],
+      detailCareTypeList: selectedDetails as CareTypeKey[],
     };
 
     registerElderly(payload, {

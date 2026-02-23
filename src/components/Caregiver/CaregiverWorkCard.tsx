@@ -4,7 +4,7 @@ import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { SALARY_MAP } from '@/constants/common/maps';
 import { useRecruitmentReadStatus } from '@/contexts/RecruitmentReadStatusContext';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { Recruitment } from '@/types/Caregiver/common';
+import { Recruitment } from '@/types/matching';
 import { formatDateTime } from '@/utils/format/date';
 import { formatCaretype, formatDaysToKR } from '@/utils/format/domain';
 

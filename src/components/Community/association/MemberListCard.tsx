@@ -6,7 +6,7 @@ import {
   INSTITUTION_RANK_MAP,
 } from '@/constants/common/maps';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { AssociationMember } from '@/types/Community/association';
+import { AssociationMember } from '@/types/association';
 
 interface MemberListCardProps {
   member: AssociationMember;

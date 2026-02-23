@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MEDIATION_MAP } from '@/constants/common/maps';
-import { MatchingRecruitmentMediateRequest } from '@/types/Caregiver/work';
+import { MatchingRecruitmentMediateRequest } from '@/types/matching';
 import { handleModal } from '@/utils/handleModal';
 import { useMediateRecruitment } from '@/api/matching/caregiver';
 

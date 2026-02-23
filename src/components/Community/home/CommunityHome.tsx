@@ -8,8 +8,7 @@ import 'swiper/css/pagination';
 import { Button } from '@/components/common/Button/Button';
 import PostOverview from '@/components/Community/common/PostOverview';
 import { BOARD_LIST } from '@/constants/domain/community';
-import { PageableRequest } from '@/types/Community/common';
-import { BoardPostListResponse, PostListItem } from '@/types/Community/post';
+import { PageableRequest, PostListItem } from '@/types/community';
 import { useMultipleBoardPosts } from '@/hooks/Community/api/usePostLists';
 import { useImportantPosts } from '@/api/community/community';
 
@@ -34,7 +33,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
   const boardPostings = useMultipleBoardPosts(boardPageable);
 
   const getContent = (
-    data: BoardPostListResponse | undefined,
+    data: PostListItem[] | undefined,
     isError: boolean,
     error: Error | null,
     board: string,
@@ -107,7 +106,7 @@ const CommunityHome = ({ onTabChange }: CommunityHomeProps) => {
                 </Title>
                 <NoticeList>
                   {getContent(
-                    data as BoardPostListResponse,
+                    data as PostListItem[],
                     isError,
                     error,
                     board.label,

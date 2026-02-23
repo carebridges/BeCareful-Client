@@ -1,6 +1,5 @@
 import { DAY_MAP, TIME_MAP } from '@/constants/common/maps';
-import { WorkDay, WorkLocation, WorkTime } from '@/types/Caregiver/common';
-import { CareType } from '@/types/Elderly';
+import { CareTypeKey, WorkDay, WorkLocation, WorkTime } from '@/types/common';
 
 // 리스트 "외 N건" 포맷팅
 export const formatWithEtc = (list: string[], length: number) => {
@@ -23,7 +22,7 @@ export const formatLocation = (
 
 // 케어타입
 export const formatCaretype = (
-  caretypes: string[] | CareType[],
+  caretypes: string[] | CareTypeKey[],
   length: number,
 ) => {
   const caretypeStrings = caretypes.map(String);

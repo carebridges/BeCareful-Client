@@ -1,19 +1,13 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
-import { PublicApiDto } from '@/types/Institution';
-import { Institution } from '@/types/SocialSignUp';
-import { getAddressFromPublicApi } from '@/utils/getAddressFromPublicApi';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
-
-type Presigned = {
-  tempKey: string;
-  presignedUrl: string;
-};
-
-type UploadResult = {
-  tempKey: string;
-  previewUrl: string;
-};
+import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
+import {
+  PresignedUrlResponse,
+  PublicApiDto,
+  UploadResult,
+} from '@/types/common';
+import { Institution } from '@/types/institution';
+import { getAddressFromPublicApi } from '@/utils/getAddressFromPublicApi';
 
 /* 기관 프로필 이미지 업로드 */
 export const useUploadInstitutionProfileImage = () =>
@@ -24,7 +18,7 @@ export const useUploadInstitutionProfileImage = () =>
           ? file.type
           : 'application/octet-stream';
 
-      const { data } = await axiosInstance.post<Presigned>(
+      const { data } = await axiosInstance.post<PresignedUrlResponse>(
         '/nursingInstitution/profile-img/presigned-url',
         null,
         {

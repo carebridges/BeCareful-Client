@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { CommentRequest } from '@/types/Community/comment';
+import { CommentRequest } from '@/types/community';
 import {
   useComments,
   useDeleteComment,

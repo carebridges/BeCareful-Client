@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MediaItemRequest } from '@/types/Community/common';
+import { MediaItemRequest } from '@/types/community';
 import { getDraftStorageKey } from '@/utils/community/storage';
 
 interface PostData {

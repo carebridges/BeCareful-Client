@@ -20,7 +20,7 @@ import { InstitutionInfoSection } from '@/components/SocialWorker/RecruitmentDet
 import { RecruitmentManageSheet } from '@/components/SocialWorker/RecruitmentDetail/RecruitmentManageSheet';
 import { WorkContentSection } from '@/components/SocialWorker/RecruitmentDetail/WorkContentSection';
 import { ErrorToast } from '@/components/SocialWorker/RecruitmentDetail/ErrorToast';
-import { ServerErrorResponse } from '@/types/common/ServerError';
+import { ServerErrorResponse } from '@/types/common';
 import axios, { AxiosError } from 'axios';
 
 type SheetOption = 'edit' | 'close' | 'delete';

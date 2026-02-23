@@ -1,15 +1,15 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { SocialworkerHomeResponse } from '@/types/Socialworker/home';
 import {
-  NursingAssociationInfoRequest,
-  MarketingAgreeInfo,
   SocialworkerAssociationResponse,
-  SocialworkerMyEditResponse,
-  SocialworkerMyRequest,
+  SocialworkerHomeResponse,
   SocialworkerProfileResponse,
-  BlockCaregiverInfo,
-} from '@/types/Socialworker/mypage';
+  SocialworkerUpdateRequest,
+  SocialworkerUpdateResponse,
+} from '@/types/socialworker';
+import { MarketingAgreeInfo } from '@/types/user';
+import { InstitutionUpdateRequest } from '@/types/institution';
+import { BlockCaregiverInfo } from '@/types/caregiver';
 
 // ==================== 홈 ====================
 /* 사회복지사 홈화면 조회 */
@@ -35,7 +35,7 @@ export const useSocialworkerProfile = () =>
 
 /* 회원정보 수정화면 정보 반환 */
 export const useSocialworkerProfileEdit = () =>
-  useQuery<SocialworkerMyEditResponse>({
+  useQuery<SocialworkerUpdateResponse>({
     queryKey: ['socialworkerProfileEdit'],
     queryFn: async () => {
       const { data } = await axiosInstance.get('/social-worker/my/profile');
@@ -48,7 +48,7 @@ export const useUpdateSocialworkerProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (profileData: SocialworkerMyRequest) => {
+    mutationFn: async (profileData: SocialworkerUpdateRequest) => {
       const response = await axiosInstance.put(
         '/social-worker/my/profile',
         profileData,
@@ -68,7 +68,7 @@ export const useUpdateInstitution = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (institutionData: NursingAssociationInfoRequest) => {
+    mutationFn: async (institutionData: InstitutionUpdateRequest) => {
       const response = await axiosInstance.put(
         '/nursingInstitution/info',
         institutionData,

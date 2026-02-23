@@ -1,5 +1,5 @@
-import { CareerDetail } from '@/types/Caregiver/mypage';
 import React from 'react';
+import { CareerDetail } from '@/types/caregiver';
 
 const CareerDetailItem = ({
   details,

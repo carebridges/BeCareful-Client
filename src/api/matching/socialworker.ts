@@ -1,18 +1,16 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
+  EditRecruitmentForm,
   ElderMatchingStatus,
+  MatchingCaregiver,
   MatchingElderData,
   RawMatchingCaregiver,
-  MatchingCaregiver,
-  RecruitmentForm,
   RawMatchingElderData,
-  EditRecruitmentForm,
-} from '@/types/Matching.socialWorker';
-import {
-  RecruitmentDetailResponse,
+  RecruitmentDetail,
+  RecruitmentForm,
   RecruitmentSearchResponse,
-} from '@/types/Socialworker/matching';
+} from '@/types/matching';
 
 // ==================== 매칭 현황 ====================
 export const getMatchingRecruitment = async (
@@ -85,7 +83,7 @@ export const useRecruitmentDetail = (recruitmentId: number) =>
   useQuery({
     queryKey: ['recruitmentDetail', recruitmentId],
     queryFn: async () => {
-      const { data } = await axiosInstance.get<RecruitmentDetailResponse>(
+      const { data } = await axiosInstance.get<RecruitmentDetail>(
         `/matching/social-worker/recruitment/${recruitmentId}`,
       );
       return data;

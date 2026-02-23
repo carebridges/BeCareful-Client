@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { GENDER_MAP } from '@/constants/common/maps';
-import { MatchingElderlyList } from '@/types/Socialworker/home';
 import { Button } from '@/components/common/Button/Button';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { MatchingElderlyList } from '@/types/socialworker';
 
 interface ElderSectionProps {
   data: MatchingElderlyList[] | undefined;

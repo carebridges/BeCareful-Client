@@ -1,5 +1,5 @@
 import { colors } from '@/style/theme/color';
-import { CertificateKey } from '@/types/CareGiverSignUp';
+import { CertificateKey } from '@/types/caregiver';
 
 export const CAREGIVER_WORK_FILTERS = [
   { icon: '', name: '전체' },

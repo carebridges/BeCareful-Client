@@ -1,19 +1,10 @@
 import { axiosInstance } from '@/api/axiosInstance';
+import { useMutation } from '@tanstack/react-query';
 import {
   buildCaregiverSignUpPayload,
   CaregiverSignUpFormData,
-} from '@/types/CareGiverSignUp';
-import { useMutation } from '@tanstack/react-query';
-
-type Presigned = {
-  tempKey: string;
-  presignedUrl: string;
-};
-
-type UploadResult = {
-  tempKey: string;
-  previewUrl: string;
-};
+} from '@/types/auth';
+import { PresignedUrlResponse, UploadResult } from '@/types/common';
 
 /* 요양보호사 회원가입 */
 export const useUploadCareGiverProfileImage = () =>
@@ -24,7 +15,7 @@ export const useUploadCareGiverProfileImage = () =>
           ? file.type
           : 'application/octet-stream';
 
-      const { data } = await axiosInstance.post<Presigned>(
+      const { data } = await axiosInstance.post<PresignedUrlResponse>(
         '/caregiver/profile-img/presigned-url',
         null,
         {

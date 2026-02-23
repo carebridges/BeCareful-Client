@@ -1,5 +1,5 @@
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { UserRole } from '@/types/common/chat';
+import { UserRole } from '@/types/common';
 
 export const useNavigationActions = (role: UserRole) => {
   const { handleNavigate } = useHandleNavigate();

@@ -1,6 +1,6 @@
-import { Boards } from '@/types/Community/community';
 import { ReactComponent as NoticeIcon } from '@/assets/icons/community/Notice.svg';
 import { ReactComponent as Information } from '@/assets/icons/community/Information.svg';
+import { Boards, CommunityAccessStatus } from '@/types/community';
 
 // ==================== 커뮤니티 접근 권한 ====================
 export const COMMUNITY_ACCESS_STATUS = [
@@ -11,11 +11,8 @@ export const COMMUNITY_ACCESS_STATUS = [
   'NOT_APPLIED',
 ] as const;
 
-export type CommunityAccessStatusValue =
-  (typeof COMMUNITY_ACCESS_STATUS)[number];
-
 export const COMMUNITY_ACCESS_SESSION_KEYS: Partial<
-  Record<CommunityAccessStatusValue, string>
+  Record<CommunityAccessStatus, string>
 > = {
   REJECTED: 'rejectedModalShown',
   PENDING: 'pendingModalShown',

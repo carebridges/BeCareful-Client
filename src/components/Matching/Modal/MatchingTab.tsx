@@ -1,8 +1,7 @@
 import { Tab } from '@/components/common/Tab/Tab';
 import { ApplyListTab } from '@/components/Matching/ApplyListTab';
 import { MatchListTab } from '@/components/Matching/MatchListTab';
-
-import { MatchingCaregiver } from '@/types/Matching.socialWorker';
+import { MatchingCaregiver } from '@/types/matching';
 import styled from 'styled-components';
 
 interface MatchingTabProps {

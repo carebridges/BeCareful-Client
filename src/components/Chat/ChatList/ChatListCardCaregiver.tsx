@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { CaregiverChatList } from '@/types/Caregiver/chat';
+import { CaregiverChatList } from '@/types/chat';
 import { formatTextTruncate } from '@/utils/format/text';
 
 interface ChatListCardProps {

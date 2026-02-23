@@ -10,7 +10,7 @@ import {
   ASSOCIATION_MEMBER_TYPES,
   ASSOCIATION_RANK_MAP,
 } from '@/constants/common/maps';
-import { ChairmanDelegateRequest } from '@/types/Community/association';
+import { ChairmanDelegateRequest } from '@/types/association';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useDelegateChairman } from '@/api/community/association';
 

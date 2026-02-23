@@ -5,16 +5,17 @@ import {
   useQueryClient,
   UseQueryResult,
 } from '@tanstack/react-query';
-import { CommunityHomeResponse } from '@/types/Community/community';
-import { PageableRequest } from '@/types/Community/common';
 import {
+  Comment,
+  CommentRequest,
+  CommunityAccessResponse,
+  CommunityHomeResponse,
+  PageableRequest,
+  PostCreateRequest,
   PostDetailResponse,
   PostListItem,
-  PostCreateRequest,
   PostUpdateRequest,
-} from '@/types/Community/post';
-import { Comment, CommentRequest } from '@/types/Community/comment';
-import { CommunityAccessResponse } from '@/types/CommunityAssociation';
+} from '@/types/community';
 
 // ==================== 커뮤니티 홈 ====================
 /* 커뮤니티 탭 접근 권한 검증 */

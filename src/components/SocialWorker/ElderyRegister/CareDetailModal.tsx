@@ -9,13 +9,13 @@ import {
   CareModalButtonWrapper,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
 import { CARE_TYPE_DETAILS } from '@/constants/domain/care';
-import { CareType } from '@/types/Elderly';
+import { CareTypeKey } from '@/types/common';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  careType: CareType | null;
+  careType: CareTypeKey | null;
   selectedDetails: string[];
   onToggleDetail: (item: string) => void;
 }

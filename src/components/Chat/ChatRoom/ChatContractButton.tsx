@@ -4,13 +4,14 @@ import { Button } from '@/components/common/Button/Button';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
+import { UserRole } from '@/types/common';
 import {
-  AcceptContractChatRequest,
+  AcceptContractRequest,
   ChatResponse,
-  ConfirmContractChatRequest,
-  UserRole,
-} from '@/types/common/chat';
+  ChatRoomContractStatus,
+  ChatRoomStatus,
+  ConfirmContractRequest,
+} from '@/types/chat';
 import { handleModal } from '@/utils/handleModal';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useChat } from '@/hooks/useChat';
@@ -41,7 +42,7 @@ const ChatContractButton = ({
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const handleConfirm = () => {
-    const request: ConfirmContractChatRequest = {
+    const request: ConfirmContractRequest = {
       sendRequestType: 'CONFIRM_MATCHING',
       lastContractChatId,
     };
@@ -54,7 +55,7 @@ const ChatContractButton = ({
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
 
   const handleAccept = () => {
-    const request: AcceptContractChatRequest = {
+    const request: AcceptContractRequest = {
       sendRequestType: 'ACCEPT_CONTRACT',
       lastContractChatId,
     };

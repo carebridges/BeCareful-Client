@@ -6,12 +6,12 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ErrorToast } from '@/components/SocialWorker/RecruitmentDetail/ErrorToast';
+import { InstitutionInfo } from '@/types/institution';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   useCaregiverBlockedInstitution,
   useUnblockInstitution,
 } from '@/api/user/caregiver';
-import { InstitutionInfo } from '@/types/common/institutionInfo';
 
 const CaregiverBlockPage = () => {
   const { handleGoBack } = useHandleNavigate();

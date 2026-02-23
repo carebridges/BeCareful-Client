@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { usePostReadStatus } from '@/contexts/PostReadStatusContext';
 import { BOARD_MAP } from '@/constants/domain/community';
 import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
-import { PostListItem } from '@/types/Community/post';
+import { PostListItem } from '@/types/community';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
 import { formatDateTime } from '@/utils/format/date';

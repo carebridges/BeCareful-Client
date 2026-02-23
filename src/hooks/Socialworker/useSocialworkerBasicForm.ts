@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
-import { SocialworkerMyEditResponse } from '@/types/Socialworker/mypage';
-import { InstitutionRank } from '@/types/Community/common';
+import { SocialworkerUpdateResponse } from '@/types/socialworker';
+import { InstitutionRank } from '@/types/common';
 import { getGenderCode } from '@/utils/format/text';
 
 export const useSocialworkerBasicForm = (
-  data: SocialworkerMyEditResponse | undefined,
+  data: SocialworkerUpdateResponse | undefined,
   setIsChanged: Dispatch<SetStateAction<boolean>>,
 ) => {
   const [name, setName] = useState('');

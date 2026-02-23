@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { DAY_MAP, SALARY_MAP } from '@/constants/common/maps';
-import {
-  ContractChatResponse,
-  EditContractChatRequest,
-} from '@/types/common/chat';
+import { ContractChat, EditContractRequest } from '@/types/chat';
 import { formatDaysToEN } from '@/utils/format/domain';
 
-export const useEditContractForm = (contract: ContractChatResponse | null) => {
+export const useEditContractForm = (contract: ContractChat | null) => {
   const [workday, setWorkday] = useState<string[]>([]);
   const [workStartTime, setWorkStartTime] = useState('');
   const [workEndTime, setWorkEndTime] = useState('');
@@ -144,7 +141,7 @@ export const useEditContractForm = (contract: ContractChatResponse | null) => {
     [selectedDay],
   );
 
-  const getRequest = useCallback((): EditContractChatRequest => {
+  const getRequest = useCallback((): EditContractRequest => {
     const year = selectedYear[0] ?? '';
     const month = selectedMonth[0]?.padStart(2, '0');
     const day = selectedDay[0]?.padStart(2, '0');

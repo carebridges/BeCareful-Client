@@ -18,9 +18,8 @@ import {
   ASSOCIATION_RANK_MAP,
   GENDER_MAP,
 } from '@/constants/common/maps';
-import { AssociationRankKR } from '@/types/Community/common';
-import { MemberRankRequest } from '@/types/Community/association';
-import { ServerErrorResponse } from '@/types/common/ServerError';
+import { AssociationRankKR, ServerErrorResponse } from '@/types/common';
+import { MemberRankRequest } from '@/types/association';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   useMemberExpel,

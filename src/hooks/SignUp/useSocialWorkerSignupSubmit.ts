@@ -1,6 +1,6 @@
 import { useSignUpMember } from '@/api/signup/socialworker';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
-import { SignUpPayload } from '@/types/SocialSignUp';
+import { SignUpPayload } from '@/types/auth';
 import { useCallback } from 'react';
 import { useSetRecoilState } from 'recoil';
 

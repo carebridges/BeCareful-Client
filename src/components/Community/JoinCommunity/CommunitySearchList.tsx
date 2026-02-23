@@ -3,7 +3,7 @@ import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicato
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { AssociationListCard } from '@/components/Community/JoinCommunity/AssociationListCard';
 import { CommunityNotFound } from '@/components/Community/JoinCommunity/CommunityNotFound';
-import { AssociationWholeList } from '@/types/CommunityAssociation';
+import { AssociationWholeList } from '@/types/association';
 import { styled } from 'styled-components';
 
 interface Props {

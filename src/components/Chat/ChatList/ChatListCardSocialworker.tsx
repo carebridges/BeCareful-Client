@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { GENDER_MAP } from '@/constants/common/maps';
-import { SocialworkerChatList } from '@/types/Socialworker/chat';
+import { SocialworkerChatList } from '@/types/chat';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { formatTextTruncate } from '@/utils/format/text';
 

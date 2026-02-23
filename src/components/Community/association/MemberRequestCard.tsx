@@ -5,14 +5,14 @@ import {
   ASSOCIATION_RANK_MAP,
   INSTITUTION_RANK_MAP,
 } from '@/constants/common/maps';
-import { JoinApplication } from '@/types/Community/association';
+import { Applications } from '@/types/association';
 import {
   useAcceptJoinRequest,
   useRejectJoinRequest,
 } from '@/api/community/association';
 
 interface MemberRequestCardProps {
-  request: JoinApplication;
+  request: Applications;
 }
 
 const MemberRequestCard = ({ request }: MemberRequestCardProps) => {

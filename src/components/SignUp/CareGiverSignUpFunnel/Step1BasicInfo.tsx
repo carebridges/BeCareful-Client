@@ -7,7 +7,6 @@ import { PhoneNumberInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/S
 import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
 import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
 import { useCaregiverBasicInfoForm } from '@/hooks/SignUp/useCaregiverBasicInfoForm';
-import { AgreeField } from '@/types/Socialworker/common';
 import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';
 import {
   CAREGIVER_TERMS,
@@ -15,6 +14,7 @@ import {
   PRIVACY_TERMS,
 } from '@/constants/common/termText';
 import { useNavigate } from 'react-router-dom';
+import { AgreeField } from '@/types/user';
 
 export const Step1BasicInfo = () => {
   const { goToNext } = useCaregiverSignUpContext();

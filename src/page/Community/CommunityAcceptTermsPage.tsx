@@ -9,15 +9,13 @@ import {
   PRIVACY_TERMS,
   MARKETING_TERMS,
 } from '@/constants/common/termText';
-import {
-  AssociationRank,
-  JoinAssociationRequest,
-} from '@/types/CommunityAssociation';
 import { useCallback, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
 import { useCommunityAgree } from '@/hooks/Community/CommunityJoin/useCommunityAgree';
+import { AssociationRank } from '@/types/common';
+import { JoinAssociationRequest } from '@/types/association';
 
 export const CommunityAcceptTermsPage = () => {
   const navigate = useNavigate();

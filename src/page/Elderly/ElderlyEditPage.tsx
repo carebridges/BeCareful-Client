@@ -15,13 +15,13 @@ import { NameInputSection } from '@/components/SocialWorker/ElderyRegister/NameI
 import { PetSection } from '@/components/SocialWorker/ElderyRegister/PetSection';
 import { SubmitSection } from '@/components/SocialWorker/ElderyRegister/SubmitSection';
 import { AreaSocials } from '@/data/AreaSocial';
-import { AreaSelectData } from '@/types/common/matching';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ReactComponent as ArrowLeft } from '@/assets/icons/ArrowLeft.svg';
 import styled from 'styled-components';
 import { useElderlyEditForm } from '@/hooks/Elderly/useElderlyEditForm';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { AreaSelectData } from '@/types/common';
 
 export const ElderlyEditPage = () => {
   const navigate = useNavigate();

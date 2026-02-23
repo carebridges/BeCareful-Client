@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ReactComponent as DotIcon } from '@/assets/icons/community/Dots.svg';
 import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
-import { PostDetailResponse } from '@/types/Community/post';
+import { PostDetailResponse } from '@/types/community';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
 import { formatDateTime } from '@/utils/format/date';
 

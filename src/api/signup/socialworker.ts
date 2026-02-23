@@ -1,6 +1,7 @@
 import { axiosInstance } from '@/api/axiosInstance';
-import { SearchInstitution, SignUpPayload } from '@/types/SocialSignUp';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { SignUpPayload } from '@/types/auth';
+import { InstitutionInfo } from '@/types/institution';
 
 /* 사회복지사 회원가입 */
 export const signUpMember = async (payload: SignUpPayload) => {
@@ -14,8 +15,8 @@ export const useSignUpMember = () => {
 
 export const searchInstitution = async (
   name: string,
-): Promise<SearchInstitution[]> => {
-  const { data } = await axiosInstance.get<SearchInstitution[]>(
+): Promise<InstitutionInfo[]> => {
+  const { data } = await axiosInstance.get<InstitutionInfo[]>(
     '/nursingInstitution/search',
     { params: { nursingInstitutionName: name } },
   );
@@ -25,11 +26,11 @@ export const searchInstitution = async (
 export const useSearchInstitution = (
   name: string,
   options?: Omit<
-    UseQueryOptions<SearchInstitution[], unknown>,
+    UseQueryOptions<InstitutionInfo[], unknown>,
     'queryKey' | 'queryFn'
   >,
 ) => {
-  return useQuery<SearchInstitution[], unknown>({
+  return useQuery<InstitutionInfo[], unknown>({
     queryKey: ['searchInstitution', name],
     queryFn: () => searchInstitution(name),
     enabled: !!name,

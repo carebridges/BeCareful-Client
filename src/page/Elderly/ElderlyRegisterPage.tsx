@@ -18,7 +18,7 @@ import { useUploadElderlyProfileImage } from '@/api/matching/elderly';
 import { ProfileImageUploader } from '@/components/SocialWorker/common/ProfileImageUploader';
 import { PetSection } from '@/components/SocialWorker/ElderyRegister/PetSection';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { AreaSelectData } from '@/types/common/matching';
+import { AreaSelectData } from '@/types/common';
 
 const ElderlyRegisterPage = () => {
   const navigate = useNavigate();

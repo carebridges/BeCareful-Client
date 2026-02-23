@@ -3,7 +3,11 @@ import {
   DetailContentContainer,
   Title,
 } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/MatchingCaregiverDetailInfo.styles';
-import { CareerSectionProps } from '@/types/Matching.socialWorker';
+import { CareerInfo } from '@/types/caregiver';
+
+interface CareerSectionProps {
+  careerInfo?: CareerInfo | null;
+}
 
 export const CareerSection = ({ careerInfo }: CareerSectionProps) => {
   if (!careerInfo) return null;

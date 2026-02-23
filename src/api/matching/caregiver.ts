@@ -1,20 +1,18 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  MatchingListResponse,
-  MatchingRecruitmentMediateRequest,
-  MatchingRecruitmentResponse,
-} from '@/types/Caregiver/work';
+import { CaregiverCompletedMatching } from '@/types/caregiver';
 import {
   MatchingMyRecruitmentDetailResponse,
-  MatchingMyRecruitmentResponse,
-} from '@/types/Caregiver/apply';
-import { CaregiverCompletedMatchingResponse } from '@/types/Caregiver/home';
+  MatchingRecruitmentMediateRequest,
+  MatchingRecruitmentResponse,
+  Recruitment,
+  RecruitmentListResponse,
+} from '@/types/matching';
 
 // ==================== 확정된 일자리 ====================
 /* 확정된 일자리의 리스트 반환 - 나의 일자리 */
 export const useCompletedMatchingList = () => {
-  return useQuery<CaregiverCompletedMatchingResponse, Error>({
+  return useQuery<CaregiverCompletedMatching[], Error>({
     queryKey: ['caregiverCompletedMatchingList'],
     queryFn: async () => {
       const response = await axiosInstance.get(
@@ -54,7 +52,7 @@ export const useUpdateMatchingMemo = () => {
 // ==================== 공고 목록 ====================
 /* 매칭 공고 리스트 조회 */
 export const useRecruitmentList = () => {
-  return useQuery<MatchingListResponse, Error>({
+  return useQuery<Recruitment[], Error>({
     queryKey: ['caregiverRecruitmentList'],
     queryFn: async () => {
       const response = await axiosInstance.get('/matching/caregiver/list');
@@ -134,7 +132,7 @@ export const useMediateRecruitment = (recruitmentId: number) => {
 
 /* 지원 현황 조회 */
 export const useMyApplicationList = (activeTab: string) => {
-  return useQuery<MatchingMyRecruitmentResponse, Error>({
+  return useQuery<RecruitmentListResponse, Error>({
     queryKey: ['caregiverApplicationList', activeTab],
     queryFn: async () => {
       const response = await axiosInstance.get(

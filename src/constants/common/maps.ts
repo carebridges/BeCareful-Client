@@ -1,15 +1,13 @@
 import {
+  AssociationRank,
+  AssociationRankKR,
+  Gender,
+  InstitutionRank,
   WorkDay,
   WorkSalaryUnitType,
   WorkTime,
-} from '@/types/Caregiver/common';
-import { MediationType } from '@/types/Caregiver/work';
-import {
-  AssociationRank,
-  AssociationRankKR,
-  InstitutionRank,
-} from '@/types/Community/common';
-import { Gender } from '@/types/Elderly';
+} from '@/types/common';
+import { MediationType } from '@/types/matching';
 
 // ==================== 요일 ====================
 export const DAYS = ['월', '화', '수', '목', '금', '토', '일'];
@@ -161,7 +159,7 @@ export const INSTITUTION_RANK_MAP = {
     CENTER_DIRECTOR: '센터장',
     REPRESENTATIVE: '대표',
     SOCIAL_WORKER: '사회복지사',
-    none: '사회복지사',
+    NONE: '사회복지사',
   } as const,
 
   KR_TO_EN: {

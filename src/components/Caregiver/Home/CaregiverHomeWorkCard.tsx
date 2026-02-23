@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
 import { GENDER_MAP } from '@/constants/common/maps';
-import { WorkSchedule } from '@/types/Caregiver/home';
+import { WorkSchedule } from '@/types/caregiver';
 import { formatCaretype } from '@/utils/format/domain';
 
 interface CaregiverHomeWorkCardProps {

@@ -1,12 +1,12 @@
-import { axiosInstance } from './axiosInstance';
+import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
 import {
   MediaPresignedUrlRequest,
   PresignedUrlRequest,
   PresignedUrlResponse,
-} from '@/types/common/presignedUrl';
-import { MediaItemRequest } from '@/types/Community/common';
+} from '@/types/common';
 import { getVideoDuration } from '@/utils/community/media';
+import { MediaItemRequest } from '@/types/community';
 
 // ==================== 파일 업로드 ====================
 /* Presigned URL 발급 */

@@ -8,16 +8,15 @@ import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
-
+import { INSTITUTION_RANK_LIST } from '@/constants/common/maps';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useProfileImg } from '@/hooks/useProfileImg';
 import { useSocialworkerBasicForm } from '@/hooks/Socialworker/useSocialworkerBasicForm';
-import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
+import { SocialworkerUpdateRequest } from '@/types/socialworker';
 import {
   useSocialworkerProfileEdit,
   useUpdateSocialworkerProfile,
 } from '@/api/user/socialworker';
-import { INSTITUTION_RANK_LIST } from '@/constants/common/maps';
 
 const SocialworkerEditProfilePage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -54,7 +53,7 @@ const SocialworkerEditProfilePage = () => {
   const handleEditBtnClick = async () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
-    const profileData: SocialworkerMyRequest = {
+    const profileData: SocialworkerUpdateRequest = {
       realName: name,
       nickName: nickname,
       birthYymmdd: birth,

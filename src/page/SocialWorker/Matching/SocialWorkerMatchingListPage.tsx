@@ -71,7 +71,7 @@ export const SocialWorkerMatchingListPage = () => {
             age={e.elderlyAge}
             gender={e.elderlyGender}
             careLevel={e.elderlyCareLevel}
-            imageUrl={e.elderlyProfileImageUrl}
+            profileImageUrl={e.elderlyProfileImageUrl}
             onClick={() => {
               setSelectedElderId(e.elderlyId);
               setIsRegisterModalOpen(true);

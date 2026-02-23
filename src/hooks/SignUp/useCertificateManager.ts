@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { CERTIFICATE_LABEL } from '@/constants/domain/caregiver';
 import {
-  Certificate,
-  CertificateFormInput,
-  CertificateKey,
   CaregiverSignUpFormData,
   CommonCaregiverSignUpFormData,
-} from '@/types/CareGiverSignUp';
+} from '@/types/auth';
+import {
+  CertificateFormInput,
+  CertificateInfo,
+  CertificateKey,
+} from '@/types/caregiver';
 
 export const useCertificateManager = (
   setFormData: (
@@ -23,9 +25,10 @@ export const useCertificateManager = (
     data: CertificateFormInput,
   ) => {
     const level = data.certificateLevel ?? '1급';
-    const grade: Certificate['grade'] = level === '2급' ? 'SECOND' : 'FIRST';
+    const grade: CertificateInfo['grade'] =
+      level === '2급' ? 'SECOND' : 'FIRST';
 
-    const newCert: Certificate = {
+    const newCert: CertificateInfo = {
       grade,
       certificateNumber: data.certificateNumber,
     };
@@ -74,9 +77,10 @@ export const useCommonCertificateManager = (
     data: CertificateFormInput,
   ) => {
     const level = data.certificateLevel ?? '1급';
-    const grade: Certificate['grade'] = level === '2급' ? 'SECOND' : 'FIRST';
+    const grade: CertificateInfo['grade'] =
+      level === '2급' ? 'SECOND' : 'FIRST';
 
-    const newCert: Certificate = {
+    const newCert: CertificateInfo = {
       grade,
       certificateNumber: data.certificateNumber,
     };

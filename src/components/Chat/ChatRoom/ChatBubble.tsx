@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import React from 'react';
 import ChatContract from '@/components/Chat/ChatRoom/ChatContract';
-import { ChatResponse, OtherUserProfile, UserRole } from '@/types/common/chat';
+import { ChatResponse, OtherUserProfile } from '@/types/chat';
+import { UserRole } from '@/types/common';
 import { formatTimeLabel } from '@/utils/format/date';
 
 interface ChatBubbleProps {

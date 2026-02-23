@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import ChatPage from '@/components/Chat/ChatPage/ChatPage';
+import { OtherUserProfile } from '@/types/chat';
 import { useGetCaregiverChat } from '@/api/chat';
-import { OtherUserProfile } from '@/types/common/chat';
 
 const CaregiverChatPage = () => {
   const { chatRoomId } = useParams<{ chatRoomId: string }>();

@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Client, IMessage } from '@stomp/stompjs';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChatRoomContractStatus, ChatRoomStatus } from '@/types/Caregiver/chat';
-import { ChatRequest, ChatResponse } from '@/types/common/chat';
+import {
+  ChatRequest,
+  ChatResponse,
+  ChatRoomContractStatus,
+  ChatRoomStatus,
+} from '@/types/chat';
 
 interface InitialData {
   chatRoomStatus?: ChatRoomStatus;

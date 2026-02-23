@@ -1,8 +1,11 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Presigned, UploadResult } from '@/types/common/image';
-import { ElderDetailResponse, ElderlyRegisterPayload } from '@/types/Elderly';
-import { ElderListResponse } from '@/types/Matching';
+import {
+  ElderDetailResponse,
+  ElderListResponse,
+  ElderlyRegisterPayload,
+} from '@/types/elderly';
+import { PresignedUrlResponse, UploadResult } from '@/types/common';
 
 export const useRegisterElderly = () =>
   useMutation({
@@ -26,7 +29,7 @@ export const useUpdateElderly = (elderlyId: number) =>
 export const useUploadElderlyProfileImage = () =>
   useMutation<UploadResult, Error, { file: File }>({
     mutationFn: async ({ file }) => {
-      const { data } = await axiosInstance.post<Presigned>(
+      const { data } = await axiosInstance.post<PresignedUrlResponse>(
         '/elderly/profile-img/presigned-url',
         null,
         {

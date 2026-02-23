@@ -1,11 +1,10 @@
-import { CareType } from '@/types/Elderly';
-import { MatchingCareTypeOption } from '@/types/Matching.socialWorker';
 import { ReactComponent as Toilet } from '@/assets/icons/matching/IconTotilet.svg';
 import { ReactComponent as Bath } from '@/assets/icons/matching/IconBath.svg';
 import { ReactComponent as Clean } from '@/assets/icons/matching/IconClean.svg';
 import { ReactComponent as Medicine } from '@/assets/icons/matching/IconMedicine.svg';
 import { ReactComponent as Spoon } from '@/assets/icons/matching/IconSpoon.svg';
 import { ReactComponent as WheelChair } from '@/assets/icons/matching/IconWheelchair.svg';
+import { CareTypeKey, MatchingCareTypeOption } from '@/types/common';
 
 // 케어 레벨
 export const CARE_LEVELS = [
@@ -28,7 +27,7 @@ export const CARE_TYPES = [
   '질병보조',
 ] as const;
 
-export const CARE_TYPE_DETAILS: Record<CareType, string[]> = {
+export const CARE_TYPE_DETAILS: Record<CareTypeKey, string[]> = {
   식사보조: ['식사 차려드리기', '죽, 반찬 등 요리 필요', '경관식 보조'],
   이동보조: [
     '스스로 거동 가능',

@@ -1,18 +1,18 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CaregiverHomeResponse } from '@/types/Caregiver/home';
 import {
+  CareerInfo,
   CareerRequest,
-  CareerResponse,
+  CaregiverHomeResponse,
   CaregiverProfileRequest,
   CaregiverProfileResponse,
-} from '@/types/Caregiver/mypage';
+} from '@/types/caregiver';
+import { InstitutionInfo } from '@/types/institution';
 import {
   WorkApplicationRequest,
   WorkApplicationResponse,
-} from '@/types/Caregiver/work';
-import { MarketingAgreeInfo } from '@/types/Socialworker/mypage';
-import { InstitutionInfo } from '@/types/common/institutionInfo';
+} from '@/types/matching';
+import { MarketingAgreeInfo } from '@/types/user';
 
 // ==================== 홈 ====================
 /* 요양보호사 홈 화면 구성 데이터 조회 */
@@ -56,7 +56,7 @@ export const useUpdateCaregiverProfile = () => {
 
 /* 경력서 조회 */
 export const useCareer = () => {
-  return useQuery<CareerResponse>({
+  return useQuery<CareerInfo>({
     queryKey: ['caregiverCareer'],
     queryFn: async () => {
       const response = await axiosInstance.get('/caregiver/career');

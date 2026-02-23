@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { UserRole } from '@/types/common/chat';
+import { UserRole } from '@/types/common';
 import {
   useCaregiverMarketing,
   useUpdateCaregiverMarketing,

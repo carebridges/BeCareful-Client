@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import ProfileCard from '@/components/common/card/ProfileCard';
 import { GENDER_MAP } from '@/constants/common/maps';
-import { CaregiverInfo } from '@/types/Caregiver/mypage';
+import { CaregiverInfo } from '@/types/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 interface ProfileSectionProps {

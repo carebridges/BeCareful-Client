@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 import { ReactComponent as IconCheckCircle } from '@/assets/icons/IconCheckCircle.svg';
 import { useState } from 'react';
 import { SmallDropdown } from '@/components/common/Dropdown/SmallDropdown';
-import { CertificateFormInput } from '@/types/CareGiverSignUp';
+import { CertificateFormInput } from '@/types/caregiver';
 
 type CardState = 'default' | 'focus' | 'check';
 

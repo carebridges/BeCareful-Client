@@ -7,12 +7,12 @@ import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ErrorToast } from '@/components/SocialWorker/RecruitmentDetail/ErrorToast';
 import { GENDER_MAP } from '@/constants/common/maps';
+import { BlockCaregiverInfo } from '@/types/caregiver';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   useUnblockCaregiver,
   useSocialBlockedCaregiver,
 } from '@/api/user/socialworker';
-import { BlockCaregiverInfo } from '@/types/Socialworker/mypage';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 const SocialworkerBlockPage = () => {
   const { handleGoBack } = useHandleNavigate();

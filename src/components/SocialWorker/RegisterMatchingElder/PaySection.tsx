@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 import { MatchingApplicationDropdown } from '@/components/Matching/MatchingApplicationDropdown';
 import { SALARY_MAP } from '@/constants/common/maps';
-import { PayCode, PayLabel } from '@/types/Matching.socialWorker';
+import { WorkSalaryUnitType, WorkSalaryUnitTypeKR } from '@/types/common';
 
 interface Props {
-  selectedPayType: PayCode;
-  onPayTypeChange: (value: PayCode) => void;
+  selectedPayType: WorkSalaryUnitType;
+  onPayTypeChange: (value: WorkSalaryUnitType) => void;
   payAmount: string;
   onAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -16,7 +16,7 @@ export const PaySection = ({
   payAmount,
   onAmountChange,
 }: Props) => {
-  const payLabels: PayLabel[] = ['시급', '일급', '월급', '연봉'];
+  const payLabels: WorkSalaryUnitTypeKR[] = ['시급', '일급', '월급', '연봉'];
   return (
     <SectionWrapper>
       <SectionTitleWrapper>
@@ -31,7 +31,9 @@ export const PaySection = ({
           selectedContents={SALARY_MAP.EN_TO_KR[selectedPayType]}
           setSelectedContents={(label: string) => {
             if (label in SALARY_MAP.KR_TO_EN) {
-              onPayTypeChange(SALARY_MAP.KR_TO_EN[label as PayLabel]);
+              onPayTypeChange(
+                SALARY_MAP.KR_TO_EN[label as WorkSalaryUnitTypeKR],
+              );
             }
           }}
         />

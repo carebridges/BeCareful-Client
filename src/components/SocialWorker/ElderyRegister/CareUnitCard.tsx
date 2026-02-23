@@ -5,7 +5,7 @@ import {
   CareButton,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
 import { CARE_TYPES } from '@/constants/domain/care';
-import { CareType } from '@/types/Elderly';
+import { CareTypeKey } from '@/types/common';
 import styled from 'styled-components';
 import { ReactComponent as ButtonLeft } from '@/assets/icons/elderly/ButtonLeft.svg';
 import { ReactComponent as CircleClose } from '@/assets/icons/elderly/GrayCircleClose.svg';
@@ -40,7 +40,7 @@ export const CareUnitCard = ({
         contents={[...CARE_TYPES]}
         selectedContents={unit.selectedCare ? [unit.selectedCare] : []}
         setSelectedContents={(items) =>
-          onUpdate({ selectedCare: (items[0] as CareType) || null })
+          onUpdate({ selectedCare: (items[0] as CareTypeKey) || null })
         }
         width="195px"
       />

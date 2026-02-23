@@ -1,4 +1,4 @@
-import { MatchingElderData } from '@/types/Matching.socialWorker';
+import { MatchingElderData } from '@/types/matching';
 import { formatHHMM } from '@/utils/format/date';
 import { translateWorkDaysToKR } from '@/utils/format/domain';
 import { styled } from 'styled-components';

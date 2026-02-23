@@ -8,7 +8,7 @@ import ProfileImgUploader from '@/components/common/ProfileImgUploader';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useAssociationChangeForm } from '@/hooks/Community/Association/useAssociationChangeForm';
 import { useProfileImg } from '@/hooks/useProfileImg';
-import { AssociationInfoRequest } from '@/types/Community/association';
+import { AssociationUpdateRequest } from '@/types/association';
 import {
   useAssociationInfo,
   usePutAssociationInfo,
@@ -29,7 +29,7 @@ const CommunityEditAssociationPage = () => {
   const handleEditBtnClick = async () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
-    const associationRequest: AssociationInfoRequest = {
+    const associationRequest: AssociationUpdateRequest = {
       profileImageTempKey: profileUrl,
       associationName: name,
       associationEstablishedYear: Number(year),

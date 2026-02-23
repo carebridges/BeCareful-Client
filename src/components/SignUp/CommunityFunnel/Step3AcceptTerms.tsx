@@ -9,6 +9,7 @@ import {
   PRIVACY_TERMS,
   MARKETING_TERMS,
 } from '@/constants/common/termText';
+import { AgreeField } from '@/types/user';
 import { useMemo, useCallback, useState } from 'react';
 import styled from 'styled-components';
 
@@ -18,11 +19,6 @@ interface StepProps {
   communityFormData: CommunityFormData;
   setCommunityFormData: React.Dispatch<React.SetStateAction<CommunityFormData>>;
 }
-
-type CommunityAgreeField =
-  | 'isAgreedToTerms'
-  | 'isAgreedToCollectPersonalInfo'
-  | 'isAgreedToReceiveMarketingInfo'; // TODO 임시로 갖다놓음
 
 export const Step3AcceptTerms = ({
   goToNext,
@@ -50,7 +46,7 @@ export const Step3AcceptTerms = ({
     requiredAgreed && agreeState.isAgreedToReceiveMarketingInfo;
 
   const handleCheckboxChange = useCallback(
-    (field: CommunityAgreeField) => (checked: boolean) => {
+    (field: AgreeField) => (checked: boolean) => {
       setCommunityFormData((prev) => ({
         ...prev,
         [field]: checked,

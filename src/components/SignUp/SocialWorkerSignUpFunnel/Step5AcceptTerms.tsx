@@ -10,13 +10,9 @@ import {
   PRIVACY_TERMS,
 } from '@/constants/common/termText';
 import { useSocialWorkerSignupSubmit } from '@/hooks/SignUp/useSocialWorkerSignupSubmit';
-import { SignUpPayload } from '@/types/SocialSignUp';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
-
-type AgreeField =
-  | 'isAgreedToTerms'
-  | 'isAgreedToCollectPersonalInfo'
-  | 'isAgreedToReceiveMarketingInfo';
+import { AgreeField } from '@/types/user';
+import { SignUpPayload } from '@/types/auth';
 
 export const Step5AcceptTerms = () => {
   const { goToNext, goToPrev, formData, setFormData } = useSignUpContext();
