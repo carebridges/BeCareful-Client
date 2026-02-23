@@ -64,8 +64,14 @@ export const Step1SelectRole = () => {
         </Button>
         <Button
           onClick={goToNext}
-          disabled={!formData.institutionRank}
-          variant={formData.institutionRank ? 'blue' : 'gray'}
+          disabled={
+            !formData.institutionRank || formData.institutionRank === 'none'
+          }
+          variant={
+            formData.institutionRank && formData.institutionRank !== 'none'
+              ? 'blue'
+              : 'gray'
+          }
           height="52px"
         >
           다음

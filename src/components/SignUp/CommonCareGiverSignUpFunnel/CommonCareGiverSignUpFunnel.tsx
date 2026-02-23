@@ -33,7 +33,7 @@ export const CommonCareGiverSignUpFunnel = () => {
   const { currentStep } = useCommonCaregiverSignUpContext();
   const StepComponent = steps[currentStep];
   const percent = stepPercents[currentStep];
-  const isLastStep = currentStep === 9;
+  const isLastStep = currentStep === steps.length - 1;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClickBack = () => {
     setIsModalOpen(true);

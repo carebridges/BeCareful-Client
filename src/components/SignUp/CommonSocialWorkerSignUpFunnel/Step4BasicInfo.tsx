@@ -4,7 +4,7 @@ import { NameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4Bas
 import { NicknameInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/NicknameInput';
 import { PhoneNumberInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/PhoneNumberInput';
 import { ResidentIdInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo/ResidentIdInput';
-import { useBasicInfoForm } from '@/hooks/SignUp/useBasicInfoForm';
+import { useCommonBasicInfoForm } from '@/hooks/SignUp/useBasicInfoForm';
 import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
 
 export const Step4BasicInfo = () => {
@@ -17,7 +17,7 @@ export const Step4BasicInfo = () => {
     handleBirthAndGenderChange,
     message,
     state,
-  } = useBasicInfoForm();
+  } = useCommonBasicInfoForm();
 
   return (
     <StepWrapper>
