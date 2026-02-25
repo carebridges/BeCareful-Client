@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import Modal from '@/components/common/Modal/Modal';
 import { Button } from '@/components/common/Button/Button';
 import { ReactComponent as ModalClose } from '@/assets/icons/Close.svg';
-import { AreaSelectData, AreaSocial } from '@/types/common/matching';
+import { AreaSelectData, WorkLocation } from '@/types/common';
 
 interface AreaSelectModalProps {
   isOpen: boolean;
   onClose: () => void;
   areaData: AreaSelectData[];
-  onSelect: (area: AreaSocial) => void;
+  onSelect: (area: WorkLocation) => void;
 }
 
 export const AreaSelectModal = ({

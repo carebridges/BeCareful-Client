@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { ReactComponent as ElderList } from '@/assets/icons/elderly/ElderList.svg';
-import { ElderDataTemp } from '@/types/Matching';
+import { ElderDataTemp } from '@/types/elderly';
 
 export const ElderlyCard = ({
   isMatching,
@@ -9,7 +9,7 @@ export const ElderlyCard = ({
   gender,
   careLevel,
   caregiverNum,
-  imageUrl,
+  profileImageUrl,
 }: ElderDataTemp) => {
   return (
     <CardContainer isMatching={!!isMatching}>
@@ -41,8 +41,8 @@ export const ElderlyCard = ({
           </LabelWrapper>
         </InfoWrapper>
         <PersonImg>
-          {imageUrl ? (
-            <img src={imageUrl} alt={`${name}님 프로필 이미지`} />
+          {profileImageUrl ? (
+            <img src={profileImageUrl} alt={`${name}님 프로필 이미지`} />
           ) : (
             <ElderList />
           )}

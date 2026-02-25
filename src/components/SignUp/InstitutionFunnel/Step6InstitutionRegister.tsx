@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { ReactComponent as SignUpComplete } from '@/assets/icons/signup/SignUpComplete.svg';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
-import { useRegisterInstitution } from '@/api/institutionFunnel';
+import { useRegisterInstitution } from '@/api/signup/institution';
 import { useState } from 'react';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 

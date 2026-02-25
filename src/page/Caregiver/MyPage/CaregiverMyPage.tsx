@@ -7,12 +7,12 @@ import CareerSection from '@/components/Caregiver/Mypage/CareerSection';
 import ApplicationSection from '@/components/Caregiver/Mypage/ApplicationSection';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/mutation/useWorkApplicationToggleMutation';
-import { useCaregiverMyPageInfoQuery } from '@/api/caregiver';
+import { useCaregiverProfile } from '@/api/user/caregiver';
 
 const CaregiverMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const { data } = useCaregiverMyPageInfoQuery();
+  const { data } = useCaregiverProfile();
   const [isToggleChecked, setIsToggleChecked] = useState(false);
   const isActive = data?.workApplicationInfo?.isActive;
 

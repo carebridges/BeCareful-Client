@@ -1,13 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  ContractChatResponse,
-  EditContractChatRequest,
-} from '@/types/common/chat';
-import { DAY_EN_TO_KR } from '@/constants/common/day';
-import { formatDaysToEN } from '@/utils/caregiverFormatter';
-import { SALARY_EN_TO_KR, SALARY_KR_TO_EN } from '@/constants/common/salary';
+import { DAY_MAP, SALARY_MAP } from '@/constants/common/maps';
+import { ContractChat, EditContractRequest } from '@/types/chat';
+import { formatDaysToEN } from '@/utils/format/domain';
 
-export const useEditContractForm = (contract: ContractChatResponse | null) => {
+export const useEditContractForm = (contract: ContractChat | null) => {
   const [workday, setWorkday] = useState<string[]>([]);
   const [workStartTime, setWorkStartTime] = useState('');
   const [workEndTime, setWorkEndTime] = useState('');
@@ -23,11 +19,11 @@ export const useEditContractForm = (contract: ContractChatResponse | null) => {
   useEffect(() => {
     if (!contract) return;
 
-    setWorkday(contract.workDays.map((day) => DAY_EN_TO_KR[day]));
+    setWorkday(contract.workDays.map((day) => DAY_MAP.EN_TO_KR[day]));
     setWorkStartTime(contract.workStartTime.slice(0, 5));
     setWorkEndTime(contract.workEndTime.slice(0, 5));
     setCareTypes(contract.careTypes);
-    setWorkSalaryType(SALARY_EN_TO_KR[contract.workSalaryUnitType]);
+    setWorkSalaryType(SALARY_MAP.EN_TO_KR[contract.workSalaryUnitType]);
     setWorkSalaryAmount(contract.workSalaryAmount.toLocaleString('ko-KR'));
     const [startYear, startMonth, startDate] =
       contract.workStartDate.split('-');
@@ -145,7 +141,7 @@ export const useEditContractForm = (contract: ContractChatResponse | null) => {
     [selectedDay],
   );
 
-  const getRequest = useCallback((): EditContractChatRequest => {
+  const getRequest = useCallback((): EditContractRequest => {
     const year = selectedYear[0] ?? '';
     const month = selectedMonth[0]?.padStart(2, '0');
     const day = selectedDay[0]?.padStart(2, '0');
@@ -155,7 +151,7 @@ export const useEditContractForm = (contract: ContractChatResponse | null) => {
       workDays: formatDaysToEN(workday),
       workStartTime: workStartTime,
       workEndTime: workEndTime,
-      workSalaryUnitType: SALARY_KR_TO_EN[workSalaryType],
+      workSalaryUnitType: SALARY_MAP.KR_TO_EN[workSalaryType],
       workSalaryAmount: Number(workSalaryAmount.replaceAll(',', '')),
       workStartDate: `${year}-${month}-${day}`,
       careTypes: careTypes,

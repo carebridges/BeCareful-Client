@@ -1,21 +1,24 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
-  validateAttachedFile,
-  validateImageFile,
-  validateVideoFile,
+  validateFile,
+  validateImage,
+  validateVideo,
   ValidationResult,
-} from '@/utils/fileValidation';
-import { usePostMediaMutation } from '@/api/presignedUrl';
+} from '@/utils/community/media';
+import {
+  MediaItem,
+  MediaItemRequest,
+  PostDetailResponse,
+} from '@/types/community';
 import { useModals } from '@/hooks/Community/WritePage/useModals';
-import { MediaItem, MediaItemRequest } from '@/types/Community/common';
-import { PostDetailResponse } from '@/types/Community/post';
+import { useUploadMedia } from '@/api/presignedUrl';
 
 /* CommunityWritePage */
 export const useMedia = (initialData?: PostDetailResponse) => {
   const { handleOpenLimitModal } = useModals();
 
   // 미디어 등록 api mutation
-  const { mutateAsync: postMediaMutate } = usePostMediaMutation();
+  const { mutateAsync: uploadMutate } = useUploadMedia();
 
   const photoRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -47,7 +50,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     file: File,
     fileTypeParam: 'IMAGE' | 'VIDEO' | 'FILE',
   ): Promise<MediaItemRequest & { mediaUrl: string }> => {
-    const uploaded = await postMediaMutate({
+    const uploaded = await uploadMutate({
       file,
       fileTypeParam,
     });
@@ -67,10 +70,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     setter: React.Dispatch<
       React.SetStateAction<(MediaItem | MediaItemRequest)[]>
     >,
-    validationFn: (
-      file: File,
-      ...args: number[]
-    ) => { isValid: boolean; title: string; message: string },
+    validationFn: (file: File, ...args: number[]) => ValidationResult,
   ) => {
     const filesToUpload: File[] = []; // 업로드할 파일
 
@@ -141,20 +141,8 @@ export const useMedia = (initialData?: PostDetailResponse) => {
     const imageFiles = files.filter((f) => f.type.startsWith('image/'));
     const videoFiles = files.filter((f) => f.type.startsWith('video/'));
 
-    await contentUpload(
-      imageFiles,
-      'IMAGE',
-      photos,
-      setPhotos,
-      validateImageFile,
-    );
-    await contentUpload(
-      videoFiles,
-      'VIDEO',
-      videos,
-      setVideos,
-      validateVideoFile,
-    );
+    await contentUpload(imageFiles, 'IMAGE', photos, setPhotos, validateImage);
+    await contentUpload(videoFiles, 'VIDEO', videos, setVideos, validateVideo);
   };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -166,7 +154,7 @@ export const useMedia = (initialData?: PostDetailResponse) => {
       'FILE',
       attachedFiles,
       setAttachedFiles,
-      validateAttachedFile,
+      validateFile,
     );
   };
 

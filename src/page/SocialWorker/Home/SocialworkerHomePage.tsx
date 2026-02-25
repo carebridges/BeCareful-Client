@@ -15,13 +15,13 @@ import InstitutionSection from '@/components/SocialWorker/Home/InstitutionSectio
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useGetSocialWorkerHome } from '@/api/socialworker';
+import { useSocialworkerHome } from '@/api/user/socialworker';
 
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
   const [isNew, setIsNew] = useState(false);
   const { hasNewChat } = useChatWebSocket();
-  const { data } = useGetSocialWorkerHome();
+  const { data } = useSocialworkerHome();
 
   return (
     <Container>

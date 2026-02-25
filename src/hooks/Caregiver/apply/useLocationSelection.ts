@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { WorkApplication, WorkLocation } from '@/types/Caregiver/common';
+import { WorkLocation } from '@/types/common';
+import { WorkApplication } from '@/types/matching';
 
 export const useLocationSelection = (data: WorkApplication | undefined) => {
   // 지역 설정 모달

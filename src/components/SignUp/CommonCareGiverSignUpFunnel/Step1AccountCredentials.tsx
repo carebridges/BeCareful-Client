@@ -4,7 +4,7 @@ import { Button } from '@/components/common/Button/Button';
 import { PasswordConfirmInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PasswordConfirmInput';
 import { PasswordInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PasswordInput';
 import { PhoneAuthInput } from '@/components/SignUp/CommonSocialWorkerSignUpFunnel/Step3ccountCredentials/PhoneAuthInput';
-import { PASSWORD_RULE_TEXT } from '@/constants/signup/signup';
+import { PASSWORD_RULE_TEXT } from '@/constants/auth';
 import { isValidPassword } from '@/hooks/SignUp/usePasswordValidation';
 import { useCommonCaregiverSignUpContext } from '@/contexts/CommonCaregiverSignUpContext';
 

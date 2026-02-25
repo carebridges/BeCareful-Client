@@ -1,5 +1,5 @@
-import { AssociationInfoResponse } from '@/types/Community/association';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { AssociationInfoResponse } from '@/types/association';
 
 export const useAssociationChangeForm = (
   data: AssociationInfoResponse | undefined,

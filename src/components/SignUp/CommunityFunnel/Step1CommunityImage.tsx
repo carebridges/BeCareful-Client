@@ -3,7 +3,7 @@ import { Button } from '@/components/common/Button/Button';
 
 import { ProfileImageUploader } from '@/components/SignUp/InstitutionFunnel/Step5UploadPhoto/ProfileImageUploader';
 import { CommunityFormData } from '@/components/SignUp/CommunityFunnel/CommunityFunnel';
-import { useUploadAssociationProfileImage } from '@/api/communityFunnel';
+import { useUploadAssociationProfileImage } from '@/api/signup/association';
 import { useState } from 'react';
 
 interface StepProps {

@@ -8,22 +8,23 @@ import AgreeSectionCommunity from '@/components/SocialWorker/MyPage/AgreeSection
 import InputBox from '@/components/common/InputBox/InputBox';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
-import { CommunityAgreementValues } from '@/types/Socialworker/common';
-import { usePutAssociationLeave } from '@/api/communityAssociation';
-import {
-  usePatchSocialAssociationInfo,
-  useSocialAssociationInfo,
-} from '@/api/socialworker';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { getTodayDateTime } from '@/utils/getTodayDate';
+import { ASSOCIATION_RANK_MAP } from '@/constants/common/maps';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { CommunityAgreement } from '@/types/user';
+import { getTodayDateTime } from '@/utils/format/date';
+import { useLeaveAssociation } from '@/api/community/association';
+
+import {
+  useUpdateSocialAssociation,
+  useSocialAssociation,
+} from '@/api/user/socialworker';
 
 const SocialworkerEditAssociationPage = () => {
   const { handleGoBack } = useHandleNavigate();
   // const [isChanged, setIsChanged] = useState(false);
 
-  const { data } = useSocialAssociationInfo();
+  const { data } = useSocialAssociation();
 
   const [isAgreeModalOpen, setIsAgreeModalOpen] = useState(false);
 
@@ -33,14 +34,12 @@ const SocialworkerEditAssociationPage = () => {
     agreedToReceiveMarketingInfo: true,
   };
   const [agreementStates, setAgreementStates] =
-    useState<CommunityAgreementValues>(defalutAgreemet);
-  const handleAgreementChange = (
-    updatedAgreements: CommunityAgreementValues,
-  ) => {
+    useState<CommunityAgreement>(defalutAgreemet);
+  const handleAgreementChange = (updatedAgreements: CommunityAgreement) => {
     setAgreementStates(updatedAgreements);
   };
 
-  const { mutate: leaveAssociation } = usePutAssociationLeave();
+  const { mutate: leaveAssociation } = useLeaveAssociation();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const handleWithdraw = () => {
     console.log('협회탈퇴');
@@ -52,7 +51,7 @@ const SocialworkerEditAssociationPage = () => {
     });
   };
 
-  const { mutate: updateAssociation } = usePatchSocialAssociationInfo();
+  const { mutate: updateAssociation } = useUpdateSocialAssociation();
   const handleMarketingClick = async () => {
     updateAssociation(
       {
@@ -92,8 +91,9 @@ const SocialworkerEditAssociationPage = () => {
           <CheckButton
             key={type}
             active={
-              ASSOCIATION_RANK_EN_TO_KR[data?.associationRank ?? 'MEMBER'] ===
-              type
+              ASSOCIATION_RANK_MAP.EN_TO_KR[
+                data?.associationRank ?? 'MEMBER'
+              ] === type
             }
           >
             <Check />

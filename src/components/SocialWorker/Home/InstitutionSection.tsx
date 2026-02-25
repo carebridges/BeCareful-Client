@@ -8,7 +8,7 @@ import { Button } from '@/components/common/Button/Button';
 import RankCard from '@/components/SocialWorker/Home/RankCard';
 import Modal from '@/components/common/Modal/Modal';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { SocialHomeInstitutionInfo } from '@/types/Socialworker/home';
+import { SocialHomeInstitutionInfo } from '@/types/socialworker';
 
 interface InstitutionSectionProps {
   data: SocialHomeInstitutionInfo | undefined;

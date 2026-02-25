@@ -9,7 +9,7 @@ import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Step3InstitutionType } from '@/components/SignUp/InstitutionFunnel/Step3InstitutionType';
-import { getRandomAddress } from '@/utils/randomAddress';
+import { getRandomAddress } from '@/utils/format/text';
 import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
 
 interface InstitutionFunnelProps {

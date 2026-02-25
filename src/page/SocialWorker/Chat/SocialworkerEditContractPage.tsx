@@ -8,20 +8,19 @@ import { Dropdown } from '@/components/common/Dropdown/Dropdown';
 import { TimeDropdown } from '@/components/common/Dropdown/TimeDropdown';
 import { ApplicationDropdown } from '@/components/Caregiver/Mypage/ApplicationDropdown';
 import { MatchingCareCard } from '@/page/Matching/MatchingCareCard';
+import { DAYS, SALARY } from '@/constants/common/maps';
+import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/domain/care';
+import { ContractChat } from '@/types/chat';
+import { useEditContractForm } from '@/hooks/Socialworker/useEditContractForm';
 import { useChat } from '@/hooks/useChat';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { DAYS } from '@/constants/common/day';
-import { salaryTypes } from '@/constants/common/salary';
-import { MATCHING_CARE_TYPE_OPTIONS } from '@/constants/socialworker/careTypes.socialWorker';
-import { ContractChatResponse } from '@/types/common/chat';
-import { useEditContractForm } from '@/hooks/Socialworker/useEditContractForm';
 
 const SocialworkerEditContractPage = () => {
   const location = useLocation();
   const param = useParams<{ chatRoomId: string }>();
   const chatRoomId = Number(param.chatRoomId);
 
-  const state = location.state as { chat?: ContractChatResponse };
+  const state = location.state as { chat?: ContractChat };
   const contract = state?.chat ?? null;
 
   const { handleGoBack } = useHandleNavigate();
@@ -111,7 +110,7 @@ const SocialworkerEditContractPage = () => {
         <PayWrapper>
           <ApplicationDropdown
             title={form.workSalaryType || '시급'}
-            contents={salaryTypes}
+            contents={SALARY}
             selectedContents={[form.workSalaryType]}
             setSelectedContents={(values) =>
               form.setWorkSalaryType(values[0] || '')

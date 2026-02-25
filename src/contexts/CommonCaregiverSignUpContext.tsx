@@ -1,6 +1,6 @@
-import { useFunnel } from '@/hooks/SignUp/useFunnel';
-import { CommonCaregiverSignUpFormData } from '@/types/CareGiverSignUp';
 import { createContext, useContext, useState } from 'react';
+import { useFunnel } from '@/hooks/SignUp/useFunnel';
+import { CommonCaregiverSignUpFormData } from '@/types/auth';
 
 interface CaregiverSignUpContextType extends ReturnType<typeof useFunnel> {
   formData: CommonCaregiverSignUpFormData;

@@ -1,11 +1,14 @@
 import { CareGiverQualificationCard } from '@/components/common/QualificationCard/CaregiverQualificationCard';
 import { NursingQualificationCard } from '@/components/common/QualificationCard/NursingQualificationCard';
 import { SocialQualificationCard } from '@/components/common/QualificationCard/SocialQualificationCard';
-import { CertificateFormInput, CertificateKey } from '@/types/CareGiverSignUp';
 import { NewCaregiverQualificationCard } from '@/components/common/QualificationCard/NewCaregiverQualificationCard';
 import { NewNursingQualificationCard } from '@/components/common/QualificationCard/NewNursingQualificationCard';
 import { NewSocialQualificationCard } from '@/components/common/QualificationCard/NewSocialQualificationCard';
-import { CertificateInfo } from '@/types/Caregiver/common';
+import {
+  CertificateFormInput,
+  CertificateInfo,
+  CertificateKey,
+} from '@/types/caregiver';
 
 export const CERTIFICATE_CARD_MAP: Record<
   CertificateKey,

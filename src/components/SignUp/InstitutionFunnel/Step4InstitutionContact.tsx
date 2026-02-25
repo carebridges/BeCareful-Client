@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { PlainInputBox } from '@/components/common/InputBox/PlainInputBox';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
-import { formatPhoneNumber } from '@/utils/formatPhoneNumber';
+import { formatPhoneNumber } from '@/utils/format/text';
 
 interface Step4Props {
   goToNext: () => void;

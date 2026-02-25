@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { CaregiverInfo } from '@/types/Caregiver/mypage';
+import { CaregiverInfo } from '@/types/caregiver';
 import { PostcodeData } from '@/types/daum-postcode';
 
 export const useCaregiverBasicForm = (

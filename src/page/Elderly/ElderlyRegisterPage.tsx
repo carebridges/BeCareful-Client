@@ -14,11 +14,11 @@ import { SubmitSection } from '@/components/SocialWorker/ElderyRegister/SubmitSe
 
 import { AreaSocials } from '@/data/AreaSocial';
 import { useElderlyRegisterForm } from '@/hooks/Elderly/useElderlyRegisterForm';
-import { useUploadElderlyProfileImage } from '@/api/elderly';
+import { useUploadElderlyProfileImage } from '@/api/matching/elderly';
 import { ProfileImageUploader } from '@/components/SocialWorker/common/ProfileImageUploader';
 import { PetSection } from '@/components/SocialWorker/ElderyRegister/PetSection';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { AreaSelectData } from '@/types/common/matching';
+import { AreaSelectData } from '@/types/common';
 
 const ElderlyRegisterPage = () => {
   const navigate = useNavigate();

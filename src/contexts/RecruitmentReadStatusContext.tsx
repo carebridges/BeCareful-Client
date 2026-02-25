@@ -60,7 +60,7 @@ export const useRecruitmentReadStatus = () => {
   const context = useContext(RecruitmentReadStatusContext);
   if (!context) {
     throw new Error(
-      'useWorkReadStatus must be used within a WorkReadStatusProvider',
+      'useRecruitmentReadStatus must be used within a WorkReadStatusProvider',
     );
   }
   return context;

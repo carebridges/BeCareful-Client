@@ -2,8 +2,8 @@ import { styled } from 'styled-components';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { InstitutionFormData } from '@/components/SignUp/InstitutionFunnel/InstitutionFunnel';
-import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
-import { FacilityType } from '@/types/SocialSignUp';
+import { FACILITY_TYPES } from '@/constants/domain/care';
+import { FacilityType } from '@/types/institution';
 
 interface StepProps {
   goToNext: () => void;

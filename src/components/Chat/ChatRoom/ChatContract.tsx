@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import InfoDisplayChat from '@/components/common/InfoDisplay/InfoDisplayChat';
-import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
-import { ContractChatResponse, UserRole } from '@/types/common/chat';
-import { GENDER_EN_TO_KR_1 } from '@/constants/common/gender';
+import { GENDER_MAP } from '@/constants/common/maps';
+import { UserRole } from '@/types/common';
+import { ContractChat } from '@/types/chat';
+import { formatCaretype, formatDaysToKR } from '@/utils/format/domain';
 
 interface ChatContractProps {
   role: UserRole;
-  contract: ContractChatResponse;
+  contract: ContractChat;
 }
 
 const ChatContract = ({ role, contract }: ChatContractProps) => {
@@ -15,7 +16,7 @@ const ChatContract = ({ role, contract }: ChatContractProps) => {
       ? [
           {
             title: '인적사항',
-            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_EN_TO_KR_1[contract.elderlyGender]}`,
+            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_MAP.EN_TO_KR_SHORT[contract.elderlyGender]}`,
           },
           {
             title: '케어항목',
@@ -41,7 +42,7 @@ const ChatContract = ({ role, contract }: ChatContractProps) => {
       : [
           {
             title: '인적사항',
-            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_EN_TO_KR_1[contract.elderlyGender]}`,
+            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_MAP.EN_TO_KR_SHORT[contract.elderlyGender]}`,
           },
           {
             title: '케어항목',

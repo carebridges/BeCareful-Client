@@ -1,10 +1,10 @@
+import { styled } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
 import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
-import { ASSOCIATION_JOIN_RANKS_LABELS } from '@/constants/common/associationRank';
-import { AssociationRank } from '@/types/CommunityAssociation';
-import { styled } from 'styled-components';
-import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
-import { useNavigate } from 'react-router-dom';
+import { ASSOCIATION_JOIN_RANKS_LABELS } from '@/constants/common/maps';
+import { AssociationRank } from '@/types/common';
 
 interface CommunityJoinSelectRoleProps {
   selectedRank: AssociationRank | null;

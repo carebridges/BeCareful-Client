@@ -1,7 +1,7 @@
-import { PostPostRequest, PostPutRequest } from '@/types/Community/post';
-import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
-import { getDraftStorageKey } from '@/utils/getDraftStorageKey';
-import { usePostPostingMutation, usePutPostingMutation } from '@/api/community';
+import { BOARD_MAP } from '@/constants/domain/community';
+import { PostCreateRequest, PostUpdateRequest } from '@/types/community';
+import { getDraftStorageKey } from '@/utils/community/storage';
+import { useCreatePost, useUpdatePost } from '@/api/community/community';
 
 /* CommunityWritePage */
 export const usePostingSubmit = (
@@ -14,19 +14,19 @@ export const usePostingSubmit = (
     throw new Error('글쓰기 수정하기 - postId가 필요합니다.');
   }
 
-  const requestBoard = BOARD_KR_TO_EN[board];
+  const requestBoard =
+    BOARD_MAP.KR_TO_EN[board as keyof typeof BOARD_MAP.KR_TO_EN];
 
   // 게시글 작성 api mutation
-  const { mutateAsync: postPostingMutate } =
-    usePostPostingMutation(requestBoard);
+  const { mutateAsync: postPostingMutate } = useCreatePost(requestBoard);
 
   // 게시글 수정 api mutation
-  const { mutateAsync: putPostingMutate } = usePutPostingMutation(
+  const { mutateAsync: putPostingMutate } = useUpdatePost(
     requestBoard,
     postId as number,
   );
 
-  const handlePostSubmit = async (postData: PostPostRequest) => {
+  const handlePostSubmit = async (postData: PostCreateRequest) => {
     try {
       await postPostingMutate(postData);
       console.log('게시글 작성 완료', postData);
@@ -40,7 +40,7 @@ export const usePostingSubmit = (
     }
   };
 
-  const handleEditSubmit = async (postData: PostPutRequest) => {
+  const handleEditSubmit = async (postData: PostUpdateRequest) => {
     try {
       if (isEditMode && typeof postId === 'number') {
         await putPostingMutate(postData);

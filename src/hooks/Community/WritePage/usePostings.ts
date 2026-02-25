@@ -1,5 +1,5 @@
-import { PostDetailResponse } from '@/types/Community/post';
 import { useEffect, useRef, useState } from 'react';
+import { PostDetailResponse } from '@/types/community';
 
 export const usePostings = (initialData?: PostDetailResponse) => {
   const [isImportant, setIsImportant] = useState(

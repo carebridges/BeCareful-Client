@@ -10,7 +10,8 @@ import { MatchingSearchBox } from '@/components/Matching/MatchingSearchBox';
 import { ElderCard } from '@/components/Matching/ElderCard';
 import { Pagination } from '@/components/common/Pagination/Pagination';
 import { Tab } from '@/components/common/Tab/Tab';
-import { useRecruitment, useWaitingElderly } from '@/api/elderly';
+import { useWaitingElderly } from '@/api/matching/elderly';
+import { useRecruitment } from '@/api/matching/socialworker';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
@@ -70,7 +71,7 @@ export const SocialWorkerMatchingListPage = () => {
             age={e.elderlyAge}
             gender={e.elderlyGender}
             careLevel={e.elderlyCareLevel}
-            imageUrl={e.elderlyProfileImageUrl}
+            profileImageUrl={e.elderlyProfileImageUrl}
             onClick={() => {
               setSelectedElderId(e.elderlyId);
               setIsRegisterModalOpen(true);

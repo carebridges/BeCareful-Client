@@ -8,11 +8,11 @@ import { Button } from '@/components/common/Button/Button';
 import CommunityMemberSearch from '@/page/Community/Association/CommunityMemberSearch';
 import {
   ASSOCIATION_MEMBER_TYPES,
-  ASSOCIATION_RANK_KR_TO_EN,
-} from '@/constants/common/associationRank';
+  ASSOCIATION_RANK_MAP,
+} from '@/constants/common/maps';
+import { ChairmanDelegateRequest } from '@/types/association';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useChangeChairman } from '@/api/communityAssociation';
-import { AssociationChairmanRequest } from '@/types/Community/association';
+import { useDelegateChairman } from '@/api/community/association';
 
 interface NewChairman {
   memberId: number;
@@ -22,7 +22,7 @@ interface NewChairman {
 const CommunityEditChairmanPage = () => {
   const { handleGoBack } = useHandleNavigate();
 
-  const { mutate: changeChairman } = useChangeChairman();
+  const { mutate: changeChairman } = useDelegateChairman();
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [newChairman, setNewChairman] = useState<NewChairman | null>(null);
@@ -41,17 +41,17 @@ const CommunityEditChairmanPage = () => {
     }
     if (
       !nextRankOfCurrentChairman ||
-      !ASSOCIATION_RANK_KR_TO_EN[nextRankOfCurrentChairman]
+      !ASSOCIATION_RANK_MAP.KR_TO_EN[nextRankOfCurrentChairman]
     ) {
       console.error('현재 회장의 변경될 직급을 선택해주세요.');
       return;
     }
 
-    const chairman: AssociationChairmanRequest = {
+    const chairman: ChairmanDelegateRequest = {
       newChairmanId: newChairman.memberId,
       newChairmanName: newChairman.name,
       nextRankOfCurrentChairman:
-        ASSOCIATION_RANK_KR_TO_EN[nextRankOfCurrentChairman],
+        ASSOCIATION_RANK_MAP.KR_TO_EN[nextRankOfCurrentChairman],
     };
     console.log(chairman);
     changeChairman(chairman, {

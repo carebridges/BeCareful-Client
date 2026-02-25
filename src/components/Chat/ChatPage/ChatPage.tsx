@@ -12,14 +12,14 @@ import ChatGuide from '@/components/Chat/ChatRoom/ChatGuide';
 import ChatRoom from '@/components/Chat/ChatRoom/ChatRoom';
 import BottomSheet from '@/components/Community/common/BottomSheet';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { CaregiverChatResponse } from '@/types/Caregiver/chat';
-import { SocialworkerChatResponse } from '@/types/Socialworker/chat';
 import {
+  CaregiverChatResponse,
   OtherUserProfile,
-  SendTextChatRequest,
+  SendTextRequest,
+  SocialworkerChatResponse,
   StatusMessage,
-  UserRole,
-} from '@/types/common/chat';
+} from '@/types/chat';
+import { UserRole } from '@/types/common';
 import { useChat } from '@/hooks/useChat';
 
 interface ChatPageProps {
@@ -98,7 +98,7 @@ const ChatPage = ({
   }, [chat]);
 
   const handleSend = () => {
-    const request: SendTextChatRequest = {
+    const request: SendTextRequest = {
       sendRequestType: 'SEND_TEXT',
       text: newChat,
     };

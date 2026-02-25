@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
-import { RecruitmentStatistics } from '@/types/Socialworker/home';
+import { RecruitmentStatistics } from '@/types/socialworker';
 
 type ColorKey = keyof typeof colors;
 

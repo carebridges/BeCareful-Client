@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { ReactComponent as DotIcon } from '@/assets/icons/community/Dots.svg';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
+import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
+import { PostDetailResponse } from '@/types/community';
 import { isRecentDate } from '@/hooks/Community/isRecentDate';
-import { PostDetailResponse } from '@/types/Community/post';
-import { formatDateTime } from '@/utils/formatTime';
+import { formatDateTime } from '@/utils/format/date';
 
 interface TitleSectionProps {
   post: PostDetailResponse | undefined;
@@ -32,7 +32,9 @@ const TitleSection = ({ post, onOpenPostActionSheet }: TitleSectionProps) => {
               <label className="writer">·</label>
               <label className="writer">
                 {post?.author.authorInstitutionRank &&
-                  INSTITUTION_RANK_EN_TO_KR[post?.author.authorInstitutionRank]}
+                  INSTITUTION_RANK_MAP.EN_TO_KR[
+                    post?.author.authorInstitutionRank
+                  ]}
               </label>
             </div>
             <div className="wrapper">

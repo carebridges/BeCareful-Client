@@ -8,7 +8,7 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilters';
+import { CAREGIVER_WORK_FILTERS } from '@/constants/domain/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
 import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { ReactComponent as ElderProfile } from '@/assets/icons/matching/ElderProfile.svg';
-import { ElderDataTemp } from '@/types/Matching';
+import { ElderDataTemp } from '@/types/elderly';
 import { theme } from '@/style/theme';
 
 export interface ElderCardProps extends ElderDataTemp {
@@ -15,7 +15,7 @@ export const ElderCard = ({
   gender,
   cognitiveLevel,
   careLevel,
-  imageUrl,
+  profileImageUrl,
   onClick,
   selected = false,
 }: ElderCardProps) => {
@@ -30,7 +30,7 @@ export const ElderCard = ({
           gender,
           cognitiveLevel,
           careLevel,
-          imageUrl,
+          profileImageUrl,
         })
       }
     >
@@ -48,8 +48,8 @@ export const ElderCard = ({
           <span>{careLevel}</span>
         </CardContent>
       </CardLeftContainer>
-      {imageUrl ? (
-        <ElderProfileStyled src={imageUrl} alt="Elder Profile" />
+      {profileImageUrl ? (
+        <ElderProfileStyled src={profileImageUrl} alt="Elder Profile" />
       ) : (
         <ElderProfile />
       )}

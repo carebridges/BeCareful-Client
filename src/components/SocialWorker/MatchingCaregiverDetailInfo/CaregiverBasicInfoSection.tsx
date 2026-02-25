@@ -3,8 +3,7 @@ import {
   DetailContentContainer,
   Title,
 } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/MatchingCaregiverDetailInfo.styles';
-
-import { Gender } from '@/types/SocialSignUp';
+import { Gender } from '@/types/common';
 
 interface CaregiverDetailInfo {
   certificateNames: string[];

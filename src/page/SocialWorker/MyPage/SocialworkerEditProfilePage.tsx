@@ -8,23 +8,20 @@ import { Button } from '@/components/common/Button/Button';
 import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/CheckCard';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
-import {
-  INSTITUTION_RANK_EN_TO_RANK,
-  INSTITUTION_RANK_LIST,
-} from '@/constants/common/institutionRank';
+import { INSTITUTION_RANK_LIST } from '@/constants/common/maps';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useProfileImg } from '@/hooks/useProfileImg';
 import { useSocialworkerBasicForm } from '@/hooks/Socialworker/useSocialworkerBasicForm';
-import { SocialworkerMyRequest } from '@/types/Socialworker/mypage';
+import { SocialworkerUpdateRequest } from '@/types/socialworker';
 import {
-  useGetSocialWorkerMyEdit,
-  usePutSocialworkerMy,
-} from '@/api/socialworker';
+  useSocialworkerProfileEdit,
+  useUpdateSocialworkerProfile,
+} from '@/api/user/socialworker';
 
 const SocialworkerEditProfilePage = () => {
   const { handleGoBack } = useHandleNavigate();
   const [isChanged, setIsChanged] = useState(false);
-  const { data } = useGetSocialWorkerMyEdit();
+  const { data } = useSocialworkerProfileEdit();
 
   const {
     name,
@@ -40,10 +37,11 @@ const SocialworkerEditProfilePage = () => {
     nicknameValidation,
     isDuplicateCheckButtonEnabled,
     handleChange,
+    handleChangeRank,
     handleCheckDuplicate,
   } = useSocialworkerBasicForm(data, setIsChanged);
 
-  const { mutate: updateSocialMy } = usePutSocialworkerMy();
+  const { mutate: updateProfile } = useUpdateSocialworkerProfile();
 
   const profileUpload = useProfileImg(
     '/social-worker/profile-img/presigned-url',
@@ -55,18 +53,18 @@ const SocialworkerEditProfilePage = () => {
   const handleEditBtnClick = async () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
-    const myData: SocialworkerMyRequest = {
+    const profileData: SocialworkerUpdateRequest = {
       realName: name,
       nickName: nickname,
       birthYymmdd: birth,
       genderCode: genderCode,
       phoneNumber: phoneNumber,
       nursingInstitutionId: institutionId,
-      institutionRank: INSTITUTION_RANK_EN_TO_RANK[rank],
+      institutionRank: rank,
       profileImageTempKey: profileUrl,
     };
-    console.log(myData);
-    updateSocialMy(myData, {
+    // console.log(profileData);
+    updateProfile(profileData, {
       onSuccess: () => {
         handleGoBack();
         setIsChanged(false);
@@ -157,7 +155,7 @@ const SocialworkerEditProfilePage = () => {
             key={option.value}
             pressed={rank === option.value}
             text={option.text}
-            onClick={() => handleChange('rank', option.value)}
+            onClick={() => handleChangeRank(option.value)}
           />
         ))}
       </CardContainer>

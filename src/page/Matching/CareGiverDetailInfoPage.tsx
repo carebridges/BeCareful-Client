@@ -4,12 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CaregiverBasicInfoSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CaregiverBasicInfoSection';
 import { WorkPreferenceSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/WorkPreferenceSection';
 import { CareerSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CareerSection';
-import { MATCH_REASON_TEXT } from '@/constants/socialworker/matching.socialWorker';
-import {
-  useCaregiverDetail,
-  useHireCaregiver,
-  usePendingMatching,
-} from '@/api/matching.socialWorker';
 import { Button } from '@/components/common/Button/Button';
 import { SelectStartDateModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/SelectStartDateModal';
 import { useState } from 'react';
@@ -18,6 +12,12 @@ import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicato
 import { ProposalModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalSentModal';
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { ProposalHoldBlockModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalHoldBlockModal';
+import { MATCH_REASON_TEXT } from '@/constants/domain/care';
+import {
+  useCaregiverDetail,
+  useHireCaregiver,
+  usePendingMatching,
+} from '@/api/matching/socialworker';
 
 export const CareGiverDetailInfoPage = () => {
   const navigate = useNavigate();

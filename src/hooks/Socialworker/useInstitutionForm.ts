@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { SocialMyInstitutionInfo } from '@/types/Socialworker/mypage';
+import { SocialworkerInstitutionInfo } from '@/types/institution';
 
 export const useInstitutionForm = (
-  data: SocialMyInstitutionInfo | undefined,
+  data: SocialworkerInstitutionInfo | undefined,
   setIsChanged: Dispatch<SetStateAction<boolean>>,
 ) => {
   const [institutionId, setInstitutionId] = useState(0);

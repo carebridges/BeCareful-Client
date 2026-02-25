@@ -1,5 +1,5 @@
-import { CommunityAgreeField } from '@/types/CommunityAssociation';
 import { useState, useMemo, useCallback } from 'react';
+import { AgreeField } from '@/types/user';
 
 export interface AgreeState {
   isAgreedToTerms: boolean;
@@ -32,7 +32,7 @@ export const useCommunityAgree = () => {
   );
 
   const handleCheckboxChange = useCallback(
-    (field: CommunityAgreeField) => (checked: boolean) => {
+    (field: AgreeField) => (checked: boolean) => {
       setAgreeState((prev) => ({ ...prev, [field]: checked }));
     },
     [],
