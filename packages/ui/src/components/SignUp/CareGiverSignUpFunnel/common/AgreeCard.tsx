@@ -1,5 +1,5 @@
 'use client';
-import CheckFilled from '../../../../assets/icons/signup/CheckFilled.svg';
+import { ReactComponent as CheckFilled } from '../../../../assets/icons/signup/CheckFilled.svg';
 import { styled } from 'styled-components';
 
 interface AgreeCardProps {

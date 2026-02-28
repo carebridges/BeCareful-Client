@@ -1,7 +1,7 @@
 'use client';
 import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
-import CloseIcon from '../../../assets/icons/CloseCircle.svg';
+import { ReactComponent as CloseIcon } from '../../../assets/icons/CloseCircle.svg';
 import { Dropdown, SmallDropdown } from '../Dropdown';
 import { CertificateFormInput, CertificateInfo } from '@repo/common';
 

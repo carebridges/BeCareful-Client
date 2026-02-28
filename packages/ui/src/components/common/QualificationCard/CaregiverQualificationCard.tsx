@@ -1,7 +1,7 @@
 'use client';
 import { styled } from 'styled-components';
 import { useState } from 'react';
-import IconCheckCircle from '../../../assets/icons/IconCheckCircle.svg';
+import { ReactComponent as IconCheckCircle } from '../../../assets/icons/IconCheckCircle.svg';
 import { CertificateFormInput } from '@repo/common';
 
 type CardState = 'default' | 'focus' | 'check';

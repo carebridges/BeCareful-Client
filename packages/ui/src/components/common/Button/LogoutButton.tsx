@@ -1,7 +1,6 @@
 'use client';
 import styled from 'styled-components';
-import LogoutIcon from '../../../assets/icons/Logout.svg';
-
+import { ReactComponent as LogoutIcon } from '../../../assets/icons/Logout.svg';
 interface ButtonProps {
   onClick: () => void;
   content?: string;

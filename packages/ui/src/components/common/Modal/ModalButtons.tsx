@@ -1,7 +1,7 @@
 'use client';
 import styled from 'styled-components';
 import React from 'react';
-import ModalClose from '../../../assets/icons/signup/ModalClose.svg';
+import { ReactComponent as ModalClose } from '../../../assets/icons/signup/ModalClose.svg';
 import { Button } from '../Button';
 
 interface ModalProps {

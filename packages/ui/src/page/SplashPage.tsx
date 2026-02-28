@@ -2,8 +2,7 @@
 
 import styled, { keyframes } from 'styled-components';
 import { useEffect } from 'react';
-import LogoBlue from '../assets/icons/LogoBlue.svg';
-
+import { ReactComponent as LogoBlue } from '../assets/icons/LogoBlue.svg';
 interface SplashPageProps {
   onComplete: () => void;
 }

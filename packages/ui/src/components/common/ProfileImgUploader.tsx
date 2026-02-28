@@ -1,7 +1,7 @@
 'use client';
 import styled from 'styled-components';
-import Camera from '../../assets/icons/Camera.svg';
-import Check from '../../assets/icons/matching/CircleCheck.svg';
+import { ReactComponent as Camera } from '../../assets/icons/Camera.svg';
+import { ReactComponent as Check } from '../../assets/icons/matching/CircleCheck.svg';
 import { Button } from './Button';
 import { BottomSheet } from './BottomSheet/BottomSheet';
 import { useProfileImg } from '@repo/common';

@@ -1,7 +1,7 @@
 'use client';
 import { styled } from 'styled-components';
 import { useState } from 'react';
-import SignUpComplete from '@repo/ui/src/assets/icons/signup/SignUpComplete.svg';
+import { ReactComponent as SignUpComplete } from '@repo/ui/src/assets/icons/signup/SignUpComplete.svg';
 import { Button, ErrorIndicator } from '../../../components/common';
 import { InstitutionFormData, useRegisterInstitution } from '@repo/common';
 

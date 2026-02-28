@@ -1,6 +1,6 @@
 'use client';
 import { styled } from 'styled-components';
-import ModalClose from '../../assets/icons/signup/ModalClose.svg';
+import { ReactComponent as ModalClose } from '../../assets/icons/signup/ModalClose.svg';
 import { Button } from '../common';
 
 interface BlockCaregiverModalProps {

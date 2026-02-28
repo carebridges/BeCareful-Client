@@ -1,6 +1,6 @@
 'use client';
 import { styled } from 'styled-components';
-import IconCheckCircle from '../../../assets/icons/IconCheckCircle.svg';
+import { ReactComponent as IconCheckCircle } from '../../../assets/icons/IconCheckCircle.svg';
 import { useState } from 'react';
 import { SmallDropdown } from '../Dropdown';
 import { CertificateFormInput } from '@repo/common';

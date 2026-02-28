@@ -1,8 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
-import IconPolygon6 from '../../../assets/icons/IconPolygon6.svg';
-
+import { ReactComponent as IconPolygon6 } from '../../../assets/icons/IconPolygon6.svg';
 interface SmallDropdownProps {
   title: string;
   contents: string[];

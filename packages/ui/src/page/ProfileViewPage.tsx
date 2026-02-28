@@ -1,10 +1,9 @@
 'use client';
-import ArrowLeft from '../assets/icons/ArrowLeft.svg';
-import InstitutionAvatar from '../assets/icons/Institution_avatar.svg';
-import PersonAvatar from '../assets/icons/Person_avatar.svg';
-
-import ThreeDots from '../assets/icons/socialworker/matching/IconThreeDots.svg';
-import ProfileIcon from '../assets/icons/socialworker/home/CaregiverDefault.svg';
+import { ReactComponent as ArrowLeft } from '../assets/icons/ArrowLeft.svg';
+import { ReactComponent as InstitutionAvatar } from '../assets/icons/Institution_avatar.svg';
+import { ReactComponent as PersonAvatar } from '../assets/icons/Person_avatar.svg';
+import { ReactComponent as ThreeDots } from '../assets/icons/socialworker/matching/IconThreeDots.svg';
+import { ReactComponent as ProfileIcon } from '../assets/icons/socialworker/home/CaregiverDefault.svg';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { useProfileActions } from '@repo/common';

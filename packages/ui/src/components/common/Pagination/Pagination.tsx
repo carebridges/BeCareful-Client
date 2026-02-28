@@ -1,8 +1,8 @@
 'use client';
 import { useMemo } from 'react';
 import styled, { css } from 'styled-components';
-import Arrow2 from '../../../assets/icons/pagination/PaginationArrow2.svg';
-import Arrow1 from '../../../assets/icons/pagination/PaginationArrow1.svg';
+import { ReactComponent as Arrow2 } from '../../../assets/icons/pagination/PaginationArrow2.svg';
+import { ReactComponent as Arrow1 } from '../../../assets/icons/pagination/PaginationArrow1.svg';
 
 type PaginationProps = {
   currentPage: number;

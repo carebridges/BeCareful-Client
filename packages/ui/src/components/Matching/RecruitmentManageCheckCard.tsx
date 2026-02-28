@@ -1,7 +1,6 @@
 'use client';
 import { styled } from 'styled-components';
-import CheckFilled from '../../assets/icons/signup/CheckFilled.svg';
-
+import { ReactComponent as CheckFilled } from '../../assets/icons/signup/CheckFilled.svg';
 export type CheckCardTone = 'blue' | 'orange' | 'gray';
 
 interface RecruitmentManageCheckCardProps {

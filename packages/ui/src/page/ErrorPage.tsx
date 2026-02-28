@@ -1,6 +1,6 @@
 'use client';
 import styled from 'styled-components';
-import ErrorIcon from '../assets/icons/Error.svg';
+import { ReactComponent as ErrorIcon } from '../assets/icons/Error.svg';
 import { Button } from '../components';
 
 interface ErrorPageProps {
@@ -21,7 +21,7 @@ export const ErrorPage = ({ onBack }: ErrorPageProps) => {
 
   return (
     <PageLayout>
-      <ErrorIcon />
+      <ErrorIcon aria-label="오류 아이콘" />
 
       <Labels>
         <Title>오류가 발생하였습니다</Title>

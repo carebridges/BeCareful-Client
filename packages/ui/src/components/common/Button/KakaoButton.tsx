@@ -1,6 +1,6 @@
 'use client';
 import styled from 'styled-components';
-import KakaoIcon from '../../../assets/icons/onboarding/Kakao.svg';
+import { ReactComponent as KakaoIcon } from '../../../assets/icons/onboarding/Kakao.svg';
 import { axiosInstance } from '@repo/common';
 
 export const KakaoButton = () => {

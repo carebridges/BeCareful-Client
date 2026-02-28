@@ -1,8 +1,8 @@
 'use client';
 import { useState } from 'react';
 import styled from 'styled-components';
-import ChevronUp from '../../../../assets/icons/signup/ChevronUp.svg';
-import ChevronDown from '../../../../assets/icons/signup/ChevronDown.svg';
+import { ReactComponent as ChevronUp } from '../../../../assets/icons/signup/ChevronUp.svg';
+import { ReactComponent as ChevronDown } from '../../../../assets/icons/signup/ChevronDown.svg';
 import { CheckBox } from '../../../common';
 
 interface CaregiverAgreeItemProps {

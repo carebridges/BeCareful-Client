@@ -1,7 +1,6 @@
 'use client';
 import styled from 'styled-components';
-import Chevron from '../../../assets/icons/ChevronRightProfile.svg';
-
+import { ReactComponent as Chevron } from '../../../assets/icons/ChevronRightProfile.svg';
 interface AssociationCardProps {
   association: string;
   onClick?: () => void;

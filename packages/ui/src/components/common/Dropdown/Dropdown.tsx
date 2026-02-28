@@ -1,8 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
-import IconPolygon5 from '../../../assets/icons/IconPolygon5.svg';
-
+import { ReactComponent as IconPolygon5 } from '../../../assets/icons/IconPolygon5.svg';
 interface DropdownProps {
   title: string;
   contents: string[];

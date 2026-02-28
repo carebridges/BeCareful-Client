@@ -1,6 +1,6 @@
 'use client';
 import { useState, useMemo, useRef, useEffect } from 'react';
-import SearchIcon from '@repo/ui/src/assets/icons/signup/SearchIcon.svg';
+import { ReactComponent as SearchIcon } from '@repo/ui/src/assets/icons/signup/SearchIcon.svg';
 import { styled } from 'styled-components';
 import { Institution, useAllInstitutions } from '@repo/common';
 

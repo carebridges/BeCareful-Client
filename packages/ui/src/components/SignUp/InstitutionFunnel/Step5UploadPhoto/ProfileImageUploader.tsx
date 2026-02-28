@@ -1,7 +1,6 @@
 'use client';
 import { styled } from 'styled-components';
-import ProfileImage from '@repo/ui/src/assets/icons/signup/SocialProfileImage.svg';
-
+import { ReactComponent as ProfileImage } from '@repo/ui/src/assets/icons/signup/SocialProfileImage.svg';
 type Props = {
   imageUrl?: string | null;
   onChange: (file: File) => void;
