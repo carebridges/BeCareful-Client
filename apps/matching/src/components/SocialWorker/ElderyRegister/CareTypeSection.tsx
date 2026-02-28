@@ -1,0 +1,133 @@
+import { useState, useEffect } from 'react';
+import {
+  SectionWrapper,
+  Title,
+  TitleWrapper,
+} from '@/components/SocialWorker/ElderyRegister/Section.styles';
+import { ReactComponent as Plus } from '@repo/ui/src/assets/icons/signup/Plus.svg';
+import { styled } from 'styled-components';
+import { CareUnitCard } from './CareUnitCard';
+import { CareTypeKey } from '@repo/common';
+import { Button } from '@repo/ui';
+
+export type CareUnit = {
+  id: string;
+  selectedCare: CareTypeKey | null;
+  selectedDetails: string[];
+};
+
+interface CareTypeSectionProps {
+  selectedCare: CareTypeKey | null;
+  setSelectedCare: (care: CareTypeKey | null) => void;
+  selectedDetails: string[];
+  setSelectedDetails: (details: string[]) => void;
+}
+
+export const CareTypeSection = ({
+  setSelectedCare,
+  setSelectedDetails,
+}: CareTypeSectionProps) => {
+  const [careUnits, setCareUnits] = useState<CareUnit[]>([]);
+  const [openModalId, setOpenModalId] = useState<string | null>(null);
+
+  const handleAddCareUnit = () => {
+    if (careUnits.length >= 5) return;
+    const newUnit: CareUnit = {
+      id: crypto.randomUUID(),
+      selectedCare: null,
+      selectedDetails: [],
+    };
+    setCareUnits((prev) => [...prev, newUnit]);
+  };
+
+  const handleRemoveCareUnit = (id: string) => {
+    setCareUnits((prev) => prev.filter((unit) => unit.id !== id));
+    if (openModalId === id) setOpenModalId(null);
+  };
+
+  const updateCareUnit = (id: string, updated: Partial<CareUnit>) => {
+    setCareUnits((prev) => {
+      if (updated.selectedCare) {
+        const isDuplicate = prev.some(
+          (unit) =>
+            unit.id !== id && unit.selectedCare === updated.selectedCare,
+        );
+
+        if (isDuplicate) {
+          alert('이미 선택한 케어 항목입니다.');
+          return prev;
+        }
+      }
+
+      return prev.map((unit) =>
+        unit.id === id ? { ...unit, ...updated } : unit,
+      );
+    });
+  };
+
+  const toggleDetail = (id: string, item: string) => {
+    setCareUnits((prev) =>
+      prev.map((unit) => {
+        if (unit.id !== id) return unit;
+        const nextDetails = unit.selectedDetails.includes(item)
+          ? unit.selectedDetails.filter((d) => d !== item)
+          : [...unit.selectedDetails, item];
+        return { ...unit, selectedDetails: nextDetails };
+      }),
+    );
+  };
+
+  useEffect(() => {
+    const first = careUnits.find((u) => u.selectedCare)?.selectedCare || null;
+    const allDetails = careUnits.flatMap((u) => u.selectedDetails);
+    setSelectedCare(first);
+    setSelectedDetails(allDetails);
+  }, [careUnits]);
+
+  return (
+    <SectionWrapper>
+      <TitleWrapper>
+        <Title color="">케어 필요항목</Title>
+        <Title color="blue">*</Title>
+      </TitleWrapper>
+
+      {careUnits.map((unit) => (
+        <CareUnitCard
+          key={unit.id}
+          unit={unit}
+          onUpdate={(updated) => updateCareUnit(unit.id, updated)}
+          onToggleDetail={(item) => toggleDetail(unit.id, item)}
+          isModalOpen={openModalId === unit.id}
+          onOpenModal={() => setOpenModalId(unit.id)}
+          onCloseModal={() => setOpenModalId(null)}
+          onRemove={() => handleRemoveCareUnit(unit.id)}
+        />
+      ))}
+
+      {careUnits.length < 5 && (
+        <CardWrapper>
+          <Button variant="blue2" height="52px" onClick={handleAddCareUnit}>
+            <ButtonContent>
+              <Plus />
+              추가하기
+            </ButtonContent>
+          </Button>
+        </CardWrapper>
+      )}
+    </SectionWrapper>
+  );
+};
+
+const CardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+`;
+
+const ButtonContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`;

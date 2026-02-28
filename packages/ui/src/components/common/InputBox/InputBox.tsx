@@ -1,0 +1,104 @@
+'use client';
+import styled from 'styled-components';
+
+interface InputBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  title: string;
+  detail?: string;
+  gray?: boolean;
+  placeholder?: string;
+  value?: string;
+  titleVariant?: 'default' | 'small';
+}
+
+export const InputBox = ({
+  title,
+  detail,
+  gray,
+  placeholder,
+  value,
+  titleVariant = 'default',
+  ...props
+}: InputBoxProps) => {
+  return (
+    <Container $titleVariant={titleVariant}>
+      <div className="titleWrapper">
+        <label className="title">
+          {title} <span>*</span>
+        </label>
+        {detail && <label className="detail">{detail}</label>}
+      </div>
+      {gray ? (
+        <InputNotFix>{value}</InputNotFix>
+      ) : (
+        <Input placeholder={placeholder} value={value} {...props} />
+      )}
+    </Container>
+  );
+};
+
+const Container = styled.div<{ $titleVariant: 'default' | 'small' }>`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .titleWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .title {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme, $titleVariant }) =>
+      $titleVariant === 'default'
+        ? theme.typography.fontSize.title5
+        : theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  }
+
+  span {
+    color: ${({ theme }) => theme.colors.mainBlue};
+  }
+
+  .detail {
+    color: ${({ theme }) => theme.colors.gray500};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  }
+`;
+
+const Input = styled.input`
+  box-sizing: border-box;
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  background: ${({ theme }) => theme.colors.white};
+
+  color: ${({ theme }) => theme.colors.gray900};
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.gray300};
+  }
+
+  &:hover,
+  &:focus {
+    border: 1px solid ${({ theme }) => theme.colors.mainBlue};
+    outline: none;
+    caret-color: ${({ theme }) => theme.colors.mainBlue};
+  }
+`;
+
+const InputNotFix = styled.div`
+  height: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  background: ${({ theme }) => theme.colors.gray50};
+
+  color: ${({ theme }) => theme.colors.gray900};
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+`;

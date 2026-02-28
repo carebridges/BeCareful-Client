@@ -1,0 +1,299 @@
+'use client';
+
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import Search from '@repo/ui/src/assets/icons/Search.svg';
+import ChevronRight from '@repo/ui/src/assets/icons/ChevronRight.svg';
+// import Plus from '@repo/ui/src/assets/icons/ButtonPlus.svg';
+import Write from '@repo/ui/src/assets/icons/community/Write.svg';
+import CommunityHome from '@/components/Community/home/CommunityHome';
+import CommunityDetail from '@/components/Community/home/CommunityDetail';
+import { CommunityJoinRequestModal } from '@/components/Community/JoinCommunity/CommunityJoinRequestModal';
+import { CommunityJoinPendingModal } from '@/components/Home/CommunityJoinPendingModal';
+import { CommunityJoinApprovedModal } from '@/components/Home/CommunityJoinApprovedModal';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { useCommunityHome } from '@/api/community';
+import { useCancelJoinAssociation } from '@/api/association';
+import { BOARD_MAP, COMMUNITY_BOARDS_TAB } from '@/constants/community';
+import { useJoinStatusModal } from '@/hooks/CommunityJoin/useJoinStatusModal';
+
+const CommunityPage = ({ previewMode = false }: { previewMode?: boolean }) => {
+  const { handleGoBack, handleNavigate } = useHandleNavigate();
+  const { mutate: cancelJoin } = useCancelJoinAssociation();
+
+  const handleCancelJoin = () => {
+    cancelJoin(undefined, {
+      onSuccess: async () => {
+        closePendingModal();
+        window.location.reload();
+      },
+      onError: () => {
+        alert('가입 취소 실패');
+      },
+    });
+  };
+
+  // TODO : navigate 관련
+  const location = useLocation();
+  const selectedAssociation = location.state as {
+    associationId: number;
+    associationName: string;
+  };
+
+  const [activeTab, setActiveTab] = useState('전체');
+  const handleTabChange = (tabName: string) => {
+    setActiveTab(tabName);
+    window.scrollTo(0, 0);
+  };
+
+  const { data } = useCommunityHome(!previewMode);
+  const {
+    isPendingModalOpen,
+    isApprovedModalOpen,
+    associationName,
+    closePendingModal,
+    closeApprovedModal,
+  } = useJoinStatusModal();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const associationImgUrl =
+    data?.associationInfo?.associationProfileImageUrl === 'default' ||
+    data?.associationInfo?.associationProfileImageUrl === null ||
+    data?.associationInfo?.associationProfileImageUrl === undefined
+      ? 'https://care-bridges-bucket.s3.ap-northeast-2.amazonaws.com/association-profile-image/default/association_cover_default.jpg'
+      : data?.associationInfo?.associationProfileImageUrl;
+
+  return (
+    <Container>
+      <Top $backgroundImageUrl={associationImgUrl}>
+        <div className="right">
+          <Search onClick={() => handleNavigate('/community/search')} />
+        </div>
+      </Top>
+
+      <Association>
+        <div
+          className="chevronWrapper"
+          onClick={() =>
+            handleNavigate(
+              `/community/association/${data?.associationInfo?.associationId}/info`,
+            )
+          }
+        >
+          <label className="title">
+            {data?.associationInfo?.associationName}
+          </label>
+          <Chevron />
+        </div>
+        <div className="bottom">
+          <div
+            className="chevronWrapper"
+            onClick={() =>
+              handleNavigate(
+                `/community/association/${data?.associationInfo?.associationId}/members`,
+              )
+            }
+          >
+            <label className="member">
+              멤버 {data?.associationInfo?.associationMemberCount}
+            </label>
+            <Chevron />
+          </div>
+          {/* <div className="invite">
+                <Plus />
+                <label className="invite-label">초대하기</label>
+              </div> */}
+        </div>
+      </Association>
+
+      <CommunityTabs>
+        {COMMUNITY_BOARDS_TAB.map((tab) => (
+          <Tab
+            key={tab}
+            active={activeTab === tab}
+            onClick={() => handleTabChange(tab)}
+          >
+            {tab}
+          </Tab>
+        ))}
+      </CommunityTabs>
+
+      {activeTab === '전체' ? (
+        <CommunityHome onTabChange={handleTabChange} />
+      ) : (
+        <CommunityDetail boardType={activeTab} />
+      )}
+
+      <Button
+        onClick={() => {
+          const board =
+            BOARD_MAP.KR_TO_PARAM[
+              activeTab as keyof typeof BOARD_MAP.KR_TO_PARAM
+            ];
+          handleNavigate(
+            board ? `/community/write?boardType=${board}` : '/community/write',
+          );
+        }}
+      >
+        <Write />
+        글쓰기
+      </Button>
+
+      {previewMode && (
+        <CommunityJoinRequestModal
+          width="343px"
+          associationId={selectedAssociation?.associationId}
+          associationName={selectedAssociation?.associationName ?? ''}
+          onClose={handleGoBack}
+        />
+      )}
+      {isPendingModalOpen && (
+        <CommunityJoinPendingModal
+          width="343px"
+          associationName={associationName}
+          onCancelJoin={handleCancelJoin}
+          onClose={closePendingModal}
+        />
+      )}
+
+      {isApprovedModalOpen && (
+        <CommunityJoinApprovedModal
+          width="343px"
+          associationName={associationName}
+          onClose={closeApprovedModal}
+        />
+      )}
+    </Container>
+  );
+};
+
+export default CommunityPage;
+
+const Container = styled.div`
+  padding-bottom: 57px;
+  min-height: 100vh;
+  background: ${({ theme }) => theme.colors.gray50};
+`;
+
+const Top = styled.div<{ $backgroundImageUrl: string }>`
+  height: 88px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-image: url(${(props) => props.$backgroundImageUrl});
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+`;
+
+const Association = styled.div`
+  height: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: space-between;
+  padding: 14px 20px 10px 20px;
+
+  position: sticky;
+  top: 88px;
+  z-index: 8;
+  background: ${({ theme }) => theme.colors.white};
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  .bottom {
+    justify-content: space-between;
+  }
+
+  .invite {
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  label {
+    color: ${({ theme }) => theme.colors.black};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+    line-height: 140%;
+    cursor: pointer;
+  }
+
+  .title {
+    font-size: ${({ theme }) => theme.typography.fontSize.title3};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
+
+  .invite-label {
+    color: ${({ theme }) => theme.colors.mainBlue};
+  }
+
+  .chevronWrapper {
+    gap: 8px;
+  }
+`;
+
+const Chevron = styled(ChevronRight)`
+  color: ${({ theme }) => theme.colors.gray800};
+  cursor: pointer;
+`;
+
+const CommunityTabs = styled.div`
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 20px 0px 20px;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray100};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
+
+  position: sticky;
+  top: 164px;
+  z-index: 6;
+  background: ${({ theme }) => theme.colors.white};
+`;
+
+const Tab = styled.div<{ active: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  //   gap: 25px;
+  text-align: center;
+  cursor: pointer;
+  color: ${({ theme, active }) =>
+    active ? theme.colors.mainBlue : theme.colors.black};
+  padding-bottom: 6px;
+  border-bottom: ${({ active }) => (active ? '3px solid #0370ff' : '')};
+`;
+
+const Button = styled.button`
+  z-index: 10;
+  position: fixed;
+  bottom: 77px;
+  right: 20px;
+
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  background: ${({ theme }) => theme.colors.mainBlue};
+  border-radius: 25px;
+  padding: 16px;
+
+  color: ${({ theme }) => theme.colors.white};
+  font-size: ${({ theme }) => theme.typography.fontSize.body1};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  line-height: 140%;
+`;

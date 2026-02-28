@@ -1,0 +1,306 @@
+import { styled } from 'styled-components';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ReactComponent as IconArrowLeft } from '@repo/ui/src/assets/icons/IconArrowLeft.svg';
+import { CaregiverBasicInfoSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CaregiverBasicInfoSection';
+import { WorkPreferenceSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/WorkPreferenceSection';
+import { CareerSection } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/CareerSection';
+import { SelectStartDateModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/SelectStartDateModal';
+import { ProposalModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalSentModal';
+import { ProposalHoldBlockModal } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/ProposalHoldBlockModal';
+import { MATCH_REASON_TEXT } from '@/constants/domain/care';
+import {
+  useCaregiverDetail,
+  useHireCaregiver,
+  usePendingMatching,
+} from '@/api/matching/socialworker';
+import {
+  Button,
+  EmptyStateIndicator,
+  ErrorIndicator,
+  LoadingIndicator,
+} from '@repo/ui';
+
+export const CareGiverDetailInfoPage = () => {
+  const navigate = useNavigate();
+  const [isStartDateModalOpen, setStartDateModalOpen] = useState(false);
+  const [isProposalModalOpen, setProposalModalOpen] = useState(false);
+  const [isProposalHoldBlockOpen, setProposalHoldBlockOpen] = useState(false);
+
+  const { recruitmentId, caregiverId } = useParams<{
+    recruitmentId: string;
+    caregiverId: string;
+  }>();
+
+  const { mutate: hireCaregiver } = useHireCaregiver();
+  const { mutate: setPending } = usePendingMatching();
+
+  const { data, isLoading, error } = useCaregiverDetail(
+    recruitmentId ?? '',
+    caregiverId ?? '',
+  );
+
+  if (!recruitmentId || !caregiverId) {
+    return <EmptyStateIndicator message="잘못된 접근입니다." />;
+  }
+
+  if (isLoading) return <LoadingIndicator />;
+  if (error || !data) return <ErrorIndicator />;
+
+  const handlePending = () => {
+    const applicationId = data.workApplicationInfo?.workApplicationId;
+
+    setPending(applicationId, {
+      onSuccess: () => {
+        setProposalHoldBlockOpen(false);
+        navigate(-1);
+      },
+      onError: () => {
+        alert('보류 처리에 실패했습니다. 다시 시도해주세요.');
+      },
+    });
+  };
+
+  return (
+    <Container>
+      <TopContainer>
+        <IconContainer onClick={() => navigate(-1)}>
+          <IconArrowLeft />
+        </IconContainer>
+        요양보호사 정보
+        <HideIconContainer />
+      </TopContainer>
+
+      <ProfileInfoContainer>
+        <ProfileImage
+          src={data.caregiverInfo.profileImageUrl || '/default-profile.png'}
+        />
+        <RightContainer>
+          <ProfileInfo>
+            <span className="highlight">{data.caregiverInfo.name}</span>
+            <span>믿고 맡길 수 있는 편안함을 제공합니다.</span>
+          </ProfileInfo>
+          <TagContainer>적합도 {data.matchingResultStatus}</TagContainer>
+        </RightContainer>
+      </ProfileInfoContainer>
+
+      <MatchReasonContainer>
+        {Object.entries(MATCH_REASON_TEXT).map(([key, text]) =>
+          data[key as keyof typeof MATCH_REASON_TEXT] === 'MATCHED_ALL' ? (
+            <p key={key}>• {text}</p>
+          ) : null,
+        )}
+      </MatchReasonContainer>
+
+      <ContentContainer>
+        <CaregiverBasicInfoSection data={data.caregiverInfo} />
+      </ContentContainer>
+
+      <GapContainer />
+      <ContentContainer>
+        <WorkPreferenceSection data={data.workApplicationInfo} />
+      </ContentContainer>
+      <GapContainer />
+      <ContentContainer>
+        <CareerSection careerInfo={data.careerInfo} />
+      </ContentContainer>
+
+      <ButtonContainer>
+        <Button
+          variant="white"
+          height="52px"
+          onClick={() => setProposalHoldBlockOpen(true)}
+        >
+          보류하기
+        </Button>
+        <Button
+          onClick={() => setStartDateModalOpen(true)}
+          height="52px"
+          variant="blue"
+        >
+          채용제안하기
+        </Button>
+      </ButtonContainer>
+      {isStartDateModalOpen && (
+        <SelectStartDateModal
+          width="312px"
+          onClose={() => setStartDateModalOpen(false)}
+          onCancel={() => {
+            setStartDateModalOpen(false);
+          }}
+          onConfirm={(selectedDate) => {
+            if (!data) return;
+            hireCaregiver(
+              {
+                recruitmentId: Number(recruitmentId),
+                caregiverId: Number(caregiverId),
+                workStartDate: selectedDate,
+              },
+              {
+                onSuccess: () => {
+                  setStartDateModalOpen(false);
+                  setProposalModalOpen(true);
+                },
+                onError: () => {
+                  alert('채용 제안에 실패했습니다. 다시 시도해주세요.');
+                },
+              },
+            );
+          }}
+        />
+      )}
+
+      {isProposalModalOpen && (
+        <ProposalModal
+          width="312px"
+          onClose={() => setProposalModalOpen(false)}
+          onCancel={() => {
+            //TODO
+          }}
+        />
+      )}
+
+      {isProposalHoldBlockOpen && (
+        <ProposalHoldBlockModal
+          width="312px"
+          onClose={() => setProposalHoldBlockOpen(false)}
+          onCancel={handlePending}
+        />
+      )}
+    </Container>
+  );
+};
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 134px;
+`;
+
+const TopContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 56px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  overflow-y: auto;
+
+  font-size: ${({ theme }) => theme.typography.fontSize.title5};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.colors.gray900};
+`;
+
+const HideIconContainer = styled.div`
+  width: 24px;
+  height: 24px;
+  background-color: ${({ theme }) => theme.colors.white};
+`;
+
+const IconContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ProfileInfoContainer = styled.div`
+  display: flex;
+  padding: 20px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+
+  color: ${({ theme }) => theme.colors.gray500};
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+
+  .highlight {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.body1};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
+`;
+
+const ProfileImage = styled.img`
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+`;
+
+const ProfileInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const RightContainer = styled.div`
+  display: flex;
+  padding-top: 2px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+`;
+
+const TagContainer = styled.div`
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  background-color: ${({ theme }) => theme.colors.gray50};
+  color: ${({ theme }) => theme.colors.gray500};
+
+  font-size: ${({ theme }) => theme.typography.fontSize.body4};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+`;
+
+const GapContainer = styled.div`
+  display: flex;
+  height: 6px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.gray50};
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
+  border: 1px solid ${({ theme }) => theme.colors.gray100};
+  box-sizing: border-box;
+  background-color: ${({ theme }) => theme.colors.white};
+  width: 100%;
+  gap: 8px;
+`;
+
+const MatchReasonContainer = styled.div`
+  display: flex;
+  padding: 0px 20px 20px 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+
+  color: ${({ theme }) => theme.colors.mainBlue};
+  font-size: ${({ theme }) => theme.typography.fontSize.body2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+`;

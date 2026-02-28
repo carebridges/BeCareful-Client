@@ -1,0 +1,101 @@
+import styled from 'styled-components';
+import { ChatInfoDisplay } from '@/components/Chat/ChatRoom/ChatInfoDisplay';
+import { ContractChat } from '@/types/chat';
+import { formatDaysToKR } from '@/utils/format/domain';
+import { formatCaretype, GENDER_MAP, UserRole } from '@repo/common';
+
+interface ChatContractProps {
+  role: UserRole;
+  contract: ContractChat;
+}
+
+const ChatContract = ({ role, contract }: ChatContractProps) => {
+  const contractInfo =
+    role === 'CAREGIVER'
+      ? [
+          {
+            title: '인적사항',
+            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_MAP.EN_TO_KR_SHORT[contract.elderlyGender]}`,
+          },
+          {
+            title: '케어항목',
+            detail: formatCaretype(contract.careTypes, 2),
+          },
+          {
+            title: '근무요일',
+            detail: formatDaysToKR(contract.workDays),
+          },
+          {
+            title: '근무시간',
+            detail: `${contract.workStartTime.slice(0, 5)} ~ ${contract.workEndTime.slice(0, 5)}`,
+          },
+          {
+            title: '급여',
+            detail: `${contract.workSalaryAmount.toLocaleString('ko-KR')}원`,
+          },
+          {
+            title: '근무시작',
+            detail: contract.workStartDate.replaceAll('-', '.'),
+          },
+        ]
+      : [
+          {
+            title: '인적사항',
+            detail: `${contract.elderlyName} ${contract.elderlyAge}세 ${GENDER_MAP.EN_TO_KR_SHORT[contract.elderlyGender]}`,
+          },
+          {
+            title: '케어항목',
+            detail: formatCaretype(contract.careTypes, 2),
+          },
+          {
+            title: '근무요일',
+            detail: formatDaysToKR(contract.workDays),
+          },
+          {
+            title: '근무시간',
+            detail: `${contract.workStartTime.slice(0, 5)} ~ ${contract.workEndTime.slice(0, 5)}`,
+          },
+          {
+            title: '급여',
+            detail: `${contract.workSalaryAmount.toLocaleString('ko-KR')}원`,
+          },
+          {
+            title: '근무시작',
+            detail: contract.workStartDate.replaceAll('-', '.'),
+          },
+          {
+            title: '근무자',
+            detail: contract.caregiverName,
+          },
+          {
+            title: '근무자 번호',
+            detail: contract.caregiverPhoneNumber,
+          },
+        ];
+
+  return (
+    <Container sender={contract.senderType}>
+      <div className="contract">
+        {contract.senderType === 'CAREGIVER'
+          ? '근무 조건에 동의했습니다.'
+          : '근무 제안이 전송되었습니다.'}
+      </div>
+      <ChatInfoDisplay items={contractInfo} sender={contract.senderType} />
+    </Container>
+  );
+};
+
+export default ChatContract;
+
+const Container = styled.div<{ sender: string }>`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .contract {
+    color: ${({ theme, sender }) =>
+      sender === 'CAREGIVER' ? theme.colors.white : theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title5};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
+  }
+`;

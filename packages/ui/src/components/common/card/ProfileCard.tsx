@@ -1,0 +1,98 @@
+'use client';
+import styled from 'styled-components';
+import Chevron from '../../../assets/icons/ChevronRightProfile.svg';
+
+interface ProfileCardProps {
+  profileImgURL: string;
+  name: string;
+  nickname?: string;
+  chevronClick?: () => void;
+  phoneNumber: string;
+  age: number;
+  gender: string;
+}
+
+export const ProfileCard = ({
+  profileImgURL,
+  name,
+  nickname,
+  chevronClick,
+  phoneNumber,
+  age,
+  gender,
+}: ProfileCardProps) => {
+  return (
+    <CardContainter>
+      <img src={profileImgURL} alt={'프로필 이미지'} />
+
+      <div className="right">
+        <NameWrapper onClick={chevronClick}>
+          <label className="name">{name}</label>
+          {nickname && <label className="nickname">{nickname}</label>}
+          {chevronClick && <Chevron />}
+        </NameWrapper>
+
+        <InfoWrapper>
+          <label className="info">{phoneNumber}</label>
+          <label className="info">·</label>
+          <label className="info">만 {age}세</label>
+          <label className="info">·</label>
+          <label className="info">{gender}</label>
+        </InfoWrapper>
+      </div>
+    </CardContainter>
+  );
+};
+
+const CardContainter = styled.div`
+  padding: 16px 0px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  img {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.colors.gray100};
+    object-fit: cover;
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+`;
+
+const NameWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+
+  color: ${({ theme }) => theme.colors.gray500};
+
+  .name {
+    color: ${({ theme }) => theme.colors.gray900};
+    font-size: ${({ theme }) => theme.typography.fontSize.title4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
+
+  .nickname {
+    color: ${({ theme }) => theme.colors.mainBlue};
+    font-size: ${({ theme }) => theme.typography.fontSize.title4};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
+`;
+
+const InfoWrapper = styled.div`
+  display: flex;
+  gap: 4px;
+
+  .info {
+    color: ${({ theme }) => theme.colors.gray500};
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.regular};
+  }
+`;
