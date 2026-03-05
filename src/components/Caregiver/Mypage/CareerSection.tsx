@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 import { ReactComponent as CareerIcon } from '@/assets/icons/caregiver/my/Career.svg';
 import { Button } from '@/components/common/Button/Button';
-import { CareerInfo } from '@/types/Caregiver/mypage';
-import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import {
-  foramtCareerInstitution,
-  foramtCareerYear,
-} from '@/utils/formatCareers';
+import { CareerInfo } from '@/types/caregiver';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import CareerDetailItem from './CareerDetailItem';
 
 interface CareerSectionProps {
   data: CareerInfo | undefined;
@@ -20,17 +17,16 @@ const CareerSection = ({ data }: CareerSectionProps) => {
     {
       title: '근무처',
       detail: (
-        <div style={{ display: 'flex', gap: '4px' }}>
-          {foramtCareerInstitution(data?.careerDetails)}
-        </div>
+        <CareerDetailItem
+          details={data?.careerDetails}
+          dataKey="workInstitution"
+        />
       ),
     },
     {
       title: '근무기간',
       detail: (
-        <div style={{ display: 'flex', gap: '4px' }}>
-          {foramtCareerYear(data?.careerDetails)}
-        </div>
+        <CareerDetailItem details={data?.careerDetails} dataKey="workYear" />
       ),
     },
   ];

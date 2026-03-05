@@ -1,10 +1,8 @@
-import { CaregiverChatListResponse } from '@/types/Caregiver/chat';
-import { NewChat } from '@/types/common/chat';
-import { SocialworkerChatListResponse } from '@/types/Socialworker/chat';
-import { Client, IMessage } from '@stomp/stompjs';
-import { useQueryClient } from '@tanstack/react-query';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { Client, IMessage } from '@stomp/stompjs';
+import { CaregiverChatList, NewChat, SocialworkerChatList } from '@/types/chat';
 
 interface ChatWebSocketContextType {
   stompClient: Client | null;
@@ -55,7 +53,7 @@ export const ChatWebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
           if (userRole === 'caregiver') {
             queryClient.setQueryData(
               ['caregiverChatList'],
-              (oldData: CaregiverChatListResponse | undefined) => {
+              (oldData: CaregiverChatList[] | undefined) => {
                 if (!oldData) return [];
 
                 // 수신된 chatRoomId와 일치하는 채팅방 업데이트
@@ -75,7 +73,7 @@ export const ChatWebSocketProvider: React.FC<{ children: React.ReactNode }> = ({
           } else {
             queryClient.setQueryData(
               ['socialworkerChatList'],
-              (oldData: SocialworkerChatListResponse | undefined) => {
+              (oldData: SocialworkerChatList[] | undefined) => {
                 if (!oldData) return [];
 
                 // 수신된 chatRoomId와 일치하는 채팅방 업데이트

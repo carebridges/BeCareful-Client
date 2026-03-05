@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { CheckBoxSelect } from '@/components/common/CheckBox/CheckBoxSelect';
-import { DAY_LABELS } from '@/constants/socialworker/day.socialWorker';
+import { DAYS } from '@/constants/common/maps';
 
 interface Props {
   selectedDays: string[];
@@ -21,7 +21,7 @@ export const DaySelectSection = ({ selectedDays, onToggle }: Props) => {
         요일별로 근무 시간이 다른가요? 공고를 각각 등록해 주세요.
       </SectionGuide>
       <SelectWrapper gap="4px">
-        {DAY_LABELS.map((day) => (
+        {DAYS.map((day) => (
           <CheckBoxSelect
             key={day}
             id={day}

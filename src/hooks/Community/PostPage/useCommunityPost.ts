@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { BOARD_PARAM_TO_EN } from '@/constants/community/communityBoard';
+
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useDeletePost, usePostDetail } from '@/api/community';
+import { useDeletePost, usePostDetail } from '@/api/community/community';
+import { BOARD_MAP } from '@/constants/domain/community';
 
 export const useCommunityPost = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -15,7 +16,9 @@ export const useCommunityPost = () => {
   const postId =
     Number.isInteger(parsedPostId) && parsedPostId > 0 ? parsedPostId : 0;
   const apiBoardType =
-    BOARD_PARAM_TO_EN[boardType ?? 'association'] ?? 'association-notice';
+    BOARD_MAP.PARAM_TO_EN[
+      (boardType ?? 'association') as keyof typeof BOARD_MAP.PARAM_TO_EN
+    ] ?? 'association-notice';
 
   // 게시글 상세 조회
   const { data: post } = usePostDetail(apiBoardType, postId);

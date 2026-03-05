@@ -1,6 +1,6 @@
 import { EmptyStateIndicator } from '@/components/common/EmptyStateIndicator/EmptyStateIndicator';
 import { TabContentMatching } from '@/components/Matching/TabContentMatching';
-import { MatchingCaregiver } from '@/types/Matching.socialWorker';
+import { MatchingCaregiver } from '@/types/matching';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 

@@ -1,12 +1,10 @@
-import { useFunnel } from '@/hooks/SignUp/useFunnel';
-import { CommonCaregiverSignUpFormData } from '@/types/CareGiverSignUp';
 import { createContext, useContext, useState } from 'react';
+import { useFunnel } from '@/hooks/SignUp/useFunnel';
+import { CaregiverSignUpFormData } from '@/types/auth';
 
 interface CaregiverSignUpContextType extends ReturnType<typeof useFunnel> {
-  formData: CommonCaregiverSignUpFormData;
-  setFormData: React.Dispatch<
-    React.SetStateAction<CommonCaregiverSignUpFormData>
-  >;
+  formData: CaregiverSignUpFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CaregiverSignUpFormData>>;
 }
 const CaregiverSignUpContext = createContext<CaregiverSignUpContextType | null>(
   null,
@@ -19,7 +17,7 @@ export const CommonCaregiverSignUpProvider = ({
 }) => {
   const funnel = useFunnel(0);
 
-  const [formData, setFormData] = useState<CommonCaregiverSignUpFormData>({
+  const [formData, setFormData] = useState<CaregiverSignUpFormData>({
     realName: '',
     birthYymmdd: '',
     genderCode: 0,
@@ -36,6 +34,7 @@ export const CommonCaregiverSignUpProvider = ({
     isAgreedToCollectPersonalInfo: false,
     isAgreedToReceiveMarketingInfo: false,
     profileImageTempKey: 'default',
+    loginProvider: '',
   });
 
   return (

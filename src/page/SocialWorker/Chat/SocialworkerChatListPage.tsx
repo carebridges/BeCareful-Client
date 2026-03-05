@@ -1,9 +1,9 @@
 import ChatList from '@/components/Chat/ChatList/ChatList';
 import ChatListCardSocialworker from '@/components/Chat/ChatList/ChatListCardSocialworker';
-import { useGetSocialworkerChatList } from '@/api/chat';
+import { useSocialworkerChatList } from '@/api/chat';
 
 const SocialworkerChatListPage = () => {
-  const { data } = useGetSocialworkerChatList();
+  const { data } = useSocialworkerChatList();
 
   return (
     <ChatList

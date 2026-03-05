@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useCommunityAccess } from '@/api/communityAssociation';
+import { useCommunityAccess } from '@/api/community/community';
 
 export const useJoinStatusModal = () => {
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false);
@@ -20,7 +20,6 @@ export const useJoinStatusModal = () => {
     setAssociationName(associationName);
     if (accessStatus in modals) {
       setModals((prev) => ({ ...prev, [accessStatus]: true }));
-
     }
   }, [isSuccess, data]);
 

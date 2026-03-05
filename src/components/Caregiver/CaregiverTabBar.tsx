@@ -8,19 +8,19 @@ import { NavLink } from 'react-router-dom';
 const CaregiverTabBar = () => {
   return (
     <TabBarWrapper>
-      <TabItem to="/caregiver" end>
+      <TabItem to="/caregiver" end className="cg-home">
         <Home />
         <span>홈</span>
       </TabItem>
-      <TabItem to="/caregiver/work">
+      <TabItem to="/caregiver/work" className="cg-work">
         <Work />
         <span>일자리</span>
       </TabItem>
-      <TabItem to="/caregiver/apply">
+      <TabItem to="/caregiver/apply" className="cg-apply">
         <Apply />
         <span>지원현황</span>
       </TabItem>
-      <TabItem to="/caregiver/my">
+      <TabItem to="/caregiver/my" className="cg-profile">
         <Mypage />
         <span>마이페이지</span>
       </TabItem>

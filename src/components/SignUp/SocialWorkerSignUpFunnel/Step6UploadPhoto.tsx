@@ -1,0 +1,130 @@
+import { useUploadCareGiverProfileImage } from '@/api/signup/caregiver';
+import { Button } from '@/components/common/Button/Button';
+import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
+import { CaregiverProfileImageUploader } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto/CaregiverProfileImageUploader';
+import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
+import { useSocialWorkerSignupSubmit } from '@/hooks/SignUp/useSocialWorkerSignupSubmit';
+import { SignUpPayload } from '@/types/auth';
+
+import { useCallback, useState } from 'react';
+import { styled } from 'styled-components';
+
+export const Step6UploadPhoto = () => {
+  const { goToNext, formData, setFormData, goToPrev } = useSignUpContext();
+  const { mutate: uploadImage } = useUploadCareGiverProfileImage();
+  const { submit, isPending, isError } = useSocialWorkerSignupSubmit();
+
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const handleImageUpload = (file: File) => {
+    uploadImage(file, {
+      onSuccess: ({ tempKey, previewUrl }) => {
+        setFormData((prev) => ({
+          ...prev,
+          profileImageTempKey: tempKey,
+        }));
+
+        setPreviewUrl(previewUrl);
+      },
+      onError: () => {
+        alert('이미지 업로드에 실패했습니다.');
+      },
+    });
+  };
+
+  const handleNext = useCallback(() => {
+    if (isPending) return;
+    submit(formData as SignUpPayload, { onSuccess: () => goToNext() });
+  }, [isPending, formData, submit, goToNext]);
+
+  return (
+    <StepWrapper>
+      <HeaderSection>
+        <Title>
+          프로필 사진을 등록해주세요 <br />
+          <span className="subtext">
+            프로필 사진을 등록하시면 지원 합격률이 올라가요
+          </span>
+        </Title>
+      </HeaderSection>
+      <ProfileContainer>
+        <CaregiverProfileImageUploader
+          imageUrl={previewUrl ?? undefined}
+          onChange={handleImageUpload}
+        />
+      </ProfileContainer>
+
+      {isError && <ErrorIndicator />}
+
+      <ButtonContainer>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
+          이전
+        </Button>
+        <Button
+          onClick={handleNext}
+          height="52px"
+          variant="blue"
+          disabled={isPending}
+        >
+          {isPending ? '등록 중...' : '시작하기'}
+        </Button>
+      </ButtonContainer>
+    </StepWrapper>
+  );
+};
+
+const StepWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  overflow-y: auto;
+  padding-bottom: 112px;
+`;
+
+const HeaderSection = styled.header`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 20px 0 20px;
+`;
+
+const Title = styled.h1`
+  font-size: ${({ theme }) => theme.typography.fontSize.title2};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  color: ${({ theme }) => theme.colors.gray900};
+
+  .highlight {
+    color: ${({ theme }) => theme.colors.mainBlue};
+  }
+
+  .subtext {
+    font-size: ${({ theme }) => theme.typography.fontSize.body2};
+    font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+    color: ${({ theme }) => theme.colors.gray500};
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  padding: 20px;
+  gap: 8px;
+  border-top: 1px solid ${({ theme }) => theme.colors.gray50};
+  box-sizing: border-box;
+  width: 100%;
+
+  background: ${({ theme }) => theme.colors.white};
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px 0px 20px;
+`;

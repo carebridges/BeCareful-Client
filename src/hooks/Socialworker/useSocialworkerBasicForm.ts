@@ -1,10 +1,11 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { SocialworkerMyEditResponse } from '@/types/Socialworker/mypage';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
-import { getGenderCode } from '@/utils/getGenderCode';
+import { SocialworkerUpdateResponse } from '@/types/socialworker';
+import { InstitutionRank } from '@/types/common';
+import { getGenderCode } from '@/utils/format/text';
 
 export const useSocialworkerBasicForm = (
-  data: SocialworkerMyEditResponse | undefined,
+  data: SocialworkerUpdateResponse | undefined,
   setIsChanged: Dispatch<SetStateAction<boolean>>,
 ) => {
   const [name, setName] = useState('');
@@ -15,7 +16,7 @@ export const useSocialworkerBasicForm = (
   const [phoneNumber, setPhoneNumber] = useState('');
   const [institutionId, setInstitutionId] = useState(0);
   const [institutionName, setInstitutionName] = useState('');
-  const [rank, setRank] = useState('');
+  const [rank, setRank] = useState<InstitutionRank>('SOCIAL_WORKER');
 
   useEffect(() => {
     if (data) {
@@ -45,13 +46,14 @@ export const useSocialworkerBasicForm = (
         setPhoneNumber(value);
         setIsChanged(true);
         break;
-      case 'rank':
-        setRank(value);
-        setIsChanged(true);
-        break;
       default:
         break;
     }
+  };
+
+  const handleChangeRank = (value: InstitutionRank) => {
+    setRank(value);
+    setIsChanged(true);
   };
 
   const { message, state, checkNickname, resetMessage } =
@@ -105,6 +107,7 @@ export const useSocialworkerBasicForm = (
     nicknameValidation: { message, state, checkNickname, resetMessage },
     isDuplicateCheckButtonEnabled,
     handleChange,
+    handleChangeRank,
     handleCheckDuplicate,
     handleBirthAndGenderChange,
   };

@@ -6,10 +6,13 @@ import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { ErrorToast } from '@/components/SocialWorker/RecruitmentDetail/ErrorToast';
+import { GENDER_MAP } from '@/constants/common/maps';
+import { BlockCaregiverInfo } from '@/types/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useDeleteSocialBlock, useGetSocialBlock } from '@/api/socialworker';
-import { BlockCaregiverInfo } from '@/types/Socialworker/mypage';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
+import {
+  useUnblockCaregiver,
+  useSocialBlockedCaregiver,
+} from '@/api/user/socialworker';
 
 const SocialworkerBlockPage = () => {
   const { handleGoBack } = useHandleNavigate();
@@ -18,14 +21,14 @@ const SocialworkerBlockPage = () => {
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const { data } = useGetSocialBlock();
+  const { data } = useSocialBlockedCaregiver();
 
   const handleBlockCancleClick = (user: BlockCaregiverInfo) => {
     setSelectedUser(user);
     setIsBlockModalOpen(true);
   };
 
-  const { mutate: blockCancle } = useDeleteSocialBlock();
+  const { mutate: blockCancle } = useUnblockCaregiver();
 
   const handleBlockCancle = () => {
     if (selectedUser && selectedUser.caregiverId) {
@@ -68,7 +71,7 @@ const SocialworkerBlockPage = () => {
                 <div className="info">
                   <div>{user.age}세</div>
                   <div>·</div>
-                  <div>{GENDER_EN_TO_KR_2[user.gender]}</div>
+                  <div>{GENDER_MAP.EN_TO_KR_FULL[user.gender]}</div>
                 </div>
               </div>
             </div>

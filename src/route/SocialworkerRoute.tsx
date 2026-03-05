@@ -17,8 +17,9 @@ import { ElderlyDetailPage } from '@/page/Elderly/ElderlyDetailPage';
 import { RecruitmentDetailPage } from '@/page/SocialWorker/Matching/RecruitmentDetailPage';
 import { MatchingInfoPage } from '@/page/Matching/MatchingInfoPage';
 import { ElderlyEditPage } from '@/page/Elderly/ElderlyEditPage';
-import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
+// import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
 import { RecruitmentEditPage } from '@/page/SocialWorker/Matching/RecruitmentEditPage';
+import { SocialworkerTourController } from '@/components/SocialWorker/common/SocialworkerTourController';
 
 const SocialworkerRoute = () => {
   const location = useLocation();
@@ -43,7 +44,7 @@ const SocialworkerRoute = () => {
     '/socialworker/recruitment/:recruitmentId',
     '/socialworker/recruitment/:recruitmentId/edit',
 
-    '/socialworker/ad/:adId',
+    // '/socialworker/ad/:adId',
   ];
   const shouldHideTabBar = () => {
     return hideTabBarPaths.some((pathPattern) => {
@@ -56,6 +57,8 @@ const SocialworkerRoute = () => {
     <div
       style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
     >
+      <SocialworkerTourController />
+
       <main>
         <Routes>
           <Route index element={<SocialworkerHomePage />} />
@@ -126,7 +129,7 @@ const SocialworkerRoute = () => {
 
           <Route path="point" element={<PointPage />} />
 
-          <Route path="ad/:adId" element={<AdPostPage />} />
+          {/* <Route path="ad/:adId" element={<AdPostPage />} /> */}
         </Routes>
       </main>
 

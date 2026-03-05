@@ -7,12 +7,12 @@ import CareerSection from '@/components/Caregiver/Mypage/CareerSection';
 import ApplicationSection from '@/components/Caregiver/Mypage/ApplicationSection';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useWorkApplicationToggleMutation } from '@/hooks/Caregiver/mutation/useWorkApplicationToggleMutation';
-import { useCaregiverMyPageInfoQuery } from '@/api/caregiver';
+import { useCaregiverProfile } from '@/api/user/caregiver';
 
 const CaregiverMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const { data } = useCaregiverMyPageInfoQuery();
+  const { data } = useCaregiverProfile();
   const [isToggleChecked, setIsToggleChecked] = useState(false);
   const isActive = data?.workApplicationInfo?.isActive;
 
@@ -51,8 +51,6 @@ const CaregiverMyPage = () => {
         isToggleChecked={isToggleChecked}
         handleToggleChange={handleToggleChange}
       />
-
-      <Border style={{ height: '5px' }} />
     </Container>
   );
 };
@@ -85,7 +83,8 @@ const NavLeft = styled.label`
 `;
 
 const Border = styled.div`
-  width: 100vw;
+  width: calc(100% + 40px);
+  box-sizing: border-box;
   height: 1px;
   background: ${({ theme }) => theme.colors.gray50};
   margin-left: -20px;

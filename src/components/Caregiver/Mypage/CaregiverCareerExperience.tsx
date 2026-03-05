@@ -3,7 +3,7 @@ import { ReactComponent as Add } from '@/assets/icons/ButtonPlus.svg';
 import { ReactComponent as Delete } from '@/assets/icons/ButtonMinus.svg';
 import { Button } from '@/components/common/Button/Button';
 import { CareerDropdown } from '@/components/Caregiver/Mypage/CareerDropdown';
-import { CareerDetail } from '@/types/Caregiver/mypage';
+import { CareerDetail } from '@/types/caregiver';
 
 interface CareerExpProps {
   experiences: CareerDetail[];

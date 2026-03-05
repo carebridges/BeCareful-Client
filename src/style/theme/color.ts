@@ -19,6 +19,7 @@ export const colors = {
   negative: '#ff3d00',
   white: '#ffffff',
   black: '#000000',
+  coachMark: '#00D0FF',
 } as const;
 
 export type ColorTypes = typeof colors;

@@ -16,6 +16,9 @@ export interface SignUpFormData {
   isAgreedToTerms: boolean;
   isAgreedToCollectPersonalInfo: boolean;
   isAgreedToReceiveMarketingInfo: boolean;
+  password: string;
+  loginProvider: string;
+  profileImageTempKey: string;
 }
 
 interface SignUpContextType extends ReturnType<typeof useFunnel> {
@@ -45,6 +48,9 @@ export const KakaoSocialworkerSignUpProvider = ({
     isAgreedToTerms: false,
     isAgreedToCollectPersonalInfo: false,
     isAgreedToReceiveMarketingInfo: false,
+    password: '',
+    loginProvider: 'KAKAO',
+    profileImageTempKey: 'default',
   });
 
   const [isInstitutionFunnel, setIsInstitutionFunnel] = useState(false);

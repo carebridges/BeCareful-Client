@@ -1,4 +1,4 @@
-import { useCommunityAccess } from '@/api/communityAssociation';
+import { useCommunityAccess } from '@/api/community/community';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
 import { CommunityCreatePage } from '@/page/Community/CommunityCreatePage';
 import CommunityPage from '@/page/Community/CommunityPage';

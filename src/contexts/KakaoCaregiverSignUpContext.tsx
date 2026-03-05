@@ -1,6 +1,6 @@
-import { useFunnel } from '@/hooks/SignUp/useFunnel';
-import { CaregiverSignUpFormData } from '@/types/CareGiverSignUp';
 import { createContext, useContext, useState } from 'react';
+import { CaregiverSignUpFormData } from '@/types/auth';
+import { useFunnel } from '@/hooks/SignUp/useFunnel';
 
 interface CaregiverSignUpContextType extends ReturnType<typeof useFunnel> {
   formData: CaregiverSignUpFormData;
@@ -33,6 +33,8 @@ export const KakaoCaregiverSignUpProvider = ({
     isAgreedToCollectPersonalInfo: false,
     isAgreedToReceiveMarketingInfo: false,
     profileImageTempKey: 'default',
+    password: '',
+    loginProvider: 'KAKAO',
   });
 
   return (

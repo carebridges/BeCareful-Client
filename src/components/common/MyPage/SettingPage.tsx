@@ -8,12 +8,12 @@ import { Toggle } from '@/components/common/Toggle/Toggle';
 import Modal from '@/components/common/Modal/Modal';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
-import { UserRole } from '@/types/common/chat';
-import { getTodayDateTime } from '@/utils/getTodayDate';
+import { UserRole } from '@/types/common';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useNavigationActions } from '@/hooks/MyPage/useNavigationActions';
 import { useMarketingAgreement } from '@/hooks/MyPage/useMarketingAgreement';
 import { useUserAuthActions } from '@/hooks/MyPage/useUserAuthActions';
+import { getTodayDateTime } from '@/utils/format/date';
 
 interface SettingPageProps {
   role: UserRole;
@@ -163,7 +163,9 @@ const SettingPage = ({ role }: SettingPageProps) => {
         <ModalButtons
           onClose={() => setIsLeaveModalOpen(false)}
           title="정말 탈퇴하시겠습니까?"
-          detail={'돌봄다리 통합 서비스에서 탈퇴됩니다.\n계속하시겠습니까?'}
+          detail={
+            '탈퇴 완료 시 모든 데이터는 즉시 파기되며\n복구할 수 없습니다.'
+          }
           left="취소"
           right="탈퇴하기"
           handleLeftBtnClick={() => setIsLeaveModalOpen(false)}

@@ -1,13 +1,13 @@
 import { styled } from 'styled-components';
-import { SOCIAL_WORKER_TAB } from '@/constants/socialworker/tabItems.socialWorker';
 import { Link, useLocation } from 'react-router-dom';
+import { SOCIAL_WORKER_TAB } from '@/constants/domain/socialworker';
 
 export const SocialWorkerTabBar = () => {
   const location = useLocation();
 
   return (
     <TabBarWrapper>
-      {SOCIAL_WORKER_TAB.map(({ key, path, label, Icon }) => {
+      {SOCIAL_WORKER_TAB.map(({ key, path, label, Icon, className }) => {
         const isActive =
           (key === 'home' &&
             (location.pathname === '/socialworker/matching/dashboard' ||
@@ -15,7 +15,12 @@ export const SocialWorkerTabBar = () => {
           location.pathname === path;
 
         return (
-          <TabBarContentWrapper as={Link} to={path} key={key}>
+          <TabBarContentWrapper
+            as={Link}
+            to={path}
+            key={key}
+            className={className}
+          >
             <TabBarIcon $isActive={isActive}>
               <Icon />
             </TabBarIcon>

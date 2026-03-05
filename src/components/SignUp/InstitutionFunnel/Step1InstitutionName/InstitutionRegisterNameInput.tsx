@@ -1,8 +1,8 @@
 import { useAllInstitutions } from '@/hooks/SignUp/useAllInstitutions';
-import { Institution } from '@/types/SocialSignUp';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { ReactComponent as SearchIcon } from '@/assets/icons/signup/SearchIcon.svg';
 import { styled } from 'styled-components';
+import { Institution } from '@/types/institution';
 
 export const InstitutionRegisterNameInput = ({
   onInstitutionSelect,

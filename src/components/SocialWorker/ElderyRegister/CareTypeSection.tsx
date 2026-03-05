@@ -7,18 +7,18 @@ import {
 import { Button } from '@/components/common/Button/Button';
 import { ReactComponent as Plus } from '@/assets/icons/signup/Plus.svg';
 import { styled } from 'styled-components';
-import { CareType } from '@/types/Elderly';
+import { CareTypeKey } from '@/types/common';
 import { CareUnitCard } from './CareUnitCard';
 
 export type CareUnit = {
   id: string;
-  selectedCare: CareType | null;
+  selectedCare: CareTypeKey | null;
   selectedDetails: string[];
 };
 
 interface CareTypeSectionProps {
-  selectedCare: CareType | null;
-  setSelectedCare: (care: CareType | null) => void;
+  selectedCare: CareTypeKey | null;
+  setSelectedCare: (care: CareTypeKey | null) => void;
   selectedDetails: string[];
   setSelectedDetails: (details: string[]) => void;
 }

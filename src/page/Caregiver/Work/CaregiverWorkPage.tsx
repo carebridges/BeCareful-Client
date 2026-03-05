@@ -8,21 +8,29 @@ import { NavBar } from '@/components/common/NavBar/NavBar';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import CaregiverWorkCard from '@/components/Caregiver/CaregiverWorkCard';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { CAREGIVER_WORK_FILTERS } from '@/constants/caregiver/caregiverWorkFilters';
+import { CAREGIVER_WORK_FILTERS } from '@/constants/domain/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApplicationData } from '@/hooks/Caregiver/work/useApplicationData';
 import { useMatchingList } from '@/hooks/Caregiver/work/useMatchingList';
+import Modal from '@/components/common/Modal/Modal';
+import ModalLimit from '@/components/common/Modal/ModalLimit';
 
 const CaregiverWorkPage = () => {
   const { handleNavigate } = useHandleNavigate();
   const { hasNewChat } = useChatWebSocket();
 
   // 상단 부분(신청서 조회)
-  const { applicationData, isToggleChecked, handleToggleChange, applyInfo } =
-    useApplicationData();
+  const {
+    applicationData,
+    isToggleChecked,
+    handleToggleChange,
+    applyInfo,
+    isModalOpen,
+    setIsModalOpen,
+  } = useApplicationData();
 
   // 지원서 펼침 상태
-  const [showApplication, setShowApplication] = useState(false);
+  const [showApplication, setShowApplication] = useState(true);
 
   // 하단 부분(일자리 조회)
   const { activeTab, handleTabChange, filteredMatchingList } =
@@ -102,7 +110,7 @@ const CaregiverWorkPage = () => {
       </FiltersWrapper>
 
       <ApplicationsWrapper>
-        <div className="count">총 {filteredMatchingList.length}건</div>
+        <div className="cg-work-main">총 {filteredMatchingList.length}건</div>
         {filteredMatchingList.length === 0 && (
           <div className="noapply">
             알맞은 일자리가 없어요.
@@ -129,6 +137,16 @@ const CaregiverWorkPage = () => {
           />
         ))}
       </ApplicationsWrapper>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <ModalLimit
+          onClose={() => setIsModalOpen(false)}
+          title="아직 등록한 지원서가 없어요!"
+          detail="아래 버튼을 눌러 일자리 지원서를 등록해 주세요."
+          button="내 지원서 등록하기"
+          handleBtnClick={() => handleNavigate('/caregiver/my/application')}
+        />
+      </Modal>
     </Container>
   );
 };
@@ -222,7 +240,8 @@ const ToggleLabel = styled.label<{ isBlue: boolean | undefined }>`
 `;
 
 const Border = styled.div`
-  width: 100vw;
+  width: calc(100% + 40px);
+  box-sizing: border-box;
   height: 5px;
   background: ${({ theme }) => theme.colors.gray50};
   margin-left: -20px;
@@ -277,7 +296,7 @@ const ApplicationsWrapper = styled.div`
   flex-direction: column;
   gap: 12px;
 
-  .count {
+  .cg-work-main {
     color: ${({ theme }) => theme.colors.gray700};
     font-size: ${({ theme }) => theme.typography.fontSize.body2};
     font-weight: ${({ theme }) => theme.typography.fontWeight.medium};

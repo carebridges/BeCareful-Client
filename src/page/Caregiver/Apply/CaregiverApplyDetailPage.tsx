@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom';
 import CaregiverWorkDetail from '@/components/Caregiver/CaregiverWorkDetail';
 import { Button } from '@/components/common/Button/Button';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useApplicationDetailQuery } from '@/api/caregiver';
+import { useMyApplicationDetail } from '@/api/matching/caregiver';
 
 const CaregiverApplyDetailPage = () => {
   const { recruitmentId } = useParams();
 
   const { handleNavigate } = useHandleNavigate();
 
-  const { data, error } = useApplicationDetailQuery(Number(recruitmentId));
+  const { data, error } = useMyApplicationDetail(Number(recruitmentId));
   if (error) {
     console.log('getApplicationDetail 에러: ', error);
   }

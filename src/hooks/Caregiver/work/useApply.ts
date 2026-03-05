@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { usePostApplyMutation } from '@/hooks/Caregiver/mutation/useApplyMutation';
 import { handleModal } from '@/utils/handleModal';
+import { useApplyRecruitment } from '@/api/matching/caregiver';
 
 export const useApply = (recruitmentId: number) => {
   // 지원하기 팝업
@@ -11,14 +11,14 @@ export const useApply = (recruitmentId: number) => {
     useState(false);
 
   // 매칭 공고 지원
-  const { mutate: applyMutation } = usePostApplyMutation(recruitmentId, {
-    onSuccessCallback: () =>
-      handleModal(setIsCompleteApplyModalOpen, setIsApplyModalOpen),
-  });
+  const { mutate: applyRecruitment } = useApplyRecruitment(recruitmentId);
 
   // 지원하기
   const handleCompleteApply = () => {
-    applyMutation();
+    applyRecruitment(undefined, {
+      onSuccess: () =>
+        handleModal(setIsCompleteApplyModalOpen, setIsApplyModalOpen),
+    });
   };
 
   return {

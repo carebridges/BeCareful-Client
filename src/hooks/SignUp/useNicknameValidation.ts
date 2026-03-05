@@ -1,4 +1,4 @@
-import { checkNicknameDuplicate } from '@/api/signupFunnel';
+import { checkNicknameDuplicate } from '@/api/signup/socialworker';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 

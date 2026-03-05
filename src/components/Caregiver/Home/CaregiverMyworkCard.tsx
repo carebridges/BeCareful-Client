@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
-import { CaregiverCompletedMatching } from '@/types/Caregiver/home';
-import { formatCaretype, formatDaysToKR } from '@/utils/caregiverFormatter';
-import { usePutMemoMutation } from '@/hooks/Caregiver/mutation/usePutMemoMutation';
+import { GENDER_MAP } from '@/constants/common/maps';
+import { CaregiverCompletedMatching } from '@/types/caregiver';
+import { formatCaretype, formatDaysToKR } from '@/utils/format/domain';
+import { useUpdateMatchingMemo } from '@/api/matching/caregiver';
 
 interface CaregiverMyworkCardProps {
   workInfo: CaregiverCompletedMatching;
@@ -26,14 +26,17 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
   const [memo, setMemo] = useState(workInfo.note);
   const [isMemoChange, setIsMemoChange] = useState(false);
 
-  const { mutate: updateMemo } = usePutMemoMutation(workInfo.id, {
-    onSuccessCallback: () => {
-      setIsMemoChange(false);
-    },
-  });
+  const { mutate: updateMemo } = useUpdateMatchingMemo();
 
   const handleMemoBtnClick = () => {
-    updateMemo({ note: memo });
+    updateMemo(
+      { completedMatchingId: workInfo.id, memo: { note: memo } },
+      {
+        onSuccess: () => {
+          setIsMemoChange(false);
+        },
+      },
+    );
   };
 
   return (
@@ -46,7 +49,7 @@ const CaregiverMyworkCard = ({ workInfo }: CaregiverMyworkCardProps) => {
               <label className="extra">{workInfo.elderlyInfo.age}세</label>
               <Border />
               <label className="extra">
-                {GENDER_EN_TO_KR_2[workInfo.elderlyInfo.gender]}
+                {GENDER_MAP.EN_TO_KR_FULL[workInfo.elderlyInfo.gender]}
               </label>
             </div>
           </div>

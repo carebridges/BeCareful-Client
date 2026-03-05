@@ -1,13 +1,15 @@
-import { axiosInstance } from './axiosInstance';
+import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation } from '@tanstack/react-query';
 import {
   MediaPresignedUrlRequest,
   PresignedUrlRequest,
   PresignedUrlResponse,
-} from '@/types/common/presignedUrl';
-import { MediaItemRequest } from '@/types/Community/common';
-import { getVideoDuration } from '@/utils/communityMedia';
+} from '@/types/common';
+import { getVideoDuration } from '@/utils/community/media';
+import { MediaItemRequest } from '@/types/community';
 
+// ==================== 파일 업로드 ====================
+/* Presigned URL 발급 */
 export const useGetPresignedUrl = (endpoint: string) => {
   return useMutation({
     mutationFn: async (request: PresignedUrlRequest) => {
@@ -23,8 +25,9 @@ export const useGetPresignedUrl = (endpoint: string) => {
   });
 };
 
-export const usePostMediaMutation = () => {
-  const postMediaMutate = async ({
+/* 미디어 업로드 */
+export const useUploadMedia = () => {
+  const uploadMedia = async ({
     file,
     fileTypeParam,
   }: {
@@ -68,6 +71,6 @@ export const usePostMediaMutation = () => {
   };
 
   return useMutation({
-    mutationFn: postMediaMutate,
+    mutationFn: uploadMedia,
   });
 };

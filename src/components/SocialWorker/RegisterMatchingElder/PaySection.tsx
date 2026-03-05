@@ -1,14 +1,11 @@
 import styled from 'styled-components';
 import { MatchingApplicationDropdown } from '@/components/Matching/MatchingApplicationDropdown';
-import {
-  PAY_CODE_TO_LABEL,
-  PAY_LABEL_TO_CODE,
-} from '@/constants/socialworker/payType.socialWorker';
-import { PayCode, PayLabel } from '@/types/Matching.socialWorker';
+import { MIN_WAGE, SALARY_MAP } from '@/constants/common/maps';
+import { WorkSalaryUnitType, WorkSalaryUnitTypeKR } from '@/types/common';
 
 interface Props {
-  selectedPayType: PayCode;
-  onPayTypeChange: (value: PayCode) => void;
+  selectedPayType: WorkSalaryUnitType;
+  onPayTypeChange: (value: WorkSalaryUnitType) => void;
   payAmount: string;
   onAmountChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -19,22 +16,26 @@ export const PaySection = ({
   payAmount,
   onAmountChange,
 }: Props) => {
-  const payLabels: PayLabel[] = ['시급', '일급', '월급', '연봉'];
+  const payLabels: WorkSalaryUnitTypeKR[] = ['시급', '일급', '월급', '연봉'];
   return (
     <SectionWrapper>
       <SectionTitleWrapper>
         <SectionTitle color="">급여</SectionTitle>
         <SectionTitle color="blue">*</SectionTitle>
       </SectionTitleWrapper>
-      <SectionGuide>최저시급 10,030원 이상으로 입력해 주세요.</SectionGuide>
+      <SectionGuide>
+        최저시급 {MIN_WAGE.toLocaleString()}원 이상으로 입력해 주세요.
+      </SectionGuide>
       <PayWrapper>
         <MatchingApplicationDropdown
           title="시급"
           contents={payLabels}
-          selectedContents={PAY_CODE_TO_LABEL[selectedPayType]}
+          selectedContents={SALARY_MAP.EN_TO_KR[selectedPayType]}
           setSelectedContents={(label: string) => {
-            if (label in PAY_LABEL_TO_CODE) {
-              onPayTypeChange(PAY_LABEL_TO_CODE[label as PayLabel]);
+            if (label in SALARY_MAP.KR_TO_EN) {
+              onPayTypeChange(
+                SALARY_MAP.KR_TO_EN[label as WorkSalaryUnitTypeKR],
+              );
             }
           }}
         />

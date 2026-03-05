@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, { useState } from 'react';
 import { ReactComponent as ModalClose } from '@/assets/icons/signup/ModalClose.svg';
 import Modal from '@/components/common/Modal/Modal';
-import { PostDetailResponse } from '@/types/Community/post';
+import { PostDetailResponse } from '@/types/community';
 
 interface TitleSectionProps {
   post: PostDetailResponse | undefined;

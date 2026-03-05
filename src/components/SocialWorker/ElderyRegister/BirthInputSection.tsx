@@ -4,7 +4,7 @@ import {
   Title,
   TitleWrapper,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
-import { formatBirthDate } from '@/utils/formatDate';
+import { formatBirthDate } from '@/utils/format/text';
 
 interface BirthInputSectionProps {
   birth: string;

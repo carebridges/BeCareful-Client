@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { ReactComponent as Chevron } from '@/assets/icons/ChevronRightProfile.svg';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { formatCaretype } from '@/utils/caregiverFormatter';
-import { InstitutionRank } from '@/types/Community/common';
+import { InstitutionRank } from '@/types/common';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
+import { formatCaretype } from '@/utils/format/domain';
 
 interface InstitutionCardProps {
   institution: string;
@@ -42,7 +42,11 @@ const InstitutionCard = ({
 
   return (
     <CardContainer
-      onClick={() => handleNavigate('/socialworker/my/institution')}
+      onClick={() => {
+        if (!isSocialworker) {
+          handleNavigate('/socialworker/my/institution');
+        }
+      }}
     >
       <div className="top">
         <label className="institution">{institution}</label>

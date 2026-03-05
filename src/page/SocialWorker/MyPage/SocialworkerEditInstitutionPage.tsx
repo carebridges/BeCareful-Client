@@ -6,20 +6,20 @@ import { CheckCard } from '@/components/SignUp/SocialWorkerSignUpFunnel/common/C
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import { InstitutionSearchInput } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName/InstitutionSearchInput';
 import ProfileImgUploader from '@/components/common/ProfileImgUploader';
-import { FACILITY_TYPES } from '@/constants/socialworker/institutionFacilityTypes';
+import { FACILITY_TYPES } from '@/constants/domain/care';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useInstitutionForm } from '@/hooks/Socialworker/useInstitutionForm';
 import { useProfileImg } from '@/hooks/useProfileImg';
-import { NursingAssociationInfoRequest } from '@/types/Socialworker/mypage';
+import { InstitutionUpdateRequest } from '@/types/institution';
 import {
-  useGetSocialWorkerMy,
-  usePutInstitutionInfo,
-} from '@/api/socialworker';
+  useSocialworkerProfile,
+  useUpdateInstitution,
+} from '@/api/user/socialworker';
 
 const SocialworkerEditInstitutionPage = () => {
   const { handleGoBack } = useHandleNavigate();
   const [isChanged, setIsChanged] = useState(false);
-  const { data } = useGetSocialWorkerMy();
+  const { data } = useSocialworkerProfile();
 
   const profileUpload = useProfileImg(
     '/nursingInstitution/profile-img/presigned-url',
@@ -39,11 +39,11 @@ const SocialworkerEditInstitutionPage = () => {
     handleTypesChange,
   } = useInstitutionForm(data?.institutionInfo, setIsChanged);
 
-  const { mutate: updateInstitution } = usePutInstitutionInfo();
+  const { mutate: updateInstitution } = useUpdateInstitution();
   const handleEditBtnClick = async () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
-    const institutionData: NursingAssociationInfoRequest = {
+    const institutionData: InstitutionUpdateRequest = {
       institutionName: institutionName,
       institutionCode: institutionCode,
       openYear: year,

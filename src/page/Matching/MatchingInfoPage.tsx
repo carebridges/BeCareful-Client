@@ -1,4 +1,4 @@
-import { useMatchingRecruitment } from '@/api/matching.socialWorker';
+import { useMatchingRecruitment } from '@/api/matching/socialworker';
 import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';

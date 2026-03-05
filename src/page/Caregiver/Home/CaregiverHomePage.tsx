@@ -13,12 +13,12 @@ import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useCaregiverHomeInfoQuery } from '@/api/caregiver';
+import { useCaregiverHome } from '@/api/user/caregiver';
 
 const CaregiverHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const { data, error } = useCaregiverHomeInfoQuery();
+  const { data, error } = useCaregiverHome();
 
   const { hasNewChat } = useChatWebSocket();
 
@@ -67,7 +67,7 @@ const CaregiverHomePage = () => {
             </ScheduleWrapper>
           )
         ) : (
-          <ScheduleWrapper>
+          <ScheduleWrapper className="cg-home-main">
             <label className="detail">새로운 돌봄을 시작해보세요!</label>
             <label className="title">
               내 근무 일정을 한눈에 확인할 수 있어요

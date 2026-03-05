@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { SmallDropdown } from '@/components/common/Dropdown/SmallDropdown';
 import { Dropdown } from '@/components/common/Dropdown/Dropdown';
-import { CertificateFormInput } from '@/types/CareGiverSignUp';
-import { CertificateInfo } from '@/types/Caregiver/common';
+import { CertificateFormInput, CertificateInfo } from '@/types/caregiver';
 
 interface NursingQualificationCardProps {
   initialType: string;

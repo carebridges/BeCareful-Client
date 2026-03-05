@@ -1,4 +1,4 @@
-import { useJoinAssociation } from '@/api/communityAssociation';
+import { useJoinAssociation } from '@/api/community/association';
 import { Button } from '@/components/common/Button/Button';
 import Modal from '@/components/common/Modal/Modal';
 import ModalLimit from '@/components/common/Modal/ModalLimit';
@@ -8,16 +8,14 @@ import {
   CENTER_TERMS,
   PRIVACY_TERMS,
   MARKETING_TERMS,
-} from '@/constants/termText';
-import {
-  AssociationRank,
-  JoinAssociationRequest,
-} from '@/types/CommunityAssociation';
+} from '@/constants/common/termText';
 import { useCallback, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { ReactComponent as IconArrowLeft } from '@/assets/icons/IconArrowLeft.svg';
 import { useCommunityAgree } from '@/hooks/Community/CommunityJoin/useCommunityAgree';
+import { AssociationRank } from '@/types/common';
+import { JoinAssociationRequest } from '@/types/association';
 
 export const CommunityAcceptTermsPage = () => {
   const navigate = useNavigate();

@@ -3,10 +3,7 @@ import {
   DetailContentContainer,
   Title,
 } from '@/components/SocialWorker/MatchingCaregiverDetailInfo/MatchingCaregiverDetailInfo.styles';
-import {
-  DAY_EN_TO_KO,
-  TIME_EN_TO_KO,
-} from '@/constants/socialworker/day.socialWorker';
+import { DAY_MAP, TIME_MAP } from '@/constants/common/maps';
 
 interface WorkLocation {
   siDo: string;
@@ -17,8 +14,8 @@ interface WorkLocation {
 interface WorkPreferenceSectionProps {
   data: {
     careTypes: string[];
-    workDays: (keyof typeof DAY_EN_TO_KO)[];
-    workTimes: (keyof typeof TIME_EN_TO_KO)[];
+    workDays: (keyof typeof DAY_MAP.EN_TO_KR)[];
+    workTimes: (keyof typeof TIME_MAP.EN_TO_KR)[];
     workSalaryAmount: number;
     workLocations: WorkLocation[];
   };
@@ -35,11 +32,15 @@ export const WorkPreferenceSection = ({ data }: WorkPreferenceSectionProps) => {
         </DetailContent>
         <DetailContent>
           <span className="highlight">근무요일</span>
-          <span>{data.workDays.map((d) => DAY_EN_TO_KO[d]).join(', ')}</span>
+          <span>
+            {data.workDays.map((d) => DAY_MAP.EN_TO_KR[d]).join(', ')}
+          </span>
         </DetailContent>
         <DetailContent>
           <span className="highlight">근무시간</span>
-          <span>{data.workTimes.map((t) => TIME_EN_TO_KO[t]).join(', ')}</span>
+          <span>
+            {data.workTimes.map((t) => TIME_MAP.EN_TO_KR[t]).join(', ')}
+          </span>
         </DetailContent>
         <DetailContent>
           <span className="highlight">희망급여</span>

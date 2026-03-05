@@ -10,7 +10,8 @@ import { useRecruitmentReadStatus } from '@/contexts/RecruitmentReadStatusContex
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useApply } from '@/hooks/Caregiver/work/useApply';
 import { useMediate } from '@/hooks/Caregiver/work/useMediate';
-import { useRecruitmentDetailQuery } from '@/api/caregiver';
+import { useRecruitmentDetail } from '@/api/matching/caregiver';
+import { MEDIATION } from '@/constants/common/maps';
 
 const CaregiverWorkDetailPage = () => {
   const { recruitmentId: recruitmentIdParam } = useParams<{
@@ -21,7 +22,7 @@ const CaregiverWorkDetailPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
   // 매칭 공고 상세 조회
-  const { data, error } = useRecruitmentDetailQuery(Number(recruitmentId));
+  const { data, error } = useRecruitmentDetail(Number(recruitmentId));
   if (error) {
     console.log('getRecruitmentDetail 에러: ', error);
   }
@@ -65,23 +66,30 @@ const CaregiverWorkDetailPage = () => {
   return (
     <Container>
       <CaregiverWorkDetail work={data} />
-
-      <Bottom>
-        <Button
-          height="52px"
-          variant="white"
-          onClick={() => setIsMediateModalOpen(true)}
-        >
-          근무조건 조율하기
-        </Button>
-        <Button
-          height="52px"
-          variant="mainBlue"
-          onClick={() => setIsApplyModalOpen(true)}
-        >
-          지원하기
-        </Button>
-      </Bottom>
+      {data.recruitmentInfo.recruitmentStatus === '공고마감' ? (
+        <Bottom>
+          <Button height="52px" variant="gray">
+            마감된 공고입니다
+          </Button>
+        </Bottom>
+      ) : (
+        <Bottom>
+          <Button
+            height="52px"
+            variant="white"
+            onClick={() => setIsMediateModalOpen(true)}
+          >
+            근무조건 조율하기
+          </Button>
+          <Button
+            height="52px"
+            variant="mainBlue"
+            onClick={() => setIsApplyModalOpen(true)}
+          >
+            지원하기
+          </Button>
+        </Bottom>
+      )}
 
       {/* 지원하기 팝업 */}
       <Modal
@@ -142,7 +150,7 @@ const CaregiverWorkDetailPage = () => {
 
           <MediateContent>
             <div className="filters">
-              {['시간 조율', '급여 조율', '요일 조율'].map((filter) => (
+              {MEDIATION.map((filter) => (
                 <Filter
                   key={filter}
                   active={mediationTypes.includes(filter)}

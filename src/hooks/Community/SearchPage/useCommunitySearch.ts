@@ -1,10 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
-import { BOARD_KR_TO_EN } from '@/constants/community/communityBoard';
+import { BOARD_MAP } from '@/constants/domain/community';
 import { useRecentSearches } from '@/hooks/Community/SearchPage/useRecentSearches';
-import { useBoardPostings } from '@/hooks/Community/api/useBoardPostings';
-import { useBoardPostList } from '@/hooks/Community/api/useBoardPostList';
-import { searchPost } from '@/utils/searchPosts';
-import { PageableRequest } from '@/types/Community/common';
+import {
+  useBoardPosts,
+  useMultipleBoardPosts,
+} from '@/hooks/Community/api/usePostLists';
+import { PageableRequest } from '@/types/community';
+import { searchPost } from '@/utils/community/search';
 
 export const useCommunitySearch = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -26,22 +28,22 @@ export const useCommunitySearch = () => {
 
   // 게시판 데이터
   const pageable: PageableRequest = { page: 0, size: 50, sort: [] };
-  const allBoardData = useBoardPostings(pageable);
-  const { data: boardData } = useBoardPostList(
-    BOARD_KR_TO_EN[selectedBoard],
+  const allBoardData = useMultipleBoardPosts(pageable);
+  const { data: boardData } = useBoardPosts(
+    BOARD_MAP.KR_TO_EN[selectedBoard as keyof typeof BOARD_MAP.KR_TO_EN],
     pageable,
   );
 
   // 실제 검색할 데이터(모든 쿼리 데이터 합치기)
   const selectedBoardData = useMemo(() => {
     if (selectedBoard === '전체') {
-      // 모든 쿼리의 content를 합쳐서 BoardPostListResponse 형태로 반환
+      // 모든 쿼리의 content를 합쳐서 PostListItem[] 형태로 반환
       const content = allBoardData.every((query) => query.isSuccess)
         ? allBoardData.flatMap((query) => query.data || [])
         : [];
       return content;
     } else {
-      // 단일 쿼리의 content를 BoardPostListResponse 형태로 반환
+      // 단일 쿼리의 content를 PostListItem[] 형태로 반환
       return boardData || [];
     }
   }, [selectedBoard, allBoardData, boardData]);

@@ -1,4 +1,4 @@
-import { Institution } from '@/types/SocialSignUp';
+import { Institution } from '@/types/institution';
 
 export function removeDuplicateInstitutions(
   list: (Institution & {

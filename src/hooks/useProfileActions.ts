@@ -1,5 +1,5 @@
-import { ReportReason } from '@/types/common/profileReport';
 import { useState } from 'react';
+import { ReportReason } from '@/types/common';
 
 type ProfileType = 'institution' | 'caregiver';
 type ActionOption = 'report' | 'block';

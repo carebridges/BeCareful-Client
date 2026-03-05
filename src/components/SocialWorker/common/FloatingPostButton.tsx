@@ -8,7 +8,7 @@ export const FloatingPostButton = () => {
       to="/socialworker/recruitment/new"
       onClick={() => window.scrollTo(0, 0)}
     >
-      <ButtonWrapper>
+      <ButtonWrapper className="sw-matching-main">
         <Pencil />
         공고 등록
       </ButtonWrapper>

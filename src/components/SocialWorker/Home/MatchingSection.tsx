@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { colors } from '@/style/theme/color';
-import { RecruitmentStatistics } from '@/types/Socialworker/home';
+import { RecruitmentStatistics } from '@/types/socialworker';
 
 type ColorKey = keyof typeof colors;
 
@@ -10,7 +10,7 @@ interface MatchingSectionProps {
 
 const MatchingSection = ({ data }: MatchingSectionProps) => {
   return (
-    <Matching>
+    <Matching className="sw-home-main">
       <div className="matching">
         <Circle color="mainGreen" />
         <label className="status">진행중</label>

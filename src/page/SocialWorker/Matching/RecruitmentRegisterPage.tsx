@@ -6,12 +6,12 @@ import { SelectElder } from '@/components/SocialWorker/RecruitmentRegister/Selec
 import { Button } from '@/components/common/Button/Button';
 import { CheckElderInfo } from '@/components/SocialWorker/RecruitmentRegister/CheckElderInfo';
 import { RecruitmentWrite } from '@/components/SocialWorker/RecruitmentRegister/RecruitmentWrite';
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
+import { RecruitmentForm } from '@/types/matching';
 import { ProgressBar } from '@/components/common/ProgressBar/ProgressBar';
 import { useState } from 'react';
-import { useRegisterMatchingRecruitment } from '@/api/matching.socialWorker';
+import { useRegisterRecruitment } from '@/api/matching/socialworker';
 import { RegisterMatchingElderModal } from '@/components/SocialWorker/RegisterMatchingElder/RegisterMatchingElderModal';
-import { MIN_WAGE } from '@/constants/socialworker/payType.socialWorker';
+import { MIN_WAGE } from '@/constants/common/maps';
 
 type RecruitmentRegisterLocationState = {
   elderlyId?: number;
@@ -48,7 +48,7 @@ export const RecruitmentRegisterPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { mutateAsync: registerRecruitment, isPending } =
-    useRegisterMatchingRecruitment();
+    useRegisterRecruitment();
 
   const percent = stepPercents[step];
   const isFinalStepValid =
@@ -74,7 +74,9 @@ export const RecruitmentRegisterPage = () => {
 
   const handleConfirmRegister = async () => {
     if (recruitmentForm.workSalaryAmount < MIN_WAGE) {
-      alert('최저시급은 10,030원 이상으로 입력해야 합니다.');
+      alert(
+        `최저시급은 ${MIN_WAGE.toLocaleString()}원 이상으로 입력해야 합니다.`,
+      );
       return;
     }
     if (!isFinalStepValid || isPending) return;

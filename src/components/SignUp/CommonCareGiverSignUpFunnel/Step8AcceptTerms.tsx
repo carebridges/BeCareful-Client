@@ -1,20 +1,15 @@
 import { styled } from 'styled-components';
+import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/common/Button/Button';
 import { AgreeCard } from '@/components/SignUp/CareGiverSignUpFunnel/common/AgreeCard';
-import { useCallback, useMemo, useState } from 'react';
 import { CaregiverAgreeItem } from '@/components/SignUp/CareGiverSignUpFunnel/Step1BasicInfo/CaregiverAgreeItem';
 import {
   CENTER_TERMS,
   MARKETING_TERMS,
   PRIVACY_TERMS,
-} from '@/constants/termText';
-
+} from '@/constants/common/termText';
 import { useCommonCaregiverSignUpContext } from '@/contexts/CommonCaregiverSignUpContext';
-
-type AgreeField =
-  | 'isAgreedToTerms'
-  | 'isAgreedToCollectPersonalInfo'
-  | 'isAgreedToReceiveMarketingInfo';
+import { AgreeField } from '@/types/user';
 
 export const Step8AcceptTerms = () => {
   const { goToNext, goToPrev, formData, setFormData } =

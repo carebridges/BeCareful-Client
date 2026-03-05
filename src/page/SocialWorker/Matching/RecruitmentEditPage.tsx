@@ -7,12 +7,12 @@ import { RecruitmentWrite } from '@/components/SocialWorker/RecruitmentRegister/
 import { useEffect, useState } from 'react';
 import {
   useRecruitmentDetail,
-  useEditMatchingRecruitment,
-} from '@/api/matching.socialWorker';
+  useEditRecruitment,
+} from '@/api/matching/socialworker';
 import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
 import { LoadingIndicator } from '@/components/common/LoadingIndicator/LoadingIndicator';
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
-import { MIN_WAGE } from '@/constants/socialworker/payType.socialWorker';
+import { MIN_WAGE } from '@/constants/common/maps';
+import { RecruitmentForm } from '@/types/matching';
 
 export const RecruitmentEditPage = () => {
   const navigate = useNavigate();
@@ -24,8 +24,7 @@ export const RecruitmentEditPage = () => {
   const [recruitmentForm, setRecruitmentForm] =
     useState<RecruitmentForm | null>(null);
 
-  const { mutateAsync: editRecruitment, isPending } =
-    useEditMatchingRecruitment(id);
+  const { mutateAsync: editRecruitment, isPending } = useEditRecruitment(id);
 
   useEffect(() => {
     if (!data) return;
@@ -60,7 +59,9 @@ export const RecruitmentEditPage = () => {
     await editRecruitment(recruitmentForm);
 
     if (recruitmentForm.workSalaryAmount < MIN_WAGE) {
-      alert('최저시급은 10,030원 이상으로 입력해야 합니다.');
+      alert(
+        `최저시급은 ${MIN_WAGE.toLocaleString()}원 이상으로 입력해야 합니다.`,
+      );
       return;
     }
 

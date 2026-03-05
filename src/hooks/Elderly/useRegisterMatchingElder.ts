@@ -1,6 +1,6 @@
-import { DAY_KO_TO_EN } from '@/constants/socialworker/day.socialWorker';
-import { PayCode } from '@/types/Matching.socialWorker';
 import { useState } from 'react';
+import { DAY_MAP } from '@/constants/common/maps';
+import { WorkSalaryUnitType } from '@/types/common';
 
 //TODO 전체 구조 개선 필요...
 export const useRegisterMatchingForm = (elderlyId: number) => {
@@ -9,7 +9,8 @@ export const useRegisterMatchingForm = (elderlyId: number) => {
   const [startTime, setStartTime] = useState('00:00');
   const [endTime, setEndTime] = useState('00:00');
   const [careTypes, setCareTypes] = useState<string[]>([]);
-  const [selectedPayType, setSelectedPayType] = useState<PayCode>('HOUR');
+  const [selectedPayType, setSelectedPayType] =
+    useState<WorkSalaryUnitType>('HOUR');
 
   const [workSalaryAmount, setWorkSalaryAmount] = useState('');
   const [memoContent, setMemoContent] = useState('');
@@ -41,7 +42,7 @@ export const useRegisterMatchingForm = (elderlyId: number) => {
     elderlyId,
     title,
     workDays: selectDay.map(
-      (day) => DAY_KO_TO_EN[day as keyof typeof DAY_KO_TO_EN],
+      (day) => DAY_MAP.KR_TO_EN[day as keyof typeof DAY_MAP.KR_TO_EN],
     ),
     workStartTime: startTime,
     workEndTime: endTime,

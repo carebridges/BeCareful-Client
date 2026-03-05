@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { ColorTypes } from '@/style/theme/color';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
-import { InstitutionRank } from '@/types/Community/common';
+import { INSTITUTION_RANK_MAP } from '@/constants/common/maps';
+import { InstitutionRank } from '@/types/common';
 
 interface RankStyleProps {
   color: keyof ColorTypes;
@@ -15,6 +15,10 @@ export const RankStyles: Record<InstitutionRank, RankStyleProps> = {
     color: 'mainGreen',
     background: 'subGreen',
   },
+  NONE: {
+    color: 'mainGreen',
+    background: 'subGreen',
+  },
 };
 
 interface RankCardProps {
@@ -25,7 +29,7 @@ const RankCard = ({ rank }: RankCardProps) => {
   const { color, background } = RankStyles[rank ?? 'SOCIAL_WORKER'];
   return (
     <Rank color={color} background={background}>
-      {INSTITUTION_RANK_EN_TO_KR[rank ?? 'SOCIAL_WORKER']}
+      {INSTITUTION_RANK_MAP.EN_TO_KR[rank ?? 'SOCIAL_WORKER']}
     </Rank>
   );
 };

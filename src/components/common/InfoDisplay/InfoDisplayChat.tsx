@@ -1,5 +1,5 @@
-import { UserRole } from '@/types/common/chat';
 import styled from 'styled-components';
+import { UserRole } from '@/types/common';
 
 interface InfoItem {
   title: string;

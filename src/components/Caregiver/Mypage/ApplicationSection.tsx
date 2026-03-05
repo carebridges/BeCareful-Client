@@ -4,14 +4,14 @@ import { ReactComponent as ApplicationIcon } from '@/assets/icons/caregiver/MyWo
 import { Button } from '@/components/common/Button/Button';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
-import { WorkApplication } from '@/types/Caregiver/common';
+import { WorkApplication } from '@/types/matching';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
   formatCaretype,
   formatDaysToKR,
   formatLocation,
   formatTimeToKR,
-} from '@/utils/caregiverFormatter';
+} from '@/utils/format/domain';
 
 interface ApplySectionProps {
   data: WorkApplication | undefined;

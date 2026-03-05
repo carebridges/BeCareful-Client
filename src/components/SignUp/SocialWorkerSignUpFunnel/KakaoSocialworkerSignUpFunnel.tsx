@@ -3,7 +3,7 @@ import { Step1SelectRole } from '@/components/SignUp/SocialWorkerSignUpFunnel/St
 import { Step3InstitutionName } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step3InstitutionName';
 import { Step4BasicInfo } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step4BasicInfo';
 import { Step5AcceptTerms } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step5AcceptTerms';
-import { Step6SignUpComplete } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step6SignUpComplete';
+import { Step7SignUpComplete } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step7SignUpComplete';
 import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 
 import { ReactComponent as IconClose } from '@/assets/icons/IconClose.svg';
@@ -12,15 +12,17 @@ import { styled } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SignUpModal } from '@/components/SignUp/common/SingUpModal';
 import { useState } from 'react';
+import { Step6UploadPhoto } from '@/components/SignUp/SocialWorkerSignUpFunnel/Step6UploadPhoto';
 
 const steps = [
   Step1SelectRole,
   Step3InstitutionName,
   Step4BasicInfo,
   Step5AcceptTerms,
-  Step6SignUpComplete,
+  Step6UploadPhoto,
+  Step7SignUpComplete,
 ];
-const stepPercents = [25, 50, 75, 100, 100];
+const stepPercents = [20, 40, 60, 80, 100, 100];
 
 export const KakaoSocialworkerSignUpFunnel = () => {
   const { currentStep, isInstitutionFunnel } = useSignUpContext();

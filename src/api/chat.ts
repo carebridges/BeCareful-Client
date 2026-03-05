@@ -1,19 +1,17 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 import {
-  SocialworkerChatListResponse,
-  SocialworkerChatResponse,
-  SocialworkerContractResponse,
-} from '@/types/Socialworker/chat';
-import {
-  CaregiverChatListResponse,
+  CaregiverChatList,
   CaregiverChatResponse,
-} from '@/types/Caregiver/chat';
+  ContractChatDetail,
+  SocialworkerChatList,
+  SocialworkerChatResponse,
+} from '@/types/chat';
 
-/* 사회복지사 */
-// 사회복지사 채팅 목록
-export const useGetSocialworkerChatList = () =>
-  useQuery<SocialworkerChatListResponse>({
+// ==================== 사회복지사 ====================
+/* 사회복지사 채팅 목록 */
+export const useSocialworkerChatList = () =>
+  useQuery<SocialworkerChatList[]>({
     queryKey: ['socialworkerChatList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get('/chat/social-worker/list');
@@ -22,8 +20,8 @@ export const useGetSocialworkerChatList = () =>
     refetchOnWindowFocus: true,
   });
 
-// 사회복지사 채팅 데이터 조회
-export const useGetSocialworkerChat = (chatRoomId: number) =>
+/* 사회복지사 채팅 데이터 조회 */
+export const useSocialworkerChat = (chatRoomId: number) =>
   useQuery<SocialworkerChatResponse>({
     queryKey: ['socialworkerChat', chatRoomId],
     queryFn: async () => {
@@ -34,9 +32,9 @@ export const useGetSocialworkerChat = (chatRoomId: number) =>
     },
   });
 
-// 계약서 상세 내용
+/* 계약서 상세 내용 */
 export const useGetSocialworkerContract = (contractId: number) =>
-  useQuery<SocialworkerContractResponse>({
+  useQuery<ContractChatDetail>({
     queryKey: ['socialworkerContract', contractId],
     queryFn: async () => {
       const { data } = await axiosInstance.get(
@@ -46,10 +44,10 @@ export const useGetSocialworkerContract = (contractId: number) =>
     },
   });
 
-/* 요양보호사 */
-// 요양보호사 채팅 목록
+// ==================== 요양보호사 ====================
+/* 요양보호사 채팅 목록 */
 export const useGetCaregiverChatList = () =>
-  useQuery<CaregiverChatListResponse>({
+  useQuery<CaregiverChatList[]>({
     queryKey: ['caregiverChatList'],
     queryFn: async () => {
       const { data } = await axiosInstance.get('/chat/caregiver/list');
@@ -58,7 +56,7 @@ export const useGetCaregiverChatList = () =>
     refetchOnWindowFocus: true,
   });
 
-// 요양보호사 채팅 데이터 조회
+/* 요양보호사 채팅 데이터 조회 */
 export const useGetCaregiverChat = (chatRoomId: number) =>
   useQuery<CaregiverChatResponse>({
     queryKey: ['caregiverChat', chatRoomId],

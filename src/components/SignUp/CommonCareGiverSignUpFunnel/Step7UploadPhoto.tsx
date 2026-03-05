@@ -1,4 +1,4 @@
-import { useUploadCareGiverProfileImage } from '@/api/caregiverFunnel';
+import { useUploadCareGiverProfileImage } from '@/api/signup/caregiver';
 import { Button } from '@/components/common/Button/Button';
 import { CaregiverProfileImageUploader } from '@/components/SignUp/CareGiverSignUpFunnel/Step6UploadPhoto/CaregiverProfileImageUploader';
 import { useCommonCaregiverSignUpContext } from '@/contexts/CommonCaregiverSignUpContext';

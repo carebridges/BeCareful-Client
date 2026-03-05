@@ -5,16 +5,18 @@ import ProfileCard from '@/components/common/card/ProfileCard';
 import BelongCard from '@/components/SocialWorker/MyPage/BelongCard';
 import AssociationCard from '@/components/common/card/AssociationCard';
 import InstitutionCard from '@/components/common/card/InstitutionCard';
-import { GENDER_EN_TO_KR_2 } from '@/constants/common/gender';
-import { INSTITUTION_RANK_EN_TO_KR } from '@/constants/common/institutionRank';
-import { ASSOCIATION_RANK_EN_TO_KR } from '@/constants/common/associationRank';
+import {
+  ASSOCIATION_RANK_MAP,
+  GENDER_MAP,
+  INSTITUTION_RANK_MAP,
+} from '@/constants/common/maps';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { useGetSocialWorkerMy } from '@/api/socialworker';
+import { useSocialworkerProfile } from '@/api/user/socialworker';
 
 const SocialworkerMyPage = () => {
   const { handleNavigate } = useHandleNavigate();
 
-  const { data } = useGetSocialWorkerMy();
+  const { data } = useSocialworkerProfile();
   const isNone = data?.socialWorkerInfo.associationRank === 'NONE';
 
   return (
@@ -34,13 +36,15 @@ const SocialworkerMyPage = () => {
           chevronClick={() => handleNavigate('/socialworker/my/profile')}
           phoneNumber={data?.socialWorkerInfo.phoneNumber ?? ''}
           age={data?.socialWorkerInfo.age ?? 0}
-          gender={GENDER_EN_TO_KR_2[data?.socialWorkerInfo.gender ?? 'FEMALE']}
+          gender={
+            GENDER_MAP.EN_TO_KR_FULL[data?.socialWorkerInfo.gender ?? 'FEMALE']
+          }
         />
 
         <BelongCard
           title={data?.institutionInfo.institutionName ?? ''}
           rank={
-            INSTITUTION_RANK_EN_TO_KR[
+            INSTITUTION_RANK_MAP.EN_TO_KR[
               data?.socialWorkerInfo.institutionRank ?? 'SOCIAL_WORKER'
             ]
           }
@@ -50,7 +54,7 @@ const SocialworkerMyPage = () => {
           <BelongCard
             title={data?.associationInfo.associationName ?? ''}
             rank={
-              ASSOCIATION_RANK_EN_TO_KR[
+              ASSOCIATION_RANK_MAP.EN_TO_KR[
                 data?.socialWorkerInfo.associationRank ?? 'MEMBER'
               ]
             }
@@ -81,7 +85,7 @@ const SocialworkerMyPage = () => {
               association={data?.associationInfo.associationName ?? ''}
               onClick={() => handleNavigate('/socialworker/my/association')}
               type={
-                ASSOCIATION_RANK_EN_TO_KR[
+                ASSOCIATION_RANK_MAP.EN_TO_KR[
                   data?.socialWorkerInfo.associationRank ?? 'MEMBER'
                 ]
               }
@@ -136,7 +140,8 @@ const SectionWrapper = styled.div`
 `;
 
 const Border = styled.div`
-  width: 100vw;
+  width: calc(100% + 40px);
+  box-sizing: border-box;
   height: 1px;
   background: ${({ theme }) => theme.colors.gray50};
   margin-left: -20px;

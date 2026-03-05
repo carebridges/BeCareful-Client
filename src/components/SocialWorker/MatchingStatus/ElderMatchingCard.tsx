@@ -1,12 +1,12 @@
 import { StatusTag } from '@/components/common/Tag/StatusTag';
 import { Tag } from '@/components/common/Tag/Tag';
-import { RecruitmentItem } from '@/types/Socialworker/matching';
-import { formatHHMM, formatDateTime, shortenYear } from '@/utils/formatTime';
-import { sortWorkDays, translateWorkDaysToKo } from '@/utils/formatWorkDays';
+import { RecruitmentItem } from '@/types/matching';
+import { formatDateTime, formatHHMM, shortenYear } from '@/utils/format/date';
+import { sortWorkDays, translateWorkDaysToKR } from '@/utils/format/domain';
 import { ReactComponent as IconMap } from '@/assets/icons/caregiver/IconMap.svg';
 import { ReactComponent as IconTime } from '@/assets/icons/caregiver/IconTime.svg';
-
 import { styled } from 'styled-components';
+
 export interface ElderMatchingCardData {
   recruitmentInfo: RecruitmentItem['recruitmentInfo'];
   elderlyInfo: RecruitmentItem['elderlyInfo'];
@@ -37,7 +37,7 @@ export const ElderMatchingCard = ({
   const gender = e.elderlyGender === 'MALE' ? '남' : '여';
   const status = data.recruitmentStatus;
 
-  const daysKo = translateWorkDaysToKo(sortWorkDays(r.workDays));
+  const daysKo = translateWorkDaysToKR(sortWorkDays(r.workDays));
   const scheduleText = `${daysKo} ${formatHHMM(r.workStartTime)}~${formatHHMM(r.workEndTime)}`;
 
   const location =

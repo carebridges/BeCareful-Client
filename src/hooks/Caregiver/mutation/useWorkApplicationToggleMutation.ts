@@ -1,7 +1,7 @@
 import {
   workApplicationActive,
   workApplicationInactive,
-} from '@/api/caregiver';
+} from '@/api/user/caregiver';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface UseWorkApplicationToggleOptions {

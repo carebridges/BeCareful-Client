@@ -13,19 +13,21 @@ import { CAREGIVER_CERTIFICATE_CARD_MAP } from '@/components/SignUp/CareGiverSig
 import InputBox from '@/components/common/InputBox/InputBox';
 import BirthInputBox from '@/components/common/InputBox/BirthInputBox';
 import ProfileImgUploader from '@/components/common/ProfileImgUploader';
-import { CERTIFICATE_LABEL } from '@/constants/caregiver/certificateLabel';
-import { CaregiverMyRequest } from '@/types/Caregiver/mypage';
+import { CERTIFICATE_LABEL } from '@/constants/domain/caregiver';
+import { CaregiverProfileRequest } from '@/types/caregiver';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
-import { usePutMyMutation } from '@/hooks/Caregiver/mutation/usePutMyMutation';
 import { useCaregiverBasicForm } from '@/hooks/Caregiver/mypage/useCaregiverBasicForm';
 import { useCaregiverCertForm } from '@/hooks/Caregiver/mypage/useCaregiverCertForm';
 import { useProfileImg } from '@/hooks/useProfileImg';
-import { useCaregiverMyPageInfoQuery } from '@/api/caregiver';
+import {
+  useCaregiverProfile,
+  useUpdateCaregiverProfile,
+} from '@/api/user/caregiver';
 
 const CaregiverEditProfilePage = () => {
   const { handleNavigate, handleGoBack } = useHandleNavigate();
   const [isChanged, setIsChanged] = useState(false);
-  const { data, error } = useCaregiverMyPageInfoQuery();
+  const { data, error } = useCaregiverProfile();
   if (error) {
     console.log('getCaregiverMyPageInfo 에러: ', error);
   }
@@ -64,11 +66,11 @@ const CaregiverEditProfilePage = () => {
     setIsChanged,
   );
 
-  const { mutate: updateMy } = usePutMyMutation();
+  const { mutate: updateProfile } = useUpdateCaregiverProfile();
   const handleEditBtnClick = () => {
     const profileUrl = profileUpload.getProfileImageKeyForServer();
 
-    const caregiverData: CaregiverMyRequest = {
+    const profileData: CaregiverProfileRequest = {
       profileImageTempKey: profileUrl,
       caregiverCertificate: caregiverCert,
       socialWorkerCertificate: socialworkerCert,
@@ -80,8 +82,8 @@ const CaregiverEditProfilePage = () => {
       isHavingCar: isCarChecked,
       isCompleteDementiaEducation: isEduChecked,
     };
-    console.log(caregiverData);
-    updateMy(caregiverData, {
+    // console.log(profileData);
+    updateProfile(profileData, {
       onSuccess: () => {
         handleNavigate('/caregiver/my');
         setIsChanged(false);

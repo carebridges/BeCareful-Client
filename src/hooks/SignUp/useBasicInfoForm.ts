@@ -1,7 +1,7 @@
 import { useCommonSignUpContext } from '@/contexts/CommonSocialWorkerSignUpContext';
 import { useSignUpContext } from '@/contexts/KakaoSocialWorkerSignUpContext';
 import { useNicknameValidation } from '@/hooks/SignUp/useNicknameValidation';
-import { getGenderCode } from '@/utils/getGenderCode';
+import { getGenderCode } from '@/utils/format/text';
 
 type BasicInfoField = 'realName' | 'nickName' | 'birthYymmdd' | 'phoneNumber';
 

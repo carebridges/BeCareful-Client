@@ -9,13 +9,13 @@ import {
   TitleWrapper,
 } from '@/components/SocialWorker/ElderyRegister/Section.styles';
 import { AreaSelectModal } from '@/components/SocialWorker/ElderyRegister/AreaSelectModal';
-import { AreaSelectData, AreaSocial } from '@/types/common/matching';
+import { AreaSelectData, WorkLocation } from '@/types/common';
 
 interface AddressSelectSectionProps {
   areaData: AreaSelectData[];
-  selectedArea: AreaSocial | null;
+  selectedArea: WorkLocation | null;
   detailAddress: string;
-  onSelect: (area: AreaSocial) => void;
+  onSelect: (area: WorkLocation) => void;
   onDetailChange: (value: string) => void;
 }
 

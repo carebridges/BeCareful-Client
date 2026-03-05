@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { CommunityJoinSelectRole } from '@/components/Community/JoinCommunity/CommunityJoinSelectRole';
-import { AssociationRank } from '@/types/CommunityAssociation';
+import { AssociationRank } from '@/types/common';
 
 const CommunityJoinSelectRolePage = () => {
   const navigate = useNavigate();

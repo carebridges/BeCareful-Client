@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { currentUserInfo } from '@/recoil/currentUserInfo';
-import { fetchUserInfo } from '@/api/userInfo';
+import { fetchUserInfo } from '@/api/info';
 
 export const useLoadUserInfo = () => {
   const [searchParams] = useSearchParams();

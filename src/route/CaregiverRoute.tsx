@@ -11,6 +11,7 @@ import CaregiverApplyPage from '@/page/Caregiver/Apply/CaregiverApplyPage';
 import CaregiverApplyDetailPage from '@/page/Caregiver/Apply/CaregiverApplyDetailPage';
 import CaregiverChatListPage from '@/page/Caregiver/Chat/CaregiverChatListPage';
 import CaregiverChatPage from '@/page/Caregiver/Chat/CaregiverChatPage';
+import { CaregiverTourController } from '@/components/Caregiver/CaregiverTourController';
 
 const CaregiverRoute = () => {
   const location = useLocation();
@@ -39,6 +40,8 @@ const CaregiverRoute = () => {
       <div
         style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
       >
+        <CaregiverTourController />
+
         <main>
           <Routes>
             <Route index element={<CaregiverHomePage />} />

@@ -1,6 +1,6 @@
 import { useCommonCaregiverSignUpContext } from '@/contexts/CommonCaregiverSignUpContext';
 import { useCaregiverSignUpContext } from '@/contexts/KakaoCaregiverSignUpContext';
-import { getGenderCode } from '@/utils/getGenderCode';
+import { getGenderCode } from '@/utils/format/text';
 
 export const useCaregiverBasicInfoForm = () => {
   const { formData, setFormData } = useCaregiverSignUpContext();

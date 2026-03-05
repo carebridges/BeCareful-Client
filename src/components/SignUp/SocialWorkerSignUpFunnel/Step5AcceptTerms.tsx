@@ -8,19 +8,11 @@ import {
   CENTER_TERMS,
   MARKETING_TERMS,
   PRIVACY_TERMS,
-} from '@/constants/termText';
-import { useSocialWorkerSignupSubmit } from '@/hooks/SignUp/useSocialWorkerSignupSubmit';
-import { SignUpPayload } from '@/types/SocialSignUp';
-import { ErrorIndicator } from '@/components/common/ErrorIndicator/ErrorIndicator';
-
-type AgreeField =
-  | 'isAgreedToTerms'
-  | 'isAgreedToCollectPersonalInfo'
-  | 'isAgreedToReceiveMarketingInfo';
+} from '@/constants/common/termText';
+import { AgreeField } from '@/types/user';
 
 export const Step5AcceptTerms = () => {
   const { goToNext, goToPrev, formData, setFormData } = useSignUpContext();
-  const { submit, isPending, isError } = useSocialWorkerSignupSubmit();
 
   const agreeState = useMemo(
     () => ({
@@ -62,11 +54,6 @@ export const Step5AcceptTerms = () => {
     marketing: false,
   });
   const isAnyExpanded = Object.values(expandedState).some(Boolean);
-
-  const handleNext = useCallback(() => {
-    if (!requiredAgreed || isPending) return;
-    submit(formData as SignUpPayload, { onSuccess: () => goToNext() });
-  }, [requiredAgreed, isPending, formData, submit, goToNext]);
 
   return (
     <StepWrapper $isAnyExpanded={isAnyExpanded}>
@@ -120,19 +107,17 @@ export const Step5AcceptTerms = () => {
         </AgreeCheckContainer>
       </AgreeWrapper>
 
-      {isError && <ErrorIndicator />}
-
       <ButtonContainer>
-        <Button onClick={goToPrev} height="52px" disabled={isPending}>
+        <Button onClick={goToPrev} height="52px" variant="blue2">
           이전
         </Button>
         <Button
-          onClick={handleNext}
+          onClick={goToNext}
           height="52px"
           variant={requiredAgreed ? 'blue' : 'gray'}
-          disabled={!requiredAgreed || isPending}
+          disabled={!requiredAgreed}
         >
-          {isPending ? '처리 중...' : '다음'}
+          다음
         </Button>
       </ButtonContainer>
     </StepWrapper>

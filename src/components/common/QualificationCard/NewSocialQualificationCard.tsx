@@ -2,8 +2,7 @@ import { styled } from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ReactComponent as CloseIcon } from '@/assets/icons/CloseCircle.svg';
 import { SmallDropdown } from '@/components/common/Dropdown/SmallDropdown';
-import { CertificateFormInput } from '@/types/CareGiverSignUp';
-import { CertificateInfo } from '@/types/Caregiver/common';
+import { CertificateFormInput, CertificateInfo } from '@/types/caregiver';
 
 interface SocialQualificationCardProps {
   initialType: string;

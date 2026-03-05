@@ -1,9 +1,6 @@
 import { useState } from 'react';
-import { RecruitmentForm } from '@/types/Matching.socialWorker';
-import {
-  DAY_EN_TO_KO,
-  DAY_KO_TO_EN,
-} from '@/constants/socialworker/day.socialWorker';
+import { DAY_MAP } from '@/constants/common/maps';
+import { RecruitmentForm } from '@/types/matching';
 
 type WorkDayEnum = RecruitmentForm['workDays'][number];
 
@@ -17,7 +14,7 @@ export const useRecruitmentWrite = ({
   onChange,
 }: UseRecruitmentWriteFormParams) => {
   const [selectDay, setSelectDay] = useState<string[]>(
-    value.workDays ? value.workDays.map((d) => DAY_EN_TO_KO[d]) : [],
+    value.workDays ? value.workDays.map((d) => DAY_MAP.EN_TO_KR[d]) : [],
   );
 
   const [title, setTitle] = useState(value.title ?? '');
@@ -43,7 +40,7 @@ export const useRecruitmentWrite = ({
       const next = exists ? prev.filter((day) => day !== id) : [...prev, id];
 
       const workDaysEnum = next
-        .map((ko) => DAY_KO_TO_EN[ko as keyof typeof DAY_KO_TO_EN])
+        .map((ko) => DAY_MAP.KR_TO_EN[ko as keyof typeof DAY_MAP.KR_TO_EN])
         .filter(Boolean) as WorkDayEnum[];
 
       onChange({ workDays: workDaysEnum });
