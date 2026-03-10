@@ -3,9 +3,9 @@ import { styled } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewBlack.svg';
+import { ReactComponent as CoachmarkMatching } from '@/assets/icons/CoachmarkMatching.svg';
 import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
-import { SocialWorkerTabBar } from '@/components/SocialWorker/common/SocialWorkerTabBar';
 import { MatchingSearchBox } from '@/components/Matching/MatchingSearchBox';
 import { ElderCard } from '@/components/Matching/ElderCard';
 import { Pagination } from '@/components/common/Pagination/Pagination';
@@ -19,6 +19,7 @@ import { NewElderRegistrationCard } from '@/components/SocialWorker/common/NewEl
 import { FloatingPostButton } from '@/components/SocialWorker/common/FloatingPostButton';
 import { ElderMatchingCard } from '@/components/SocialWorker/MatchingStatus/ElderMatchingCard';
 import { RegisterElderModal } from '@/components/SocialWorker/RegisterMatchingElder/RegisterElderModal';
+import { TabGuideTour } from '@/components/common/TabGuideTour';
 
 const TAB_LABELS = ['매칭 대기', '매칭 중', '매칭 완료'] as const;
 
@@ -96,10 +97,20 @@ export const SocialWorkerMatchingListPage = () => {
   return (
     <>
       <Container>
+        <TabGuideTour
+          target={'.sw-matching'}
+          storageKey="visitedMatching"
+          Img={
+            <ImgWrapper>
+              <CoachmarkMatching />
+            </ImgWrapper>
+          }
+        />
+
         <NavBar
           left={<NavLeft>매칭</NavLeft>}
           right={
-            <NavRight onClick={() => navigate('/caregiver/chat')}>
+            <NavRight onClick={() => navigate('/socialworker/chat')}>
               {hasNewChat ? <ChatNew /> : <Chat />}
             </NavRight>
           }
@@ -157,20 +168,20 @@ export const SocialWorkerMatchingListPage = () => {
         </PaginationContainer>
 
         <FloatingPostButton />
+
+        {isRegisterModalOpen && selectedElderId !== null && (
+          <RegisterElderModal
+            width="320px"
+            onClose={() => setIsRegisterModalOpen(false)}
+            onCancel={() => {
+              setIsRegisterModalOpen(false);
+              navigate('/socialworker/recruitment/new', {
+                state: { elderlyId: selectedElderId },
+              });
+            }}
+          />
+        )}
       </Container>
-      {isRegisterModalOpen && selectedElderId !== null && (
-        <RegisterElderModal
-          width="320px"
-          onClose={() => setIsRegisterModalOpen(false)}
-          onCancel={() => {
-            setIsRegisterModalOpen(false);
-            navigate('/socialworker/recruitment/new', {
-              state: { elderlyId: selectedElderId },
-            });
-          }}
-        />
-      )}
-      <SocialWorkerTabBar />
     </>
   );
 };
@@ -226,4 +237,10 @@ const PaginationContainer = styled.div`
 const NewElderRegistrContainer = styled.div`
   display: flex;
   padding-top: 16px;
+`;
+
+const ImgWrapper = styled.div`
+  position: fixed;
+  bottom: 77px;
+  right: 20px;
 `;

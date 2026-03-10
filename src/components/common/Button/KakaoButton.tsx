@@ -12,7 +12,7 @@ export const KakaoButton = () => {
   return (
     <KakaoContainer onClick={handleClick}>
       <KakaoIcon />
-      <ButtonText>카카오로 시작하기</ButtonText>
+      <ButtonText>카카오톡으로 시작하기</ButtonText>
     </KakaoContainer>
   );
 };

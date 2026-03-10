@@ -1,5 +1,14 @@
 import { useState } from 'react';
 import { ReportReason } from '@/types/common';
+import {
+  useBlockCaregiverBySocialWorker,
+  useUnblockCaregiverBySocialWorker,
+  useBlockSocialWorkerByCaregiver,
+  useUnblockSocialWorkerByCaregiver,
+  useReportCaregiverChat,
+  useReportSocialWorkerChat,
+} from '@/api/profileAction';
+import { AxiosError } from 'axios';
 
 type ProfileType = 'institution' | 'caregiver';
 type ActionOption = 'report' | 'block';
@@ -18,10 +27,37 @@ interface ProfileActionsModals {
   unblock: boolean;
 }
 
-export const useProfileActions = (
-  profileType: ProfileType,
-  isBlocked: boolean,
-) => {
+interface UseProfileActionsParams {
+  profileType: ProfileType;
+  isBlocked: boolean;
+  targetId: number;
+  chatRoomId?: number;
+  onSuccess?: () => void;
+  onReportSuccess?: () => void;
+  onBlockSuccess?: () => void;
+  onUnblockSuccess?: () => void;
+  onErrorMessage?: (message: string) => void;
+}
+
+const getServerMessage = (error: unknown) => {
+  const axiosError = error as AxiosError<{ message?: string }>;
+
+  return (
+    axiosError?.response?.data?.message ?? '요청 처리 중 문제가 발생했습니다.'
+  );
+};
+
+export const useProfileActions = ({
+  profileType,
+  isBlocked,
+  targetId,
+  chatRoomId,
+  onSuccess,
+  onReportSuccess,
+  onBlockSuccess,
+  onUnblockSuccess,
+  onErrorMessage,
+}: UseProfileActionsParams) => {
   const [selectedOption, setSelectedOption] = useState<ActionOption | null>(
     null,
   );
@@ -37,6 +73,13 @@ export const useProfileActions = (
     blockInstitution: false,
     unblock: false,
   });
+
+  const { mutate: blockCaregiver } = useBlockCaregiverBySocialWorker();
+  const { mutate: unblockCaregiver } = useUnblockCaregiverBySocialWorker();
+  const { mutate: blockSocialWorker } = useBlockSocialWorkerByCaregiver();
+  const { mutate: unblockSocialWorker } = useUnblockSocialWorkerByCaregiver();
+  const { mutate: reportSocialWorker } = useReportSocialWorkerChat();
+  const { mutate: reportCaregiver } = useReportCaregiverChat();
 
   const openModal = (key: keyof ProfileActionsModals) => {
     setModals((prev) => ({ ...prev, [key]: true }));
@@ -68,19 +111,23 @@ export const useProfileActions = (
     closeModal('sheet');
 
     if (selectedOption === 'report') {
+      if (!chatRoomId) {
+        alert('채팅방에서만 신고할 수 있습니다.');
+        return;
+      }
+
       openModal('reason');
       return;
     }
 
-    if (selectedOption === 'block') {
-      if (isBlocked) {
-        openModal('unblock');
-        return;
-      }
-      openModal(
-        profileType === 'institution' ? 'blockInstitution' : 'blockCaregiver',
-      );
+    if (isBlocked) {
+      openModal('unblock');
+      return;
     }
+
+    openModal(
+      profileType === 'institution' ? 'blockInstitution' : 'blockCaregiver',
+    );
   };
 
   const handleReasonConfirm = (payload: ReportPayload) => {
@@ -92,23 +139,97 @@ export const useProfileActions = (
   const handleReportSubmit = () => {
     if (!reportPayload) return;
 
-    // TODO
-    console.log('신고 제출:', reportPayload);
+    if (!chatRoomId) {
+      closeModal('reportConfirm');
+      alert('채팅방에서만 신고할 수 있습니다.');
+      return;
+    }
 
-    setReportPayload(null);
-    closeModal('reportConfirm');
+    if (profileType === 'caregiver') {
+      reportCaregiver(
+        {
+          chatRoomId,
+          payload: reportPayload,
+        },
+        {
+          onSuccess: () => {
+            setReportPayload(null);
+            closeModal('reportConfirm');
+            onReportSuccess?.();
+            onSuccess?.();
+          },
+          onError: (error) => {
+            onErrorMessage?.(getServerMessage(error));
+          },
+        },
+      );
+      return;
+    }
+
+    reportSocialWorker(
+      {
+        chatRoomId,
+        payload: reportPayload,
+      },
+      {
+        onSuccess: () => {
+          setReportPayload(null);
+          closeModal('reportConfirm');
+          onReportSuccess?.();
+          onSuccess?.();
+        },
+      },
+    );
   };
 
   const handleBlock = () => {
-    // TODO
-    console.log('차단 처리');
-    closeAllModals();
+    if (profileType === 'caregiver') {
+      blockCaregiver(targetId, {
+        onSuccess: () => {
+          closeAllModals();
+          onBlockSuccess?.();
+          onSuccess?.();
+        },
+        onError: (error) => {
+          onErrorMessage?.(getServerMessage(error));
+        },
+      });
+      return;
+    }
+    blockSocialWorker(targetId, {
+      onSuccess: () => {
+        closeAllModals();
+        onBlockSuccess?.();
+        onSuccess?.();
+      },
+      onError: (error) => {
+        onErrorMessage?.(getServerMessage(error));
+      },
+    });
   };
 
   const handleUnblock = () => {
-    // TODO
-    console.log('차단 해제');
-    closeModal('unblock');
+    if (profileType === 'caregiver') {
+      unblockCaregiver(targetId, {
+        onSuccess: () => {
+          closeModal('unblock');
+          onUnblockSuccess?.();
+          onSuccess?.();
+        },
+        onError: (error) => {
+          onErrorMessage?.(getServerMessage(error));
+        },
+      });
+      return;
+    }
+
+    unblockSocialWorker(targetId, {
+      onSuccess: () => {
+        closeModal('unblock');
+        onUnblockSuccess?.();
+        onSuccess?.();
+      },
+    });
   };
 
   return {

@@ -7,6 +7,7 @@ import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
 import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Plus } from '@/assets/icons/socialworker/home/Plus.svg';
+import { ReactComponent as CoachmarkHome } from '@/assets/icons/CoachmarkHomeS.svg';
 import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { Button } from '@/components/common/Button/Button';
 import { NavBar } from '@/components/common/NavBar/NavBar';
@@ -21,6 +22,7 @@ import { useSocialworkerHome } from '@/api/user/socialworker';
 import { Swiper } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { SwiperSlide } from 'swiper/react';
+import { TabGuideTour } from '@/components/common/TabGuideTour';
 
 const SocialworkerHomePage = () => {
   const { handleNavigate } = useHandleNavigate();
@@ -44,6 +46,12 @@ const SocialworkerHomePage = () => {
           />
         </Modal>
       )}
+
+      <TabGuideTour
+        target={'.sw-home'}
+        storageKey={'visitedHomeS'}
+        Img={<CoachmarkHome />}
+      />
 
       <NavBar
         left={<NavLeft />}

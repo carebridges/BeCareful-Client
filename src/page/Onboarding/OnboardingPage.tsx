@@ -7,15 +7,17 @@ export const OnboardingPage = () => {
     <>
       <IntroduceContainer>
         <TopText>
-          요양보호사 <strong>구인구직</strong>과
+          우리 동내
           <br />
-          <strong>정보 공유</strong>를 한번에
+          <span>요양보호사 구인구직</span>
         </TopText>
         <LogoBlue />
         <BottomText>
-          센터 운영에 꼭 필요한 정보와 소통,
+          내가 찾던 일자리,
           <br />
-          돌봄다리에 다 있어요.
+          우리 센터에 딱 맞는 선생님
+          <br />
+          <span>지금 바로 확인하세요</span>
         </BottomText>
       </IntroduceContainer>
 
@@ -55,7 +57,7 @@ const TopText = styled.h1`
   font-size: 26px;
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 
-  strong {
+  span {
     font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
   }
 `;
@@ -66,4 +68,8 @@ const BottomText = styled.p`
   font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
 
   margin-top: 15px;
+
+  span {
+    font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+  }
 `;

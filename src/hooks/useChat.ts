@@ -50,6 +50,8 @@ export const useChat = ({ chatRoomId, initialData }: UseChatProps) => {
 
       queryClient.invalidateQueries({ queryKey: ['caregiverChatList'] });
       queryClient.invalidateQueries({ queryKey: ['socialworkerChatList'] });
+      queryClient.invalidateQueries({ queryKey: ['caregiverChat'] });
+      queryClient.invalidateQueries({ queryKey: ['socialworkerChat'] });
     },
     [queryClient],
   );

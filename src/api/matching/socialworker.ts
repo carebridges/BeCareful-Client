@@ -11,6 +11,7 @@ import {
   RecruitmentForm,
   RecruitmentSearchResponse,
 } from '@/types/matching';
+import { SocialWorkerProfileViewResponse } from '@/types/socialworker';
 
 // ==================== 매칭 현황 ====================
 export const getMatchingRecruitment = async (
@@ -220,3 +221,16 @@ export const useCaregiverDetail = (
     queryFn: () => getCaregiverDetail(recruitmentId, caregiverId),
     enabled: !!recruitmentId && !!caregiverId,
   });
+
+export const useSocialWorkerProfileView = (socialWorkerId: string) => {
+  return useQuery({
+    queryKey: ['socialWorkerProfile', socialWorkerId],
+    queryFn: async () => {
+      const response = await axiosInstance.get<SocialWorkerProfileViewResponse>(
+        `/social-worker/${socialWorkerId}/profile`,
+      );
+      return response.data;
+    },
+    enabled: !!socialWorkerId,
+  });
+};

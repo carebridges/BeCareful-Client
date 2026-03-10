@@ -9,7 +9,12 @@ const CaregiverChatPage = () => {
   const roomId = Number(chatRoomId);
   const { data } = useGetCaregiverChat(roomId);
 
+  const socialWorkerId =
+    data?.chatList.find((chat) => chat.socialWorkerId != null)
+      ?.socialWorkerId ?? 0;
+
   const otherUser: OtherUserProfile = {
+    id: socialWorkerId,
     profileImg:
       data?.institutionProfileImageUrl ??
       'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/institution-profile-image/default/institution_default.png',

@@ -23,9 +23,9 @@ export const Step9SignUpComplete = () => {
         <Button
           height="52px"
           variant="blue"
-          onClick={() => navigate('/caregiver')}
+          onClick={() => navigate('/caregiver/onboarding')}
         >
-          돌봄다리 시작하기
+          돌봄다리 둘러보기
         </Button>
       </ButtonContainer>
     </StepWrapper>

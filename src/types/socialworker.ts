@@ -79,3 +79,17 @@ export interface SocialworkerAssociationResponse {
   communityAgreement: CommunityAgreement;
   associationInfo: AssociationBase;
 }
+
+export type SocialWorkerProfileViewResponse = {
+  socialWorkerId: number;
+  socialWorkerName: string;
+  socialWorkerProfileImage: string;
+  socialWorkerSignUpDate: string;
+  institutionInfo: {
+    institutionId: number;
+    institutionCode: string;
+    name: string;
+    profileImageUrl: string;
+    address: string;
+  };
+};

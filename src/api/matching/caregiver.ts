@@ -1,6 +1,9 @@
 import { axiosInstance } from '@/api/axiosInstance';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CaregiverCompletedMatching } from '@/types/caregiver';
+import {
+  CaregiverCompletedMatching,
+  CaregiverProfileViewResponse,
+} from '@/types/caregiver';
 import {
   MatchingMyRecruitmentDetailResponse,
   MatchingRecruitmentMediateRequest,
@@ -159,5 +162,19 @@ export const useMyApplicationDetail = (recruitmentId: number) => {
       return response.data;
     },
     enabled: !!recruitmentId,
+  });
+};
+
+/* 요양보호사 프로필 화면 조회*/
+export const useCaregiverProfileView = (caregiverId: string) => {
+  return useQuery({
+    queryKey: ['caregiverProfile', caregiverId],
+    queryFn: async () => {
+      const response = await axiosInstance.get<CaregiverProfileViewResponse>(
+        `/caregiver/${caregiverId}/profile`,
+      );
+      return response.data;
+    },
+    enabled: !!caregiverId,
   });
 };

@@ -36,7 +36,7 @@ const TabBarWrapper = styled.div`
   width: 100%;
   height: 57px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   border-top: 1px solid ${({ theme }) => theme.colors.gray200};
   position: fixed;
@@ -50,7 +50,7 @@ const TabBarContentWrapper = styled.a`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 25%;
+  // width: 25%;
   gap: 2px;
   text-decoration: none;
   cursor: pointer;

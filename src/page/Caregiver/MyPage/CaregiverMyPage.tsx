@@ -50,6 +50,7 @@ const CaregiverMyPage = () => {
         data={data?.workApplicationInfo}
         isToggleChecked={isToggleChecked}
         handleToggleChange={handleToggleChange}
+        hasCareer={!!data?.careerInfo}
       />
     </Container>
   );

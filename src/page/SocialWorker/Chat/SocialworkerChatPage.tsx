@@ -10,16 +10,22 @@ const SocialworkerChatPage = () => {
   const { data } = useSocialworkerChat(roomId);
 
   const otherUser: OtherUserProfile = {
+    id: data?.caregiverId ?? 0,
     profileImg:
       data?.caregiverProfileImageUrl ??
       'https://care-bridges-main-bucket.s3.ap-northeast-2.amazonaws.com/caregiver-profile-image/default/caregiver_default.png',
     name: data?.caregiverName ?? '',
   };
 
+  const chatRoomName =
+    data?.caregiverName === '탈퇴한 요양보호사'
+      ? data.caregiverName
+      : `${data?.caregiverName} 요양보호사`;
+
   return (
     <Container>
       <ChatPage
-        chatRoomName={`${data?.caregiverName} 요양보호사`}
+        chatRoomName={chatRoomName}
         data={data}
         role="SOCIAL_WORKER"
         chatRoomId={roomId}

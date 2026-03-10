@@ -25,6 +25,6 @@ const Dot = styled.div<{ active: boolean }>`
   height: 6px;
   border-radius: 50%;
   background-color: ${({ active, theme }) =>
-    active ? theme.colors.coachMark : theme.colors.gray200};
+    active ? theme.colors.mainBlue : theme.colors.gray200};
   transition: background-color 0.3s ease;
 `;

@@ -130,6 +130,7 @@ export interface StatusMessage {
 export interface OtherUserProfile {
   profileImg: string;
   name: string;
+  id: number;
 }
 
 // ==================== 채팅방 목록 ====================
@@ -175,6 +176,7 @@ export interface SocialworkerChatResponse extends ChatRoomDetail {
 export interface CaregiverChatResponse extends ChatRoomDetail {
   institutionName: string;
   institutionProfileImageUrl: string;
+  socialWorkerId: number;
 }
 
 // ==================== 계약서 상세 ====================

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { ReactComponent as Logo } from '@/assets/icons/Logo.svg';
 import { ReactComponent as Chat } from '@/assets/icons/Chat.svg';
 import { ReactComponent as ChatNew } from '@/assets/icons/ChatNewWhite.svg';
+import { ReactComponent as CoachmarkHome } from '@/assets/icons/CoachmarkHomeC.svg';
 // import { ReactComponent as Point } from '@/assets/icons/Point.svg';
 // import { ReactComponent as ChevronRight } from '@/assets/icons/ChevronRight.svg';
 import { ReactComponent as Person } from '@/assets/icons/caregiver/home/Person.svg';
@@ -12,6 +13,7 @@ import { ReactComponent as Status } from '@/assets/icons/caregiver/home/Status.s
 import { useChatWebSocket } from '@/contexts/ChatWebSocketContext';
 import { NavBar } from '@/components/common/NavBar/NavBar';
 import CaregiverHomeWorkCard from '@/components/Caregiver/Home/CaregiverHomeWorkCard';
+import { TabGuideTour } from '@/components/common/TabGuideTour';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import { useCaregiverHome } from '@/api/user/caregiver';
 
@@ -28,6 +30,12 @@ const CaregiverHomePage = () => {
 
   return (
     <Container>
+      <TabGuideTour
+        target={'.cg-home'}
+        storageKey={'visitedHomeC'}
+        Img={<CoachmarkHome />}
+      />
+
       <NavBar
         left={<NavLeft />}
         right={
@@ -50,33 +58,47 @@ const CaregiverHomePage = () => {
       </BannerWrapper>
 
       <MainWrapper>
-        {data?.isWorking ? (
-          data.workScheduleList && data.workScheduleList.length > 0 ? (
-            <CardWrapper>
-              {data.workScheduleList.map((workSchedule, index) => (
-                <CaregiverHomeWorkCard
-                  key={index}
-                  workSchedule={workSchedule}
-                />
-              ))}
-            </CardWrapper>
+        {data?.hasCareer ? (
+          data.isApplying ? (
+            data.isWorking ? (
+              <CardWrapper>
+                {data.workScheduleList.map((workSchedule, index) => (
+                  <CaregiverHomeWorkCard
+                    key={index}
+                    workSchedule={workSchedule}
+                  />
+                ))}
+              </CardWrapper>
+            ) : (
+              <ScheduleWrapper>
+                <label className="detail">편안한 하루 보내세요!</label>
+                <label className="title">
+                  오늘은 정해진 근무 일정이 없어요
+                </label>
+              </ScheduleWrapper>
+            )
           ) : (
             <ScheduleWrapper>
-              <label className="detail">편안한 하루 보내세요!</label>
-              <label className="title">오늘은 정해진 근무 일정이 없어요</label>
+              <label className="detail">새로운 돌봄을 시작해보세요!</label>
+              <label className="title">
+                내 근무 일정을 한눈에 확인할 수 있어요
+              </label>
             </ScheduleWrapper>
           )
         ) : (
-          <ScheduleWrapper className="cg-home-main">
-            <label className="detail">새로운 돌봄을 시작해보세요!</label>
+          <ScheduleWrapper onClick={() => handleNavigate('/caregiver/my')}>
+            <label className="detail">
+              경력서를 채우면 더 많은 일자리 추천을 받아요
+            </label>
             <label className="title">
-              내 근무 일정을 한눈에 확인할 수 있어요
+              경력서 채우고 일자리 추천 받기
+              <ArrowRight />
             </label>
           </ScheduleWrapper>
         )}
 
         <ButtonsWrapper>
-          <ApplyButton onClick={() => handleNavigate('/caregiver/my')}>
+          <ApplyButton onClick={() => handleNavigate('/caregiver/work')}>
             <div className="top">
               <label>일자리 지원</label>
               <label className="title">
@@ -211,6 +233,10 @@ const ScheduleWrapper = styled.div`
   background: ${({ theme }) => theme.colors.white};
 
   .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
     color: ${({ theme }) => theme.colors.gray800};
     font-size: ${({ theme }) => theme.typography.fontSize.title4};
     font-weight: ${({ theme }) => theme.typography.fontWeight.semibold};
@@ -327,6 +353,7 @@ const MyWorkButton = styled.button`
   border-radius: 12px;
   background: #555960;
   margin-bottom: 72px;
+  color: ${({ theme }) => theme.colors.white};
 
   label {
     color: ${({ theme }) => theme.colors.white};

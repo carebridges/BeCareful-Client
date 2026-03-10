@@ -4,16 +4,32 @@ import ChatContract from '@/components/Chat/ChatRoom/ChatContract';
 import { ChatResponse, OtherUserProfile } from '@/types/chat';
 import { UserRole } from '@/types/common';
 import { formatTimeLabel } from '@/utils/format/date';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatBubbleProps {
   chat: ChatResponse;
   other: OtherUserProfile;
   role: UserRole;
   children?: React.ReactNode;
+  chatRoomId?: number;
 }
 
-const ChatBubble = ({ chat, other, role, children }: ChatBubbleProps) => {
+const ChatBubble = ({
+  chat,
+  other,
+  role,
+  children,
+  chatRoomId,
+}: ChatBubbleProps) => {
   const isMyChat = chat.senderType === role;
+  const navigate = useNavigate();
+  const handleProfileClick = () => {
+    const type = role === 'SOCIAL_WORKER' ? 'caregiver' : 'institution';
+
+    navigate(`/profile/${type}/${other.id}`, {
+      state: { chatRoomId },
+    });
+  };
 
   return (
     <Container isMyChat={isMyChat}>
@@ -34,7 +50,12 @@ const ChatBubble = ({ chat, other, role, children }: ChatBubbleProps) => {
         </>
       ) : (
         <div className="bubble">
-          <img className="profile" alt="프로필 이미지" src={other.profileImg} />
+          <img
+            className="profile"
+            alt="프로필 이미지"
+            src={other.profileImg}
+            onClick={handleProfileClick}
+          />
           <div className="center">
             <div className="name">
               {other.name}

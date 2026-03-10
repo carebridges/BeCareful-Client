@@ -77,6 +77,7 @@ export interface CaregiverHomeResponse {
   workScheduleList: WorkSchedule[];
   isWorking: boolean;
   isApplying: boolean;
+  hasCareer: boolean;
 }
 
 export interface CaregiverCompletedMatching {
@@ -114,3 +115,12 @@ export interface CaregiverProfileResponse {
 export interface BlockCaregiverInfo extends Omit<BaseUserInfo, 'phoneNumber'> {
   caregiverId: number;
 }
+
+export type CaregiverProfileViewResponse = {
+  caregiverId: number;
+  caregiverName: string;
+  caregiverAge: number;
+  caregiverGender: Gender;
+  caregiverSignUpDate: string;
+  caregiverProfileImageUrl: string;
+};

@@ -7,15 +7,18 @@ import {
   formatTimeToKR,
 } from '@/utils/format/domain';
 import { useWorkApplication } from '@/api/user/caregiver';
+import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 
 export const useApplicationData = () => {
+  const { handleNavigate } = useHandleNavigate();
   // 신청서 조회
   const { data: applicationData } = useWorkApplication();
   const [isToggleChecked, setIsToggleChecked] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
 
   useEffect(() => {
-    setIsToggleChecked(!!applicationData?.workApplicationDto);
+    setIsToggleChecked(!!applicationData?.workApplicationDto.isActive);
   }, [applicationData]);
 
   const { mutate: toggleWorkApplication } = useWorkApplicationToggleMutation({
@@ -26,7 +29,15 @@ export const useApplicationData = () => {
     if (applicationData?.workApplicationDto) {
       toggleWorkApplication(isToggleChecked);
     } else {
-      setIsModalOpen(true);
+      setIsApplyModalOpen(true);
+    }
+  };
+
+  const handleApplyButtonClick = () => {
+    if (applicationData?.hasCareer) {
+      handleNavigate('/caregiver/my/application');
+    } else {
+      setIsCareerModalOpen(true);
     }
   };
 
@@ -66,7 +77,10 @@ export const useApplicationData = () => {
     isToggleChecked,
     handleToggleChange,
     applyInfo,
-    isModalOpen,
-    setIsModalOpen,
+    isApplyModalOpen,
+    setIsApplyModalOpen,
+    isCareerModalOpen,
+    setIsCareerModalOpen,
+    handleApplyButtonClick,
   };
 };

@@ -7,7 +7,7 @@ export const Step6SignUpComplete = () => {
   const navigate = useNavigate();
 
   const handleStart = () => {
-    navigate('/community/create');
+    navigate('/socialworker/onboarding');
   };
 
   return (
@@ -26,7 +26,7 @@ export const Step6SignUpComplete = () => {
 
       <ButtonContainer>
         <Button height="52px" variant="blue" onClick={handleStart}>
-          돌봄다리 시작하기
+          돌봄다리 둘러보기
         </Button>
       </ButtonContainer>
     </StepWrapper>

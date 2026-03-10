@@ -1,9 +1,11 @@
 import styled from 'styled-components';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ReactComponent as ApplicationIcon } from '@/assets/icons/caregiver/MyWork.svg';
 import { Button } from '@/components/common/Button/Button';
 import { Toggle } from '@/components/common/Toggle/Toggle';
 import InfoDisplay from '@/components/common/InfoDisplay/InfoDisplay';
+import Modal from '@/components/common/Modal/Modal';
+import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { WorkApplication } from '@/types/matching';
 import { useHandleNavigate } from '@/hooks/useHandleNavigate';
 import {
@@ -17,14 +19,26 @@ interface ApplySectionProps {
   data: WorkApplication | undefined;
   isToggleChecked: boolean;
   handleToggleChange: () => void;
+  hasCareer: boolean;
 }
 
 const ApplicationSection = ({
   data,
   isToggleChecked,
   handleToggleChange,
+  hasCareer,
 }: ApplySectionProps) => {
   const { handleNavigate } = useHandleNavigate();
+
+  const [isCareerModalOpen, setIsCareerModalOpen] = useState(false);
+
+  const handleApplyButtonClick = () => {
+    if (hasCareer) {
+      handleNavigate('/caregiver/my/application');
+    } else {
+      setIsCareerModalOpen(true);
+    }
+  };
 
   const applicationInfo = useMemo(() => {
     if (!data) {
@@ -96,12 +110,27 @@ const ApplicationSection = ({
           <Button
             height="52px"
             variant="subBlue"
-            onClick={() => handleNavigate('/caregiver/my/application')}
+            onClick={handleApplyButtonClick}
           >
             지원서 등록하기
           </Button>
         </NoContent>
       )}
+
+      <Modal
+        isOpen={isCareerModalOpen}
+        onClose={() => setIsCareerModalOpen(false)}
+      >
+        <ModalButtons
+          onClose={() => setIsCareerModalOpen(false)}
+          title="아직 경력서가 작성되지 않았어요!"
+          detail="마이페이지에서 경력서를 먼저 작성해주세요."
+          left="확인"
+          right="경력서 작성하기"
+          handleLeftBtnClick={() => setIsCareerModalOpen(false)}
+          handleRightBtnClick={() => handleNavigate('/caregiver/my/career')}
+        />
+      </Modal>
     </SectionWrapper>
   );
 };

@@ -1,3 +1,5 @@
+import React from 'react';
+
 // ==================== 공공 API ====================
 export type PublicApiDto = {
   longTermAdminSym?: string;
@@ -32,10 +34,23 @@ export interface MediaPresignedUrlRequest {
 // ==================== 신고/차단 관련 ====================
 export type ReportReason = 'SPAM' | 'ABUSE' | 'SEXUAL' | 'PRIVACY' | 'OTHER';
 export type ProfileActionOption = 'report' | 'block';
+export type ReportRequest = {
+  reason: ReportReason;
+  detail?: string;
+};
 
 // ==================== 에러 관련 ====================
 export interface ServerErrorResponse {
   message?: string;
+}
+
+// ==================== 온보딩 관련 ====================
+export interface OnboardingItem {
+  id: number;
+  title: string;
+  detail: string;
+  image: string;
+  buttonText: string;
 }
 
 // ==================== 사용자 타입 ====================
@@ -118,3 +133,11 @@ export interface Address {
   streetAddress: string;
   detailAddress: string;
 }
+
+export type ProfileViewData = {
+  profileType: 'institution' | 'caregiver';
+  joinedDate: string;
+  name: string;
+  profileImageUrl: string;
+  subText: string;
+};

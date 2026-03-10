@@ -18,6 +18,7 @@ import {
   useHireCaregiver,
   usePendingMatching,
 } from '@/api/matching/socialworker';
+import { ReactComponent as ChevronIcon } from '@/assets/icons/ChevronRightProfile.svg';
 
 export const CareGiverDetailInfoPage = () => {
   const navigate = useNavigate();
@@ -59,6 +60,10 @@ export const CareGiverDetailInfoPage = () => {
     });
   };
 
+  const handleOpenProfile = () => {
+    navigate(`/profile/caregiver/${caregiverId}`);
+  };
+
   return (
     <Container>
       <TopContainer>
@@ -75,7 +80,17 @@ export const CareGiverDetailInfoPage = () => {
         />
         <RightContainer>
           <ProfileInfo>
-            <span className="highlight">{data.caregiverInfo.name}</span>
+            <div className="name">
+              <span className="highlight">{data.caregiverInfo.name}</span>
+              <div
+                className="icon"
+                onClick={handleOpenProfile}
+                role="button"
+                tabIndex={0}
+              >
+                <ChevronIcon />
+              </div>
+            </div>
             <span>믿고 맡길 수 있는 편안함을 제공합니다.</span>
           </ProfileInfo>
           <TagContainer>적합도 {data.matchingResultStatus}</TagContainer>
@@ -232,7 +247,19 @@ const ProfileImage = styled.img`
 const ProfileInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
+
+  .name {
+    display: flex;
+    gap: 4px;
+    flex-direction: row;
+
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 `;
 
 const RightContainer = styled.div`

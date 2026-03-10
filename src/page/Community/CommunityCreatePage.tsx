@@ -54,13 +54,13 @@ export const CommunityCreatePage = () => {
         color="blue"
       />
 
-      <AdWrapper className="sw-community-main1">
+      <AdWrapper>
         <AD1 />
       </AdWrapper>
 
       <SectionWrapper>
         <div className="title">내 협회 찾기</div>
-        <ButtonsWrapper className="sw-community-main2">
+        <ButtonsWrapper>
           <ApplyButton $light onClick={handleCreateClick}>
             <ApplyWrapper>
               <Label>협회 회장님이라면?</Label>

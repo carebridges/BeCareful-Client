@@ -44,7 +44,13 @@ const ChatRoom = ({
           <div className="date">{formatDateLabel(date)}</div>
           {chatGroupByDate[date].map((chat, index) => {
             return (
-              <ChatBubble key={index} chat={chat} other={other} role={role}>
+              <ChatBubble
+                key={index}
+                chat={chat}
+                other={other}
+                role={role}
+                chatRoomId={chatRoomId}
+              >
                 {chat.chatType === 'CONTRACT' &&
                   lastContractChatId === chat.chatId && (
                     <ChatContractButton

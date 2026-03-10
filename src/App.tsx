@@ -61,7 +61,7 @@ function App() {
       <Route path="*" element={<ErrorPage />} />
 
       {/* 임시 - 프로필 보기 페이지 */}
-      <Route path="/profile/view" element={<ProfileViewPage />} />
+      <Route path="/profile/:type/:id" element={<ProfileViewPage />} />
     </Routes>
   );
 }

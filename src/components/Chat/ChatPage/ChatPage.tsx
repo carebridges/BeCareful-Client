@@ -110,7 +110,15 @@ const ChatPage = ({
     <Container>
       <NavBar
         left={<NavLeft onClick={handleGoBack} />}
-        center={<NavCenter>{chatRoomName}</NavCenter>}
+        center={
+          <NavCenter>
+            {chatRoomName === '탈퇴한 요양보호사' ? (
+              <div className="expelCaregiver">{chatRoomName}</div>
+            ) : (
+              <div>{chatRoomName}</div>
+            )}
+          </NavCenter>
+        }
         right={<NavRight onClick={() => setIsKakaoSheetOpen(true)} />}
         fix={true}
       />
@@ -206,10 +214,14 @@ const NavLeft = styled(ArrowLeft)`
   cursor: pointer;
 `;
 
-const NavCenter = styled.label`
+const NavCenter = styled.div`
   color: ${({ theme }) => theme.colors.black};
   font-size: ${({ theme }) => theme.typography.fontSize.title5};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
+
+  .expelCaregiver {
+    color: ${({ theme }) => theme.colors.gray600};
+  }
 `;
 
 const NavRight = styled(DotIcon)`

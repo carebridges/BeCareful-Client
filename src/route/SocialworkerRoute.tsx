@@ -19,12 +19,13 @@ import { MatchingInfoPage } from '@/page/Matching/MatchingInfoPage';
 import { ElderlyEditPage } from '@/page/Elderly/ElderlyEditPage';
 // import AdPostPage from '@/page/SocialWorker/Home/AdPostPage';
 import { RecruitmentEditPage } from '@/page/SocialWorker/Matching/RecruitmentEditPage';
-import { SocialworkerTourController } from '@/components/SocialWorker/common/SocialworkerTourController';
+import { SocialworkerOnboardingPage } from '@/page/Onboarding/SocialworkerOnboardingPage';
 
 const SocialworkerRoute = () => {
   const location = useLocation();
 
   const hideTabBarPaths = [
+    '/socialworker/onboarding',
     '/socialworker/my/profile',
     '/socialworker/my/institution',
     '/socialworker/my/association',
@@ -62,6 +63,8 @@ const SocialworkerRoute = () => {
       <main>
         <Routes>
           <Route index element={<SocialworkerHomePage />} />
+
+          <Route path="/onboarding" element={<SocialworkerOnboardingPage />} />
 
           <Route path="my/*" element={<SocialworkerMyRoute />} />
 
